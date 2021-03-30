@@ -15,6 +15,7 @@ import org.hamcrest.MatcherAssert;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import uk.ac.cam.ch.wwmm.opsin.BondStereo.BondStereoValue;
@@ -291,7 +292,7 @@ public class StereochemistryTest {
 		assertEnhancedStereo("rac-1-phenylethan-1-ol", 1, 0, 0);
 	}
 
-	@Test
+	@Ignore("not allowed")
 	public void applyStereochemistryRacemicMultipleUnlocanted() throws StructureBuildingException {
 		assertEnhancedStereo("rac-2-(methylamino)-1-phenylpropan-1-ol", 2, 0, 0);
 	}
