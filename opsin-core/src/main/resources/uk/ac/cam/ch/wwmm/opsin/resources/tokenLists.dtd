@@ -37,6 +37,7 @@ ignoreWhenWritingXML == Tells the parser not to form an XML element out of these
         suffixAppliesTo CDATA #IMPLIED
         suffixAppliesToByDefault CDATA #IMPLIED
         usableAsAJoiner CDATA #IMPLIED
+        stereoGroup CDATA #IMPLIED
 >
 <!--
   (the #PCDATA inside the tag) = the string to match

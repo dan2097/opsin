@@ -3,6 +3,8 @@ package uk.ac.cam.ch.wwmm.opsin;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Deque;
 import java.util.EnumMap;
 import java.util.HashMap;
@@ -11,6 +13,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeMap;
 
@@ -47,7 +50,7 @@ class SMILESWriter {
 	private final StringBuilder smilesBuilder = new StringBuilder();
 
 	/**Should extended SMILES be output*/
-	private final boolean outputExtendedSmiles;
+	private int options;
 
 	/**The order atoms were traversed when creating the SMILES*/
 	private List<Atom> smilesOutputOrder;
@@ -78,11 +81,24 @@ class SMILESWriter {
 	/**
 	 * Creates a SMILES writer for the given fragment
 	 * @param structure
-	 * @param outputExtendedSmiles
+	 * @param options
 	 */
-	private SMILESWriter(Fragment structure, boolean outputExtendedSmiles) {
+	private SMILESWriter(Fragment structure, int options) {
 		this.structure = structure;
-		this.outputExtendedSmiles = outputExtendedSmiles;
+		this.options = options;
+	}
+
+	/**
+	 * Generates SMILES for the given fragment
+	 * The following assumptions are currently made:
+	 * 	The fragment contains no bonds to atoms outside the fragment
+	 * 	Hydrogens are all explicit
+	 * 	Spare valency has been converted to double bonds
+	 * @param options the set of {@link SmilesOptions} to use
+	 * @return SMILES String
+	 */
+	static String generateSmiles(Fragment structure, int options) {
+		return new SMILESWriter(structure, options).writeSmiles();
 	}
 
 	/**
@@ -94,7 +110,7 @@ class SMILESWriter {
 	 * @return SMILES String
 	 */
 	static String generateSmiles(Fragment structure) {
-		return new SMILESWriter(structure, false).writeSmiles();
+		return new SMILESWriter(structure, SmilesOptions.DEFAULT).writeSmiles();
 	}
 
 	/**
@@ -106,7 +122,7 @@ class SMILESWriter {
 	 * @return Extended SMILES String
 	 */
 	static String generateExtendedSmiles(Fragment structure) {
-		return new SMILESWriter(structure, true).writeSmiles();
+		return new SMILESWriter(structure, SmilesOptions.CXSMILES).writeSmiles();
 	}
 
 	String writeSmiles() {
@@ -128,21 +144,21 @@ class SMILESWriter {
 			}
 		}
 
-		if (outputExtendedSmiles) {
-			writeExtendedSmilesLayer();
+		if ((options & SmilesOptions.CXSMILES) != 0) {
+			writeExtendedSmilesLayer(options);
 		}
 
 		return smilesBuilder.toString();
 	}
 
-	private void writeExtendedSmilesLayer() {
+	private void writeExtendedSmilesLayer(int options) {
 		List<String> atomLabels = new ArrayList<String>();
 		List<String> atomLocants = new ArrayList<String>();
 		List<String> positionVariationBonds = new ArrayList<String>();
 		Integer lastLabel = null;
 		Integer lastLocant = null;
 		int attachmentPointCounter = 1;
-		Map<StereoGroup,List<Integer>> enhancedStereo = null;
+		Map<StereoGrpKey,List<Integer>> enhancedStereo = null;
 		Set<Integer> seenAttachmentpoints = new HashSet<Integer>();
 		List<Atom> polymerAttachPoints = structure.getPolymerAttachmentPoints();
 		boolean isPolymer = polymerAttachPoints != null && polymerAttachPoints.size() > 0;
@@ -209,26 +225,29 @@ class SMILESWriter {
 
 			if (a.getStereoGroup() != StereoGroup.Unk) {
 				if (enhancedStereo == null)
-					enhancedStereo = new TreeMap<>();
-				List<Integer> grps = enhancedStereo.get(a.getStereoGroup());
-				if (grps == null)
-					enhancedStereo.put(a.getStereoGroup(), grps = new ArrayList<>());
+					enhancedStereo = new HashMap<>();
+				StereoGrpKey key = new StereoGrpKey(a.getAtomParity());
+				List<Integer> grps = enhancedStereo.get(key);
+				if (grps == null) {
+					enhancedStereo.put(key, grps = new ArrayList<>());
+				}
 				grps.add(smilesOutputOrder.indexOf(a));
 			}
 		}
 		List<String> extendedSmiles = new ArrayList<String>(2);
-		if (lastLabel != null) {
+		if (lastLabel != null && (options & SmilesOptions.CXSMILES_ATOM_LABELS) != 0) {
 			extendedSmiles.add("$" + StringTools.stringListToString(atomLabels.subList(0, lastLabel + 1), ";") + "$" );
 		}
-		if (lastLocant != null) {
+		if (lastLocant != null && (options & SmilesOptions.CXSMILES_ATOM_VALUES) != 0) {
 			extendedSmiles.add("$_AV:" + StringTools.stringListToString(atomLocants.subList(0, lastLocant + 1), ";") + "$" );
 		}
-		if (enhancedStereo != null) {
+		if (enhancedStereo != null && (options & SmilesOptions.CXSMILES_ENHANCED_STEREO) != 0) {
 			if (enhancedStereo.size() == 1) {
-				if (enhancedStereo.get(StereoGroup.Rac) != null) {
+				if (enhancedStereo.get(new StereoGrpKey(StereoGroup.Rac, 1)) != null ||
+					enhancedStereo.get(new StereoGrpKey(StereoGroup.Rac, 2)) != null) {
 					extendedSmiles.add("r");
-				} else if (enhancedStereo.get(StereoGroup.Rel) != null) {
-					List<Integer> idxs = enhancedStereo.get(StereoGroup.Rel);
+				} else if (enhancedStereo.get(new StereoGrpKey(StereoGroup.Rel, 1)) != null) {
+					List<Integer> idxs = enhancedStereo.get(new StereoGrpKey(StereoGroup.Rel, 1));
 					StringBuilder sb   = new StringBuilder();
 					sb.append("o1:");
 					sb.append(idxs.get(0));
@@ -240,17 +259,41 @@ class SMILESWriter {
 				// all stereochemistry is absolute
 			} else {
 				StringBuilder sb = new StringBuilder();
-				for (Map.Entry<StereoGroup, List<Integer>> e : enhancedStereo.entrySet()) {
+				int numRac = 1, numRel = 1; // renumber
+				List<Map.Entry<StereoGrpKey, List<Integer>>> entires
+						= new ArrayList<>(enhancedStereo.entrySet());
+				// ensure consistent output order
+				Collections.sort(entires,
+						new Comparator<Map.Entry<StereoGrpKey, List<Integer>>>() {
+							@Override
+							public int compare(Map.Entry<StereoGrpKey, List<Integer>> a,
+											   Map.Entry<StereoGrpKey, List<Integer>> b) {
+								Collections.sort(a.getValue());
+								Collections.sort(b.getValue());
+								int len = Math.min(a.getValue().size(), b.getValue().size());
+								for (int i = 0; i < len; i++) {
+									int cmp = a.getValue().get(i).compareTo(b.getValue().get(i));
+									if (cmp != 0)
+										return cmp;
+								}
+								int cmp = Integer.compare(a.getValue().size(), b.getValue().size());
+								if (cmp != 0)
+									return cmp;
+								return a.getKey().compareTo(b.getKey()); // error?
+							}
+						});
+				for (Map.Entry<StereoGrpKey, List<Integer>> e : entires) {
 					sb.setLength(0);
-					switch (e.getKey()) {
+					StereoGrpKey key = e.getKey();
+					switch (key.group) {
 						case Abs:
-							sb.append("a:");
-							break;
+							// skip Abs this is the default in SMILES but we could be verbose about it
+							continue;
 						case Rel:
-							sb.append("o1:");
+							sb.append("o").append(numRac++).append(":");
 							break;
 						case Rac:
-							sb.append("&1:");
+							sb.append("&").append(numRel++).append(":");
 							break;
 						case Unk:
 							continue;
@@ -266,7 +309,7 @@ class SMILESWriter {
 		if (positionVariationBonds.size() > 0) {
 			extendedSmiles.add("m:" + StringTools.stringListToString(positionVariationBonds, ","));
 		}
-		if (isPolymer) {
+		if (isPolymer && (options & SmilesOptions.CXSMILES_POLYMERS) != 0) {
 			StringBuilder sruContents = new StringBuilder();
 			sruContents.append("Sg:n:");
 			boolean appendDelimiter = false;
@@ -409,6 +452,29 @@ class SMILESWriter {
 			}
 		}
 		return true;
+	}
+
+	private boolean hasStereo(Atom atom) {
+		AtomParity partity = atom.getAtomParity();
+		if (partity == null)
+			return false;
+		if (atom.getStereoGroup() != StereoGroup.Rac)
+			return true;
+		if ((options & SmilesOptions.CXSMILES_ENHANCED_STEREO) != 0)
+			return true;
+		return countStereoGroup(atom) > 1;
+	}
+
+	private int countStereoGroup(Atom atom) {
+		int count = 0;
+		for (Atom a : atom.getFrag().getAtomList()) {
+			if (a.getAtomParity() == null)
+				continue;
+			if (a.getAtomParity().getStereoGroup().equals(atom.getAtomParity().getStereoGroup()) &&
+					a.getAtomParity().getStereoGroupNum() == atom.getAtomParity().getStereoGroupNum())
+				count++;
+		}
+		return count;
 	}
 
 	/**
@@ -651,10 +717,9 @@ class SMILESWriter {
 				atomSmiles.append(chemEl.toString());
 			}
 		}
-		if (atom.getAtomParity() != null){
-			if (atom.getStereoGroup() != StereoGroup.Rac || outputExtendedSmiles)
-				atomSmiles.append(atomParityToSmiles(atom, depth, bondtaken));
-		}
+		if (hasStereo(atom))
+			atomSmiles.append(atomParityToSmiles(atom, depth, bondtaken));
+
 		if (hydrogenCount != 0 && needsSquareBrackets && chemEl != ChemEl.H){
 			atomSmiles.append('H');
 			if (hydrogenCount != 1){
@@ -709,8 +774,7 @@ class SMILESWriter {
 		if (atom.getIsotope() != null){
 			return true;
 		}
-		if (atom.getAtomParity() != null &&
-				(atom.getStereoGroup() != StereoGroup.Rac || outputExtendedSmiles)) {
+		if (hasStereo(atom)) {
 			return true;
 		}
 
@@ -839,5 +903,47 @@ class SMILESWriter {
 			}
 		}
 		return bondSmiles;
+	}
+
+	private static final class StereoGrpKey implements Comparable<StereoGrpKey> {
+		private final StereoGroup group;
+		private final int number;
+
+		public StereoGrpKey(StereoGroup group, int number) {
+			this.group = group;
+			this.number = number;
+		}
+
+		public StereoGrpKey(AtomParity parity) {
+			this(parity.getStereoGroup(), parity.getStereoGroupNum());
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o) return true;
+			if (o == null || getClass() != o.getClass()) return false;
+			StereoGrpKey that = (StereoGrpKey) o;
+			return number == that.number && group == that.group;
+		}
+
+		@Override
+		public int hashCode() {
+			return Objects.hash(group, number);
+		}
+
+		public int compareTo(StereoGrpKey that) {
+			int cmp = this.group.compareTo(that.group);
+			if (cmp != 0)
+				return cmp;
+			return Integer.compare(this.number, that.number);
+		}
+
+		@Override
+		public String toString() {
+			return "StereoGrpKey{" +
+					"group=" + group +
+					", number=" + number +
+					'}';
+		}
 	}
 }

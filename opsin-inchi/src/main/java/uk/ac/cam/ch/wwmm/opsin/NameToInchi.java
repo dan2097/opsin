@@ -3,7 +3,10 @@ package uk.ac.cam.ch.wwmm.opsin;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
+import java.util.TreeMap;
 
 import org.apache.log4j.Logger;
 
@@ -163,21 +166,25 @@ public class NameToInchi {
 
 		for (Atom atom : atomList) {//add atomParities
 			AtomParity atomParity =atom.getAtomParity();
-        	if (atomParity != null && atomParity.getStereoGroup() != StereoGroup.Rac){
-        		Atom[] atomRefs4 = atomParity.getAtomRefs4();
-				int[] atomRefs4AsInt = new int[4];
-				for (int i = 0; i < atomRefs4.length; i++) {
-					atomRefs4AsInt[i] = atomRefs4[i].getID();
-				}
-				INCHI_PARITY parity =INCHI_PARITY.UNKNOWN;
-				if (atomParity.getParity() > 0){
-					parity =INCHI_PARITY.EVEN;
-				}
-				else if (atomParity.getParity() < 0){
-					parity =INCHI_PARITY.ODD;
-				}
-				input.addStereo0D(JniInchiStereo0D.createNewTetrahedralStereo0D(opsinIdAtomMap.get(atom.getID()), opsinIdAtomMap.get(atomRefs4AsInt[0]), opsinIdAtomMap.get(atomRefs4AsInt[1]), opsinIdAtomMap.get(atomRefs4AsInt[2]), opsinIdAtomMap.get(atomRefs4AsInt[3]), parity));
+			if (atomParity == null)
+				continue;
+        	if (atomParity.getStereoGroup() == StereoGroup.Rac &&
+					countStereoGroup(atom) == 1)
+        		continue;
+			Atom[] atomRefs4 = atomParity.getAtomRefs4();
+			int[] atomRefs4AsInt = new int[4];
+			for (int i = 0; i < atomRefs4.length; i++) {
+				atomRefs4AsInt[i] = atomRefs4[i].getID();
 			}
+			INCHI_PARITY parity =INCHI_PARITY.UNKNOWN;
+			if (atomParity.getParity() > 0){
+				parity =INCHI_PARITY.EVEN;
+			}
+			else if (atomParity.getParity() < 0){
+				parity =INCHI_PARITY.ODD;
+			}
+			input.addStereo0D(JniInchiStereo0D.createNewTetrahedralStereo0D(opsinIdAtomMap.get(atom.getID()), opsinIdAtomMap.get(atomRefs4AsInt[0]), opsinIdAtomMap.get(atomRefs4AsInt[1]), opsinIdAtomMap.get(atomRefs4AsInt[2]), opsinIdAtomMap.get(atomRefs4AsInt[3]), parity));
+
         }
 
 		for (Bond bond : bondList) {//add bondStereos
@@ -211,5 +218,17 @@ public class NameToInchi {
     		return null;
     	}
     	return output.getInchi();
+	}
+
+	private static int countStereoGroup(Atom atom) {
+		int count = 0;
+		for (Atom a : atom.getFrag().getAtomList()) {
+			if (a.getAtomParity() == null)
+				continue;
+			if (a.getAtomParity().getStereoGroup().equals(atom.getAtomParity().getStereoGroup()) &&
+					a.getAtomParity().getStereoGroupNum() == atom.getAtomParity().getStereoGroupNum())
+				count++;
+		}
+		return count;
 	}
 }

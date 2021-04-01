@@ -3,6 +3,9 @@ package uk.ac.cam.ch.wwmm.opsin;
 import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.TreeMap;
 
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
@@ -135,8 +138,13 @@ class CMLWriter {
 			}
 		}
 		AtomParity atomParity = atom.getAtomParity();
-		if(atomParity != null && atomParity.getStereoGroup() != StereoGroup.Rac){
-			writeAtomParity(atomParity);
+		if(atomParity != null) {
+			if (atomParity.getStereoGroup() != StereoGroup.Rac){
+				writeAtomParity(atomParity);
+			} else {
+				if (countStereoGroup(atom) > 1)
+					writeAtomParity(atomParity);
+			}
 		}
 		for(String locant : atom.getLocants()) {
 			writer.writeStartElement("label");
@@ -145,6 +153,18 @@ class CMLWriter {
 			writer.writeEndElement();
 		}
 		writer.writeEndElement();
+	}
+
+	private int countStereoGroup(Atom atom) {
+		int count = 0;
+		for (Atom a : atom.getFrag().getAtomList()) {
+			if (a.getAtomParity() == null)
+				continue;
+			if (a.getAtomParity().getStereoGroup().equals(atom.getAtomParity().getStereoGroup()) &&
+				a.getAtomParity().getStereoGroupNum() == atom.getAtomParity().getStereoGroupNum())
+				count++;
+		}
+		return count;
 	}
 
 	private void writeAtomParity(AtomParity atomParity) throws XMLStreamException {

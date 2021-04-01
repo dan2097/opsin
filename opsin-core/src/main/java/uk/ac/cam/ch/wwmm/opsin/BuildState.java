@@ -18,6 +18,9 @@ class BuildState {
 	final FragmentManager fragManager;
 	final HashMap<Element, List<Fragment>> xmlSuffixMap;
 	final NameToStructureConfig n2sConfig;
+	// counter is used for DL- racemic stereochemistry in oligomers, we place each one in a separate racemic group,
+	// there is implicitly one group in-case the input has a combination of (RS)- and then DL-
+	int numRacGrps = 1;
 	private final List<OpsinWarning> warnings = new ArrayList<OpsinWarning>();
 	
 	WordRule currentWordRule = null;

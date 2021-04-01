@@ -16,7 +16,8 @@ class AtomParity {
 	static final Atom deoxyHydrogen = new Atom(ChemEl.H);
 	private Atom[] atomRefs4;
 	private int parity;
-	private StereoGroup stereoGroup = StereoGroup.Unk;
+	private StereoGroup stereoGroup = StereoGroup.Abs;
+	private int stereoGroupNum = 1;
 	
 	/**
 	 * Create an atomParity from an array of 4 atoms and the parity of the chiral determinant
@@ -44,11 +45,20 @@ class AtomParity {
 		this.parity = parity;
 	}
 
-	public void setStereoGroup(StereoGroup stroGrp) {
+	public void setStereoGroup(StereoGroup stroGrp, int num) {
 		this.stereoGroup = stroGrp;
+		this.stereoGroupNum = num;
+	}
+
+	public void setStereoGroup(StereoGroup stroGrp) {
+		setStereoGroup(stroGrp, 1);
 	}
 
 	public StereoGroup getStereoGroup() {
 		return this.stereoGroup;
+	}
+
+	public int getStereoGroupNum() {
+		return this.stereoGroupNum;
 	}
 }

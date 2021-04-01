@@ -141,9 +141,31 @@ public class OpsinResult {
 	 * @return SMILES as a String
 	 */
 	public String getSmiles() {
+		return getSmiles(SmilesOptions.DEFAULT);
+	}
+
+	/**
+	 * Generates the SMILES corresponding to the molecule described by the name
+	 * If name generation failed i.e. the OPSIN_RESULT_STATUS is FAILURE then null is returned.
+	 * <br>
+	 * The <code>options</code> parameter is used to control the output by a set of binary flags. This is
+	 * primarily used to control the output layers in ChemAxon Extended SMILES (CXSMILES).
+	 * <pre>
+	 * // only the include the enhanced stereo layers
+	 * result.getSmiles(SmilesOptions.CXSMILES_ENHANCED_STEREO);
+	 * // only the include the enhanced stereo and polymer layers
+	 * result.getSmiles(SmilesOptions.CXSMILES_ENHANCED_STEREO +
+	 *                  SmilesOptions.CXSMILES_POLYMERS);
+	 * </pre>
+	 *
+	 * @param options binary flags of {@link SmilesOptions} (default: {@link SmilesOptions#DEFAULT}))
+	 * @return SMILES as a String
+	 * @see SmilesOptions
+	 */
+	public String getSmiles(int options) {
 		if (structure != null){
 			try{
-				return SMILESWriter.generateSmiles(structure);
+				return SMILESWriter.generateSmiles(structure, options);
 			}
 			catch (Exception e) {
 				LOG.debug("SMILES generation failed", e);
@@ -151,6 +173,7 @@ public class OpsinResult {
 		}
 		return null;
 	}
+
 	
 	/**
 	 * Experimental function that generates the extended SMILES corresponding to the molecule described by the name
@@ -161,7 +184,7 @@ public class OpsinResult {
 	public String getExtendedSmiles() {
 		if (structure != null){
 			try{
-				return SMILESWriter.generateExtendedSmiles(structure);
+				return SMILESWriter.generateSmiles(structure, SmilesOptions.CXSMILES);
 			}
 			catch (Exception e) {
 				LOG.debug("Extended SMILES generation failed", e);

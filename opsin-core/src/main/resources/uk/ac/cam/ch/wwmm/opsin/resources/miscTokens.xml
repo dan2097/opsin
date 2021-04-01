@@ -36,6 +36,10 @@
 	<tokenList tagname="stereoChemistry" type="RorS" symbol="ā">
 		<token value="R">r</token>
 		<!--s has locant ambiguity-->
+		<token value="R" stereoGroup="Rel">r or s</token>
+		<token value="S" stereoGroup="Rel">s or r</token>
+		<token value="R" stereoGroup="Rac">r and s</token>
+		<token value="S" stereoGroup="Rac">s and r</token>
 	</tokenList>
 
 	<tokenList tagname="ine" symbol="«"><!--used for amino acids-->
