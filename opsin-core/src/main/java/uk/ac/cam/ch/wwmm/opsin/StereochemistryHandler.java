@@ -283,14 +283,6 @@ class StereochemistryHandler {
 		}
 	}
 
-	private int hcount(Atom atom) {
-		int hcnt = 0;
-		for (Bond bond : atom.getBonds())
-			if (bond.getOtherAtom(atom).getElement() == ChemEl.H)
-				hcnt++;
-		return hcnt;
-	}
-
 	/**
 	 * Handles R/S stereochemistry. r/s is not currently handled
 	 * @param stereoChemistryEl

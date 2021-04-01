@@ -15,7 +15,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.util.TreeMap;
 
 import uk.ac.cam.ch.wwmm.opsin.Bond.SMILES_BOND_DIRECTION;
 import uk.ac.cam.ch.wwmm.opsin.BondStereo.BondStereoValue;

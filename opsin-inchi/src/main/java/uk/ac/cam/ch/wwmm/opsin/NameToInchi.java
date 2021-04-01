@@ -3,14 +3,10 @@ package uk.ac.cam.ch.wwmm.opsin;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
-import java.util.TreeMap;
 
 import org.apache.log4j.Logger;
 
-import uk.ac.cam.ch.wwmm.opsin.BondStereo.BondStereoValue;
 import net.sf.jniinchi.INCHI_BOND_TYPE;
 import net.sf.jniinchi.INCHI_OPTION;
 import net.sf.jniinchi.INCHI_PARITY;
@@ -23,6 +19,7 @@ import net.sf.jniinchi.JniInchiOutput;
 import net.sf.jniinchi.JniInchiOutputKey;
 import net.sf.jniinchi.JniInchiStereo0D;
 import net.sf.jniinchi.JniInchiWrapper;
+import uk.ac.cam.ch.wwmm.opsin.BondStereo.BondStereoValue;
 
 /**
  * Allows the conversion of OPSIN's output into (Std)InChIs or StdInChIKeys

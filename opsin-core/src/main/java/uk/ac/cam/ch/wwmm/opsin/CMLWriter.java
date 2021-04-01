@@ -3,9 +3,6 @@ package uk.ac.cam.ch.wwmm.opsin;
 import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.TreeMap;
 
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
