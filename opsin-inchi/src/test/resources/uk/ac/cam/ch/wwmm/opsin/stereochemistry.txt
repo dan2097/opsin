@@ -6,3 +6,4 @@ D-2-Aminobutyric acid	InChI=1S/C4H9NO2/c1-2-3(5)4(6)7/h3H,2,5H2,1H3,(H,6,7)/t3-/
 L-5-oxopyrrolidine-2-carboxylic acid	InChI=1S/C5H7NO3/c7-4-2-1-3(6-4)5(8)9/h3H,1-2H2,(H,6,7)(H,8,9)/t3-/m0/s1
 L(-)-Tryptophan	InChI=1S/C11H12N2O2/c12-9(11(14)15)5-7-6-13-10-4-2-1-3-8(7)10/h1-4,6,9,13H,5,12H2,(H,14,15)/t9-/m0/s1
 1,2-Bis((S)-(2-methoxyphenyl)(phenyl)phosphino)ethane	InChI=1S/C28H28O2P2/c1-29-25-17-9-11-19-27(25)31(23-13-5-3-6-14-23)21-22-32(24-15-7-4-8-16-24)28-20-12-10-18-26(28)30-2/h3-20H,21-22H2,1-2H3/t31-,32-/m0/s1
+(2R,4S,4aS)-rel-11-fluoro-2,4-dimethyl-8-(methylsulfinyl)-1,2,4,4a-tetrahydro-2′H,6H-spiro[1,4-oxazino[4,3-a][1,2]oxazolo[4,5-g]quinoline-5,5′-pyrimidine]-2′,4′,6′(1′H,3′H)-trione	InChI=1S/C19H19FN4O6S/c1-7-6-24-12-9(4-10-13(11(12)20)30-23-15(10)31(3)28)5-19(14(24)8(2)29-7)16(25)21-18(27)22-17(19)26/h4,7-8,14H,5-6H2,1-3H3,(H2,21,22,25,26,27)/t7-,8+,14-,31?/m1/s1

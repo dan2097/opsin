@@ -454,14 +454,21 @@ class SMILESWriter {
 	}
 
 	private boolean hasStereo(Atom atom) {
-		AtomParity partity = atom.getAtomParity();
-		if (partity == null)
+		AtomParity parity = atom.getAtomParity();
+		if (parity == null) {
 			return false;
-		if (atom.getStereoGroup() != StereoGroup.Rac)
+		}
+		if ((options & SmilesOptions.CXSMILES_ENHANCED_STEREO) != 0) {
 			return true;
-		if ((options & SmilesOptions.CXSMILES_ENHANCED_STEREO) != 0)
-			return true;
-		return countStereoGroup(atom) > 1;
+		}
+		//When not outputting extended SMILES, treat rac/rel like undefined, when a stereogroup only has a single atom
+		//e.g. rac-(R)-chlorofluorobromomethane
+		StereoGroup stereoGroupType = parity.getStereoGroup();
+    	if ((stereoGroupType == StereoGroup.Rac || stereoGroupType == StereoGroup.Rel) &&
+				countStereoGroup(atom) == 1) {
+    		return false;
+    	}
+		return true;
 	}
 
 	private int countStereoGroup(Atom atom) {

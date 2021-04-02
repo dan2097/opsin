@@ -136,12 +136,11 @@ class CMLWriter {
 		}
 		AtomParity atomParity = atom.getAtomParity();
 		if(atomParity != null) {
-			if (atomParity.getStereoGroup() != StereoGroup.Rac){
-				writeAtomParity(atomParity);
-			} else {
-				if (countStereoGroup(atom) > 1)
-					writeAtomParity(atomParity);
-			}
+			StereoGroup stereoGroupType = atomParity.getStereoGroup();
+        	if (!((stereoGroupType == StereoGroup.Rac || stereoGroupType == StereoGroup.Rel) &&
+					countStereoGroup(atom) == 1)) {
+    			writeAtomParity(atomParity);
+        	}
 		}
 		for(String locant : atom.getLocants()) {
 			writer.writeStartElement("label");

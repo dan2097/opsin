@@ -162,12 +162,15 @@ public class NameToInchi {
 		}
 
 		for (Atom atom : atomList) {//add atomParities
-			AtomParity atomParity =atom.getAtomParity();
-			if (atomParity == null)
+			AtomParity atomParity = atom.getAtomParity();
+			if (atomParity == null) {
 				continue;
-        	if (atomParity.getStereoGroup() == StereoGroup.Rac &&
-					countStereoGroup(atom) == 1)
+			}
+			StereoGroup stereoGroupType = atomParity.getStereoGroup();
+        	if ((stereoGroupType == StereoGroup.Rac || stereoGroupType == StereoGroup.Rel) &&
+					countStereoGroup(atom) == 1) {
         		continue;
+        	}
 			Atom[] atomRefs4 = atomParity.getAtomRefs4();
 			int[] atomRefs4AsInt = new int[4];
 			for (int i = 0; i < atomRefs4.length; i++) {
