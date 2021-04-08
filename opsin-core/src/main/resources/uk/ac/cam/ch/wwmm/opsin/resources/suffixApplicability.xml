@@ -120,6 +120,8 @@ The value of the suffix elements corresponds to the value attribute of the suffi
 		<suffix value="imido">cyclicimido</suffix>
 		<suffix value="imidylium">cyclicimidylium</suffix>
 		<suffix value="ium">ium</suffix>
+		<suffix value="nitrile">nitrile</suffix>
+		<suffix value="nitrilium">nitrilium</suffix>
 		<suffix value="ol" subType="endInIne">ol</suffix>
 		<suffix value="ol" subType="endInAn">ol</suffix>
 		<suffix value="olate" subType="endInIne">olate</suffix>
@@ -127,7 +129,6 @@ The value of the suffix elements corresponds to the value attribute of the suffi
 		<suffix value="oyl">oyl</suffix>
 		<suffix value="yl">oyl</suffix>
 		<suffix value="oMeaningYl">yl</suffix><!--e.g. glycino-->
-		<suffix value="nitrile">nitrile</suffix>
 		<suffix value="locantedAminoAcidOrCarbohydrateYl">yl</suffix><!--locanted yl means something different to unlocanted yl!-->
 		<suffix value="locantedAminoAcidOrCarbohydrateYlidene">ylidene</suffix>
 	</groupType>
