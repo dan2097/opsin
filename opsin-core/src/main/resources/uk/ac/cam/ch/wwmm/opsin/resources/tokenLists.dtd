@@ -38,6 +38,7 @@ ignoreWhenWritingXML == Tells the parser not to form an XML element out of these
         suffixAppliesToByDefault CDATA #IMPLIED
         usableAsAJoiner CDATA #IMPLIED
         stereoGroup CDATA #IMPLIED
+        onlyReplace CDATA #IMPLIED
 >
 <!--
   (the #PCDATA inside the tag) = the string to match
@@ -64,4 +65,6 @@ ignoreWhenWritingXML == Tells the parser not to form an XML element out of these
   suffixAppliesTo == comma separated IDs indicating where the suffix following a group should be applied. Currently used to direct the formation of trivial di-acids. IDs are relative to this particular fragment first atom = 1)
   suffixAppliesToByDefault == same as suffixAppliesTo but can be overridden by given locants
   usableAsAJoiner == yes or absent. Can the substituent be implicitly bracketed to a previous substitutent e.g. methylaminobenzene becomes (methylamino)benzene as amino has this attribute
+  stereoGroup == stereo group racemic/relative indication
+  onlyReplace == Hetero atom replacement restriction (deaza)
   -->

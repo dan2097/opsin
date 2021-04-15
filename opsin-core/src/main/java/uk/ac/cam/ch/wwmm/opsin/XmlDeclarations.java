@@ -192,6 +192,9 @@ class XmlDeclarations {
 	/**The stereo group (absolute, racemic, relative)  */
 	static final String STEREOGROUP_ATR ="stereoGroup";
 
+	/**Restriction on some locant/group */
+	static final String ONLY_REPLACE_ATR ="onlyReplace";
+
 	/**The type of the token. Possible values are enumerated with strings ending in _TYPE_VAL */
 	static final String TYPE_ATR = "type";
 

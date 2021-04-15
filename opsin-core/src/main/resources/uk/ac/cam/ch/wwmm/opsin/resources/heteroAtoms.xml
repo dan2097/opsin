@@ -18,6 +18,7 @@
 	<token value="[SbH3]">stiba</token>
 	<token value="[BiH3]">bisma</token>
 	<token value="C">carba</token>
+	<token value="C" onlyReplace="N">deaza</token>
 	<token value="[SiH4]">sila</token>
 	<token value="[GeH4]">germa</token>
 	<token value="[SnH4]">stanna</token>

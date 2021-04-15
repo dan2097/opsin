@@ -642,7 +642,16 @@ class StructureBuildingMethods {
 			String locant = heteroatomEl.getAttributeValue(LOCANT_ATR);
 			if(locant != null) {
 				Atom heteroatom = state.fragManager.getHeteroatom(heteroatomEl.getAttributeValue(VALUE_ATR));
-				Atom atomToBeReplaced =thisFrag.getAtomByLocantOrThrow(locant);
+				Atom atomToBeReplaced = thisFrag.getAtomByLocantOrThrow(locant);
+
+				String restrict = heteroatomEl.getAttributeValue(ONLY_REPLACE_ATR);
+				if (restrict != null) {
+					if (ChemEl.valueOf(restrict) != atomToBeReplaced.getElement()) {
+						throw new StructureBuildingException("The replacement term " + heteroatomEl.getValue() + " was used on an atom that already is not an " + restrict);
+					}
+				}
+
+
 				if (heteroatom.getElement() == atomToBeReplaced.getElement() && heteroatom.getCharge() == atomToBeReplaced.getCharge()){
 					throw new StructureBuildingException("The replacement term " +heteroatomEl.getValue() +" was used on an atom that already is a " + heteroatom.getElement());
 				}
