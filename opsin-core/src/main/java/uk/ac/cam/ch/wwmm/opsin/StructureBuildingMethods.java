@@ -647,7 +647,7 @@ class StructureBuildingMethods {
 				String restrict = heteroatomEl.getAttributeValue(ONLY_REPLACE_ATR);
 				if (restrict != null) {
 					if (ChemEl.valueOf(restrict) != atomToBeReplaced.getElement()) {
-						throw new StructureBuildingException("The replacement term " + heteroatomEl.getValue() + " was used on an atom that already is not an " + restrict);
+						throw new StructureBuildingException("The replacement term " + heteroatomEl.getValue() + " was used on an atom that is not an " + restrict);
 					}
 				}
 
