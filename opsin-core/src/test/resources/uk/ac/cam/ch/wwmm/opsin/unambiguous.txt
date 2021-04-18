@@ -61,3 +61,5 @@ methane-d
 2-chloro-6-(methyl-d3)-benzene-d
 tridemethylcaffeine
 deoxycytidine
+deazamorpholine
+pentadeazaguanine

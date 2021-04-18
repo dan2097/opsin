@@ -398,6 +398,9 @@ class XmlDeclarations {
 
 	/**A multiplier for groups of terms e.g. bis*/
 	static final String GROUP_TYPE_VAL ="group";
+	
+	/**A subtractive prefix that removes a heteroatom i.e. replaces it with carbon */
+	static final String HETEROATOMREMOVAL_TYPE_VAL = "heteratomRemoval";
 
 	/**An implicit bracket. Implicit brackets are added where a bracket is needed to give the intended meaning*/
 	static final String IMPLICIT_TYPE_VAL ="implicit";

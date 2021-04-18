@@ -503,92 +503,108 @@ class StructureBuildingMethods {
 		/*
 		 * Add locanted functionality
 		 */
-
-		List<Atom> atomsToDehydro = new ArrayList<Atom>();
-		//locanted substitution can be assumed to be irrelevant to subtractive operations hence perform all subtractive operations now
-		Map<ChemEl, Integer> unlocantedSubtractivePrefixes = new HashMap<ChemEl, Integer>();
-
-		for(int i = subtractivePrefixElements.size() -1; i >= 0; i--) {
-			Element subtractivePrefix = subtractivePrefixElements.get(i);
-			String type = subtractivePrefix.getAttributeValue(TYPE_ATR);
-			if (type.equals(DEOXY_TYPE_VAL)){
-				String locant = subtractivePrefix.getAttributeValue(LOCANT_ATR);
-				ChemEl chemEl = ChemEl.valueOf(subtractivePrefix.getAttributeValue(VALUE_ATR));
-				if (locant == null) {
-					Integer count = unlocantedSubtractivePrefixes.get(chemEl);
-					unlocantedSubtractivePrefixes.put(chemEl, count != null ? count + 1 : 1);
-				}
-				else {
-					applySubtractivePrefix(state, thisFrag, chemEl, locant);
-				}
-			}
-			else if (type.equals(ANHYDRO_TYPE_VAL)){
-				applyAnhydroPrefix(state, thisFrag, subtractivePrefix);
-			}
-			else if (type.equals(DEHYDRO_TYPE_VAL)){
-				String locant = subtractivePrefix.getAttributeValue(LOCANT_ATR);
-				if(locant != null) {
-					atomsToDehydro.add(thisFrag.getAtomByLocantOrThrow(locant));
-				}
-				else{
-					throw new StructureBuildingException("locants are assumed to be required for the use of dehydro to be unambiguous");
-				}
-			}
-			else{
-				throw new StructureBuildingException("OPSIN bug: Unexpected subtractive prefix type: " + type);
-			}
-			subtractivePrefix.detach();
-		}
-		for (Entry<ChemEl, Integer> entry : unlocantedSubtractivePrefixes.entrySet()) {
-			applyUnlocantedSubtractivePrefixes(state, thisFrag, entry.getKey(), entry.getValue());
-		}
 		
-		if (atomsToDehydro.size() > 0){
-			boolean isCarbohydrateDehydro = false;
-			if (group.getAttributeValue(TYPE_ATR).equals(CARBOHYDRATE_TYPE_VAL)){
-				Set<Atom> uniquifiedDehydroAtoms = new HashSet<Atom>(atomsToDehydro);
-				if (uniquifiedDehydroAtoms.size()==atomsToDehydro.size()){//need to rule out case where dehydro is being used to form triple bonds on carbohydrates
-					isCarbohydrateDehydro = true;
-				}
-			}
-			if (isCarbohydrateDehydro){
-				for (Atom a : atomsToDehydro) {
-					List<Atom> hydroxyAtoms = FragmentTools.findHydroxyLikeTerminalAtoms(a.getAtomNeighbours(), ChemEl.O);
-					if (hydroxyAtoms.size() > 0){
-						hydroxyAtoms.get(0).getFirstBond().setOrder(2);
+		if (!subtractivePrefixElements.isEmpty()) {
+			List<Atom> atomsToDehydro = new ArrayList<Atom>();
+			//locanted substitution can be assumed to be irrelevant to subtractive operations hence perform all subtractive operations now
+			Map<ChemEl, Integer> unlocantedSubtractivePrefixes = new HashMap<ChemEl, Integer>();
+			Map<ChemEl, Integer> unlocantedHeteroatomRemovalPrefixes = new HashMap<ChemEl, Integer>();
+	
+			for(int i = subtractivePrefixElements.size() -1; i >= 0; i--) {
+				Element subtractivePrefix = subtractivePrefixElements.get(i);
+				String type = subtractivePrefix.getAttributeValue(TYPE_ATR);
+				String locant = subtractivePrefix.getAttributeValue(LOCANT_ATR);
+				switch (type) {
+				case DEOXY_TYPE_VAL:
+					ChemEl atomToRemove = ChemEl.valueOf(subtractivePrefix.getAttributeValue(VALUE_ATR));
+					if (locant == null) {
+						Integer count = unlocantedSubtractivePrefixes.get(atomToRemove);
+						unlocantedSubtractivePrefixes.put(atomToRemove, count != null ? count + 1 : 1);
+					}
+					else {
+						applySubtractivePrefix(state, thisFrag, atomToRemove, locant);
+					}
+					break;
+				case ANHYDRO_TYPE_VAL:
+					applyAnhydroPrefix(state, thisFrag, subtractivePrefix);
+					break;
+				case DEHYDRO_TYPE_VAL:
+					if(locant != null) {
+						atomsToDehydro.add(thisFrag.getAtomByLocantOrThrow(locant));
 					}
 					else{
-						throw new StructureBuildingException("atom with locant " + a.getFirstLocant() + " did not have a hydroxy group to convert to a ketose");
+						throw new StructureBuildingException("locants are assumed to be required for the use of dehydro to be unambiguous");
 					}
+					break;
+				case HETEROATOMREMOVAL_TYPE_VAL:
+					ChemEl heteroatom = ChemEl.valueOf(subtractivePrefix.getAttributeValue(VALUE_ATR));
+					if (locant == null) {
+						Integer count = unlocantedHeteroatomRemovalPrefixes.get(heteroatom);
+						unlocantedHeteroatomRemovalPrefixes.put(heteroatom, count != null ? count + 1 : 1);
+					}
+					else {
+						applyHeteroatomRemovalPrefix(state, thisFrag, heteroatom, locant);
+					}
+					break;
+				default:
+					throw new StructureBuildingException("OPSIN bug: Unexpected subtractive prefix type: " + type);
 				}
+				subtractivePrefix.detach();
 			}
-			else{
-				List<Atom> atomsToFormDoubleBonds = new ArrayList<Atom>();
-				List<Atom> atomsToFormTripleBondsBetween = new ArrayList<Atom>();//dehydro on a double/aromatic bond forms a triple bond
-				
-				for (Atom a : atomsToDehydro) {
-					if (!a.hasSpareValency()){
-						a.setSpareValency(true);
-						atomsToFormDoubleBonds.add(a);
-					}
-					else{
-						atomsToFormTripleBondsBetween.add(a);
+			for (Entry<ChemEl, Integer> entry : unlocantedSubtractivePrefixes.entrySet()) {
+				applyUnlocantedSubtractivePrefixes(state, thisFrag, entry.getKey(), entry.getValue());
+			}
+			for (Entry<ChemEl, Integer> entry : unlocantedHeteroatomRemovalPrefixes.entrySet()) {
+				applyUnlocantedHeteroatomRemovalPrefixes(state, thisFrag, entry.getKey(), entry.getValue());
+			}
+			
+			if (atomsToDehydro.size() > 0){
+				boolean isCarbohydrateDehydro = false;
+				if (group.getAttributeValue(TYPE_ATR).equals(CARBOHYDRATE_TYPE_VAL)){
+					Set<Atom> uniquifiedDehydroAtoms = new HashSet<Atom>(atomsToDehydro);
+					if (uniquifiedDehydroAtoms.size()==atomsToDehydro.size()){//need to rule out case where dehydro is being used to form triple bonds on carbohydrates
+						isCarbohydrateDehydro = true;
 					}
 				}
-				
-				for (Atom atom : atomsToFormDoubleBonds) {//check that all the dehydro-ed atoms are next to another atom with spare valency
-					boolean hasSpareValency =false;
-					for (Atom neighbour : atom.getAtomNeighbours()) {
-						if (neighbour.hasSpareValency()){
-							hasSpareValency = true;
-							break;
+				if (isCarbohydrateDehydro){
+					for (Atom a : atomsToDehydro) {
+						List<Atom> hydroxyAtoms = FragmentTools.findHydroxyLikeTerminalAtoms(a.getAtomNeighbours(), ChemEl.O);
+						if (hydroxyAtoms.size() > 0){
+							hydroxyAtoms.get(0).getFirstBond().setOrder(2);
+						}
+						else{
+							throw new StructureBuildingException("atom with locant " + a.getFirstLocant() + " did not have a hydroxy group to convert to a ketose");
 						}
 					}
-					if (!hasSpareValency){
-						throw new StructureBuildingException("Unexpected use of dehydro; two adjacent atoms were not unsaturated such as to form a double bond");
-					}
 				}
-				addDehydroInducedTripleBonds(atomsToFormTripleBondsBetween);
+				else{
+					List<Atom> atomsToFormDoubleBonds = new ArrayList<Atom>();
+					List<Atom> atomsToFormTripleBondsBetween = new ArrayList<Atom>();//dehydro on a double/aromatic bond forms a triple bond
+					
+					for (Atom a : atomsToDehydro) {
+						if (!a.hasSpareValency()){
+							a.setSpareValency(true);
+							atomsToFormDoubleBonds.add(a);
+						}
+						else{
+							atomsToFormTripleBondsBetween.add(a);
+						}
+					}
+					
+					for (Atom atom : atomsToFormDoubleBonds) {//check that all the dehydro-ed atoms are next to another atom with spare valency
+						boolean hasSpareValency =false;
+						for (Atom neighbour : atom.getAtomNeighbours()) {
+							if (neighbour.hasSpareValency()){
+								hasSpareValency = true;
+								break;
+							}
+						}
+						if (!hasSpareValency){
+							throw new StructureBuildingException("Unexpected use of dehydro; two adjacent atoms were not unsaturated such as to form a double bond");
+						}
+					}
+					addDehydroInducedTripleBonds(atomsToFormTripleBondsBetween);
+				}
 			}
 		}
 		
@@ -793,6 +809,51 @@ class StructureBuildingMethods {
 				}
 				throw new StructureBuildingException("dehydro indicated atom should form a triple bond but no adjacent atoms also had hydrogen removed!");
 			}
+		}
+	}
+	
+	/**
+	 * Replaces the specified heteroatom at the specified locant with carbon
+	 * @param state 
+	 * @param fragment
+	 * @param chemEl
+	 * @param locant A locant
+	 * @throws StructureBuildingException 
+	 */
+	private static void applyHeteroatomRemovalPrefix(BuildState state, Fragment fragment, ChemEl chemEl, String locant) throws StructureBuildingException {
+		Atom atomToChange = fragment.getAtomByLocantOrThrow(locant);
+		if (atomToChange.getElement() != chemEl) {
+			throw new StructureBuildingException("Removal of " + chemEl.toString() + " requested, but the atom at locant " + locant + " is not this element");
+		}
+		atomToChange.setElement(ChemEl.C);
+		atomToChange.removeElementSymbolLocants();
+	}
+	
+	/**
+	 * Replaces the specified number of the specified heteroatoms with carbon
+	 * @param state
+	 * @param fragment
+	 * @param chemEl
+	 * @param count
+	 * @throws StructureBuildingException
+	 */
+	private static void applyUnlocantedHeteroatomRemovalPrefixes(BuildState state, Fragment fragment, ChemEl chemEl, int count) throws StructureBuildingException {
+		List<Atom> applicableAtoms = new ArrayList<>();
+		for (Atom atom : fragment) {
+			if (atom.getElement() == chemEl) {
+				applicableAtoms.add(atom);
+			}
+		}
+		if (applicableAtoms.isEmpty() || applicableAtoms.size() < count) {
+			throw new StructureBuildingException("Unable to find sufficient atoms of element: " + chemEl + " for subtractive nomenclature");
+		}
+		if (AmbiguityChecker.isSubstitutionAmbiguous(applicableAtoms, count)) {
+			state.addIsAmbiguous("Group to remove with subtractive prefix");
+		}
+		for (int i = 0; i < count; i++) {
+			Atom atomToChange = applicableAtoms.get(i);
+			atomToChange.setElement(ChemEl.C);
+			atomToChange.removeElementSymbolLocants();
 		}
 	}
 
