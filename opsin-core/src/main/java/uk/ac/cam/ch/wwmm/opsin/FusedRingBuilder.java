@@ -787,8 +787,16 @@ class FusedRingBuilder {
 	 */
 	private List<Atom> determineAtomsToFuse(Fragment ring, List<String> numericalLocantsOnRing, Integer expectedNumberOfAtomsToBeUsedForFusion) throws StructureBuildingException {
 		List<Atom> parentPeripheralAtomList = getPeripheralAtoms(ring.getAtomList());
-		int indexfirst = parentPeripheralAtomList.indexOf(ring.getAtomByLocantOrThrow(numericalLocantsOnRing.get(0)));
-		int indexfinal = parentPeripheralAtomList.indexOf(ring.getAtomByLocantOrThrow(numericalLocantsOnRing.get(numericalLocantsOnRing.size()-1)));
+		String firstLocant = numericalLocantsOnRing.get(0);
+		String lastLocant = numericalLocantsOnRing.get(numericalLocantsOnRing.size() - 1);
+		int indexfirst = parentPeripheralAtomList.indexOf(ring.getAtomByLocantOrThrow(firstLocant));
+		if (indexfirst == -1) {
+			throw new StructureBuildingException(firstLocant + " refers to an atom that is not a peripheral atom!");
+		}
+		int indexfinal = parentPeripheralAtomList.indexOf(ring.getAtomByLocantOrThrow(lastLocant));
+		if (indexfinal == -1) {
+			throw new StructureBuildingException(lastLocant + " refers to an atom that is not a peripheral atom!");
+		}
 		CyclicAtomList cyclicRingAtomList = new CyclicAtomList(parentPeripheralAtomList, indexfirst);
 		List<Atom> fusionAtoms = null;
 		

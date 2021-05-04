@@ -7,3 +7,4 @@ bicyclo[12.2.2]octadeca-1(16),1(16)-diene
 oxochloride
 oxychloride
 1-deaza-morpholine
+phenaleno[1,9b-c]thiophene
