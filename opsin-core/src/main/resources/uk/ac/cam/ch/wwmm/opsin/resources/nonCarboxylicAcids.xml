@@ -154,6 +154,12 @@ This attribute is required for multi-centre acids. Acids containing OH not direc
 		<token value="S(=O)(=O)([O-])S(=O)[O-]" functionalIDs="4,7">pyrosulfite|pyro-sulfite|pyrosulfit|pyro-sulfit</token><!--oddly doesn't seem to be the same as disulfite-->
 		<token value="S(=O)(=O)([O-])S(=O)(=O)[O-]" functionalIDs="4,8">metabisulfate|metabisulfat</token>
 		<token value="S(=O)(=O)([O-])S(=O)[O-]" functionalIDs="4,7">metabisulfite|metabisulfit</token>
+		<token value="O=P(O)(O)OCC(O)CO" labels="////1///2//3" functionalIDs="3,4">glycero-1-phosphate|glycero-1-phosphat</token>
+		<token value="OCC(OP(=O)(O)O)CO" labels="1///2//////3" functionalIDs="7,8">glycero-2-phosphate|glycero-2-phosphat</token>
+		<token value="OCC(O)COP(=O)(O)O" labels="1///2//3////" functionalIDs="9,10">glycero-3-phosphate|glycero-3-phosphat</token>
+		<token value="O=P(O)(O)OC[C@@H](O)CO" labels="////1///2//3" functionalIDs="3,4">sn-glycero-1-phosphate|sn-glycero-1-phosphat</token>
+		<token value="OC[C@@H](OP(=O)(O)O)CO" labels="1///2//////3" functionalIDs="7,8">sn-glycero-2-phosphate|sn-glycero-2-phosphat</token>
+		<token value="OC[C@@H](O)COP(=O)(O)O" labels="1///2//3////" functionalIDs="9,10">sn-glycero-3-phosphate|sn-glycero-3-phosphat</token>
 		<token value="S(=O)([O-])S(=O)[O-]" labels="1///2//" functionalIDs="3,6">hydrosulfite|hydrosulfit</token>
 		<token value="[O-]SC#N" functionalIDs="1">hypothiocyanate|hypothiocyanat</token><!--misspelling-->
 		<token value="OSC#N" functionalIDs="1">hypothiocyanicacid|hypothiocyanic acid</token><!--misspelling-->

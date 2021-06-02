@@ -438,10 +438,15 @@
 
 	<tokenList tagname="group" type="substituent" subType="phospho" symbol="x">
 		<token value="-P(=O)(O)OP(=O)(O)O">diphospho</token>
+		<token value="-P(=O)(O)OCC(O)CO" labels="///1///2//3">glycero-1-phospho|glycero-1-phosphoryl</token>
+		<token value="OCC(OP(=O)O)CO" labels="1///2/////3" outIDs="5">glycero-2-phospho|glycero-2-phosphoryl</token>
+		<token value="OCC(O)COP(=O)O" labels="1///2//3///" outIDs="7">glycero-3-phospho|glycero-3-phosphoryl</token>
 		<token value="-[P|5](=O)(O)O" usableAsAJoiner="yes">phosphono</token>
 		<token value="-[P|5](=O)([O-])[O-]">phosphonato</token>
 		<token value="-[P|5](=O)=O">phospho</token><!-- NOTE that this is P(=O)(O)O in biochemical nomenclature. This ambiguity is resolved in the ComponentGenerator-->
-		<token value="OC[C@@H](O)COP(=O)O" labels="1///2//3///" outIDs="7">sn-glycero-3-phospho</token>
+		<token value="-P(=O)(O)OC[C@@H](O)CO" labels="///1///2//3">sn-glycero-1-phospho|sn-glycero-1-phosphoryl</token>
+		<token value="OC[C@@H](OP(=O)O)CO" labels="1///2/////3" outIDs="5">sn-glycero-2-phospho|sn-glycero-2-phosphoryl</token>
+		<token value="OC[C@@H](O)COP(=O)O" labels="1///2//3///" outIDs="7">sn-glycero-3-phospho|sn-glycero-3-phosphoryl</token>
 		<token value="-P(=O)(O)OP(=O)(O)OP(=O)(O)O">triphospho</token>
 	</tokenList>
 

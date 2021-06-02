@@ -1831,7 +1831,7 @@ class StructureBuilder {
 			deprotonateAcidIfSaltWithMetal(molecule);
 		}
 		int overallCharge = state.fragManager.getOverallCharge();
-		if (overallCharge!=0 && wordRules.size() >1){//a net charge is present! Could just mean the counterion has not been specified though
+		if (overallCharge != 0){//a net charge is present! Could just mean the counterion has not been specified though
 			balanceChargeIfPossible(molecule, overallCharge, explicitStoichiometryPresent);
 		}
 		if (wordRulesWithFractionalMultipliers.size() > 0 && !chargedFractionalGroup) {
@@ -1911,6 +1911,12 @@ class StructureBuilder {
 	 */
 	private void balanceChargeIfPossible(Element molecule, int overallCharge, boolean explicitStoichiometryPresent) throws StructureBuildingException {
 		List<Element> wordRules = molecule.getChildElements(WORDRULE_ATR);
+		if (wordRules.size() == 1) {//single molecule
+			if (overallCharge == 1) {
+				phosphoZwitterionSpecialCase(wordRules.get(0));
+			}
+			return;
+		}
 
 		List<Element> positivelyChargedComponents = new ArrayList<Element>();
 		List<Element> negativelyChargedComponents = new ArrayList<Element>();
@@ -2058,6 +2064,27 @@ class StructureBuilder {
 					otherAtom2.setCharge(0);
 					state.fragManager.createBond(centralAtom, otherAtom1, 1);
 					state.fragManager.createBond(centralAtom, otherAtom2, 1);
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+
+	private boolean phosphoZwitterionSpecialCase(Element wordRule) {
+		List<Element> groups = OpsinTools.getDescendantElementsWithTagName(wordRule, GROUP_EL);
+		List<Fragment> phosphoFrags = new ArrayList<>();
+		for (Element group : groups) {
+			if (PHOSPHO_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR)) && group.getValue().endsWith("phospho")) {
+				phosphoFrags.add(group.getFrag());
+			}
+		}
+		if (phosphoFrags.size() == 1) {
+			List<Atom> matches = FragmentTools.findHydroxyLikeTerminalAtoms(phosphoFrags.get(0).getAtomList(), ChemEl.O);
+			for (Atom atom : matches) {
+				if (atom.getFirstBond().getOtherAtom(atom).getElement() == ChemEl.P) {
+					atom.addChargeAndProtons(-1, -1);
 					return true;
 				}
 			}
