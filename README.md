@@ -180,4 +180,4 @@ YourKit, LLC is the creator of [YourKit Java Profiler](https://www.yourkit.com/j
 Good Luck and let us know if you have problems, comments or suggestions!
 Bugs may be reported on the project's [issue tracker](https://github.com/dan2097/opsin/issues).
 
-[![Build Status](https://github.com/dan2097/opsin/workflows/Java%20CI%20with%20Maven/badge.svg)
+![Build Status](https://github.com/dan2097/opsin/workflows/Java%20CI%20with%20Maven/badge.svg)
