@@ -24,7 +24,7 @@ import static uk.ac.cam.ch.wwmm.opsin.StructureBuildingMethods.*;
  */
 class StructureBuilder {
 	private final BuildState state;
-	private final List<Atom> polymerAttachmentPoints = new ArrayList<Atom>();//rGroups need to be represented as normal atoms for the purpose of working out stereochemistry. They will be converted to a suitable representation later
+	private final List<Atom> polymerAttachmentPoints = new ArrayList<>();//rGroups need to be represented as normal atoms for the purpose of working out stereochemistry. They will be converted to a suitable representation later
 	
 	private int currentTopLevelWordRuleCount;
 	
@@ -187,8 +187,8 @@ class StructureBuilder {
 	private void buildEster(List<Element> words) throws StructureBuildingException {
 		boolean inSubstituents = true;
 		BuildResults substituentsBr = new BuildResults();
-		List<BuildResults> ateGroups = new ArrayList<BuildResults>();
-		Map<BuildResults, String> buildResultsToLocant = new HashMap<BuildResults, String>();//typically locant will be null
+		List<BuildResults> ateGroups = new ArrayList<>();
+		Map<BuildResults, String> buildResultsToLocant = new HashMap<>();//typically locant will be null
 		
 		for (Element word : words) {
 			resolveWordOrBracket(state, word);
@@ -378,7 +378,7 @@ class StructureBuilder {
 		}
 		BuildResults substituentBR = new BuildResults(words.get(0));
 
-		List<Fragment> functionalGroupFragments = new ArrayList<Fragment>();
+		List<Fragment> functionalGroupFragments = new ArrayList<>();
 		for (int i=1; i<words.size(); i++ ) {
 			Element functionalGroupWord =words.get(i);
 			List<Element> functionalGroups = OpsinTools.getDescendantElementsWithTagName(functionalGroupWord, FUNCTIONALGROUP_EL);
@@ -488,8 +488,8 @@ class StructureBuilder {
 	 */
 	private void buildOxide(List<Element> words) throws StructureBuildingException {
 		resolveWordOrBracket(state, words.get(0));//the group
-		List<Fragment> oxideFragments = new ArrayList<Fragment>();
-		List<String> locantsForOxide =new ArrayList<String>();//often not specified
+		List<Fragment> oxideFragments = new ArrayList<>();
+		List<String> locantsForOxide =new ArrayList<>();//often not specified
 		if (!words.get(1).getAttributeValue(TYPE_ATR).equals(WordType.functionalTerm.toString())){
 			throw new StructureBuildingException("Oxide functional term not found where expected!");
 		}
@@ -670,8 +670,8 @@ class StructureBuilder {
 		if (!WordType.full.toString().equals(words.get(0).getAttributeValue(TYPE_ATR))){
 			throw new StructureBuildingException("OPSIN bug: Wrong word type encountered when applying carbonylDerivative wordRule");
 		}
-		List<Fragment> replacementFragments = new ArrayList<Fragment>();
-		List<String> locantForFunctionalTerm =new ArrayList<String>();//usually not specified
+		List<Fragment> replacementFragments = new ArrayList<>();
+		List<String> locantForFunctionalTerm =new ArrayList<>();//usually not specified
 		if (!words.get(1).getAttributeValue(TYPE_ATR).equals(WordType.functionalTerm.toString())){//e.g. acetone O-ethyloxime or acetone 1-chloro-1-methylhydrazone
 			for (int i = 1; i < words.size(); i++) {
 				Fragment frag = findRightMostGroupInWordOrWordRule(words.get(i)).getFrag();
@@ -750,8 +750,8 @@ class StructureBuilder {
 			//Note that the right most group may be multiplied e.g. 3,3'-methylenebis(2,4,6-trimethylbenzaldehyde) disemicarbazone
 			//or the carbonyl may not even be on the right most group e.g.  4-oxocyclohexa-2,5-diene-1-carboxylic acid 4-oxime
 			BuildResults br = new BuildResults(words.get(0));
-			List<Atom> carbonylOxygens = new ArrayList<Atom>();
-			List<Fragment> fragments = new ArrayList<Fragment>(br.getFragments());
+			List<Atom> carbonylOxygens = new ArrayList<>();
+			List<Fragment> fragments = new ArrayList<>(br.getFragments());
 			for (ListIterator<Fragment> iterator = fragments.listIterator(fragments.size()); iterator.hasPrevious();) {//iterate in reverse order - right most groups preferred
 				carbonylOxygens.addAll(findCarbonylOxygens(iterator.previous(), locantForFunctionalTerm));
 			}
@@ -812,7 +812,7 @@ class StructureBuilder {
 	 * @throws StructureBuildingException
 	 */
 	private List<Atom> findCarbonylOxygens(Fragment fragment, List<String> locantForCarbonylAtom) throws StructureBuildingException {
-		List<Atom> matches = new ArrayList<Atom>();
+		List<Atom> matches = new ArrayList<>();
 		List<Atom> rootFragAtomList = fragment.getAtomList();
 		for (Atom atom : rootFragAtomList) {//find all carbonyl oxygen
 			if (atom.getElement() == ChemEl.O && atom.getCharge()==0){
@@ -933,7 +933,7 @@ class StructureBuilder {
 					if (br1.getFunctionalAtomCount() < (numberOfAnhydrideLinkages *2)){
 						throw new StructureBuildingException("Mismatch between number of acid atoms and number of anhydride linkages to form");
 					}
-					List<Atom> functionalAtoms = new ArrayList<Atom>();
+					List<Atom> functionalAtoms = new ArrayList<>();
 					for (int i = 0; i < br1.getFunctionalAtomCount(); i++) {
 						functionalAtoms.add(br1.getFunctionalAtom(i));
 					}
@@ -1027,7 +1027,7 @@ class StructureBuilder {
 		}
 
 		boolean monoMultiplierDetected =false;
-		List<Fragment> functionalGroupFragments = new ArrayList<Fragment>();
+		List<Fragment> functionalGroupFragments = new ArrayList<>();
 		for (int i = 1; i < words.size(); i++ ) {
 			Element functionalGroupWord =words.get(i);
 			List<Element> functionalGroups = OpsinTools.getDescendantElementsWithTagName(functionalGroupWord, FUNCTIONALGROUP_EL);
@@ -1089,7 +1089,7 @@ class StructureBuilder {
 		Fragment elementaryAtomFrag = elementaryAtomEl.getFrag();
 		Atom elementaryAtom = elementaryAtomFrag.getFirstAtom();
 		int charge = elementaryAtom.getCharge();
-		List<Fragment> functionalGroupFragments = new ArrayList<Fragment>();
+		List<Fragment> functionalGroupFragments = new ArrayList<>();
 		for (int i = 1; i < words.size(); i++ ) {
 			Element functionalGroupWord = words.get(i);
 			List<Element> functionalGroups = OpsinTools.getDescendantElementsWithTagName(functionalGroupWord, FUNCTIONALGROUP_EL);
@@ -1245,7 +1245,7 @@ class StructureBuilder {
 	 * @throws StructureBuildingException
 	 */
 	private void buildGlycolEther(List<Element> words) throws StructureBuildingException {
-		List<Element> wordsToAttachToGlycol = new ArrayList<Element>();
+		List<Element> wordsToAttachToGlycol = new ArrayList<>();
 		Element glycol =words.get(0);
 		resolveWordOrBracket(state, glycol);//if this actually is something like ethylene glycol this is a no-op as it will already have been resolved
 		if (!glycol.getAttributeValue(TYPE_ATR).equals(WordType.full.toString())){
@@ -1320,7 +1320,7 @@ class StructureBuilder {
 		}	
 		Element rightMostGroup = findRightMostGroupInWordOrWordRule(words.get(0));
 		Fragment rootFragment = rightMostGroup.getFrag();//the group which will be modified
-		List<Atom> carbonylOxygen= findCarbonylOxygens(rootFragment, new ArrayList<String>());
+		List<Atom> carbonylOxygen= findCarbonylOxygens(rootFragment, new ArrayList<>());
 		Element functionalWord = words.get(words.size()-1);
 		List<Element> functionalClasses = OpsinTools.getDescendantElementsWithTagName(functionalWord, FUNCTIONALCLASS_EL);
 		if (functionalClasses.size()!=1){
@@ -1344,7 +1344,7 @@ class StructureBuilder {
 			throw new StructureBuildingException("Insufficient carbonyls to form " + numberOfAcetals +" " + functionalClass );
 		}
 		boolean hemiacetal = functionalClass.contains("hemi");
-		List<Fragment> acetalFrags = new ArrayList<Fragment>();
+		List<Fragment> acetalFrags = new ArrayList<>();
 		for (int i = 0; i < numberOfAcetals; i++) {
 			acetalFrags.add(formAcetal(carbonylOxygen, elements));
 		}
@@ -1390,7 +1390,7 @@ class StructureBuilder {
 		state.fragManager.removeAtomAndAssociatedBonds(carbonylOxygen.get(0));
 		carbonylOxygen.remove(0);
 		Fragment acetalFrag = state.fragManager.buildSMILES(StringTools.arrayToString(elements, "."),"",NONE_LABELS_VAL);
-		FragmentTools.assignElementLocants(acetalFrag, new ArrayList<Fragment>());
+		FragmentTools.assignElementLocants(acetalFrag, new ArrayList<>());
 		List<Atom> acetalAtomList = acetalFrag.getAtomList();
 		Atom atom1 = acetalAtomList.get(0);
 		state.fragManager.createBond(neighbouringCarbon, atom1, 1);
@@ -1415,8 +1415,8 @@ class StructureBuilder {
 		Fragment potentialAlcoholFragment = findRightMostGroupInWordOrWordRule(words.get(0)).getFrag();
 		List<Atom> hydroxyAtoms = FragmentTools.findHydroxyGroups(potentialAlcoholFragment);
 		
-		List<Atom> chosenHydroxyAtoms = new ArrayList<Atom>();
-		List<BuildResults> ateBuildResults = new ArrayList<BuildResults>();
+		List<Atom> chosenHydroxyAtoms = new ArrayList<>();
+		List<BuildResults> ateBuildResults = new ArrayList<>();
 		for (int i = 1; i < words.size(); i++) {
 			Element ateWord = words.get(i);
 			BuildResults wordBr = new BuildResults(ateWord);
@@ -1580,7 +1580,7 @@ class StructureBuilder {
 	}
 
 	private void connectSubstituentsToAcetal(List<Fragment> acetalFrags, BuildResults subBr, boolean hemiacetal) throws StructureBuildingException {
-		Map<Fragment,Integer> usageMap= new HashMap<Fragment, Integer>();
+		Map<Fragment,Integer> usageMap= new HashMap<>();
 		for (int i = subBr.getOutAtomCount() -1; i>=0; i--) {
 			OutAtom out = subBr.getOutAtom(i);
 			subBr.removeOutAtom(i);
@@ -1738,8 +1738,8 @@ class StructureBuilder {
 					for (Atom a : degenerateAtoms) {
 						if (a.hasLocant(locant) || (isElementSymbol && a.getElement().toString().equals(locant))){
 							//swap locants and element type
-							List<String> tempLocants = new ArrayList<String>(a.getLocants());
-							List<String> tempLocants2 = new ArrayList<String>(possibleAtom.getLocants());
+							List<String> tempLocants = new ArrayList<>(a.getLocants());
+							List<String> tempLocants2 = new ArrayList<>(possibleAtom.getLocants());
 							a.clearLocants();
 							possibleAtom.clearLocants();
 							for (String l : tempLocants) {
@@ -1776,7 +1776,7 @@ class StructureBuilder {
 	private void manipulateStoichiometry(Element molecule, List<Element> wordRules) throws StructureBuildingException {
 		boolean explicitStoichiometryPresent = applyExplicitStoichiometryIfProvided(wordRules);
 		boolean chargedFractionalGroup = false;
-		List<Element> wordRulesWithFractionalMultipliers = new ArrayList<Element>(0);
+		List<Element> wordRulesWithFractionalMultipliers = new ArrayList<>(0);
 		for (Element wordRule : wordRules) {
 			Element fractionalMultiplier = wordRule.getChild(0);
 			while (fractionalMultiplier.getChildCount() != 0){
@@ -1864,9 +1864,9 @@ class StructureBuilder {
 	
 
 	private void deprotonateAcidIfSaltWithMetal(Element molecule) {
-		List<BuildResults> positivelyChargedComponents = new ArrayList<BuildResults>();
-		List<BuildResults> negativelyChargedComponents = new ArrayList<BuildResults>();
-		List<BuildResults> neutralComponents = new ArrayList<BuildResults>();
+		List<BuildResults> positivelyChargedComponents = new ArrayList<>();
+		List<BuildResults> negativelyChargedComponents = new ArrayList<>();
+		List<BuildResults> neutralComponents = new ArrayList<>();
 		List<Element> wordRules = molecule.getChildElements(WORDRULE_ATR);
 		for (Element wordRule : wordRules) {
 			BuildResults br = new BuildResults(wordRule);
@@ -1883,7 +1883,7 @@ class StructureBuilder {
 		}
 		if (negativelyChargedComponents.size() == 0 && (positivelyChargedComponents.size() > 0 || getMetalsThatCanBeImplicitlyCations(molecule).size() > 0)) {
 			for (int i = neutralComponents.size() - 1; i>=0; i--) {
-				List<Atom> functionalAtoms = new ArrayList<Atom>();
+				List<Atom> functionalAtoms = new ArrayList<>();
 				for (Fragment f : neutralComponents.get(i).getFragments()) {
 					for (int j = 0; j < f.getFunctionalAtomCount(); j++) {
 						functionalAtoms.add(f.getFunctionalAtom(j).getAtom());
@@ -1918,10 +1918,10 @@ class StructureBuilder {
 			return;
 		}
 
-		List<Element> positivelyChargedComponents = new ArrayList<Element>();
-		List<Element> negativelyChargedComponents = new ArrayList<Element>();
-		Map<Element, Integer> componentToChargeMapping = new HashMap<Element, Integer>();
-		Map<Element, BuildResults> componentToBR = new HashMap<Element, BuildResults>();
+		List<Element> positivelyChargedComponents = new ArrayList<>();
+		List<Element> negativelyChargedComponents = new ArrayList<>();
+		Map<Element, Integer> componentToChargeMapping = new HashMap<>();
+		Map<Element, BuildResults> componentToBR = new HashMap<>();
 		
 		List<Element> cationicElements = getMetalsThatCanBeImplicitlyCations(molecule);
 		overallCharge = setCationicElementsToTypicalCharge(cationicElements, overallCharge);
@@ -1998,7 +1998,7 @@ class StructureBuilder {
 	}
 
 	private List<Element> getMetalsThatCanBeImplicitlyCations(Element molecule) {
-		List<Element> cationicElements = new ArrayList<Element>();
+		List<Element> cationicElements = new ArrayList<>();
 		List<Element> elementaryAtoms = OpsinTools.getDescendantElementsWithTagNameAndAttribute(molecule, GROUP_EL, TYPE_ATR, ELEMENTARYATOM_TYPE_VAL);
 		for (Element elementaryAtom : elementaryAtoms) {
 			if (elementaryAtom.getAttribute(COMMONOXIDATIONSTATESANDMAX_ATR)!=null){
@@ -2360,14 +2360,14 @@ class StructureBuilder {
 	private void processStereochemistry(Element molecule, Fragment uniFrag) throws StructureBuildingException {
 		List<Element> stereoChemistryEls = findStereochemistryElsInProcessingOrder(molecule);
 		List<Atom> atomList = uniFrag.getAtomList();
-		List<Atom> atomsWithPreDefinedAtomParity = new ArrayList<Atom>();
+		List<Atom> atomsWithPreDefinedAtomParity = new ArrayList<>();
 		for (Atom atom : atomList) {
 			if (atom.getAtomParity()!=null){
 				atomsWithPreDefinedAtomParity.add(atom);
 			}
 		}
 		Set<Bond> bonds = uniFrag.getBondSet();
-		List<Bond> bondsWithPreDefinedBondStereo = new ArrayList<Bond>();
+		List<Bond> bondsWithPreDefinedBondStereo = new ArrayList<>();
 		for (Bond bond : bonds) {
 			if (bond.getBondStereo()!=null){
 				bondsWithPreDefinedBondStereo.add(bond);
@@ -2375,12 +2375,12 @@ class StructureBuilder {
 		}
 		if (stereoChemistryEls.size() >0 || atomsWithPreDefinedAtomParity.size() >0 || bondsWithPreDefinedBondStereo.size() >0){
 			StereoAnalyser stereoAnalyser = new StereoAnalyser(uniFrag);
-			Map<Atom, StereoCentre> atomStereoCentreMap = new HashMap<Atom, StereoCentre>();//contains all atoms that are stereo centres with a mapping to the corresponding StereoCentre object
+			Map<Atom, StereoCentre> atomStereoCentreMap = new HashMap<>();//contains all atoms that are stereo centres with a mapping to the corresponding StereoCentre object
 			List<StereoCentre> stereoCentres = stereoAnalyser.findStereoCentres();
 			for (StereoCentre stereoCentre : stereoCentres) {
 				atomStereoCentreMap.put(stereoCentre.getStereoAtom(),stereoCentre);
 			}
-			Map<Bond, StereoBond> bondStereoBondMap = new HashMap<Bond, StereoBond>();
+			Map<Bond, StereoBond> bondStereoBondMap = new HashMap<>();
 			List<StereoBond> stereoBonds = stereoAnalyser.findStereoBonds();
 			for (StereoBond stereoBond : stereoBonds) {
 				Bond b = stereoBond.getBond();
@@ -2401,9 +2401,9 @@ class StructureBuilder {
 	 * @return
 	 */
 	private List<Element> findStereochemistryElsInProcessingOrder(Element parentEl) {
-		List<Element> matchingElements = new ArrayList<Element>();
+		List<Element> matchingElements = new ArrayList<>();
 		List<Element> children =parentEl.getChildElements();
-		List<Element> stereochemistryElsAtThisLevel = new ArrayList<Element>();
+		List<Element> stereochemistryElsAtThisLevel = new ArrayList<>();
 		for (int i = children.size()-1; i >=0; i--) {
 			Element child = children.get(i);
 			if (child.getName().equals(STEREOCHEMISTRY_EL)){

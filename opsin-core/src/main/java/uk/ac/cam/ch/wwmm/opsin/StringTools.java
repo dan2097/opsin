@@ -313,7 +313,7 @@ class StringTools {
 	 * @return The ArrayList.
 	 */
 	static List<String> arrayToList(String [] array) {
-		List<String> list = new ArrayList<String>();
+		List<String> list = new ArrayList<>();
         list.addAll(Arrays.asList(array));
 		return list;
 	}

@@ -12,8 +12,8 @@ import java.util.Map;
  *
  */
 class PreProcessor {
-	private static final Map<String, String> DOTENCLOSED_TO_DESIRED = new HashMap<String, String>();
-	private static final Map<String, String> XMLENTITY_TO_DESIRED = new HashMap<String, String>();
+	private static final Map<String, String> DOTENCLOSED_TO_DESIRED = new HashMap<>();
+	private static final Map<String, String> XMLENTITY_TO_DESIRED = new HashMap<>();
 
 	static {
 		DOTENCLOSED_TO_DESIRED.put("a", "alpha");

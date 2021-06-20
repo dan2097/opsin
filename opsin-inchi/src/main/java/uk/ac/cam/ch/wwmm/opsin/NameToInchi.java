@@ -135,9 +135,9 @@ public class NameToInchi {
 	}
 
 	private static String opsinFragmentToInchi(Fragment frag, boolean produceStdInChI) throws JniInchiException {
-		HashMap<Integer, JniInchiAtom> opsinIdAtomMap = new HashMap<Integer, JniInchiAtom>();
+		HashMap<Integer, JniInchiAtom> opsinIdAtomMap = new HashMap<>();
 		JniInchiInput input;
-		List<INCHI_OPTION> options = new ArrayList<INCHI_OPTION>();
+		List<INCHI_OPTION> options = new ArrayList<>();
 		options.add(INCHI_OPTION.AuxNone);
 		if (!produceStdInChI){
 			options.add(INCHI_OPTION.FixedH);

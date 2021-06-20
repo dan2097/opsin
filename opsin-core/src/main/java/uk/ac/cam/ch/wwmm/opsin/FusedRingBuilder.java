@@ -24,8 +24,8 @@ class FusedRingBuilder {
 	private final List<Element> groupsInFusedRing;
 	private final Element lastGroup;
 	private final Fragment parentRing;
-	private final Map<Integer,Fragment> fragmentInScopeForEachFusionLevel = new HashMap<Integer,Fragment>();
-	private final Map<Atom, Atom> atomsToRemoveToReplacementAtom = new HashMap<Atom, Atom>();
+	private final Map<Integer,Fragment> fragmentInScopeForEachFusionLevel = new HashMap<>();
+	private final Map<Atom, Atom> atomsToRemoveToReplacementAtom = new HashMap<>();
 
 	private FusedRingBuilder(BuildState state, List<Element> groupsInFusedRing) {
 		this.state = state;
@@ -46,7 +46,7 @@ class FusedRingBuilder {
 		if (groups.size() < 2){
 			return;//nothing to fuse
 		}
-		List<Element> groupsInFusedRing =new ArrayList<Element>();
+		List<Element> groupsInFusedRing =new ArrayList<>();
 		for (int i = groups.size()-1; i >=0; i--) {//group groups into fused rings
 			Element group =groups.get(i);
 			groupsInFusedRing.add(0, group);
@@ -88,8 +88,8 @@ class FusedRingBuilder {
 		List<Element> nameComponents = formNameComponentList();
 		nameComponents.remove(lastGroup);
 
-		List<Fragment> componentFragments = new ArrayList<Fragment>();//all the ring fragments (other than the parentRing). These will later be merged into the parentRing
-		List<Fragment> parentFragments = new ArrayList<Fragment>();
+		List<Fragment> componentFragments = new ArrayList<>();//all the ring fragments (other than the parentRing). These will later be merged into the parentRing
+		List<Fragment> parentFragments = new ArrayList<>();
 		parentFragments.add(parentRing);
 		
 		int numberOfParents = 1;
@@ -273,7 +273,7 @@ class FusedRingBuilder {
 	 * @return
 	 */
 	private List<Element> formNameComponentList() {
-		List<Element> nameComponents  = new ArrayList<Element>();
+		List<Element> nameComponents  = new ArrayList<>();
 		Element currentEl = groupsInFusedRing.get(0);
 		while(currentEl != lastGroup){
 			if (currentEl.getName().equals(GROUP_EL) || currentEl.getName().equals(FUSION_EL)){
@@ -351,7 +351,7 @@ class FusedRingBuilder {
 	 */
 	private void aromatiseCyclicAlkane(Element cyclicAlkaneGroup) {
 		Element next = OpsinTools.getNextSibling(cyclicAlkaneGroup);
-		List<Element> unsaturators = new ArrayList<Element>();
+		List<Element> unsaturators = new ArrayList<>();
 		while (next!=null && next.getName().equals(UNSATURATOR_EL)){
 			unsaturators.add(next);
 			next = OpsinTools.getNextSibling(next);
@@ -420,7 +420,7 @@ class FusedRingBuilder {
 					multiplier = Integer.parseInt(possibleMultiplierEl.getAttributeValue(VALUE_ATR));
 					possibleMultiplierEl.detach();
 				}
-				List<Fragment> fusionComponents = new ArrayList<Fragment>();
+				List<Fragment> fusionComponents = new ArrayList<>();
 				for (int j = 0; j < multiplier; j++) {
 					if (j>0){
 						Fragment clonedFrag = state.fragManager.copyFragment(nextComponent);
@@ -567,7 +567,7 @@ class FusedRingBuilder {
 			if (fusionArray.length ==2){
 				numericalLocantsOfChild = Arrays.asList(fusionArray[0].split(","));
 				char[] tempLetterLocantsOfParent = fusionArray[1].toCharArray();
-				letterLocantsOfParent = new ArrayList<String>();
+				letterLocantsOfParent = new ArrayList<>();
                 for (char letterLocantOfParent : tempLetterLocantsOfParent) {
                     letterLocantsOfParent.add(String.valueOf(letterLocantOfParent));
                 }
@@ -579,7 +579,7 @@ class FusedRingBuilder {
 				}
 				else{//only has letters
 					char[] tempLetterLocantsOfParentCharArray = fusionArray[0].toCharArray();
-					letterLocantsOfParent = new ArrayList<String>();
+					letterLocantsOfParent = new ArrayList<>();
                     for (char letterLocantOfParentCharArray : tempLetterLocantsOfParentCharArray) {
                         letterLocantsOfParent.add(String.valueOf(letterLocantOfParentCharArray));
                     }
@@ -621,7 +621,7 @@ class FusedRingBuilder {
 	 * @return
 	 */
 	private List<String> findPossibleLetterLocants(Fragment ring, int edgeLength) {
-		List<Integer> carbonAtomIndexes = new ArrayList<Integer>();
+		List<Integer> carbonAtomIndexes = new ArrayList<>();
 		int numberOfAtoms = ring.getAtomCount();
 		CyclicAtomList cyclicAtomList = new CyclicAtomList(ring.getAtomList());
 		for (int i = 0; i <= numberOfAtoms; i++) {
@@ -635,7 +635,7 @@ class FusedRingBuilder {
 				carbonAtomIndexes.add(cyclicAtomList.getIndex());
 				if (carbonAtomIndexes.size() == edgeLength + 1){//as many carbons in a row as to give that edgelength ->use these side/s
 					Collections.reverse(carbonAtomIndexes);
-					List<String> letterLocantsOfParent = new ArrayList<String>();
+					List<String> letterLocantsOfParent = new ArrayList<>();
 					for (int j = 0; j < edgeLength; j++) {
 						letterLocantsOfParent.add(String.valueOf((char)(97 + carbonAtomIndexes.get(j))));//97 is ascii for a	
 					}
@@ -658,7 +658,7 @@ class FusedRingBuilder {
 	 * @return
 	 */
 	private List<String> findPossibleNumericalLocants(Fragment ring, int edgeLength) {
-		List<String> carbonLocants = new ArrayList<String>();
+		List<String> carbonLocants = new ArrayList<>();
 		int numberOfAtoms = ring.getAtomCount();
 		CyclicAtomList cyclicAtomList = new CyclicAtomList(ring.getAtomList());
 		for (int i = 0; i <= numberOfAtoms; i++) {
@@ -669,7 +669,7 @@ class FusedRingBuilder {
 					&& (carbonLocants.size() == 0 || atom.getAtomNeighbours().contains(cyclicAtomList.peekPrevious()))){
 				carbonLocants.add(atom.getFirstLocant());
 				if (carbonLocants.size() == edgeLength + 1){//as many carbons in a row as to give that edgelength ->use these side/s
-					List<String> numericalLocantsOfChild = new ArrayList<String>();
+					List<String> numericalLocantsOfChild = new ArrayList<>();
 					for (String locant : carbonLocants) {
 						numericalLocantsOfChild.add(locant);
 					}
@@ -697,7 +697,7 @@ class FusedRingBuilder {
 			throw new StructureBuildingException("Malformed fusion bracket!");
 		}
 
-		List<Atom> parentAtoms = new ArrayList<Atom>();
+		List<Atom> parentAtoms = new ArrayList<>();
 		List<Atom> parentPeripheralAtomList = getPeripheralAtoms(parentRing.getAtomList());
 		CyclicAtomList cyclicListAtomsOnSurfaceOfParent = new CyclicAtomList(parentPeripheralAtomList, (int)letterLocantsOfParent.get(0).charAt(0) -97);//convert from lower case character through ascii to 0-23
 		parentAtoms.add(cyclicListAtomsOnSurfaceOfParent.getCurrent());
@@ -800,7 +800,7 @@ class FusedRingBuilder {
 		CyclicAtomList cyclicRingAtomList = new CyclicAtomList(parentPeripheralAtomList, indexfirst);
 		List<Atom> fusionAtoms = null;
 		
-		List<Atom> potentialFusionAtomsAscending = new ArrayList<Atom>();
+		List<Atom> potentialFusionAtomsAscending = new ArrayList<>();
 		potentialFusionAtomsAscending.add(cyclicRingAtomList.getCurrent());
 		while (cyclicRingAtomList.getIndex() != indexfinal){//assume numbers are ascending
 			potentialFusionAtomsAscending.add(cyclicRingAtomList.next());
@@ -819,7 +819,7 @@ class FusedRingBuilder {
 		
 		if (fusionAtoms ==null || expectedNumberOfAtomsToBeUsedForFusion ==null){//that didn't work, so try assuming the numbers are descending
 			cyclicRingAtomList.setIndex(indexfirst);
-			List<Atom> potentialFusionAtomsDescending = new ArrayList<Atom>();
+			List<Atom> potentialFusionAtomsDescending = new ArrayList<>();
 			potentialFusionAtomsDescending.add(cyclicRingAtomList.getCurrent());
 			while (cyclicRingAtomList.getIndex() != indexfinal){//assume numbers are descending
 				potentialFusionAtomsDescending.add(cyclicRingAtomList.previous());
@@ -882,13 +882,13 @@ class FusedRingBuilder {
 			atomsToRemoveToReplacementAtom.put(childAtom, parentAtom);
 		}
 		
-		Set<Bond> fusionEdgeBonds  = new HashSet<Bond>();//these bonds already exist in both the child and parent atoms
+		Set<Bond> fusionEdgeBonds  = new HashSet<>();//these bonds already exist in both the child and parent atoms
 		for (int i = 0; i < childAtoms.size() -1; i++) {
 			fusionEdgeBonds.add(childAtoms.get(i).getBondToAtomOrThrow(childAtoms.get(i+1)));
 			fusionEdgeBonds.add(parentAtoms.get(i).getBondToAtomOrThrow(parentAtoms.get(i+1)));
 		}
 
-		Set<Bond> bondsToAddToParentAtoms = new LinkedHashSet<Bond>();
+		Set<Bond> bondsToAddToParentAtoms = new LinkedHashSet<>();
 		for (Atom childAtom : childAtoms) {
 			for (Bond b : childAtom.getBonds()) {
 				if (!fusionEdgeBonds.contains(b)){
@@ -897,7 +897,7 @@ class FusedRingBuilder {
 			}
 		}
 		
-		Set<Bond> bondsToAddToChildAtoms = new LinkedHashSet<Bond>();
+		Set<Bond> bondsToAddToChildAtoms = new LinkedHashSet<>();
 		for (Atom parentAtom : parentAtoms) {
 			for (Bond b : parentAtom.getBonds()) {
 				if (!fusionEdgeBonds.contains(b)){
@@ -974,8 +974,8 @@ class FusedRingBuilder {
 			String[] locants = locantEl.getValue().split(",");
 			if (locantsCouldApplyToHeteroatomPositions(locants, benzoEl)) {
 				List<Atom> atomList =fusedRing.getAtomList();
-				List<Atom> heteroatoms = new ArrayList<Atom>();
-				List<ChemEl> elementOfHeteroAtom = new ArrayList<ChemEl>();
+				List<Atom> heteroatoms = new ArrayList<>();
+				List<ChemEl> elementOfHeteroAtom = new ArrayList<>();
 				for (Atom atom : atomList) {//this iterates in the same order as the numbering system
 					if (atom.getElement() != ChemEl.C){
 						heteroatoms.add(atom);

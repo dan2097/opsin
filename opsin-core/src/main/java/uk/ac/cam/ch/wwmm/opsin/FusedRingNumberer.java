@@ -22,10 +22,10 @@ class FusedRingNumberer {
 	
 	private static final Logger LOG = Logger.getLogger(FusedRingNumberer.class);
 	private static class RingConnectivityTable {
-		final List<RingShape> ringShapes = new ArrayList<RingShape>();
-		final List<Ring> neighbouringRings = new ArrayList<Ring>();
-		final List<Integer> directionFromRingToNeighbouringRing = new ArrayList<Integer>();
-		final List<Ring> usedRings = new ArrayList<Ring>();
+		final List<RingShape> ringShapes = new ArrayList<>();
+		final List<Ring> neighbouringRings = new ArrayList<>();
+		final List<Integer> directionFromRingToNeighbouringRing = new ArrayList<>();
+		final List<Ring> usedRings = new ArrayList<>();
 
 		RingConnectivityTable copy(){
 			RingConnectivityTable copy = new RingConnectivityTable();
@@ -207,7 +207,7 @@ class FusedRingNumberer {
 	    }
 	}
 
-	private static final Map<ChemEl, Integer> heteroAtomValues = new EnumMap<ChemEl, Integer>(ChemEl.class);
+	private static final Map<ChemEl, Integer> heteroAtomValues = new EnumMap<>(ChemEl.class);
 	static{
 		//unknown heteroatoms or carbon are given a value of 0
 		heteroAtomValues.put(ChemEl.Hg, 2);
@@ -347,7 +347,7 @@ class FusedRingNumberer {
 			throw new RuntimeException("OPSIN Bug: Non-fused bond from terminal ring not found");
 		}
 
-		List<RingConnectivityTable> cts = new ArrayList<RingConnectivityTable>();
+		List<RingConnectivityTable> cts = new ArrayList<>();
 		RingConnectivityTable startingCT = new RingConnectivityTable();
 		cts.add(startingCT);
 		buildRingConnectionTables(tRing, null, 0, b1, b1.getFromAtom(), startingCT, cts);
@@ -370,7 +370,7 @@ class FusedRingNumberer {
 	 * @return
 	 */
 	private static List<Ring> findTerminalRings(List<Ring> rings) {
-		List<Ring> tRings = new ArrayList<Ring>();
+		List<Ring> tRings = new ArrayList<>();
 
 		int minFusedBonds = Integer.MAX_VALUE;
 		for (Ring ring : rings){
@@ -401,7 +401,7 @@ class FusedRingNumberer {
 	private static List<RingConnectivityTable> buildRingConnectionTables(Ring currentRing, Ring previousRing, int previousDir, Bond previousBond, Atom atom, RingConnectivityTable ct, List<RingConnectivityTable> cts) {
 		// order atoms and bonds in the ring
 		currentRing.makeCyclicLists(previousBond, atom);
-		List<RingConnectivityTable> generatedCts = new ArrayList<RingConnectivityTable>();
+		List<RingConnectivityTable> generatedCts = new ArrayList<>();
 		List<FusionRingShape> allowedShapes = getAllowedShapesForRing(currentRing, previousBond);
 		if (allowedShapes.size() == 0) {
 			throw new RuntimeException("OPSIN limitation, unsupported ring size in fused ring numbering");
@@ -419,7 +419,7 @@ class FusedRingNumberer {
 				generatedCts.add(currentCT);
 			}
 			RingShape ringShape = new RingShape(currentRing, fusionRingShape);
-			List<RingConnectivityTable> ctsToExpand = new ArrayList<RingConnectivityTable>();
+			List<RingConnectivityTable> ctsToExpand = new ArrayList<>();
 			ctsToExpand.add(currentCT);//all the cts to consider, the currentCT and generated clones
 			for (Ring neighbourRing : currentRing.getNeighbours()) {
 				//find the directions between the current ring and all neighbouring rings including the previous ring
@@ -444,7 +444,7 @@ class FusedRingNumberer {
 					ctToExpand.directionFromRingToNeighbouringRing.add(dir);
 				}
 				if (!currentCT.usedRings.contains(neighbourRing)) {
-					List<RingConnectivityTable> newCts = new ArrayList<RingConnectivityTable>();
+					List<RingConnectivityTable> newCts = new ArrayList<>();
 					for (RingConnectivityTable ctToExpand : ctsToExpand) {
 						Atom a = getAtomFromBond(currentRing, currentBond);
 						List<RingConnectivityTable> generatedDownStreamCts = buildRingConnectionTables(neighbourRing, currentRing, dir, currentBond, a, ctToExpand, cts);
@@ -468,7 +468,7 @@ class FusedRingNumberer {
 	 * @return
 	 */
 	private static List<FusionRingShape> getAllowedShapesForRing(Ring ring, Bond startingBond) {
-		List<FusionRingShape> allowedRingShapes = new ArrayList<FusionRingShape>();
+		List<FusionRingShape> allowedRingShapes = new ArrayList<>();
 		int size = ring.size();
 		if (size==5){
 			List<Bond> fusedBonds = ring.getFusedBonds();
@@ -477,7 +477,7 @@ class FusedRingNumberer {
 				allowedRingShapes.add(FusionRingShape.enterFromLeftHouse);
 			}
 			else if (fusedBondCount==2 || fusedBondCount==3 || fusedBondCount==4){
-				List<Integer> distances = new ArrayList<Integer>();//one distance is likely to be 0
+				List<Integer> distances = new ArrayList<>();//one distance is likely to be 0
 				for (Bond fusedBond : fusedBonds) {
 					distances.add(calculateDistanceBetweenBonds(startingBond, fusedBond, ring));
 				}
@@ -510,7 +510,7 @@ class FusedRingNumberer {
 				allowedRingShapes.add(FusionRingShape.enterFromLeftSevenMembered);
 			}
 			else{
-				List<Integer> distances = new ArrayList<Integer>();//one distance is likely to be 0
+				List<Integer> distances = new ArrayList<>();//one distance is likely to be 0
 				for (Bond fusedBond : fusedBonds) {
 					distances.add(calculateDistanceBetweenBonds(startingBond, fusedBond, ring));
 				}
@@ -545,7 +545,7 @@ class FusedRingNumberer {
 	 * @param ringSize 
 	 */
 	private static List<FusionRingShape> removeDegenerateRingShapes(List<FusionRingShape> allowedRingShapes, List<Integer> distances, int ringSize) {
-		distances = new ArrayList<Integer>(distances);
+		distances = new ArrayList<>(distances);
 		distances.remove((Integer)0);//remove distance 0 if present, this invariably comes from the starting bond and is not of interest (and breaks getDirectionFromDist)
 		for (int i = allowedRingShapes.size() - 1; i >=0; i--) {
 			FusionRingShape shapeToConsiderRemoving = allowedRingShapes.get(i);
@@ -876,9 +876,9 @@ class FusedRingNumberer {
 	}
 
 	private static void removeCTsWithDistortedRingShapes(List<RingConnectivityTable> cts) {
-		Map<RingConnectivityTable, List<Integer>> ctToDistortedRings = new HashMap<RingConnectivityTable, List<Integer>>();
+		Map<RingConnectivityTable, List<Integer>> ctToDistortedRings = new HashMap<>();
 		for (RingConnectivityTable ct : cts) {
-			List<Integer> distortedRingSizes = new ArrayList<Integer>();
+			List<Integer> distortedRingSizes = new ArrayList<>();
 			ctToDistortedRings.put(ct, distortedRingSizes);
 			List<RingShape> ringShapes = ct.ringShapes;
 			for (int i = 0; i < ringShapes.size(); i++) {
@@ -916,14 +916,14 @@ class FusedRingNumberer {
 	 * @return
 	 */
 	private static Map<RingConnectivityTable, List<Integer>> findLongestChainDirections(List<RingConnectivityTable> cts){
-		Map<RingConnectivityTable, List<Integer>> horizonalRowDirections = new LinkedHashMap<RingConnectivityTable, List<Integer>>();
+		Map<RingConnectivityTable, List<Integer>> horizonalRowDirections = new LinkedHashMap<>();
 		int maxChain = 0;
 		for (RingConnectivityTable ct : cts) {
 			if (ct.ringShapes.size() != ct.neighbouringRings.size() || ct.neighbouringRings.size() != ct.directionFromRingToNeighbouringRing.size()) {
 				throw new RuntimeException("OPSIN Bug: Sizes of arrays in fused ring numbering connection table are not equal");
 			}
 			int ctEntriesSize = ct.ringShapes.size();
-			List<Integer> directions = new ArrayList<Integer>();
+			List<Integer> directions = new ArrayList<>();
 			horizonalRowDirections.put(ct, directions);
 
 			for (int i = 0; i < ctEntriesSize; i++) {
@@ -993,7 +993,7 @@ class FusedRingNumberer {
 	 * @throws StructureBuildingException
 	 */
 	private static List<Ring[][]> createRingMapsAlignedAlongGivenhorizonalRowDirections(Map<RingConnectivityTable, List<Integer>> horizonalRowDirectionsMap) throws StructureBuildingException {
-		List<Ring[][]> ringMaps = new ArrayList<Ring[][]>();
+		List<Ring[][]> ringMaps = new ArrayList<>();
 		for (Entry<RingConnectivityTable, List<Integer>> entry : horizonalRowDirectionsMap.entrySet()) {
 			RingConnectivityTable ct = entry.getKey();
 			if ( ct.ringShapes.size() != ct.neighbouringRings.size() || ct.neighbouringRings.size() != ct.directionFromRingToNeighbouringRing.size() || ct.ringShapes.size() <= 0) {
@@ -1026,8 +1026,8 @@ class FusedRingNumberer {
 	 * @return
 	 */
 	private static List<List<Atom>> findPossiblePaths(List<Ring[][]> ringMaps, int atomCountOfFusedRingSystem){
-		List<Double[]> chainQs = new ArrayList<Double[]>();
-		List<Ring[][]> correspondingRingMap = new ArrayList<Ring[][]>();
+		List<Double[]> chainQs = new ArrayList<>();
+		List<Ring[][]> correspondingRingMap = new ArrayList<>();
 		for (Ring[][] ringMap : ringMaps) {
 			List<Chain> chains = findChainsOfMaximumLengthInHorizontalDir(ringMap);
 			// For each chain count the number of rings in each quadrant
@@ -1052,7 +1052,7 @@ class FusedRingNumberer {
 		//  order for each right corner candidates for each chain
 		List<List<Integer>> allowedUpperRightQuadrantsForEachChain =rulesBCD(chainQs);
 
-		List<List<Atom>> paths = new ArrayList<List<Atom>> ();
+		List<List<Atom>> paths = new ArrayList<> ();
 		for (int c=0; c < chainQs.size(); c++) {
 			Ring[][] ringMap = correspondingRingMap.get(c);
 			List<Integer> allowedUpperRightQuadrants = allowedUpperRightQuadrantsForEachChain.get(c);
@@ -1179,7 +1179,7 @@ class FusedRingNumberer {
 		int w = ringMap.length;
 		int h = ringMap[0].length;
 
-		List<Chain> chains = new ArrayList<Chain>();
+		List<Chain> chains = new ArrayList<>();
 
 		int maxChain = 0;
 		int chain = 0;
@@ -1278,7 +1278,7 @@ class FusedRingNumberer {
 	 * @param chainQs - array with number of ring in each quadrant for each chain.
 	 */
 	private static List<List<Integer>> rulesBCD(List<Double[]> chainQs) {
-		List<List<Integer>> possibleUpperRightQuadrantsForEachChain = new ArrayList<List<Integer>>();
+		List<List<Integer>> possibleUpperRightQuadrantsForEachChain = new ArrayList<>();
 		int nChains = chainQs.size();
 		if (nChains==0){
 			throw new RuntimeException("OPSIN Bug: Fused ring numbering, no chains found?");
@@ -1297,7 +1297,7 @@ class FusedRingNumberer {
 		}
 
 		for (Double[] chainQ : chainQs) {
-			List<Integer> allowedUpperRightQuadrants = new ArrayList<Integer>();
+			List<Integer> allowedUpperRightQuadrants = new ArrayList<>();
 			for (int j = 0; j < 4; j++){
 				if (chainQ[j] == qmax) {
 					allowedUpperRightQuadrants.add(j);
@@ -1320,7 +1320,7 @@ class FusedRingNumberer {
 		}
 		for (int c = 0; c < nChains; c++) {
 			List<Integer> possibleUpperRightQuadrant = possibleUpperRightQuadrantsForEachChain.get(c);
-			List<Integer> allowedUpperRightQuadrants = new ArrayList<Integer>();
+			List<Integer> allowedUpperRightQuadrants = new ArrayList<>();
 			for (Integer upperRightQuad : possibleUpperRightQuadrant) {
 				int qdiagonal = (upperRightQuad + 2) % 4;
 				if (chainQs.get(c)[qdiagonal]==qmin) {
@@ -1350,7 +1350,7 @@ class FusedRingNumberer {
 		}
 		for (int c = 0; c < nChains; c++) {
 			List<Integer> possibleUpperRightQuadrant = possibleUpperRightQuadrantsForEachChain.get(c);
-			List<Integer> allowedUpperRightQuadrants = new ArrayList<Integer>();
+			List<Integer> allowedUpperRightQuadrants = new ArrayList<>();
 			for (Integer upperRightQuad : possibleUpperRightQuadrant) {
 				int upperLeftQuad;
 				if (upperRightQuad % 2 == 0) {
@@ -1392,7 +1392,7 @@ class FusedRingNumberer {
 		if (upperRightRing == null) {
 			throw new RuntimeException("OPSIN Bug: Upper right ring not found when performing fused ring numbering");
 		}
-		List<Ring> visitedRings = new ArrayList<Ring>();
+		List<Ring> visitedRings = new ArrayList<>();
 		visitedRings.add(upperRightRing);
 		while (isEntirelyFusionAtoms(upperRightRing)){//c.f cyclopropa[de]anthracene
 			upperRightRing = findClockwiseRingFromUpperRightRing(ringMap, upperRightRing, visitedRings);
@@ -1408,7 +1408,7 @@ class FusedRingNumberer {
 
 		Ring currentRing = upperRightRing;
 		Ring nextRing = null;
-		List<Atom> atomPath = new ArrayList<Atom>();
+		List<Atom> atomPath = new ArrayList<>();
 		int count = 0;
 		mainLoop: for (; count <= atomCountOfFusedRingSystem; count++) {
 			int ringSize = currentRing.size();
@@ -1636,7 +1636,7 @@ class FusedRingNumberer {
 	 * @return
 	 */
 	private static Bond getStartingNonFusedBond(Ring tRing){
-		List<Bond> allBonds = new ArrayList<Bond>(tRing.getBondList());
+		List<Bond> allBonds = new ArrayList<>(tRing.getBondList());
 		for (Bond fusedBond : tRing.getFusedBonds()) {
 			List<Bond> neighbouringBonds = fusedBond.getFromAtom().getBonds();
 			for (Bond bond : neighbouringBonds) {

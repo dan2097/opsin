@@ -117,7 +117,7 @@ class Parser {
 			throw new ParsingException("No parses could be found for " + name);
 		}
 		
-		List<Element> results = new ArrayList<Element>();
+		List<Element> results = new ArrayList<>();
 		ParsingException preciseException = null;
 		for(Parse pp : parses) {
 			Element moleculeEl = new GroupingEl(MOLECULE_EL);
@@ -256,9 +256,9 @@ class Parser {
 		if (numberOfCombinations ==1){
 			return Arrays.asList(parse);
 		}
-		List<Parse> parses = new ArrayList<Parse>();
+		List<Parse> parses = new ArrayList<>();
 		
-		Deque<Parse> parseQueue = new ArrayDeque<Parse>();
+		Deque<Parse> parseQueue = new ArrayDeque<>();
 		parseQueue.add(new Parse(parse.getName()));
 		while (!parseQueue.isEmpty()){
 			Parse currentParse = parseQueue.removeFirst();

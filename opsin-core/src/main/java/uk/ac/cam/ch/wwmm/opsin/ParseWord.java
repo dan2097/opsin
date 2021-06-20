@@ -24,7 +24,7 @@ class ParseWord {
 			this.parseTokens = null;
 		}
 		else{
-			this.parseTokens = new ArrayList<ParseTokens>(parseTokens);
+			this.parseTokens = new ArrayList<>(parseTokens);
 		}
 	}
 

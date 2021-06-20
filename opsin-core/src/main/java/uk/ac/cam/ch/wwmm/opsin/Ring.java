@@ -11,9 +11,9 @@ import java.util.Map;
  *
  */
 class Ring {
-	private final List<Atom> atomList = new ArrayList<Atom>();
+	private final List<Atom> atomList = new ArrayList<>();
 	private final List<Bond> bondList;
-	private final Map<Bond, Ring> bondToNeighbourRings = new LinkedHashMap<Bond, Ring>();
+	private final Map<Bond, Ring> bondToNeighbourRings = new LinkedHashMap<>();
 	
 	private List<Atom> cyclicAtomList;
 	private List<Bond> cyclicBondList;
@@ -67,7 +67,7 @@ class Ring {
 	 * @return List<Bond>
 	 */
 	List<Bond> getFusedBonds(){
-		return new ArrayList<Bond>(bondToNeighbourRings.keySet());
+		return new ArrayList<>(bondToNeighbourRings.keySet());
 	}
 
 	int getBondIndex(Bond bond){
@@ -83,7 +83,7 @@ class Ring {
 	}
 
 	List<Ring> getNeighbours() {
-		return new ArrayList<Ring>(bondToNeighbourRings.values());
+		return new ArrayList<>(bondToNeighbourRings.values());
 	}
 	
 	Ring getNeighbourOfFusedBond(Bond fusedBond) {
@@ -104,8 +104,8 @@ class Ring {
 	 */
 	void makeCyclicLists(Bond stBond, Atom stAtom){
 		if (cyclicBondList==null){
-			cyclicBondList = new ArrayList<Bond>();
-			cyclicAtomList = new ArrayList<Atom>();
+			cyclicBondList = new ArrayList<>();
+			cyclicAtomList = new ArrayList<>();
 
 			Atom atom = stAtom;
 			cyclicBondList.add(stBond);

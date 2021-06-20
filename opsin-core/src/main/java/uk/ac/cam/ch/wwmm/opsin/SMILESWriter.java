@@ -27,20 +27,20 @@ import uk.ac.cam.ch.wwmm.opsin.BondStereo.BondStereoValue;
 class SMILESWriter {
 
 	/**The organic atoms and their allowed implicit valences in SMILES */
-	private static final Map<ChemEl,Integer[]> organicAtomsToStandardValencies = new EnumMap<ChemEl, Integer[]>(ChemEl.class);
+	private static final Map<ChemEl,Integer[]> organicAtomsToStandardValencies = new EnumMap<>(ChemEl.class);
 
 	/**Closures 1-9, %10-99, 0 */
-	private static final  List<String> closureSymbols = new ArrayList<String>();
+	private static final  List<String> closureSymbols = new ArrayList<>();
 
 
 	/**The available ring closure symbols, ordered from start to end in the preferred order for use.*/
-	private final Deque<String> availableClosureSymbols = new ArrayDeque<String>(closureSymbols);
+	private final Deque<String> availableClosureSymbols = new ArrayDeque<>(closureSymbols);
 
 	/**Maps between bonds and the ring closure to use when the atom that ends the bond is encountered.*/
-	private final HashMap<Bond, String> bondToClosureSymbolMap = new HashMap<Bond, String>();
+	private final HashMap<Bond, String> bondToClosureSymbolMap = new HashMap<>();
 
 	/**Maps between bonds and the atom that this bond will go to in the SMILES. Populated in the order the bonds are to be made */
-	private final HashMap<Bond, Atom> bondToNextAtomMap = new LinkedHashMap<Bond, Atom>();
+	private final HashMap<Bond, Atom> bondToNextAtomMap = new LinkedHashMap<>();
 
 	/**The structure to be converted to SMILES*/
 	private final Fragment structure;
@@ -129,7 +129,7 @@ class SMILESWriter {
 		assignDoubleBondStereochemistrySlashes();
 
 		List<Atom> atomList = structure.getAtomList();
-		smilesOutputOrder = new ArrayList<Atom>(atomList.size());
+		smilesOutputOrder = new ArrayList<>(atomList.size());
 
 		boolean isEmpty = true;
 		for (Atom currentAtom : atomList) {
@@ -151,14 +151,14 @@ class SMILESWriter {
 	}
 
 	private void writeExtendedSmilesLayer(int options) {
-		List<String> atomLabels = new ArrayList<String>();
-		List<String> atomLocants = new ArrayList<String>();
-		List<String> positionVariationBonds = new ArrayList<String>();
+		List<String> atomLabels = new ArrayList<>();
+		List<String> atomLocants = new ArrayList<>();
+		List<String> positionVariationBonds = new ArrayList<>();
 		Integer lastLabel = null;
 		Integer lastLocant = null;
 		int attachmentPointCounter = 1;
 		Map<StereoGrpKey,List<Integer>> enhancedStereo = null;
-		Set<Integer> seenAttachmentpoints = new HashSet<Integer>();
+		Set<Integer> seenAttachmentpoints = new HashSet<>();
 		List<Atom> polymerAttachPoints = structure.getPolymerAttachmentPoints();
 		boolean isPolymer = polymerAttachPoints != null && polymerAttachPoints.size() > 0;
 		for (int i = 0, l = smilesOutputOrder.size(); i < l; i++) {
@@ -233,7 +233,7 @@ class SMILESWriter {
 				grps.add(smilesOutputOrder.indexOf(a));
 			}
 		}
-		List<String> extendedSmiles = new ArrayList<String>(2);
+		List<String> extendedSmiles = new ArrayList<>(2);
 		if (lastLabel != null && (options & SmilesOptions.CXSMILES_ATOM_LABELS) != 0) {
 			extendedSmiles.add("$" + StringTools.stringListToString(atomLabels.subList(0, lastLabel + 1), ";") + "$" );
 		}
@@ -540,7 +540,7 @@ class SMILESWriter {
 				SMILES_BOND_DIRECTION bond1OtherDirection =null;
 				SMILES_BOND_DIRECTION bond2OtherDirection =null;
 
-				List<Bond> bondsFrom2ndAtom = new ArrayList<Bond>(atomRefs4[1].getBonds());
+				List<Bond> bondsFrom2ndAtom = new ArrayList<>(atomRefs4[1].getBonds());
 				bondsFrom2ndAtom.remove(bond1);
 				bondsFrom2ndAtom.remove(bond);
 				if (bondsFrom2ndAtom.size()==1){//can be 0 for imines
@@ -556,7 +556,7 @@ class SMILESWriter {
 					}
 				}
 
-				List<Bond> bondsFrom3rdAtom= new ArrayList<Bond>(atomRefs4[2].getBonds());
+				List<Bond> bondsFrom3rdAtom= new ArrayList<>(atomRefs4[2].getBonds());
 				bondsFrom3rdAtom.remove(bond2);
 				bondsFrom3rdAtom.remove(bond);
 				if (bondsFrom3rdAtom.size()==1){
@@ -615,7 +615,7 @@ class SMILESWriter {
 	 * @param startingAtom
 	 */
 	private void traverseSmiles(Atom startingAtom){
-		Deque<TraversalState> stack = new ArrayDeque<TraversalState>();
+		Deque<TraversalState> stack = new ArrayDeque<>();
 		stack.add(new TraversalState(startingAtom, null, 0));
 		while (!stack.isEmpty()){
 			TraversalState currentstate = stack.removeLast();
@@ -648,7 +648,7 @@ class SMILESWriter {
 					String closure = bondToClosureSymbolMap.get(bond);
 					smilesBuilder.append(closure);
 					if (newlyAvailableClosureSymbols == null){
-						newlyAvailableClosureSymbols = new ArrayList<String>();
+						newlyAvailableClosureSymbols = new ArrayList<>();
 					}
 					newlyAvailableClosureSymbols.add(closure);
 				}
@@ -814,7 +814,7 @@ class SMILESWriter {
 		AtomParity atomParity = currentAtom.getAtomParity();
 		Atom[] atomRefs4 = atomParity.getAtomRefs4().clone();
 
-		List<Atom> atomrefs4Current = new ArrayList<Atom>();
+		List<Atom> atomrefs4Current = new ArrayList<>();
 
 		if (bondtaken != null) {//previous atom
 			Atom neighbour = bondtaken.getOtherAtom(currentAtom);

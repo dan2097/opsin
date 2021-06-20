@@ -19,8 +19,8 @@ class WordTools {
 	 * @return
 	 */
 	static List<ParseWord> splitIntoParseWords(List<ParseTokens> parseTokensList, String chemicalName) {
-		List<ParseTokens> wellFormedParseTokens = new ArrayList<ParseTokens>();//these are all in the same word as would be expected
-		List<List<ParseTokens>> splitParseTokensForEachParseTokens = new ArrayList<List<ParseTokens>>();
+		List<ParseTokens> wellFormedParseTokens = new ArrayList<>();//these are all in the same word as would be expected
+		List<List<ParseTokens>> splitParseTokensForEachParseTokens = new ArrayList<>();
 		/*
 		 * Each ParseTokens is split into the number of words it describes
 		 * e.g. ethylchloride has one interpretation so splitParseTokensList will have one entry
@@ -32,10 +32,10 @@ class WordTools {
 			List<Character> annotations = parseTokens.getAnnotations();
 			List<List<Character>> chunkedAnnotations = chunkAnnotations(annotations);//chunked into mainGroup/substituent/functionalTerm
 			if (containsOmittedSpace(chunkedAnnotations)){
-				List<ParseTokens> omittedWordParseTokens = new ArrayList<ParseTokens>();
+				List<ParseTokens> omittedWordParseTokens = new ArrayList<>();
 				List<String> tokens = parseTokens.getTokens();
-				List<Character> newAnnotations = new ArrayList<Character>();
-				List<String> newTokens = new ArrayList<String>();
+				List<Character> newAnnotations = new ArrayList<>();
+				List<String> newTokens = new ArrayList<>();
 				int currentFunctionalTermLength = 0;
 				int annotPos = 0;
 				for (List<Character> annotationList : chunkedAnnotations) {
@@ -44,8 +44,8 @@ class WordTools {
 						//create a new parseTokens for the substituent/maingroup preceding the functional term
 						//not necessary if the functional term is the first thing to be read e.g. in the case of poly
 						omittedWordParseTokens.add(new ParseTokens(newTokens, newAnnotations));
-						newAnnotations = new ArrayList<Character>();
-						newTokens = new ArrayList<String>();
+						newAnnotations = new ArrayList<>();
+						newTokens = new ArrayList<>();
 					}
 					for (Character annotation : annotationList) {
 						newAnnotations.add(annotation);
@@ -56,8 +56,8 @@ class WordTools {
 						if (finalAnnotationInList.equals(END_OF_FUNCTIONALTERM)){
 							currentFunctionalTermLength = StringTools.stringListToString(newTokens, "").length();
 						}
-						newAnnotations = new ArrayList<Character>();
-						newTokens = new ArrayList<String>();
+						newAnnotations = new ArrayList<>();
+						newTokens = new ArrayList<>();
 					}
 				}
 				if (omittedWordParseTokens.size() <= leastWordsInOmmittedSpaceParse){
@@ -78,12 +78,12 @@ class WordTools {
 				wellFormedParseTokens.add(parseTokens);
 			}
 		}
-		List<ParseWord> parseWords = new ArrayList<ParseWord>();
+		List<ParseWord> parseWords = new ArrayList<>();
 		if (!wellFormedParseTokens.isEmpty()) {
 			parseWords.add(new ParseWord(chemicalName, wellFormedParseTokens));
 		} else {
 			for (int i = 0; i < leastWordsInOmmittedSpaceParse; i++) {
-				List<ParseTokens> parseTokensForWord = new ArrayList<ParseTokens>();
+				List<ParseTokens> parseTokensForWord = new ArrayList<>();
 				for (List<ParseTokens> parseTokens : splitParseTokensForEachParseTokens) {
 					if (!parseTokensForWord.contains(parseTokens.get(i))){//if only one word is ambiguous there is no need for the unambiguous word to have multiple identical interpretation
 						parseTokensForWord.add(parseTokens.get(i));
@@ -113,14 +113,14 @@ class WordTools {
 	 * @return A List of lists of annotations, each list corresponds to a substituent/maingroup/functionalTerm
 	 */
 	static List<List<Character>> chunkAnnotations(List<Character> annots) {
-		List<List<Character>> chunkList = new ArrayList<List<Character>>();
-		List<Character> currentTerm = new ArrayList<Character>();
+		List<List<Character>> chunkList = new ArrayList<>();
+		List<Character> currentTerm = new ArrayList<>();
 		for (Character annot : annots) {
 			currentTerm.add(annot);
 			char ch = annot;
 			if (ch == END_OF_SUBSTITUENT || ch == END_OF_MAINGROUP || ch == END_OF_FUNCTIONALTERM) {
 				chunkList.add(currentTerm);
-				currentTerm = new ArrayList<Character>();
+				currentTerm = new ArrayList<>();
 			}
 		}
 		return chunkList;

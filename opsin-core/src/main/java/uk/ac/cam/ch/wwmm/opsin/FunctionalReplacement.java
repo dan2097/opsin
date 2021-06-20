@@ -295,8 +295,8 @@ class FunctionalReplacement {
 				List<String> infixTransformations = StringTools.arrayToList(suffix.getAttributeValue(INFIX_ATR).split(";"));
 
 				List<Atom> atomList =fragToApplyInfixTo.getAtomList();
-				LinkedList<Atom> singleBondedOxygen = new LinkedList<Atom>();
-				LinkedList<Atom> doubleBondedOxygen = new LinkedList<Atom>();
+				LinkedList<Atom> singleBondedOxygen = new LinkedList<>();
+				LinkedList<Atom> doubleBondedOxygen = new LinkedList<>();
 				populateTerminalSingleAndDoubleBondedOxygen(atomList, singleBondedOxygen, doubleBondedOxygen);
 				int oxygenAvailable = singleBondedOxygen.size() +doubleBondedOxygen.size();
 
@@ -364,7 +364,7 @@ class FunctionalReplacement {
 						}
 					}
 
-					Set<Atom> ambiguousElementAtoms = new LinkedHashSet<Atom>();
+					Set<Atom> ambiguousElementAtoms = new LinkedHashSet<>();
 					Atom atomToUse = null;
 					if ((acceptDoubleBondedOxygen || nitrido) && doubleBondedOxygen.size()>0 ){
 						atomToUse = doubleBondedOxygen.removeFirst();
@@ -590,7 +590,7 @@ class FunctionalReplacement {
 
 	
 	private boolean acidHasSufficientHydrogenForSubstitutionInterpretation(Fragment acidFrag, int hydrogenRequiredForSubstitutionInterpretation, Element locantEl) {
-		List<Atom> atomsThatWouldBeSubstituted = new ArrayList<Atom>();
+		List<Atom> atomsThatWouldBeSubstituted = new ArrayList<>();
 		if (locantEl !=null){
 			String[] possibleLocants = locantEl.getValue().split(",");
 			for (String locant : possibleLocants) {
@@ -642,7 +642,7 @@ class FunctionalReplacement {
 				oxygenAtoms = oxygenWithAppropriateLocants;
 			}
 		}
-		List<Atom> replaceableAtoms = new ArrayList<Atom>();
+		List<Atom> replaceableAtoms = new ArrayList<>();
 		if (replacementSmiles.startsWith("=")) {
 			//e.g. thiono
 			replacementSmiles = replacementSmiles.substring(1);
@@ -655,9 +655,9 @@ class FunctionalReplacement {
 			}
 		}
 		else {
-			List<Atom> doubleBondedOxygen = new ArrayList<Atom>();
-			List<Atom> singleBondedOxygen = new ArrayList<Atom>();
-			List<Atom> ethericOxygen = new ArrayList<Atom>();
+			List<Atom> doubleBondedOxygen = new ArrayList<>();
+			List<Atom> singleBondedOxygen = new ArrayList<>();
+			List<Atom> ethericOxygen = new ArrayList<>();
 			for (Atom oxygen : oxygenAtoms) {
 				int incomingValency = oxygen.getIncomingValency();
 				int bondCount = oxygen.getBondCount();
@@ -686,7 +686,7 @@ class FunctionalReplacement {
 		int atomsReplaced =0;
 		if (totalOxygen >=numberOfAtomsToReplace){//check that there atleast as many oxygens as requested replacements
 			boolean prefixAssignmentAmbiguous =false;
-			Set<Atom> ambiguousElementAtoms = new LinkedHashSet<Atom>();
+			Set<Atom> ambiguousElementAtoms = new LinkedHashSet<>();
 			if (totalOxygen != numberOfAtomsToReplace){
 				prefixAssignmentAmbiguous=true;
 			}
@@ -801,8 +801,8 @@ class FunctionalReplacement {
 		}
 		if (locantEl !=null){//locants are used to indicate replacement on trivial groups
 			List<Atom> oxygenWithAppropriateLocants = pickOxygensWithAppropriateLocants(locantEl, oxygenAtoms);
-			List<Atom> singleBondedOxygen = new ArrayList<Atom>();
-			List<Atom> terminalDoubleBondedOxygen = new ArrayList<Atom>();
+			List<Atom> singleBondedOxygen = new ArrayList<>();
+			List<Atom> terminalDoubleBondedOxygen = new ArrayList<>();
 			populateTerminalSingleAndDoubleBondedOxygen(oxygenWithAppropriateLocants, singleBondedOxygen, terminalDoubleBondedOxygen);
 			if (outValency ==1){
 				oxygenWithAppropriateLocants.removeAll(terminalDoubleBondedOxygen);
@@ -819,8 +819,8 @@ class FunctionalReplacement {
 				oxygenAtoms = oxygenWithAppropriateLocants;
 			}
 		}
-		List<Atom> singleBondedOxygen = new ArrayList<Atom>();
-		List<Atom> terminalDoubleBondedOxygen = new ArrayList<Atom>();
+		List<Atom> singleBondedOxygen = new ArrayList<>();
+		List<Atom> terminalDoubleBondedOxygen = new ArrayList<>();
 		populateTerminalSingleAndDoubleBondedOxygen(oxygenAtoms, singleBondedOxygen, terminalDoubleBondedOxygen);
 		if (outValency ==1){
 			oxygenAtoms.removeAll(terminalDoubleBondedOxygen);
@@ -1009,7 +1009,7 @@ class FunctionalReplacement {
 	private List<Atom> pickOxygensWithAppropriateLocants(Element locantEl, List<Atom> oxygenAtoms) {
 		String[] possibleLocants = locantEl.getValue().split(",");
 		boolean pLocantSpecialCase = allLocantsP(possibleLocants);
-		List<Atom> oxygenWithAppropriateLocants = new ArrayList<Atom>();
+		List<Atom> oxygenWithAppropriateLocants = new ArrayList<>();
 		for (Atom atom : oxygenAtoms) {
 			List<String> atomlocants = atom.getLocants();
 			if (atomlocants.size() > 0) {
@@ -1063,7 +1063,7 @@ class FunctionalReplacement {
 	 */
 	private List<Atom> findFunctionalOxygenAtomsInApplicableSuffixes(Element groupToBeModified) {
 		List<Element> suffixElements =OpsinTools.getNextSiblingsOfType(groupToBeModified, SUFFIX_EL);
-		List<Atom> oxygenAtoms = new ArrayList<Atom>();
+		List<Atom> oxygenAtoms = new ArrayList<>();
 		for (Element suffix : suffixElements) {
 			Fragment suffixFrag = suffix.getFrag();
 			if (suffixFrag != null) {//null for non carboxylic acids
@@ -1084,7 +1084,7 @@ class FunctionalReplacement {
 	 * @return
 	 */
 	private List<Atom> findFunctionalOxygenAtomsInGroup(Element groupToBeModified) {
-		List<Atom> oxygenAtoms = new ArrayList<Atom>();
+		List<Atom> oxygenAtoms = new ArrayList<>();
 		Fragment frag = groupToBeModified.getFrag();
 		for (int i = 0, l = frag.getFunctionalAtomCount(); i < l; i++) {
 			Atom a = frag.getFunctionalAtom(i).getAtom();
@@ -1102,7 +1102,7 @@ class FunctionalReplacement {
 	 * @return
 	 */
 	private List<Atom> findEthericOxygenAtomsInGroup(Element groupToBeModified) {
-		List<Atom> oxygenAtoms = new ArrayList<Atom>();
+		List<Atom> oxygenAtoms = new ArrayList<>();
 		List<Atom> atomList = groupToBeModified.getFrag().getAtomList();
 		for (Atom a: atomList) {
 			if (a.getElement() == ChemEl.O && a.getBondCount()==2 && a.getCharge()==0 && a.getIncomingValency()==2){
@@ -1120,7 +1120,7 @@ class FunctionalReplacement {
 	 */
 	private List<Atom> findOxygenAtomsInApplicableSuffixes(Element groupToBeModified) {
 		List<Element> suffixElements =OpsinTools.getNextSiblingsOfType(groupToBeModified, SUFFIX_EL);
-		List<Atom> oxygenAtoms = new ArrayList<Atom>();
+		List<Atom> oxygenAtoms = new ArrayList<>();
 		for (Element suffix : suffixElements) {
 			Fragment suffixFrag = suffix.getFrag();
 			if (suffixFrag != null) {//null for non carboxylic acids
@@ -1143,7 +1143,7 @@ class FunctionalReplacement {
 	 * @return
 	 */
 	private List<Atom> findOxygenAtomsInGroup(Element groupToBeModified) {
-		List<Atom> oxygenAtoms = new ArrayList<Atom>();
+		List<Atom> oxygenAtoms = new ArrayList<>();
 		List<Atom> atomList = groupToBeModified.getFrag().getAtomList();
 		for (Atom a : atomList) {
 			if (a.getElement() == ChemEl.O){

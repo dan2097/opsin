@@ -27,10 +27,10 @@ class CASTools {
 	 * @throws ParsingException
 	 */
 	static String uninvertCASName(String name, ParseRules parseRules) throws ParsingException {
-		List<String> nameComponents = new ArrayList<String>(Arrays.asList(matchCommaSpace.split(name)));
-		List<String> substituents = new ArrayList<String>();
-		List<String> seperateWordSubstituents = new ArrayList<String>();
-		List<String> functionalTerms = new ArrayList<String>();
+		List<String> nameComponents = new ArrayList<>(Arrays.asList(matchCommaSpace.split(name)));
+		List<String> substituents = new ArrayList<>();
+		List<String> seperateWordSubstituents = new ArrayList<>();
+		List<String> functionalTerms = new ArrayList<>();
 
 		String parent = nameComponents.get(0);
 		String[] parentNameParts = parent.split(" ");
