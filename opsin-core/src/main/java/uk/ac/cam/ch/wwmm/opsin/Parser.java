@@ -9,7 +9,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
 
@@ -31,7 +32,7 @@ class Parser {
 	
 	private static final Pattern matchSemiColonSpace = Pattern.compile("; ");
 	private static final Pattern matchStoichiometryIndication = Pattern.compile("[ ]?[\\{\\[\\(](\\d+|\\?)([:/](\\d+|\\?))+[\\}\\]\\)]$");
-	private static final Logger LOG = Logger.getLogger(Parser.class);
+	private static final Logger LOG = LogManager.getLogger(Parser.class);
 
 	/**
 	 * No-argument constructor. Uses ResouceGetter found at

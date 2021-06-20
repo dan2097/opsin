@@ -3,7 +3,8 @@ package uk.ac.cam.ch.wwmm.opsin;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import uk.ac.cam.ch.wwmm.opsin.OpsinWarning.OpsinWarningType;
 
@@ -14,7 +15,7 @@ import uk.ac.cam.ch.wwmm.opsin.OpsinWarning.OpsinWarningType;
  *
  */
 public class OpsinResult {
-	private static final Logger LOG = Logger.getLogger(OpsinResult.class);
+	private static final Logger LOG = LogManager.getLogger(OpsinResult.class);
 	private final Fragment structure;
 	private final OPSIN_RESULT_STATUS status;
 	private final String message;
