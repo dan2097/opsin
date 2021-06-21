@@ -5,7 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import net.sf.jniinchi.INCHI_BOND_TYPE;
 import net.sf.jniinchi.INCHI_OPTION;
@@ -29,7 +30,7 @@ import uk.ac.cam.ch.wwmm.opsin.BondStereo.BondStereoValue;
  */
 public class NameToInchi {
 
-	private static final Logger LOG = Logger.getLogger(NameToInchi.class);
+	private static final Logger LOG = LogManager.getLogger(NameToInchi.class);
 	private NameToStructure n2s;
 	public NameToInchi() {
 		n2s = NameToStructure.getInstance();

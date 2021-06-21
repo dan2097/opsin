@@ -28,8 +28,10 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Option.Builder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.UnrecognizedOptionException;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.core.config.Configurator;
 
 import com.ctc.wstx.api.WstxOutputProperties;
 import com.ctc.wstx.stax.WstxOutputFactory;
@@ -43,7 +45,7 @@ import uk.ac.cam.ch.wwmm.opsin.OpsinResult.OPSIN_RESULT_STATUS;
  */
 public class NameToStructure {
 	
-	private static final Logger LOG = Logger.getLogger(NameToStructure.class);
+	private static final Logger LOG = LogManager.getLogger(NameToStructure.class);
 	
 	/**Applies OPSIN's grammar to tokenise and assign meaning to tokens*/
 	private ParseRules parseRules;
@@ -255,7 +257,7 @@ public class NameToStructure {
 			displayUsage(options);
 		}
 		if(cmd.hasOption("v")){
-			Logger.getLogger("uk.ac.cam.ch.wwmm.opsin").setLevel(Level.DEBUG);
+			Configurator.setLevel("uk.ac.cam.ch.wwmm.opsin", Level.DEBUG);
 		}
 
 		NameToStructureConfig n2sconfig = generateOpsinConfigObjectFromCmd(cmd);

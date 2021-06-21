@@ -6,7 +6,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import dk.brics.automaton.Automaton;
 import dk.brics.automaton.RegExp;
@@ -21,7 +22,7 @@ import dk.brics.automaton.SpecialOperations;
  */
 class AutomatonInitialiser {
 	
-	private static final Logger LOG = Logger.getLogger(AutomatonInitialiser.class);
+	private static final Logger LOG = LogManager.getLogger(AutomatonInitialiser.class);
 	private final ResourceGetter resourceGetter;
 	
 	AutomatonInitialiser(String resourcePath) {

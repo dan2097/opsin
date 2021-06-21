@@ -14,7 +14,8 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import uk.ac.cam.ch.wwmm.opsin.IsotopeSpecificationParser.IsotopeSpecification;
 
@@ -28,7 +29,7 @@ import static uk.ac.cam.ch.wwmm.opsin.OpsinTools.*;
  *
  */
 class StructureBuildingMethods {
-	private static final Logger LOG = Logger.getLogger(StructureBuildingMethods.class);
+	private static final Logger LOG = LogManager.getLogger(StructureBuildingMethods.class);
 	private static final Pattern matchCompoundLocant =Pattern.compile("[\\[\\(\\{](\\d+[a-z]?'*)[\\]\\)\\}]");
 
 	private StructureBuildingMethods() {}
@@ -1659,7 +1660,9 @@ class StructureBuildingMethods {
 				throw new StructureBuildingException("Multiplication bond formation failure: number of outAtoms disagree with multiplier(multiplier: " + multiplier + ", outAtom count: " + multiRadicalBR.getOutAtomCount()+ ")");
 			}
 		}
-		if (LOG.isTraceEnabled()){LOG.trace(multiplier +" multiplicative bonds to be formed");}
+		if (LOG.isTraceEnabled()){
+			LOG.trace(multiplier +" multiplicative bonds to be formed");
+		}
 		multipliedParent.removeAttribute(multipliedParent.getAttribute(MULTIPLIER_ATR));
 		List<String> inLocants = null;
 		String inLocantsString = multipliedParent.getAttributeValue(INLOCANTS_ATR);
@@ -1784,7 +1787,9 @@ class StructureBuildingMethods {
 					multiRadicalFrag.removeOutAtom(multiRadicalOutAtom);
 
 					state.fragManager.createBond(from, atomToJoinTo, bondOrder);
-					if (LOG.isTraceEnabled()){LOG.trace("Substitutively bonded (multiplicative to root) " + from.getID() + " (" + from.getFrag().getTokenEl().getValue() + ") " + atomToJoinTo.getID() + " (" + atomToJoinTo.getFrag().getTokenEl().getValue() + ")");}
+					if (LOG.isTraceEnabled()){
+						LOG.trace("Substitutively bonded (multiplicative to root) " + from.getID() + " (" + from.getFrag().getTokenEl().getValue() + ") " + atomToJoinTo.getID() + " (" + atomToJoinTo.getFrag().getTokenEl().getValue() + ")");
+					}
 					substitutivelyBondedToRoot = true;
 				}
 			}
@@ -2080,7 +2085,9 @@ class StructureBuildingMethods {
 		fragToBeJoined.removeOutAtom(out);
 
 		state.fragManager.createBond(from, to, bondOrder);
-		if (LOG.isTraceEnabled()){LOG.trace("Additively bonded " + from.getID() + " (" + from.getFrag().getTokenEl().getValue() + ") " + to.getID() + " (" + to.getFrag().getTokenEl().getValue() + ")" );}
+		if (LOG.isTraceEnabled()){
+			LOG.trace("Additively bonded " + from.getID() + " (" + from.getFrag().getTokenEl().getValue() + ") " + to.getID() + " (" + to.getFrag().getTokenEl().getValue() + ")" );
+		}
 	}
 
 	private static void joinFragmentsSubstitutively(BuildState state, Fragment fragToBeJoined, Atom atomToJoinTo) throws StructureBuildingException {
@@ -2119,7 +2126,9 @@ class StructureBuildingMethods {
 		fragToBeJoined.removeOutAtom(out);
 
 		state.fragManager.createBond(from, atomToJoinTo, bondOrder);
-		if (LOG.isTraceEnabled()){LOG.trace("Substitutively bonded " + from.getID() + " (" + from.getFrag().getTokenEl().getValue() + ") " + atomToJoinTo.getID() + " (" + atomToJoinTo.getFrag().getTokenEl().getValue() + ")");}
+		if (LOG.isTraceEnabled()){
+			LOG.trace("Substitutively bonded " + from.getID() + " (" + from.getFrag().getTokenEl().getValue() + ") " + atomToJoinTo.getID() + " (" + atomToJoinTo.getFrag().getTokenEl().getValue() + ")");
+		}
 	}
 
 	/**

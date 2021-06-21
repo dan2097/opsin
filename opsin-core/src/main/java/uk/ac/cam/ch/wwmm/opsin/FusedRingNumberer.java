@@ -10,7 +10,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Numbers fusedRings
@@ -20,7 +21,7 @@ import org.apache.log4j.Logger;
  */
 class FusedRingNumberer {
 	
-	private static final Logger LOG = Logger.getLogger(FusedRingNumberer.class);
+	private static final Logger LOG = LogManager.getLogger(FusedRingNumberer.class);
 	private static class RingConnectivityTable {
 		final List<RingShape> ringShapes = new ArrayList<>();
 		final List<Ring> neighbouringRings = new ArrayList<>();
