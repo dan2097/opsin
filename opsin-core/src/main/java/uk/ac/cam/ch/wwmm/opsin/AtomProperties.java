@@ -10,8 +10,8 @@ import java.util.Map;
  */
 class AtomProperties {
 
-	private static final Map<ChemEl, Double> elementToPaulingElectronegativity = new EnumMap<ChemEl, Double>(ChemEl.class);
-	private static final Map<ChemEl, Integer> elementToHwPriority = new EnumMap<ChemEl, Integer>(ChemEl.class);
+	private static final Map<ChemEl, Double> elementToPaulingElectronegativity = new EnumMap<>(ChemEl.class);
+	private static final Map<ChemEl, Integer> elementToHwPriority = new EnumMap<>(ChemEl.class);
 	
 	static{
 		elementToPaulingElectronegativity.put(ChemEl.H, 2.20);

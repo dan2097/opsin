@@ -37,7 +37,7 @@ class SuffixRules {
 	}
 	
 	private Map<String, List<SuffixRule>> generateSuffixRulesMap(ResourceGetter resourceGetter) throws IOException {
-		Map<String, List<SuffixRule>> suffixRulesMap = new HashMap<String, List<SuffixRule>>();
+		Map<String, List<SuffixRule>> suffixRulesMap = new HashMap<>();
 		XMLStreamReader reader = resourceGetter.getXMLStreamReader("suffixRules.xml");
 		try {
 			while (reader.hasNext()) {
@@ -67,13 +67,13 @@ class SuffixRules {
 
 	private List<SuffixRule> processSuffixRules(XMLStreamReader reader) throws XMLStreamException {
 		String startingElName = reader.getLocalName();
-		List<SuffixRule> rules = new ArrayList<SuffixRule>();
+		List<SuffixRule> rules = new ArrayList<>();
 		while (reader.hasNext()) {
 			switch (reader.next()) {
 			case XMLStreamConstants.START_ELEMENT:
 				String tagName = reader.getLocalName();
 				SuffixRuleType type = SuffixRuleType.valueOf(tagName);
-				List<Attribute> attributes = new ArrayList<Attribute>();
+				List<Attribute> attributes = new ArrayList<>();
 				for (int i = 0, l = reader.getAttributeCount(); i < l; i++) {
 					attributes.add(new Attribute(reader.getAttributeLocalName(i), reader.getAttributeValue(i)));
 				}
@@ -90,13 +90,13 @@ class SuffixRules {
 	}
 
 	private Map<String, Map<String, List<ApplicableSuffix>>> generateSuffixApplicabilityMap(ResourceGetter resourceGetter, Map<String, List<SuffixRule>> suffixRulesMap) throws IOException {
-		Map<String, Map<String, List<ApplicableSuffix>>> suffixApplicability = new HashMap<String, Map<String,List<ApplicableSuffix>>>();
+		Map<String, Map<String, List<ApplicableSuffix>>> suffixApplicability = new HashMap<>();
 		XMLStreamReader reader = resourceGetter.getXMLStreamReader("suffixApplicability.xml");
 		try {
 			while (reader.hasNext()) {
 				if (reader.next() == XMLStreamConstants.START_ELEMENT && 
 						reader.getLocalName().equals(SUFFIXAPPLICABILITY_GROUPTYPE_EL)) {
-					Map<String, List<ApplicableSuffix>> suffixToRuleMap = new HashMap<String, List<ApplicableSuffix>>();
+					Map<String, List<ApplicableSuffix>> suffixToRuleMap = new HashMap<>();
 					suffixApplicability.put(reader.getAttributeValue(null, SUFFIXAPPLICABILITY_TYPE_ATR), suffixToRuleMap);
 					while (reader.hasNext()) {
 						int event = reader.next();
@@ -106,7 +106,7 @@ class SuffixRules {
 							List<ApplicableSuffix> suffixList = suffixToRuleMap.get(suffixValue);
 							//can have multiple entries if subType attribute is set
 							if (suffixToRuleMap.get(suffixValue) == null){
-								suffixList = new ArrayList<ApplicableSuffix>();
+								suffixList = new ArrayList<>();
 								suffixToRuleMap.put(suffixValue, suffixList);
 							}
 							String requiredSubType = reader.getAttributeValue(null, SUFFIXAPPLICABILITY_SUBTYPE_ATR);

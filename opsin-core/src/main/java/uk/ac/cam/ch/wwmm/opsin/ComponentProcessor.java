@@ -38,7 +38,7 @@ class ComponentProcessor {
 	private final BuildState state;
 	
 	//rings that look like HW rings but have other meanings. For the HW like inorganics the true meaning is given
-	private static final Map<String, String[]> specialHWRings = new HashMap<String, String[]>();
+	private static final Map<String, String[]> specialHWRings = new HashMap<>();
 	static{
 		//The first entry of the array is a special instruction e.g. blocked or saturated. The correct order of the heteroatoms follows
 		//terminal e is ignored from all of the keys as it is optional in the input name
@@ -321,7 +321,7 @@ class ComponentProcessor {
 		
 		if(group.getAttribute(ADDGROUP_ATR) != null) {
 			String addGroupInformation = group.getAttributeValue(ADDGROUP_ATR);
-			List<AddGroup> groupsToBeAdded = new ArrayList<AddGroup>();
+			List<AddGroup> groupsToBeAdded = new ArrayList<>();
 			////typically only one, but 2 in the case of xylene and quinones
 			for (String groupToBeAdded : addGroupInformation.split(";")) {
 				String[] description = groupToBeAdded.split(" ");
@@ -426,7 +426,7 @@ class ComponentProcessor {
 
 		if(group.getAttributeValue(ADDHETEROATOM_ATR) != null) {
 			String addHeteroAtomInformation = group.getAttributeValue(ADDHETEROATOM_ATR);
-			List<AddHeteroatom> heteroAtomsToBeAdded = new ArrayList<AddHeteroatom>();
+			List<AddHeteroatom> heteroAtomsToBeAdded = new ArrayList<>();
 			for (String heteroAtomToBeAdded : addHeteroAtomInformation.split(";")) {
 				String[] description = heteroAtomToBeAdded.split(" ");
 				if (description.length != 3) {
@@ -477,7 +477,7 @@ class ComponentProcessor {
 
 		if(group.getAttributeValue(ADDBOND_ATR) != null && !HANTZSCHWIDMAN_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR))) {//HW add bond is handled later
 			String addBondInformation = group.getAttributeValue(ADDBOND_ATR);
-			List<AddBond> bondsToBeAdded = new ArrayList<AddBond>();
+			List<AddBond> bondsToBeAdded = new ArrayList<>();
 			for (String bondToBeAdded : addBondInformation.split(";")) {
 				String[] description = bondToBeAdded.split(" ");
 				if (description.length != 3) {
@@ -674,7 +674,7 @@ class ComponentProcessor {
 		if (homologyValsStr != null) {
 			String[] vals = homologyValsStr.split(";");
 			
-			List<Atom> homologyAtoms = new ArrayList<Atom>();
+			List<Atom> homologyAtoms = new ArrayList<>();
 			for (Atom a : frag.getAtomList()) {
 				if (a.getElement() == ChemEl.R) {
 					homologyAtoms.add(a);
@@ -1292,7 +1292,7 @@ class ComponentProcessor {
 	boolean applyDlStereochemistryToAminoAcid(Element aminoAcidEl, String dlStereochemistryValue) throws ComponentGenerationException {
 		Fragment aminoAcid = aminoAcidEl.getFrag();
 		List<Atom> atomList = aminoAcid.getAtomList();
-		List<Atom> atomsWithParities = new ArrayList<Atom>();
+		List<Atom> atomsWithParities = new ArrayList<>();
 		for (Atom atom : atomList) {
 			if (atom.getAtomParity() != null) {
 				atomsWithParities.add(atom);
@@ -1333,7 +1333,7 @@ class ComponentProcessor {
 	void applyDlStereochemistryToCarbohydrate(Element carbohydrateEl, String dlStereochemistryValue) throws ComponentGenerationException {
 		Fragment carbohydrate = carbohydrateEl.getFrag();
 		List<Atom> atomList = carbohydrate.getAtomList();
-		List<Atom> atomsWithParities = new ArrayList<Atom>();
+		List<Atom> atomsWithParities = new ArrayList<>();
 		for (Atom atom : atomList) {
 			if (atom.getAtomParity()!=null){
 				atomsWithParities.add(atom);
@@ -1558,7 +1558,7 @@ class ComponentProcessor {
 	 * @throws StructureBuildingException 
 	 */
 	private Atom processUloseSuffix(Element group, Element suffix, Atom potentialCarbonyl) throws StructureBuildingException {
-		List<String> locantsToConvertToKetones = new ArrayList<String>();
+		List<String> locantsToConvertToKetones = new ArrayList<>();
 		Element potentialLocantOrMultiplier = OpsinTools.getPreviousSibling(suffix);
 		if (potentialLocantOrMultiplier.getName().equals(MULTIPLIER_ATR)){
 			int multVal = Integer.parseInt(potentialLocantOrMultiplier.getAttributeValue(VALUE_ATR));
@@ -1967,7 +1967,7 @@ class ComponentProcessor {
 	private void detectConjunctiveSuffixGroups(Element subOrRoot, List<Element> allGroups) throws ComponentGenerationException, StructureBuildingException {
 		List<Element> groups = subOrRoot.getChildElements(GROUP_EL);
 		if (groups.size() > 1) {
-			List<Element> conjunctiveGroups = new ArrayList<Element>();
+			List<Element> conjunctiveGroups = new ArrayList<>();
 			Element ringGroup =null;
 			for (int i = groups.size() -1 ; i >=0; i--) {
 				Element group =groups.get(i);
@@ -1995,7 +1995,7 @@ class ComponentProcessor {
 			for (Atom atom : atomList) {
 				atom.clearLocants();
 			}
-			List<Element> suffixes = new ArrayList<Element>();
+			List<Element> suffixes = new ArrayList<>();
 			Element possibleSuffix = OpsinTools.getNextSibling(primaryConjunctiveGroup);
 			while (possibleSuffix !=null){
 				if (possibleSuffix.getName().equals(SUFFIX_EL)){
@@ -2099,7 +2099,7 @@ class ComponentProcessor {
 				}
 				if (locants.size()>0 ){
 					Element locantBeforeHWSystem = null;
-					List<Element> heteroAtoms = new ArrayList<Element>();
+					List<Element> heteroAtoms = new ArrayList<>();
 					int indexOfGroup = subOrRoot.indexOf(group);
 					for (int j = indexOfGroup -1; j >= 0; j--) {
 						String elName = subOrRoot.getChild(j).getName();
@@ -2245,7 +2245,7 @@ class ComponentProcessor {
 			String[] suffixInstructions = defaultLocantsAtrValue.split(",");
 			Element suffix = OpsinTools.getNextNonChargeSuffix(group);
 			if (suffix !=null) {
-				List<Element> suffixes = new ArrayList<Element>();
+				List<Element> suffixes = new ArrayList<>();
 				while (suffix != null) {
 					suffixes.add(suffix);
 					suffix = OpsinTools.getNextNonChargeSuffix(suffix);
@@ -2338,7 +2338,7 @@ class ComponentProcessor {
 	 * @throws ComponentGenerationException
 	 */
 	private List<Fragment> resolveGroupAddingSuffixes(List<Element> suffixes, Fragment frag) throws StructureBuildingException, ComponentGenerationException {
-		List<Fragment> suffixFragments =new ArrayList<Fragment>();
+		List<Fragment> suffixFragments =new ArrayList<>();
 		String groupType = frag.getType();
 		String subgroupType = frag.getSubType();
 
@@ -2587,7 +2587,7 @@ class ComponentProcessor {
 	 */
 	static boolean checkLocantPresentOnPotentialRoot(BuildState state, Element startingElement, String locant) throws StructureBuildingException {
 		boolean foundSibling =false;
-		Deque<Element> s = new ArrayDeque<Element>();
+		Deque<Element> s = new ArrayDeque<>();
 		s.add(startingElement);
 		boolean doneFirstIteration =false;//check on index only done on first iteration to only get elements with an index greater than the starting element
 		while (s.size()>0){
@@ -2633,7 +2633,7 @@ class ComponentProcessor {
 		}
 
 		if (!foundSibling){//Special case: anything the group could potentially substitute onto is in a bracket. The bracket is checked recursively
-			s = new ArrayDeque<Element>();
+			s = new ArrayDeque<>();
 			s.add(startingElement);
 			doneFirstIteration =false;//check on index only done on first iteration to only get elements with an index greater than the starting element
 			while (s.size()>0){
@@ -2780,7 +2780,7 @@ class ComponentProcessor {
 			Fragment hwRing = group.getFrag();
 			List<Atom> atomList =hwRing.getAtomList();
 			boolean noLocants = true;
-			List<Element> prevs = new ArrayList<Element>();
+			List<Element> prevs = new ArrayList<>();
 			Element prev = OpsinTools.getPreviousSibling(group);
 			while(prev != null && prev.getName().equals(HETEROATOM_EL)) {
 				prevs.add(prev);
@@ -2921,7 +2921,7 @@ class ComponentProcessor {
 			//add unlocanted heteroatoms
 			int hetAtomsToProcess = heteroatomsToProcess.size();
 			if (hetAtomsToProcess > 0) {
-				List<Atom> carbonAtomsInRing = new ArrayList<Atom>();
+				List<Atom> carbonAtomsInRing = new ArrayList<>();
 				for (Atom atom : atomList) {
 					if (atom.getElement() == ChemEl.C) {
 						carbonAtomsInRing.add(atom);
@@ -2968,7 +2968,7 @@ class ComponentProcessor {
 	private void assignElementSymbolLocants(Element subOrRoot) throws StructureBuildingException {
 		List<Element> groups = subOrRoot.getChildElements(GROUP_EL);
 		Element lastGroupElementInSubOrRoot =groups.get(groups.size()-1);
-		List<Fragment> suffixFragments = new ArrayList<Fragment>(state.xmlSuffixMap.get(lastGroupElementInSubOrRoot));
+		List<Fragment> suffixFragments = new ArrayList<>(state.xmlSuffixMap.get(lastGroupElementInSubOrRoot));
 		Fragment suffixableFragment = lastGroupElementInSubOrRoot.getFrag();
 		//treat conjunctive suffixesas if they were suffixes
 		List<Element> conjunctiveGroups = subOrRoot.getChildElements(CONJUNCTIVESUFFIXGROUP_EL);
@@ -2977,7 +2977,7 @@ class ComponentProcessor {
 		}
 		FragmentTools.assignElementLocants(suffixableFragment, suffixFragments);
 		for (int i = groups.size()-2; i>=0; i--) {
-			FragmentTools.assignElementLocants(groups.get(i).getFrag(), new ArrayList<Fragment>());
+			FragmentTools.assignElementLocants(groups.get(i).getFrag(), new ArrayList<>());
 		}
 	}
 
@@ -2997,19 +2997,19 @@ class ComponentProcessor {
 			 * Populate locants with locants. Two locants are required for every pair of rings to be joined.
 			 * e.g. bi requires 2, ter requires 4 etc.
 			 */
-			List<List<String>> ringJoiningLocants = new ArrayList<List<String>>();
+			List<List<String>> ringJoiningLocants = new ArrayList<>();
 			Element potentialLocant = OpsinTools.getPreviousSibling(multiplier);
 			Element group = OpsinTools.getNextSibling(multiplier, GROUP_EL);
 			if (potentialLocant != null && (potentialLocant.getName().equals(COLONORSEMICOLONDELIMITEDLOCANT_EL) || potentialLocant.getName().equals(LOCANT_EL))){ //a locant appears to have been provided to indicate how to connect the rings of the ringAssembly
 				if (ORTHOMETAPARA_TYPE_VAL.equals(potentialLocant.getAttributeValue(TYPE_ATR))){//an OMP locant has been provided to indicate how to connect the rings of the ringAssembly
 					String locant2 = potentialLocant.getValue();
 					String locant1 = "1";
-					List<String> locantArrayList = new ArrayList<String>();
+					List<String> locantArrayList = new ArrayList<>();
 					locantArrayList.add("1");
 					locantArrayList.add("1'");
 					ringJoiningLocants.add(locantArrayList);
 					for (int i = 1; i < mvalue - 1; i++) {
-						locantArrayList = new ArrayList<String>();
+						locantArrayList = new ArrayList<>();
 						locantArrayList.add(locant2 + StringTools.multiplyString("'", i));
 						locantArrayList.add(locant1 + StringTools.multiplyString("'", i + 1));
 						ringJoiningLocants.add(locantArrayList);
@@ -3089,7 +3089,7 @@ class ComponentProcessor {
 				state.fragManager.incorporateFragment(clone, atomOnClone, fragmentToResolveAndDuplicate, atomOnParent, bondOrder);
 			}
 			else {
-				List<Fragment> clonedFragments = new ArrayList<Fragment>();
+				List<Fragment> clonedFragments = new ArrayList<>();
 				for (int j = 1; j < mvalue; j++) {
 					clonedFragments.add(state.fragManager.copyAndRelabelFragment(fragmentToResolveAndDuplicate, j));
 				}
@@ -3274,7 +3274,7 @@ class ComponentProcessor {
 			throw new ComponentGenerationException("OPSIN Bug: Open bracket not found where open bracket expeced");
 		}
 		
-		List<Element> groups = new ArrayList<Element>();
+		List<Element> groups = new ArrayList<>();
 		for (Element spiroBracketElement : spiroBracketElements) {
 			String name = spiroBracketElement.getName();
 			if (name.equals(GROUP_EL)) {
@@ -3325,7 +3325,7 @@ class ComponentProcessor {
 		}
 		
 		Element firstGroup = groups.get(0);
-		List<Element> firstGroupEls = new ArrayList<Element>();
+		List<Element> firstGroupEls = new ArrayList<>();
 		int indexOfOpenBracket = subOrRoot.indexOf(openBracket);
 		Element firstSpiroLocant = OpsinTools.getNextSibling(firstGroup, SPIROLOCANT_EL);
 		if (firstSpiroLocant == null) {
@@ -3336,7 +3336,7 @@ class ComponentProcessor {
 			firstGroupEls.add(subOrRoot.getChild(i));
 		}
 		resolveFeaturesOntoGroup(firstGroupEls);
-		Set<Atom> spiroAtoms = new HashSet<Atom>();
+		Set<Atom> spiroAtoms = new HashSet<>();
 		for (int i = 1; i < groupCount; i++) {
 			Element nextGroup = groups.get(i);
 			Element spiroLocant = OpsinTools.getNextSibling(groups.get(i - 1), SPIROLOCANT_EL);
@@ -3347,7 +3347,7 @@ class ComponentProcessor {
 			locants[0] = fixLocantCapitalisation(locants[0]);
 			locants[1] = fixLocantCapitalisation(locants[1]);
 
-			List<Element> nextGroupEls = new ArrayList<Element>();
+			List<Element> nextGroupEls = new ArrayList<>();
 			int indexOfLocant = subOrRoot.indexOf(spiroLocant);
 			int indexOfNextSpiroLocantOrEndOfSpiro = subOrRoot.indexOf(i + 1 < groupCount ? OpsinTools.getNextSibling(nextGroup, SPIROLOCANT_EL) : OpsinTools.getNextSibling(nextGroup, STRUCTURALCLOSEBRACKET_EL));
 			for (int j = indexOfLocant + 1; j < indexOfNextSpiroLocantOrEndOfSpiro; j++) {
@@ -3541,7 +3541,7 @@ class ComponentProcessor {
 
 		determineFeaturesToResolveInSingleComponentSpiro(polyCyclicSpiroDescriptor);
 		Fragment fragment = group.getFrag();
-		List<Fragment> clones = new ArrayList<Fragment>();
+		List<Fragment> clones = new ArrayList<>();
 		for (int i = 1; i < components ; i++) {
 			clones.add(state.fragManager.copyAndRelabelFragment(fragment, i));
 		}
@@ -3595,7 +3595,7 @@ class ComponentProcessor {
 		}
 		determineFeaturesToResolveInSingleComponentSpiro(polyCyclicSpiroDescriptor);
 		Fragment fragment = group.getFrag();
-		List<Fragment> clones = new ArrayList<Fragment>();
+		List<Fragment> clones = new ArrayList<>();
 		for (int i = 1; i < 3 ; i++) {
 			clones.add(state.fragManager.copyAndRelabelFragment(fragment, i));
 		}
@@ -3657,7 +3657,7 @@ class ComponentProcessor {
 		Element parent = elementsToResolve.get(0).getParent();
 		int index = parent.indexOf(elementsToResolve.get(0));
 		Element group =null;
-		List<Element> suffixes = new ArrayList<Element>();
+		List<Element> suffixes = new ArrayList<>();
 		Element locant =null;
 		for (Element element : elementsToResolve) {
 			String elName =element.getName();
@@ -3745,7 +3745,7 @@ class ComponentProcessor {
 		}
 		Element groupEl = OpsinTools.getNextSibling(bridges.get(bridgeCount - 1), GROUP_EL);
 		Fragment ringFrag = groupEl.getFrag();
-		Map<Fragment, Atom[]> bridgeToRingAtoms = new LinkedHashMap<Fragment, Atom[]>();
+		Map<Fragment, Atom[]> bridgeToRingAtoms = new LinkedHashMap<>();
 		for (Element bridge : bridges) {
 			Element possibleMultiplier = OpsinTools.getPreviousSibling(bridge);
 			List<String[]> locants = null;
@@ -3757,7 +3757,7 @@ class ComponentProcessor {
 					possibleLocant = OpsinTools.getPreviousSibling(possibleMultiplier);
 					possibleMultiplier.detach();
 					if (possibleLocant != null && possibleLocant.getName().equals(COLONORSEMICOLONDELIMITEDLOCANT_EL)) {
-						locants = new ArrayList<String[]>();
+						locants = new ArrayList<>();
 						String[] locantsForEachMultiple = StringTools.removeDashIfPresent(possibleLocant.getValue()).split(":");
 						if (locantsForEachMultiple.length != multiplier) {
 							throw new RuntimeException("Mismatch between locant and multiplier counts (" + locantsForEachMultiple.length + " and " + multiplier + "): " + possibleLocant.getValue());
@@ -3777,7 +3777,7 @@ class ComponentProcessor {
 					if (possibleLocant != null && possibleLocant.getName().equals(LOCANT_EL)) {
 						String[] locantArray = possibleLocant.getValue().split(",");
 						if (locantArray.length == 2) {
-							locants = new ArrayList<String[]>();
+							locants = new ArrayList<>();
 							locants.add(locantArray);
 							possibleLocant.detach();
 						}
@@ -3811,7 +3811,7 @@ class ComponentProcessor {
 			bridge.detach();
 		}
 		int highestLocant = getHighestNumericLocant(ringFrag);
-		List<Fragment> bridgeFragments = new ArrayList<Fragment>(bridgeToRingAtoms.keySet());
+		List<Fragment> bridgeFragments = new ArrayList<>(bridgeToRingAtoms.keySet());
 		Collections.sort(bridgeFragments, new SortBridgesByHighestLocantedBridgehead(bridgeToRingAtoms));
 		for (Fragment bridgeFragment: bridgeFragments) {
 			List<Atom> bridgeFragmentAtoms = bridgeFragment.getAtomList();
@@ -4078,7 +4078,7 @@ class ComponentProcessor {
 				
 				//now find the brackets/substituents before this element
 				Element previous = OpsinTools.getPreviousSibling(subOrRoot);
-				List<Element> previousElements = new ArrayList<Element>();
+				List<Element> previousElements = new ArrayList<>();
 				while( previous !=null){
 					if (!previous.getName().equals(SUBSTITUENT_EL) && !previous.getName().equals(BRACKET_EL)){
 						break;
@@ -4285,9 +4285,9 @@ class ComponentProcessor {
 		 *  theSubstituentGroup
 		 *  e.g. 2-aminomethyl-1-chlorobenzene where the 2 refers to the benzene NOT the methyl
 		 */
-		List<Element> locantRelatedElements = new ArrayList<Element>();//sometimes moved
+		List<Element> locantRelatedElements = new ArrayList<>();//sometimes moved
 		String[] locantValues = null;
-		List<Element> stereoChemistryElements = new ArrayList<Element>();//always moved if bracketing occurs
+		List<Element> stereoChemistryElements = new ArrayList<>();//always moved if bracketing occurs
 		List<Element> childrenOfElementBeforeSubstituent = elementBeforeSubstituent.getChildElements();
 		for (Element childOfElBeforeSub : childrenOfElementBeforeSubstituent) {
 			String currentElementName = childOfElBeforeSub.getName();
@@ -4571,7 +4571,7 @@ class ComponentProcessor {
 	 */
 	private List<Element> findLocantsThatCouldBeIndirectLocants(Element subOrRoot) {
 		List<Element> children = subOrRoot.getChildElements();
-		List<Element> locantEls = new ArrayList<Element>();
+		List<Element> locantEls = new ArrayList<>();
 		for (Element el : children) {
 			if (el.getName().equals(LOCANT_EL)){
 				Element afterLocant = OpsinTools.getNextSibling(el);
@@ -4596,7 +4596,7 @@ class ComponentProcessor {
 	 * @return An arrayList of locantable elements
 	 */
 	private List<Element> findElementsMissingIndirectLocants(Element subOrRoot,Element locantEl) {
-		List<Element> locantAble = new ArrayList<Element>();
+		List<Element> locantAble = new ArrayList<>();
 		List<Element> childrenOfSubOrBracketOrRoot=subOrRoot.getChildElements();
 		for (Element el : childrenOfSubOrBracketOrRoot) {
 			String name =el.getName();
@@ -4728,7 +4728,7 @@ class ComponentProcessor {
 				if (hasAdjacentGroupToSubstitute) {
 					//now find the brackets/substituents before this element
 					Element previous = OpsinTools.getPreviousSibling(substituent);
-					List<Element> previousElements = new ArrayList<Element>();
+					List<Element> previousElements = new ArrayList<>();
 					while( previous != null) {
 						if (!previous.getName().equals(SUBSTITUENT_EL) && !previous.getName().equals(BRACKET_EL)) {
 							break;
@@ -4843,7 +4843,7 @@ class ComponentProcessor {
 
 	private void moveSubstituentDetachableHetAtomRepl(Element substituent) throws ComponentGenerationException {
 		Element child = substituent.getChild(0);
-		List<Element> locantededHeteroAtomRepls = new ArrayList<Element>();
+		List<Element> locantededHeteroAtomRepls = new ArrayList<>();
 		while (child != null && child.getName().equals(HETEROATOM_EL) && child.getAttribute(LOCANT_ATR) != null) {
 			locantededHeteroAtomRepls.add(child);
 			child = OpsinTools.getNextSibling(child);
@@ -4934,7 +4934,7 @@ class ComponentProcessor {
 		if (!substituent.getName().equals(SUBSTITUENT_EL)) {
 			return;
 		}
-		List<Element> multipliers = new ArrayList<Element>();
+		List<Element> multipliers = new ArrayList<>();
 		for (int i = 0, len = substituent.getChildCount(); i < len; i++) {
 			Element child = substituent.getChild(i);
 			if (child.getName().equals(MULTIPLIER_EL)) {
@@ -5045,7 +5045,7 @@ class ComponentProcessor {
 	 * @return
 	 */
 	private List<Element> getLocantsAtStartOfSubstituent(Element substituent) {
-		List<Element> locants = new ArrayList<Element>();
+		List<Element> locants = new ArrayList<>();
 		for (int i = 0, len = substituent.getChildCount(); i < len; i++) {
 			Element child = substituent.getChild(i);
 			String currentElementName = child.getName();
@@ -5248,7 +5248,7 @@ class ComponentProcessor {
 				if (multiVal == 1) {//mono
 					return;
 				}
-				List<Element> elementsNotToBeMultiplied = new ArrayList<Element>();//anything before the multiplier
+				List<Element> elementsNotToBeMultiplied = new ArrayList<>();//anything before the multiplier
 				for (int i = firstSubBrackOrRoot.indexOf(multiplier) -1 ; i >=0 ; i--) {
 					Element el = firstSubBrackOrRoot.getChild(i);
 					el.detach();

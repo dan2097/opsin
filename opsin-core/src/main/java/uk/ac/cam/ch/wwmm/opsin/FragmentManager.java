@@ -22,7 +22,7 @@ import java.util.Set;
 class FragmentManager {
 
 	/** A mapping between fragments and inter fragment bonds */
-	private final Map<Fragment,Set<Bond>> fragToInterFragmentBond = new LinkedHashMap<Fragment, Set<Bond>>();
+	private final Map<Fragment,Set<Bond>> fragToInterFragmentBond = new LinkedHashMap<>();
 	
 	/** All of the atom-containing fragments in the molecule */
 	private final Set<Fragment> fragments = fragToInterFragmentBond.keySet();
@@ -297,7 +297,7 @@ class FragmentManager {
 	 * @param frag
 	 */
 	private void addFragment(Fragment frag)  {
-		fragToInterFragmentBond.put(frag, new LinkedHashSet<Bond>());
+		fragToInterFragmentBond.put(frag, new LinkedHashSet<>());
 	}
 
 	/**
@@ -312,7 +312,7 @@ class FragmentManager {
 		if (interFragmentBondsInvolvingFragmentSet == null) {
 			throw new StructureBuildingException("Fragment not registered with this FragmentManager!");
 		}
-		List<Bond> interFragmentBondsInvolvingFragment = new ArrayList<Bond>(interFragmentBondsInvolvingFragmentSet);
+		List<Bond> interFragmentBondsInvolvingFragment = new ArrayList<>(interFragmentBondsInvolvingFragmentSet);
 		for (Bond bond : interFragmentBondsInvolvingFragment) {
 			if (bond.getFromAtom().getFrag() == frag){
 				fragToInterFragmentBond.get(bond.getToAtom().getFrag()).remove(bond);
@@ -355,11 +355,11 @@ class FragmentManager {
 		tokenEl.addAttribute(TYPE_ATR, originalFragment.getType());
 		tokenEl.addAttribute(SUBTYPE_ATR, originalFragment.getSubType());
 		Fragment newFragment = new Fragment(tokenEl);
-		HashMap<Atom, Atom> oldToNewAtomMap = new HashMap<Atom, Atom>();//maps old Atom to new Atom
+		HashMap<Atom, Atom> oldToNewAtomMap = new HashMap<>();//maps old Atom to new Atom
 		List<Atom> atomList =originalFragment.getAtomList();
 		for (Atom atom : atomList) {
 			int id = idManager.getNextID();
-			ArrayList<String> newLocants = new ArrayList<String>(atom.getLocants());
+			ArrayList<String> newLocants = new ArrayList<>(atom.getLocants());
 			if (primesToAdd !=0){
 				for (int i = 0; i < newLocants.size(); i++) {
 					String currentLocant = newLocants.get(i);
@@ -411,7 +411,7 @@ class FragmentManager {
 			}
 			Set<Atom> oldAmbiguousElementAssignmentAtoms = atom.getProperty(Atom.AMBIGUOUS_ELEMENT_ASSIGNMENT);
 			if (oldAmbiguousElementAssignmentAtoms!=null){
-				Set<Atom> newAtoms = new LinkedHashSet<Atom>();
+				Set<Atom> newAtoms = new LinkedHashSet<>();
 				for (Atom oldAtom : oldAmbiguousElementAssignmentAtoms) {
 					newAtoms.add(oldToNewAtomMap.get(oldAtom));
 				}
@@ -443,7 +443,7 @@ class FragmentManager {
 			}
 			List<Atom> oldPositionVariationAtoms = atom.getProperty(Atom.POSITION_VARIATION_BOND);
 			if (oldPositionVariationAtoms != null) {
-				List<Atom> newAtoms = new ArrayList<Atom>();
+				List<Atom> newAtoms = new ArrayList<>();
 				for (Atom oldAtom : oldPositionVariationAtoms) {
 					newAtoms.add(oldToNewAtomMap.get(oldAtom));
 				}
@@ -510,7 +510,7 @@ class FragmentManager {
 		Element clone = elementToBeCloned.copy();
 		List<Element> originalGroups = OpsinTools.getDescendantElementsWithTagName(elementToBeCloned, XmlDeclarations.GROUP_EL);
 		List<Element> clonedGroups = OpsinTools.getDescendantElementsWithTagName(clone,  XmlDeclarations.GROUP_EL);
-		HashMap<Fragment,Fragment> oldNewFragmentMapping  =new LinkedHashMap<Fragment, Fragment>();
+		HashMap<Fragment,Fragment> oldNewFragmentMapping  =new LinkedHashMap<>();
 		for (int i = 0; i < originalGroups.size(); i++) {
 			Fragment originalFragment = originalGroups.get(i).getFrag();
 			Fragment newFragment = copyAndRelabelFragment(originalFragment, primesToAdd);
@@ -518,13 +518,13 @@ class FragmentManager {
 			newFragment.setTokenEl(clonedGroups.get(i));
 			clonedGroups.get(i).setFrag(newFragment);
 			List<Fragment> originalSuffixes =state.xmlSuffixMap.get(originalGroups.get(i));
-			List<Fragment> newSuffixFragments =new ArrayList<Fragment>();
+			List<Fragment> newSuffixFragments =new ArrayList<>();
 			for (Fragment suffix : originalSuffixes) {
 				newSuffixFragments.add(copyFragment(suffix));
 			}
 			state.xmlSuffixMap.put(clonedGroups.get(i), newSuffixFragments);
 		}
-		Set<Bond> interFragmentBondsToClone = new LinkedHashSet<Bond>();
+		Set<Bond> interFragmentBondsToClone = new LinkedHashSet<>();
 		for (Fragment originalFragment : oldNewFragmentMapping.keySet()) {//add inter fragment bonds to cloned fragments
 			for (Bond bond : fragToInterFragmentBond.get(originalFragment)) {
 				interFragmentBondsToClone.add(bond);
@@ -555,7 +555,7 @@ class FragmentManager {
 	 */
 	void replaceAtomWithAnotherAtomPreservingConnectivity(Atom atomToBeReplaced, Atom replacementAtom) {
 		atomToBeReplaced.removeElementSymbolLocants();
-		List<String> locants = new ArrayList<String>(atomToBeReplaced.getLocants());
+		List<String> locants = new ArrayList<>(atomToBeReplaced.getLocants());
 		for (String locant : locants) {
 			atomToBeReplaced.removeLocant(locant);
 			replacementAtom.addLocant(locant);
@@ -652,7 +652,7 @@ class FragmentManager {
 	}
 	
 	void removeAtomAndAssociatedBonds(Atom atom){
-		List<Bond> bondsToBeRemoved = new ArrayList<Bond>(atom.getBonds());
+		List<Bond> bondsToBeRemoved = new ArrayList<>(atom.getBonds());
 		for (Bond bond : bondsToBeRemoved) {
 			removeBond(bond);
 		}

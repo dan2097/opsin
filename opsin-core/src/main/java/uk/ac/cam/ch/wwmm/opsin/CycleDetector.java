@@ -39,7 +39,7 @@ class CycleDetector {
 			return previouslyAssignedDepth;
 		}
 		currentAtom.setProperty(Atom.VISITED, depth);
-		List<Atom> equivalentAtoms = new ArrayList<Atom>();
+		List<Atom> equivalentAtoms = new ArrayList<>();
 		equivalentAtoms.add(currentAtom);
 		
 		List<Atom> neighbours;
@@ -100,15 +100,15 @@ class CycleDetector {
 	 * @return
 	 */
 	static List<List<Atom>> getPathBetweenAtomsUsingBonds(Atom a1, Atom a2, Set<Bond> peripheryBonds){
-		List<List<Atom>> paths = new ArrayList<List<Atom>>();
-		Deque<PathSearchState> stateStack = new ArrayDeque<PathSearchState>();
-		stateStack.add(new PathSearchState(a1, new ArrayList<Atom>()));
+		List<List<Atom>> paths = new ArrayList<>();
+		Deque<PathSearchState> stateStack = new ArrayDeque<>();
+		stateStack.add(new PathSearchState(a1, new ArrayList<>()));
 		while (stateStack.size()>0){
 			PathSearchState state  =stateStack.removeLast();//depth first traversal
 			List<Atom> orderAtomsVisited = state.getOrderAtomsVisited();
 			Atom nextAtom = state.getCurrentAtom();
 			orderAtomsVisited.add(nextAtom);
-			Set<Bond> neighbourBonds = new LinkedHashSet<Bond>(nextAtom.getBonds());
+			Set<Bond> neighbourBonds = new LinkedHashSet<>(nextAtom.getBonds());
 			neighbourBonds.retainAll(peripheryBonds);
 			for (Bond neighbourBond : neighbourBonds) {
 				Atom neighbour = neighbourBond.getOtherAtom(nextAtom);
@@ -116,10 +116,10 @@ class CycleDetector {
 					continue;
 				}
 				if (neighbour ==a2 ){//target atom found
-					paths.add(new ArrayList<Atom>(orderAtomsVisited.subList(1, orderAtomsVisited.size())));
+					paths.add(new ArrayList<>(orderAtomsVisited.subList(1, orderAtomsVisited.size())));
 				}
 				else{//add atom to stack, its neighbours will be recursively investigated shortly
-					stateStack.add(new PathSearchState(neighbour, new ArrayList<Atom>(orderAtomsVisited)));
+					stateStack.add(new PathSearchState(neighbour, new ArrayList<>(orderAtomsVisited)));
 				}
 			}
 		}

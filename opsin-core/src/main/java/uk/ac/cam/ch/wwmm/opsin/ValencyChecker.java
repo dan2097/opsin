@@ -18,13 +18,13 @@ import java.util.Map;
 class ValencyChecker {
 
 	/** used to decide on the likely valency state*/
-	private static final Map<ChemEl, Integer> expectedDefaultValency = new EnumMap<ChemEl, Integer>(ChemEl.class);
+	private static final Map<ChemEl, Integer> expectedDefaultValency = new EnumMap<>(ChemEl.class);
 	
 	/** used to decide whether an atom has spare valency in a ring, these are the same as specified in the Hantzch-Widman system */
-	private static final Map<ChemEl, Integer> valencyInHW = new EnumMap<ChemEl, Integer>(ChemEl.class);
+	private static final Map<ChemEl, Integer> valencyInHW = new EnumMap<>(ChemEl.class);
 	
 	/** used to decide on the likely valency state */
-	private static final Map<ChemEl, Map<Integer, Integer[]>> possibleStableValencies = new EnumMap<ChemEl, Map<Integer, Integer[]>>(ChemEl.class);
+	private static final Map<ChemEl, Map<Integer, Integer[]>> possibleStableValencies = new EnumMap<>(ChemEl.class);
 
 	static {
 		expectedDefaultValency.put(ChemEl.B, 3);
@@ -80,50 +80,50 @@ class ValencyChecker {
 		
 		valencyInHW.put(ChemEl.C, 4);
 
-		possibleStableValencies.put(ChemEl.H, new HashMap<Integer, Integer[]>());
-		possibleStableValencies.put(ChemEl.He, new HashMap<Integer, Integer[]>());
-		possibleStableValencies.put(ChemEl.Li, new HashMap<Integer, Integer[]>());
-		possibleStableValencies.put(ChemEl.Be, new HashMap<Integer, Integer[]>());
-		possibleStableValencies.put(ChemEl.B, new HashMap<Integer, Integer[]>());
-		possibleStableValencies.put(ChemEl.C, new HashMap<Integer, Integer[]>());
-		possibleStableValencies.put(ChemEl.N, new HashMap<Integer, Integer[]>());
-		possibleStableValencies.put(ChemEl.O, new HashMap<Integer, Integer[]>());
-		possibleStableValencies.put(ChemEl.F, new HashMap<Integer, Integer[]>());
-		possibleStableValencies.put(ChemEl.Ne, new HashMap<Integer, Integer[]>());
-		possibleStableValencies.put(ChemEl.Na, new HashMap<Integer, Integer[]>());
-		possibleStableValencies.put(ChemEl.Mg, new HashMap<Integer, Integer[]>());
-		possibleStableValencies.put(ChemEl.Al, new HashMap<Integer, Integer[]>());
-		possibleStableValencies.put(ChemEl.Si, new HashMap<Integer, Integer[]>());
-		possibleStableValencies.put(ChemEl.P, new HashMap<Integer, Integer[]>());
-		possibleStableValencies.put(ChemEl.S, new HashMap<Integer, Integer[]>());
-		possibleStableValencies.put(ChemEl.Cl, new HashMap<Integer, Integer[]>());
-		possibleStableValencies.put(ChemEl.Ar, new HashMap<Integer, Integer[]>());
-		possibleStableValencies.put(ChemEl.K, new HashMap<Integer, Integer[]>());
-		possibleStableValencies.put(ChemEl.Ca, new HashMap<Integer, Integer[]>());
-		possibleStableValencies.put(ChemEl.Ga, new HashMap<Integer, Integer[]>());
-		possibleStableValencies.put(ChemEl.Ge, new HashMap<Integer, Integer[]>());
-		possibleStableValencies.put(ChemEl.As, new HashMap<Integer, Integer[]>());
-		possibleStableValencies.put(ChemEl.Se, new HashMap<Integer, Integer[]>());
-		possibleStableValencies.put(ChemEl.Br, new HashMap<Integer, Integer[]>());
-		possibleStableValencies.put(ChemEl.Kr, new HashMap<Integer, Integer[]>());
-		possibleStableValencies.put(ChemEl.Rb, new HashMap<Integer, Integer[]>());
-		possibleStableValencies.put(ChemEl.Sr, new HashMap<Integer, Integer[]>());
-		possibleStableValencies.put(ChemEl.In, new HashMap<Integer, Integer[]>());
-		possibleStableValencies.put(ChemEl.Sn, new HashMap<Integer, Integer[]>());
-		possibleStableValencies.put(ChemEl.Sb, new HashMap<Integer, Integer[]>());
-		possibleStableValencies.put(ChemEl.Te, new HashMap<Integer, Integer[]>());
-		possibleStableValencies.put(ChemEl.I, new HashMap<Integer, Integer[]>());
-		possibleStableValencies.put(ChemEl.Xe, new HashMap<Integer, Integer[]>());
-		possibleStableValencies.put(ChemEl.Cs, new HashMap<Integer, Integer[]>());
-		possibleStableValencies.put(ChemEl.Ba, new HashMap<Integer, Integer[]>());
-		possibleStableValencies.put(ChemEl.Tl, new HashMap<Integer, Integer[]>());
-		possibleStableValencies.put(ChemEl.Pb, new HashMap<Integer, Integer[]>());
-		possibleStableValencies.put(ChemEl.Bi, new HashMap<Integer, Integer[]>());
-		possibleStableValencies.put(ChemEl.Po, new HashMap<Integer, Integer[]>());
-		possibleStableValencies.put(ChemEl.At, new HashMap<Integer, Integer[]>());
-		possibleStableValencies.put(ChemEl.Rn, new HashMap<Integer, Integer[]>());
-		possibleStableValencies.put(ChemEl.Fr, new HashMap<Integer, Integer[]>());
-		possibleStableValencies.put(ChemEl.Ra, new HashMap<Integer, Integer[]>());
+		possibleStableValencies.put(ChemEl.H, new HashMap<>());
+		possibleStableValencies.put(ChemEl.He, new HashMap<>());
+		possibleStableValencies.put(ChemEl.Li, new HashMap<>());
+		possibleStableValencies.put(ChemEl.Be, new HashMap<>());
+		possibleStableValencies.put(ChemEl.B, new HashMap<>());
+		possibleStableValencies.put(ChemEl.C, new HashMap<>());
+		possibleStableValencies.put(ChemEl.N, new HashMap<>());
+		possibleStableValencies.put(ChemEl.O, new HashMap<>());
+		possibleStableValencies.put(ChemEl.F, new HashMap<>());
+		possibleStableValencies.put(ChemEl.Ne, new HashMap<>());
+		possibleStableValencies.put(ChemEl.Na, new HashMap<>());
+		possibleStableValencies.put(ChemEl.Mg, new HashMap<>());
+		possibleStableValencies.put(ChemEl.Al, new HashMap<>());
+		possibleStableValencies.put(ChemEl.Si, new HashMap<>());
+		possibleStableValencies.put(ChemEl.P, new HashMap<>());
+		possibleStableValencies.put(ChemEl.S, new HashMap<>());
+		possibleStableValencies.put(ChemEl.Cl, new HashMap<>());
+		possibleStableValencies.put(ChemEl.Ar, new HashMap<>());
+		possibleStableValencies.put(ChemEl.K, new HashMap<>());
+		possibleStableValencies.put(ChemEl.Ca, new HashMap<>());
+		possibleStableValencies.put(ChemEl.Ga, new HashMap<>());
+		possibleStableValencies.put(ChemEl.Ge, new HashMap<>());
+		possibleStableValencies.put(ChemEl.As, new HashMap<>());
+		possibleStableValencies.put(ChemEl.Se, new HashMap<>());
+		possibleStableValencies.put(ChemEl.Br, new HashMap<>());
+		possibleStableValencies.put(ChemEl.Kr, new HashMap<>());
+		possibleStableValencies.put(ChemEl.Rb, new HashMap<>());
+		possibleStableValencies.put(ChemEl.Sr, new HashMap<>());
+		possibleStableValencies.put(ChemEl.In, new HashMap<>());
+		possibleStableValencies.put(ChemEl.Sn, new HashMap<>());
+		possibleStableValencies.put(ChemEl.Sb, new HashMap<>());
+		possibleStableValencies.put(ChemEl.Te, new HashMap<>());
+		possibleStableValencies.put(ChemEl.I, new HashMap<>());
+		possibleStableValencies.put(ChemEl.Xe, new HashMap<>());
+		possibleStableValencies.put(ChemEl.Cs, new HashMap<>());
+		possibleStableValencies.put(ChemEl.Ba, new HashMap<>());
+		possibleStableValencies.put(ChemEl.Tl, new HashMap<>());
+		possibleStableValencies.put(ChemEl.Pb, new HashMap<>());
+		possibleStableValencies.put(ChemEl.Bi, new HashMap<>());
+		possibleStableValencies.put(ChemEl.Po, new HashMap<>());
+		possibleStableValencies.put(ChemEl.At, new HashMap<>());
+		possibleStableValencies.put(ChemEl.Rn, new HashMap<>());
+		possibleStableValencies.put(ChemEl.Fr, new HashMap<>());
+		possibleStableValencies.put(ChemEl.Ra, new HashMap<>());
 
 		possibleStableValencies.get(ChemEl.H).put(0, new Integer[]{1});
 		possibleStableValencies.get(ChemEl.He).put(0, new Integer[]{0});

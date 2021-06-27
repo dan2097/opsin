@@ -28,7 +28,7 @@ class Atom {
 	private ChemEl chemEl;
 
 	/**The locants that pertain to the atom.*/
-	private final List<String> locants = new ArrayList<String>(2);
+	private final List<String> locants = new ArrayList<>(2);
 
 	/**The formal charge on the atom.*/
 	private int charge = 0;
@@ -43,29 +43,29 @@ class Atom {
 	private AtomParity atomParity = null;
 
 	/**The bonds that involve the atom*/
-	private final List<Bond> bonds = new ArrayList<Bond>(4);
+	private final List<Bond> bonds = new ArrayList<>(4);
 
 	/**A map between PropertyKey s as declared here and useful atom properties, usually relating to some kind of special case. */
 	@SuppressWarnings("rawtypes")
-	private final Map<PropertyKey, Object> properties = new HashMap<PropertyKey, Object>();
+	private final Map<PropertyKey, Object> properties = new HashMap<>();
 	/** A set of atoms that were equally plausible to perform functional replacement on */
-	static final PropertyKey<Set<Atom>> AMBIGUOUS_ELEMENT_ASSIGNMENT = new PropertyKey<Set<Atom>>("ambiguousElementAssignment");
+	static final PropertyKey<Set<Atom>> AMBIGUOUS_ELEMENT_ASSIGNMENT = new PropertyKey<>("ambiguousElementAssignment");
 	/** The atom class which will be output when serialised to SMILES. Useful for distinguishing attachment points */
-	static final PropertyKey<Integer> ATOM_CLASS = new PropertyKey<Integer>("atomClass");
+	static final PropertyKey<Integer> ATOM_CLASS = new PropertyKey<>("atomClass");
 	/** Used on wildcard atoms to indicate their meaning */
-	static final PropertyKey<String> HOMOLOGY_GROUP = new PropertyKey<String>("homologyGroup");
+	static final PropertyKey<String> HOMOLOGY_GROUP = new PropertyKey<>("homologyGroup");
 	/** Used on wildcard atoms to indicate that they are a position variation bond */
-	static final PropertyKey<List<Atom>> POSITION_VARIATION_BOND = new PropertyKey<List<Atom>>("positionVariationBond");
+	static final PropertyKey<List<Atom>> POSITION_VARIATION_BOND = new PropertyKey<>("positionVariationBond");
 	/** The hydrogen count as set in the SMILES*/
-	static final PropertyKey<Integer> SMILES_HYDROGEN_COUNT = new PropertyKey<Integer>("smilesHydrogenCount");
+	static final PropertyKey<Integer> SMILES_HYDROGEN_COUNT = new PropertyKey<>("smilesHydrogenCount");
 	/** The oxidation number as specified by Roman numerals in the name*/
-	static final PropertyKey<Integer> OXIDATION_NUMBER = new PropertyKey<Integer>("oxidationNumber");
+	static final PropertyKey<Integer> OXIDATION_NUMBER = new PropertyKey<>("oxidationNumber");
 	/** Is this atom the carbon of an aldehyde? (however NOT formaldehyde)*/
-	static final PropertyKey<Boolean> ISALDEHYDE = new PropertyKey<Boolean>("isAldehyde");
+	static final PropertyKey<Boolean> ISALDEHYDE = new PropertyKey<>("isAldehyde");
 	/** Indicates that this atom is an anomeric atom in a cyclised carbohydrate*/
-	static final PropertyKey<Boolean> ISANOMERIC = new PropertyKey<Boolean>("isAnomeric");
+	static final PropertyKey<Boolean> ISANOMERIC = new PropertyKey<>("isAnomeric");
 	/** Transient integer used to indicate traversal of fragments*/
-	static final PropertyKey<Integer> VISITED = new PropertyKey<Integer>("visited");
+	static final PropertyKey<Integer> VISITED = new PropertyKey<>("visited");
 
 	/**The fragment to which the atom belongs.*/
 	private Fragment frag;
@@ -297,7 +297,7 @@ class Atom {
 	 * @return The list of locants (may be empty)
 	 */
 	List<String> getElementSymbolLocants() {
-		List<String> elementSymbolLocants = new ArrayList<String>(1);
+		List<String> elementSymbolLocants = new ArrayList<>(1);
 		for (int i = 0, l = locants.size(); i < l; i++) {
 			String locant = locants.get(i);
             if (MATCH_ELEMENT_SYMBOL_LOCANT.matcher(locant).matches()) {
@@ -483,7 +483,7 @@ class Atom {
 	 */
 	List<Atom> getAtomNeighbours(){
 		int bondCount = bonds.size();
-		List<Atom> results = new ArrayList<Atom>(bondCount);
+		List<Atom> results = new ArrayList<>(bondCount);
 		for (int i = 0; i < bondCount; i++) {
 			results.add(bonds.get(i).getOtherAtom(this));
 		}

@@ -99,7 +99,7 @@ class StereoAnalyser {
 			Atom a2 = bond.getToAtom();
 			List<Atom> cipOrdered1 = new CipSequenceRules(a1).getNeighbouringAtomsInCipOrderIgnoringGivenNeighbour(a2);
 			List<Atom> cipOrdered2 = new CipSequenceRules(a2).getNeighbouringAtomsInCipOrderIgnoringGivenNeighbour(a1);
-			List<Atom> stereoAtoms = new ArrayList<Atom>();
+			List<Atom> stereoAtoms = new ArrayList<>();
 			stereoAtoms.add(cipOrdered1.get(cipOrdered1.size()-1));//highest CIP adjacent to a1
 			stereoAtoms.add(a1);
 			stereoAtoms.add(a2);
@@ -205,10 +205,10 @@ class StereoAnalyser {
 		this.atoms = atoms;
 		this.bonds = bonds;
 		List<Atom> ghostAtoms = addGhostAtoms();
-		List<Atom> atomsToSort = new ArrayList<Atom>(atoms);
+		List<Atom> atomsToSort = new ArrayList<>(atoms);
 		atomsToSort.addAll(ghostAtoms);
-		mappingToColour = new HashMap<Atom, Integer>(atomsToSort.size());
-		atomNeighbourColours = new HashMap<Atom, int[]>(atomsToSort.size());
+		mappingToColour = new HashMap<>(atomsToSort.size());
+		atomNeighbourColours = new HashMap<>(atomsToSort.size());
 		Collections.sort(atomsToSort, atomicNumberThenAtomicMassComparator);
 		List<List<Atom>> groupsByColour = populateColoursByAtomicNumberAndMass(atomsToSort);
 		boolean changeFound = true;
@@ -219,7 +219,7 @@ class StereoAnalyser {
 					atomNeighbourColours.put(atom, neighbourColours);
 				}
 			}
-			List<List<Atom>> updatedGroupsByColour = new ArrayList<List<Atom>>();
+			List<List<Atom>> updatedGroupsByColour = new ArrayList<>();
 			changeFound = populateColoursAndReportIfColoursWereChanged(groupsByColour, updatedGroupsByColour);
 			groupsByColour = updatedGroupsByColour;
 		}
@@ -232,7 +232,7 @@ class StereoAnalyser {
 	 * @return The ghost atoms created
 	 */
 	private List<Atom> addGhostAtoms() {
-		List<Atom> ghostAtoms = new ArrayList<Atom>();
+		List<Atom> ghostAtoms = new ArrayList<>();
 		for (Bond bond : bonds) {
 			int bondOrder = bond.getOrder();
 			for (int i = bondOrder; i > 1; i--) {
@@ -274,9 +274,9 @@ class StereoAnalyser {
 	 * @return 
 	 */
 	private List<List<Atom>> populateColoursByAtomicNumberAndMass(List<Atom> atomList) {
-		List<List<Atom>> groupsByColour = new ArrayList<List<Atom>>();
+		List<List<Atom>> groupsByColour = new ArrayList<>();
 		Atom previousAtom = null;
-		List<Atom> atomsOfThisColour = new ArrayList<Atom>();
+		List<Atom> atomsOfThisColour = new ArrayList<>();
 		int atomsSeen = 0;
 		for (Atom atom : atomList) {
 			if (previousAtom != null && compareAtomicNumberThenAtomicMass(previousAtom, atom) != 0){
@@ -284,7 +284,7 @@ class StereoAnalyser {
 					mappingToColour.put(atomOfthisColour, atomsSeen);
 				}
 				groupsByColour.add(atomsOfThisColour);
-				atomsOfThisColour = new ArrayList<Atom>();
+				atomsOfThisColour = new ArrayList<>();
 			}
 			previousAtom = atom;
 			atomsOfThisColour.add(atom);
@@ -314,7 +314,7 @@ class StereoAnalyser {
 		for (List<Atom> groupWithAColour : groupsByColour) {
 			Collections.sort(groupWithAColour, atomNeighbouringColoursComparator);
 			Atom previousAtom = null;
-			List<Atom> atomsOfThisColour = new ArrayList<Atom>();
+			List<Atom> atomsOfThisColour = new ArrayList<>();
 			for (Atom atom : groupWithAColour) {
 				if (previousAtom != null && atomNeighbouringColoursComparator.compare(previousAtom, atom) != 0){
 					for (Atom atomOfThisColour : atomsOfThisColour) {
@@ -324,7 +324,7 @@ class StereoAnalyser {
 						mappingToColour.put(atomOfThisColour, atomsSeen);
 					}
 					updatedGroupsByColour.add(atomsOfThisColour);
-					atomsOfThisColour = new ArrayList<Atom>();
+					atomsOfThisColour = new ArrayList<>();
 				}
 				previousAtom = atom;
 				atomsOfThisColour.add(atom);
@@ -368,13 +368,13 @@ class StereoAnalyser {
 	 */
 	List<StereoCentre> findStereoCentres(){
 		List<Atom> potentialStereoAtoms = getPotentialStereoCentres();
-		List<Atom> trueStereoCentres = new ArrayList<Atom>();
+		List<Atom> trueStereoCentres = new ArrayList<>();
 		for (Atom potentialStereoAtom : potentialStereoAtoms) {
 			if (isTrueStereCentre(potentialStereoAtom)){
 				trueStereoCentres.add(potentialStereoAtom);
 			}
 		}
-		List<StereoCentre> stereoCentres = new ArrayList<StereoCentre>();
+		List<StereoCentre> stereoCentres = new ArrayList<>();
 		for (Atom trueStereoCentreAtom : trueStereoCentres) {
 			stereoCentres.add(new StereoCentre(trueStereoCentreAtom, true));
 		}
@@ -392,7 +392,7 @@ class StereoAnalyser {
 	 * @return
 	 */
 	private List<Atom> getPotentialStereoCentres() {
-		List<Atom> potentialStereoAtoms = new ArrayList<Atom>();
+		List<Atom> potentialStereoAtoms = new ArrayList<>();
 		for (Atom atom : atoms) {
 			if (isPossiblyStereogenic(atom)){
 				potentialStereoAtoms.add(atom);
@@ -436,7 +436,7 @@ class StereoAnalyser {
 	 * @param trueStereoCentres 
 	 */
 	private List<Atom> findParaStereoCentres(List<Atom> potentialStereoAtoms, List<Atom> trueStereoCentres) {
-		List<Atom> paraStereoCentres = new ArrayList<Atom>();
+		List<Atom> paraStereoCentres = new ArrayList<>();
 		for (Atom potentialStereoAtom : potentialStereoAtoms) {
 			List<Atom> neighbours = potentialStereoAtom.getAtomNeighbours();
 			if (neighbours.size() == 4){
@@ -445,7 +445,7 @@ class StereoAnalyser {
 					colours[i] = mappingToColour.get(neighbours.get(i));
 				}
 				//find pairs of constitutionally identical substituents
-				Map<Integer, Integer> foundPairs = new HashMap<Integer, Integer>();
+				Map<Integer, Integer> foundPairs = new HashMap<>();
 				for (int i = 0; i < 4; i++) {
 					int cl = colours[i];
 					for (int j = i +1; j < 4; j++) {
@@ -475,13 +475,13 @@ class StereoAnalyser {
 
 
 	private boolean branchesHaveTrueStereocentre(Atom branchAtom1, Atom branchAtom2, Atom potentialStereoAtom, List<Atom> trueStereoCentres) {
-		List<Atom> atomsToVisit= new ArrayList<Atom>();
-		Set<Atom> visitedAtoms = new HashSet<Atom>();
+		List<Atom> atomsToVisit= new ArrayList<>();
+		Set<Atom> visitedAtoms = new HashSet<>();
 		visitedAtoms.add(potentialStereoAtom);
 		atomsToVisit.add(branchAtom1);
 		atomsToVisit.add(branchAtom2);
 		while(!atomsToVisit.isEmpty()){
-			List<Atom> newAtomsToVisit = new ArrayList<Atom>();
+			List<Atom> newAtomsToVisit = new ArrayList<>();
 			while(!atomsToVisit.isEmpty()){
 				Atom atom = atomsToVisit.remove(0);
 				if (trueStereoCentres.contains(atom)){
@@ -575,7 +575,7 @@ class StereoAnalyser {
 				chemEl == ChemEl.S || 
 				chemEl == ChemEl.Se) {
 			List<Atom> neighbours = atom.getAtomNeighbours();
-			Set<String> resonanceAndTautomerismAtomicElementPlusIsotopes = new HashSet<String>();
+			Set<String> resonanceAndTautomerismAtomicElementPlusIsotopes = new HashSet<>();
 			for (Atom neighbour : neighbours) {
 				ChemEl neighbourChemEl = neighbour.getElement();
 				if ((neighbourChemEl.isChalcogen() || neighbourChemEl == ChemEl.N)
@@ -613,7 +613,7 @@ class StereoAnalyser {
 	 * @return
 	 */
 	List<StereoBond> findStereoBonds() {
-		List<StereoBond> stereoBonds = new ArrayList<StereoBond>();
+		List<StereoBond> stereoBonds = new ArrayList<>();
 		for (Bond bond : bonds) {
 			if (bond.getOrder()==2){
 				Atom a1 = bond.getFromAtom();

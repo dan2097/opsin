@@ -24,27 +24,27 @@ import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
 class Fragment implements Iterable<Atom> {
 
 	/**A mapping between IDs and the atoms in this fragment, by default is ordered by the order atoms are added to the fragment*/
-	private final Map<Integer, Atom> atomMapFromId = new LinkedHashMap<Integer, Atom>();
+	private final Map<Integer, Atom> atomMapFromId = new LinkedHashMap<>();
 
 	/**Equivalent to and synced to atomMapFromId.values() */
 	private final Collection<Atom> atomCollection = atomMapFromId.values();
 
 	/**A mapping between locants and the atoms in this fragment*/
-	private final Map<String, Atom> atomMapFromLocant = new HashMap<String, Atom>();
+	private final Map<String, Atom> atomMapFromLocant = new HashMap<>();
 
 	/**The bonds in the fragment*/
-	private final Set<Bond> bondSet = new LinkedHashSet<Bond>();
+	private final Set<Bond> bondSet = new LinkedHashSet<>();
 
 	/**The associated token element*/
 	private Element tokenEl;
 
 	/**The atoms that are used when this fragment is connected to another fragment. Unused outAtoms means that the fragment is a radical or an error has occurred
 	 * Initially empty */
-	private final List<OutAtom> outAtoms = new ArrayList<OutAtom>();
+	private final List<OutAtom> outAtoms = new ArrayList<>();
 
 	/**The atoms that are used on this fragment to form things like esters
 	 * Initially empty */
-	private final List<FunctionalAtom> functionalAtoms = new ArrayList<FunctionalAtom>();
+	private final List<FunctionalAtom> functionalAtoms = new ArrayList<>();
 
 	/**The atom that fragments connecting to this fragment should connect to in preference
 	 * e.g. for amino acids the alpha amino group
@@ -52,7 +52,7 @@ class Fragment implements Iterable<Atom> {
 	private Atom defaultInAtom = null;
 
 	/**The atoms in the fragment that have been indicated to have hydrogen at the SMILES level.*/
-	private final List<Atom> indicatedHydrogen = new ArrayList<Atom>();
+	private final List<Atom> indicatedHydrogen = new ArrayList<>();
 	
 	/**Pseudo atoms indicating start and end of polymer structure repeat unit*/
 	private List<Atom> polymerAttachmentPoints =  null;
@@ -100,7 +100,7 @@ class Fragment implements Iterable<Atom> {
 	 * @return
 	 */
 	List<Atom> getAtomList() {
-		return new ArrayList<Atom>(atomCollection);
+		return new ArrayList<>(atomCollection);
 	}
 
 
@@ -435,7 +435,7 @@ class Fragment implements Iterable<Atom> {
 	 * @return The list of atoms connected to the atom
 	 */
 	List<Atom> getIntraFragmentAtomNeighbours(Atom atom) {
-		List<Atom> results = new ArrayList<Atom>(atom.getBondCount());
+		List<Atom> results = new ArrayList<>(atom.getBondCount());
 		for(Bond b : atom.getBonds()) {
 			Atom otherAtom = b.getOtherAtom(atom);
 			if (otherAtom == null) {

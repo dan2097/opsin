@@ -88,9 +88,9 @@ class SMILESFragmentBuilder {
 	private static final Atom ringOpeningDummyAtom = new Atom(ChemEl.R);
 
 	/**Organic Atoms.*/
-	private static final Set<String> organicAtoms = new HashSet<String>();
+	private static final Set<String> organicAtoms = new HashSet<>();
 	/**Aromatic Atoms.*/
-	private static final Set<String> aromaticAtoms = new HashSet<String>();
+	private static final Set<String> aromaticAtoms = new HashSet<>();
 
 	static {
 		organicAtoms.add("B");
@@ -123,8 +123,8 @@ class SMILESFragmentBuilder {
 	}
 
 	private class ParserInstance {
-		private final Deque<StackFrame> stack = new ArrayDeque<StackFrame>();
-		private final Map<String, StackFrame> ringClosures = new HashMap<String, StackFrame>();
+		private final Deque<StackFrame> stack = new ArrayDeque<>();
+		private final Map<String, StackFrame> ringClosures = new HashMap<>();
 		
 		private final String smiles;
 		private final int endOfSmiles;

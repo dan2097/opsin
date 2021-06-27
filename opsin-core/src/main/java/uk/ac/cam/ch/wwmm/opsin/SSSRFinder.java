@@ -46,13 +46,13 @@ class SSSRFinder {
 	 * @return list of rings
 	 */
 	private static List<Ring> getRings(List<Atom> atomSet ){
-		List<Ring> ringList = new ArrayList<Ring>();
-		Set<Atom> usedAtoms = new HashSet<Atom>();
+		List<Ring> ringList = new ArrayList<>();
+		Set<Atom> usedAtoms = new HashSet<>();
 		
 		Atom root = atomSet.get(0); 
 		Atom parentAtom = null;
-		Map<Atom, Atom> atomToParentMap = new HashMap<Atom, Atom>();
-		Set<Bond> linkBondSet = new LinkedHashSet<Bond>(); 
+		Map<Atom, Atom> atomToParentMap = new HashMap<>();
+		Set<Bond> linkBondSet = new LinkedHashSet<>(); 
 		
 		expand(root, parentAtom, usedAtoms, atomToParentMap, linkBondSet);
 		
@@ -76,7 +76,7 @@ class SSSRFinder {
 	}
 	
 	private static List<Bond> getAncestors1(Atom atom, Map<Atom, Atom> atomToParentMap){
-		List<Bond> newBondSet = new ArrayList<Bond>();
+		List<Bond> newBondSet = new ArrayList<>();
 		while (true) {
 			Atom atom1 = atomToParentMap.get(atom);
 			if (atom1 == null) {
@@ -133,7 +133,7 @@ class SSSRFinder {
 
 	
 	private static List<Bond> symmetricDifference(List<Bond> bondSet1, List<Bond> bondSet2) {
-		List<Bond> newBondSet = new ArrayList<Bond>();
+		List<Bond> newBondSet = new ArrayList<>();
 
 		for (Bond bond1 : bondSet1) {
 			if (!bondSet2.contains(bond1)) {

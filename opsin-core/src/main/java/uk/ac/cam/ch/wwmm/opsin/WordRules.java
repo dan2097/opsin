@@ -164,7 +164,7 @@ class WordRules {
 		 * @throws XMLStreamException 
 		 */
 		WordRuleDescription(XMLStreamReader reader) throws XMLStreamException {
-			List<WordDescription> wordDescriptions = new ArrayList<WordDescription>();
+			List<WordDescription> wordDescriptions = new ArrayList<>();
 			ruleName = WordRule.valueOf(reader.getAttributeValue(null, "name"));
 			ruleType = WordType.valueOf(reader.getAttributeValue(null,"type"));
 			while (reader.hasNext()) {
@@ -190,7 +190,7 @@ class WordRules {
 	 * @throws IOException 
 	 */
 	WordRules(ResourceGetter resourceGetter) throws IOException {
-		List<WordRuleDescription> wordRuleList = new ArrayList<WordRuleDescription>();
+		List<WordRuleDescription> wordRuleList = new ArrayList<>();
 		XMLStreamReader reader = resourceGetter.getXMLStreamReader("wordRules.xml");
 		try {
 			while (reader.hasNext()) {
@@ -468,7 +468,7 @@ class WordRules {
 						break;
 					}
 
-					List<String> wordValues = new ArrayList<String>();
+					List<String> wordValues = new ArrayList<>();
 					Element parentEl = wordEls.get(i).getParent();
 					int indexToInsertAt = parentEl.indexOf(wordEls.get(i));
 					for (int j = 0; j < wordsInWordRule; j++) {

@@ -26,7 +26,7 @@ class AmbiguityChecker {
 		if (allAtomsConnectToDefaultInAtom(substitutableAtoms, numberToBeSubstituted)) {
 			return false;
 		}
-		Set<Atom> uniqueAtoms = new HashSet<Atom>(substitutableAtoms);
+		Set<Atom> uniqueAtoms = new HashSet<>(substitutableAtoms);
 		if (uniqueAtoms.size() == 1) {
 			return false;
 		}
@@ -38,7 +38,7 @@ class AmbiguityChecker {
 	
 	static boolean allAtomsEquivalent(Collection<Atom> atoms) {
 		StereoAnalyser analyser = analyseRelevantAtomsAndBonds(atoms);
-		Set<String> uniqueEnvironments = new HashSet<String>();
+		Set<String> uniqueEnvironments = new HashSet<>();
 		for (Atom a : atoms) {
 			uniqueEnvironments.add(getAtomEnviron(analyser, a));
 		}
@@ -46,13 +46,13 @@ class AmbiguityChecker {
 	}
 
 	static boolean allBondsEquivalent(Collection<Bond> bonds) {
-		Set<Atom> relevantAtoms = new HashSet<Atom>();
+		Set<Atom> relevantAtoms = new HashSet<>();
 		for (Bond b : bonds) {
 			relevantAtoms.add(b.getFromAtom());
 			relevantAtoms.add(b.getToAtom());
 		}
 		StereoAnalyser analyser = analyseRelevantAtomsAndBonds(relevantAtoms);
-		Set<String> uniqueBonds = new HashSet<String>();
+		Set<String> uniqueBonds = new HashSet<>();
 		for (Bond b : bonds) {
 			uniqueBonds.add(bondToCanonicalEnvironString(analyser, b));
 		}
@@ -94,9 +94,9 @@ class AmbiguityChecker {
 	}
 
 	static StereoAnalyser analyseRelevantAtomsAndBonds(Collection<Atom> startingAtoms) {
-		Set<Atom> atoms = new HashSet<Atom>();
-		Set<Bond> bonds = new HashSet<Bond>();
-		Deque<Atom> stack = new ArrayDeque<Atom>(startingAtoms);
+		Set<Atom> atoms = new HashSet<>();
+		Set<Bond> bonds = new HashSet<>();
+		Deque<Atom> stack = new ArrayDeque<>(startingAtoms);
 		while (!stack.isEmpty()) {
 			Atom a = stack.removeLast();
 			if (!atoms.contains(a)) {
@@ -108,7 +108,7 @@ class AmbiguityChecker {
 			}
 		}
 		
-		List<Atom> ghostHydrogens = new ArrayList<Atom>();
+		List<Atom> ghostHydrogens = new ArrayList<>();
 		for (Atom atom : atoms) {
 			int explicitHydrogensToAdd = StructureBuildingMethods.calculateSubstitutableHydrogenAtoms(atom);
 			for (int i = 0; i < explicitHydrogensToAdd; i++) {
@@ -148,13 +148,13 @@ class AmbiguityChecker {
 
 	private static List<Atom> findPlausibleSubstitutionPatternUsingSymmmetry(List<Atom> substitutableAtoms, int numberToBeSubstituted) {
 		//cf. octaethylporphyrin (8 identical atoms capable of substitution)
-		StereoAnalyser analyser = analyseRelevantAtomsAndBonds(new HashSet<Atom>(substitutableAtoms));
-		Map<String, List<Atom>> atomsInEachEnvironment = new HashMap<String, List<Atom>>();
+		StereoAnalyser analyser = analyseRelevantAtomsAndBonds(new HashSet<>(substitutableAtoms));
+		Map<String, List<Atom>> atomsInEachEnvironment = new HashMap<>();
 		for (Atom a : substitutableAtoms) {
 			String env = getAtomEnviron(analyser, a);
 			List<Atom> atomsInEnvironment = atomsInEachEnvironment.get(env);
 			if (atomsInEnvironment == null) {
-				atomsInEnvironment = new ArrayList<Atom>();
+				atomsInEnvironment = new ArrayList<>();
 				atomsInEachEnvironment.put(env, atomsInEnvironment);
 			}
 			atomsInEnvironment.add(a);
@@ -172,12 +172,12 @@ class AmbiguityChecker {
 			//check for environments with double the required atoms where this means each atom can support two substitutions c.f. cyclohexane
 			for (List<Atom> atoms : atomsInEachEnvironment.values()) {
 				if (atoms.size() == (numberToBeSubstituted * 2)){
-					Set<Atom> uniquified = new LinkedHashSet<Atom>(atoms);//retain deterministic atom ordering
+					Set<Atom> uniquified = new LinkedHashSet<>(atoms);//retain deterministic atom ordering
 					if (uniquified.size() == numberToBeSubstituted) {
 						if (preferredAtoms != null){
 							return null;
 						}
-						preferredAtoms = new ArrayList<Atom>(uniquified);
+						preferredAtoms = new ArrayList<>(uniquified);
 					}
 				}
 			}
@@ -187,7 +187,7 @@ class AmbiguityChecker {
 	
 	private static List<Atom> findPlausibleSubstitutionPatternUsingLocalEnvironment(List<Atom> substitutableAtoms, int numberToBeSubstituted) {
 		//cf. pentachlorotoluene (5 sp2 carbons vs sp3 methyl)
-		Map<String, List<Atom>> atomsInEachLocalEnvironment = new HashMap<String, List<Atom>>();
+		Map<String, List<Atom>> atomsInEachLocalEnvironment = new HashMap<>();
 		for (Atom a : substitutableAtoms) {
 			int valency = a.determineValency(true);	
 			int currentValency = a.getIncomingValency() + a.getOutValency();
@@ -195,7 +195,7 @@ class AmbiguityChecker {
 			String s = a.getElement().toString() +"\t" + valency + "\t" + numOfBonds + "\t" + a.hasSpareValency();
 			List<Atom> atomsInEnvironment = atomsInEachLocalEnvironment.get(s);
 			if (atomsInEnvironment == null) {
-				atomsInEnvironment = new ArrayList<Atom>();
+				atomsInEnvironment = new ArrayList<>();
 				atomsInEachLocalEnvironment.put(s, atomsInEnvironment);
 			}
 			atomsInEnvironment.add(a);

@@ -7,7 +7,7 @@ abstract class Element {
 
 	protected String name;
 	protected Element parent = null;
-	protected final List<Attribute> attributes = new ArrayList<Attribute>();
+	protected final List<Attribute> attributes = new ArrayList<>();
 
 	Element(String name) {
 		this.name = name;

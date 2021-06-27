@@ -18,7 +18,7 @@ public class InchiPruner {
 		if (inchiLayers.length < 2){
 			return inchi;
 		}
-		List<String> retainedLayers = new ArrayList<String>();
+		List<String> retainedLayers = new ArrayList<>();
 		if (Character.isLetter(inchiLayers[0].charAt(inchiLayers[0].length() -1))){//remove the S indicating this to be a standard InChI
 			inchiLayers[0] = inchiLayers[0].substring(0, inchiLayers[0].length() -1);
 		}
@@ -49,7 +49,7 @@ public class InchiPruner {
 		if (inchiLayers.length < 2){
 			return inchi;
 		}
-		List<String> retainedLayers = new ArrayList<String>();
+		List<String> retainedLayers = new ArrayList<>();
 		if (Character.isLetter(inchiLayers[0].charAt(inchiLayers[0].length() -1))){//remove the S indicating this to be a standard InChI
 			inchiLayers[0] = inchiLayers[0].substring(0, inchiLayers[0].length() -1);
 		}
