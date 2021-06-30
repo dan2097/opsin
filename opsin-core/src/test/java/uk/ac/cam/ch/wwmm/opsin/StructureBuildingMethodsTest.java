@@ -2,10 +2,10 @@ package uk.ac.cam.ch.wwmm.opsin;
 
 import java.util.Set;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 
 public class StructureBuildingMethodsTest {

@@ -1,22 +1,28 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.AbstractMap;
-import java.util.Iterator;
+
+import org.hamcrest.MatcherAssert;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import org.hamcrest.CoreMatchers;
-import org.hamcrest.MatcherAssert;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Test;
+
+import java.util.AbstractMap;
+import java.util.Iterator;
 
 import uk.ac.cam.ch.wwmm.opsin.BondStereo.BondStereoValue;
 import uk.ac.cam.ch.wwmm.opsin.StereoAnalyser.StereoBond;
@@ -26,7 +32,7 @@ public class StereochemistryTest {
 
 	private FragmentManager fm;
 	
-	@Before
+	@BeforeEach
 	public void setup() {
 		IDManager idManager = new IDManager();
 		fm = new FragmentManager(new SMILESFragmentBuilder(idManager), idManager);
@@ -34,12 +40,12 @@ public class StereochemistryTest {
 	
 	private static NameToStructure n2s;
 
-	@BeforeClass
+	@BeforeAll
 	public static void intialSetup() {
 		n2s = NameToStructure.getInstance();
 	}
 	
-	@AfterClass
+	@AfterAll
 	public static void cleanUp(){
 		n2s = null;
 	}
@@ -252,9 +258,9 @@ public class StereochemistryTest {
 					nAbsAtoms++;
 			}
 		}
-		assertEquals("Incorrect number of racemic stereo centers", nRacExp, nRacAtoms);
-		assertEquals("Incorrect number of relative stereo centers", nRelExp, nRelAtoms);
-		assertEquals("Incorrect number of absolute stereo centers", nAbsExp, nAbsAtoms);
+		assertEquals(nRacExp, nRacAtoms, "Incorrect number of racemic stereo centers");
+		assertEquals(nRelExp, nRelAtoms, "Incorrect number of relative stereo centers");
+		assertEquals(nAbsExp, nAbsAtoms, "Incorrect number of absolute stereo centers");
 	}
 
 	@Test
@@ -292,7 +298,7 @@ public class StereochemistryTest {
 		assertEnhancedStereo("rac-1-phenylethan-1-ol", 1, 0, 0);
 	}
 
-	@Ignore("not allowed")
+	@Disabled("not allowed")
 	public void applyStereochemistryRacemicMultipleUnlocanted() throws StructureBuildingException {
 		assertEnhancedStereo("rac-2-(methylamino)-1-phenylpropan-1-ol", 2, 0, 0);
 	}
@@ -822,11 +828,13 @@ public class StereochemistryTest {
 		assertEquals(3, cipOrdered.get(3).getID());
 	}
 	
-	@Test(expected=CipOrderingException.class)
-	public void testCipUnassignable() throws StructureBuildingException {
-		//two sides of ring are identical
-		Fragment f = fm.buildSMILES("NC1(O)CCC(CCC2CCCCC2)CC1");
-		new CipSequenceRules(f.getAtomList().get(1)).getNeighbouringAtomsInCipOrder();
+	@Test()
+	public void testCipUnassignable() {
+		assertThrows(CipOrderingException.class, () -> {
+			// two sides of ring are identical
+			Fragment f = fm.buildSMILES("NC1(O)CCC(CCC2CCCCC2)CC1");
+			new CipSequenceRules(f.getAtomList().get(1)).getNeighbouringAtomsInCipOrder();
+		});
 	}
 	
 	@Test
@@ -874,7 +882,7 @@ public class StereochemistryTest {
 		assertEquals(0, stereoAnalyser.findStereoCentres().size());
 		assertEquals(0, stereoAnalyser.findStereoBonds().size());
 		Atom formerChiralCentre = f.getAtomByLocantOrThrow("alpha");
-		assertNull("This atom is no longer a chiral centre and hence should not have an associated atom parity", formerChiralCentre.getAtomParity());
+		assertNull(formerChiralCentre.getAtomParity(), "This atom is no longer a chiral centre and hence should not have an associated atom parity");
 	}
 	
 	@Test
@@ -884,7 +892,7 @@ public class StereochemistryTest {
 		assertEquals(0, stereoAnalyser.findStereoCentres().size());
 		assertEquals(0, stereoAnalyser.findStereoBonds().size());
 		Bond formerChiralBond = f.getAtomByLocantOrThrow("2").getBondToAtomOrThrow(f.getAtomByLocantOrThrow("3"));
-		assertNull("This Bond is no longer a chiral centre and hence should not have an associated bond stereo", formerChiralBond.getBondStereo());
+		assertNull(formerChiralBond.getBondStereo(), "This Bond is no longer a chiral centre and hence should not have an associated bond stereo");
 	}
 	
 	@Test

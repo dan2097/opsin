@@ -1,12 +1,13 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.Collections;
 import java.util.List;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import uk.ac.cam.ch.wwmm.opsin.BondStereo.BondStereoValue;
 
@@ -14,7 +15,7 @@ public class SMILESWriterTest {
 	
 	private FragmentManager fm;
 
-	@Before
+	@BeforeEach
 	public void setup(){
 		IDManager idManager = new IDManager();
 		fm = new FragmentManager(new SMILESFragmentBuilder(idManager), idManager);

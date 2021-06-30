@@ -1,25 +1,26 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
+
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
 public class NomenclatureIntegrationTest {
 	private static NameToStructure n2s;
 
-	@BeforeClass
+	@BeforeAll
 	public static void setUp() {
 		n2s = NameToStructure.getInstance();
 	}
 	
-	@AfterClass
+	@AfterAll
 	public static void cleanUp(){
 		n2s = null;
 	}

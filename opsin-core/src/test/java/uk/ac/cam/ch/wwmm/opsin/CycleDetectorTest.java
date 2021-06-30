@@ -1,14 +1,12 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.junit.Test;
-
-import uk.ac.cam.ch.wwmm.opsin.Fragment;
+import org.junit.jupiter.api.Test;
 
 //Cycle detection is performed as part of fragment creation so we can just check the output of fragment creation
 public class CycleDetectorTest {
@@ -18,7 +16,7 @@ public class CycleDetectorTest {
 	public void testAssignCyclic1() throws StructureBuildingException {
 		Fragment frag = sBuilder.build("CCCC");
 		for (Atom a : frag.getAtomList()) {
-			assertEquals("Should be acylic", false, a.getAtomIsInACycle());
+			assertEquals(false, a.getAtomIsInACycle(), "Should be acylic");
 		}
 	}
 
@@ -26,7 +24,7 @@ public class CycleDetectorTest {
 	public void testAssignCyclic2() throws StructureBuildingException {
 		Fragment frag = sBuilder.build("c1ccccc1");
 		for (Atom a : frag.getAtomList()) {
-			assertEquals("Should be cylic", true, a.getAtomIsInACycle());
+			assertEquals(true, a.getAtomIsInACycle(), "Should be cylic");
 		}
 	}
 	
@@ -34,7 +32,7 @@ public class CycleDetectorTest {
 	public void testAssignCyclic3() throws StructureBuildingException {
 		Fragment frag = sBuilder.build("c12.c23.c34.c45.c56.c61");
 		for (Atom a : frag.getAtomList()) {
-			assertEquals("Should be cylic", true, a.getAtomIsInACycle());
+			assertEquals(true, a.getAtomIsInACycle(), "Should be cylic");
 		}
 	}
 	
@@ -45,10 +43,10 @@ public class CycleDetectorTest {
 		for (int i = 0; i < atomList.size(); i++) {
 			Atom a = atomList.get(i);
 			if (i<=5 || i >=8){
-				assertEquals("Should be cylic", true, a.getAtomIsInACycle());
+				assertEquals(true, a.getAtomIsInACycle(), "Should be cylic");
 			}
 			else{
-				assertEquals("Should be acylic", false, a.getAtomIsInACycle());
+				assertEquals(false, a.getAtomIsInACycle(), "Should be acylic");
 			}
 		}
 	}
@@ -60,10 +58,10 @@ public class CycleDetectorTest {
 		for (int i = 0; i < atomList.size(); i++) {
 			Atom a = atomList.get(i);
 			if (i<=1 || i==6){
-				assertEquals("Should be acylic", false, a.getAtomIsInACycle());
+				assertEquals(false, a.getAtomIsInACycle(), "Should be acylic");
 			}
 			else{
-				assertEquals("Should be cylic", true, a.getAtomIsInACycle());
+				assertEquals(true, a.getAtomIsInACycle(), "Should be cylic");
 			}
 		}
 	}
@@ -75,10 +73,10 @@ public class CycleDetectorTest {
 		for (int i = 0; i < atomList.size(); i++) {
 			Atom a = atomList.get(i);
 			if (i==0 || i==5){
-				assertEquals("Should be acylic", false, a.getAtomIsInACycle());
+				assertEquals(false, a.getAtomIsInACycle(), "Should be acylic");
 			}
 			else{
-				assertEquals("Should be cylic", true, a.getAtomIsInACycle());
+				assertEquals(true, a.getAtomIsInACycle(), "Should be cylic");
 			}
 		}
 	}

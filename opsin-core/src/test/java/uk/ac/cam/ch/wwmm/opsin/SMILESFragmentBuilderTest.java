@@ -1,11 +1,14 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.List;
 import java.util.Set;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import uk.ac.cam.ch.wwmm.opsin.BondStereo.BondStereoValue;
 
@@ -16,7 +19,7 @@ public class SMILESFragmentBuilderTest {
 	@Test
 	public void testBuild() throws StructureBuildingException {
 		Fragment fragment = sBuilder.build("C");
-		assertNotNull("Got a fragment", fragment);
+		assertNotNull(fragment, "Got a fragment");
 	}
 
 	@Test
@@ -146,10 +149,12 @@ public class SMILESFragmentBuilderTest {
 	}
 
 
-	@Test(expected=StructureBuildingException.class)
-	public void unterminatedRingOpening() throws StructureBuildingException {
-		sBuilder.build("C1CC");
-		fail("Should throw exception for bad smiles");
+	@Test()
+	public void unterminatedRingOpening() {
+		assertThrows(StructureBuildingException.class, () -> {
+			sBuilder.build("C1CC");
+			fail("Should throw exception for bad smiles");
+		});
 	}
 
 	@Test
@@ -197,58 +202,73 @@ public class SMILESFragmentBuilderTest {
 		Fragment fragment = sBuilder.build("[15NH3]");
 		List<Atom> atomList = fragment.getAtomList();
 		assertEquals(1, atomList.size());
-		assertNotNull("Isotope should not be null", atomList.get(0).getIsotope());
+		assertNotNull(atomList.get(0).getIsotope(), "Isotope should not be null");
 		int isotope = atomList.get(0).getIsotope();
 		assertEquals(15, isotope);
 	}
 
-	@Test(expected=StructureBuildingException.class)
-	public void badlyFormedSMILE1() throws StructureBuildingException {
-		sBuilder.build("H5");
-		fail("Should throw exception for bad smiles");
+	@Test()
+	public void badlyFormedSMILE1() {
+		assertThrows(StructureBuildingException.class, () -> {
+			sBuilder.build("H5");
+			fail("Should throw exception for bad smiles");
+		});
 	}
 
-	@Test(expected=StructureBuildingException.class)
-	public void badlyFormedSMILE2() throws StructureBuildingException {
-		sBuilder.build("CH4");
-		fail("Should throw exception for bad smiles");
+	@Test()
+	public void badlyFormedSMILE2() {
+		assertThrows(StructureBuildingException.class, () -> {
+			sBuilder.build("CH4");
+			fail("Should throw exception for bad smiles");
+		});
 	}
 
-	@Test(expected=StructureBuildingException.class)
-	public void badlyFormedSMILE3() throws StructureBuildingException {
-		sBuilder.build("13C");
-		fail("Should throw exception for bad smiles");
+	@Test()
+	public void badlyFormedSMILE3() {
+		assertThrows(StructureBuildingException.class, () -> {
+			sBuilder.build("13C");
+			fail("Should throw exception for bad smiles");
+		});
 	}
 
-	@Test(expected=StructureBuildingException.class)
-	public void badlyFormedSMILE4() throws StructureBuildingException {
-		sBuilder.build("C=#C");
-		fail("Should throw exception for bad smiles: is it a double or triple bond?");
+	@Test()
+	public void badlyFormedSMILE4() {
+		assertThrows(StructureBuildingException.class, () -> {
+			sBuilder.build("C=#C");
+			fail("Should throw exception for bad smiles: is it a double or triple bond?");
+		});
 	}
 
-	@Test(expected=StructureBuildingException.class)
-	public void badlyFormedSMILE5() throws StructureBuildingException {
-		sBuilder.build("C#=C");
-		fail("Should throw exception for bad smiles: is it a double or triple bond?");
+	@Test()
+	public void badlyFormedSMILE5() {
+		assertThrows(StructureBuildingException.class, () -> {
+			sBuilder.build("C#=C");
+			fail("Should throw exception for bad smiles: is it a double or triple bond?");
+		});
 	}
 
-	@Test(expected=StructureBuildingException.class)
-	public void badlyFormedSMILE6() throws StructureBuildingException {
-		sBuilder.build("F//C=C/F");
-		fail("Should throw exception for bad smiles: bond configuration specified twice");
+	@Test()
+	public void badlyFormedSMILE6() {
+		assertThrows(StructureBuildingException.class, () -> {
+			sBuilder.build("F//C=C/F");
+			fail("Should throw exception for bad smiles: bond configuration specified twice");
+		});
 	}
 
-
-	@Test(expected=StructureBuildingException.class)
-	public void badlyFormedSMILE7() throws StructureBuildingException {
-		sBuilder.build("F/C=C/\\F");
-		fail("Should throw exception for bad smiles: bond configuration specified twice");
+	@Test()
+	public void badlyFormedSMILE7() {
+		assertThrows(StructureBuildingException.class, () -> {
+			sBuilder.build("F/C=C/\\F");
+			fail("Should throw exception for bad smiles: bond configuration specified twice");
+		});
 	}
 
-	@Test(expected=StructureBuildingException.class)
-	public void badlyFormedSMILE8() throws StructureBuildingException {
-		sBuilder.build("F[C@@](Cl)Br");
-		fail("Should throw exception for invalid atom parity, not enough atoms in atom parity");
+	@Test()
+	public void badlyFormedSMILE8() {
+		assertThrows(StructureBuildingException.class, () -> {
+			sBuilder.build("F[C@@](Cl)Br");
+			fail("Should throw exception for invalid atom parity, not enough atoms in atom parity");
+		});
 	}
 
 	@Test
@@ -267,10 +287,12 @@ public class SMILESFragmentBuilderTest {
 		assertEquals(2, atomList.get(0).getBondToAtomOrThrow(atomList.get(2)).getOrder());
 	}
 
-	@Test(expected=StructureBuildingException.class)
-	public void ringClosureHandling3() throws StructureBuildingException {
-		sBuilder.build("C#1CN=1");
-		fail("Should throw exception for bad smiles");
+	@Test()
+	public void ringClosureHandling3() {
+		assertThrows(StructureBuildingException.class, () -> {
+			sBuilder.build("C#1CN=1");
+			fail("Should throw exception for bad smiles");
+		});
 	}
 
 	@Test
@@ -778,22 +800,28 @@ public class SMILESFragmentBuilderTest {
 		}
 	}
 
-	@Test(expected=StructureBuildingException.class)
-	public void testDoubleBondNoele() throws StructureBuildingException {
-		sBuilder.build("C/C=C\\1\\NC1");
-		fail("Should throw exception for bad smiles: contradictory double bond configuration");
+	@Test()
+	public void testDoubleBondNoele() {
+		assertThrows(StructureBuildingException.class, () -> {
+			sBuilder.build("C/C=C\\1\\NC1");
+			fail("Should throw exception for bad smiles: contradictory double bond configuration");
+		});
 	}
 
-	@Test(expected=StructureBuildingException.class)
-	public void testDoubleBondNoelf() throws StructureBuildingException {
-		sBuilder.build("C/C=C\1NC\1");
-		fail("Should throw exception for bad smiles: contradictory double bond configuration");
+	@Test()
+	public void testDoubleBondNoelf() {
+		assertThrows(StructureBuildingException.class, () -> {
+			sBuilder.build("C/C=C\1NC\1");
+			fail("Should throw exception for bad smiles: contradictory double bond configuration");
+		});
 	}
 
-	@Test(expected=StructureBuildingException.class)
-	public void testDoubleBondNoelg() throws StructureBuildingException {
-		sBuilder.build("C/C=C\1/NC\1");
-		fail("Should throw exception for bad smiles: contradictory double bond configuration");
+	@Test()
+	public void testDoubleBondNoelg() {
+		assertThrows(StructureBuildingException.class, () -> {
+			sBuilder.build("C/C=C\1/NC\1");
+			fail("Should throw exception for bad smiles: contradictory double bond configuration");
+		});
 	}
 
 	@Test
@@ -812,16 +840,20 @@ public class SMILESFragmentBuilderTest {
 		assertEquals("1 3 4 5", atomRefsToIdStr(b.getBondStereo().getAtomRefs4()));
 	}
 	
-	@Test(expected=StructureBuildingException.class)
-	public void testDoubleBondCornerCase3() throws StructureBuildingException {
-		sBuilder.build("C/1=C/CCCCCC/1");
-		fail("Should throw exception for bad smiles: contradictory double bond configuration");
+	@Test()
+	public void testDoubleBondCornerCase3() {
+		assertThrows(StructureBuildingException.class, () -> {
+			sBuilder.build("C/1=C/CCCCCC/1");
+			fail("Should throw exception for bad smiles: contradictory double bond configuration");
+		});
 	}
 	
-	@Test(expected=StructureBuildingException.class)
-	public void testDoubleBondCornerCase4() throws StructureBuildingException {
-		sBuilder.build("C\\1=C/CCCCCC\\1");
-		fail("Should throw exception for bad smiles: contradictory double bond configuration");
+	@Test()
+	public void testDoubleBondCornerCase4() {
+		assertThrows(StructureBuildingException.class, () -> {
+			sBuilder.build("C\\1=C/CCCCCC\\1");
+			fail("Should throw exception for bad smiles: contradictory double bond configuration");
+		});
 	}
 	
 	@Test

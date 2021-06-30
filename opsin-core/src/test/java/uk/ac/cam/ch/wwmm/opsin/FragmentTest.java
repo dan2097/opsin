@@ -3,10 +3,15 @@ package uk.ac.cam.ch.wwmm.opsin;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
 
 public class FragmentTest {
@@ -14,7 +19,7 @@ public class FragmentTest {
 	private Fragment frag;
 	private FragmentManager fm;
 
-	@Before
+	@BeforeEach
 	public void setUp(){
 		IDManager idManager = new IDManager();
 		fm = new FragmentManager(new SMILESFragmentBuilder(idManager), idManager);
@@ -27,34 +32,34 @@ public class FragmentTest {
 
 	@Test
 	public void testFragment() {
-		assertNotNull("Has atom list", frag.getAtomList());
+		assertNotNull(frag.getAtomList(), "Has atom list");
 	}
 
 	@Test
 	public void testAddAtom() {
-		assertEquals("Has no atoms", 0, frag.getAtomCount());
+		assertEquals(0, frag.getAtomCount(), "Has no atoms");
 		frag.addAtom(new Atom(1, ChemEl.C, frag));
-		assertEquals("Now has one atom", 1, frag.getAtomCount());
+		assertEquals(1, frag.getAtomCount(), "Now has one atom");
 	}
 
 	@Test
 	public void testAddBond() {
 		frag.addAtom(new Atom(1, ChemEl.C, frag));
 		frag.addAtom(new Atom(2, ChemEl.C, frag));
-		assertEquals("Has no bonds", 0, frag.getBondSet().size());
+		assertEquals(0, frag.getBondSet().size(), "Has no bonds");
 		fm.createBond(frag.getAtomByID(1), frag.getAtomByID(2), 1);
-		assertEquals("Now has one bond", 1, frag.getBondSet().size());
+		assertEquals(1, frag.getBondSet().size(), "Now has one bond");
 	}
 
 	@Test
 	public void testImportFrag() throws StructureBuildingException {
 		Fragment frag1 = fm.buildSMILES("CC");
 		Fragment frag2 = fm.buildSMILES("CC");
-		assertEquals("Fragment has two atoms", 2, frag1.getAtomCount());
-		assertEquals("Fragment has one bond", 1, frag1.getBondSet().size());
+		assertEquals(2, frag1.getAtomCount(), "Fragment has two atoms");
+		assertEquals(1, frag1.getBondSet().size(), "Fragment has one bond");
 		fm.incorporateFragment(frag2, frag1);
-		assertEquals("Fragment now has four atoms", 4, frag1.getAtomCount());
-		assertEquals("Fragment now has two bonds", 2, frag1.getBondSet().size());
+		assertEquals(4, frag1.getAtomCount(), "Fragment now has four atoms");
+		assertEquals(2, frag1.getBondSet().size(), "Fragment now has two bonds");
 	}
 	
 	@Test
@@ -100,9 +105,9 @@ public class FragmentTest {
 		atom = new Atom(20, ChemEl.C, frag);
 		atom.addLocant("silly");
 		frag.addAtom(atom);
-		assertEquals("Locant a has ID 10", 10, frag.getIDFromLocant("a"));
-		assertEquals("Locant silly has ID 20", 20, frag.getIDFromLocant("silly"));
-		assertEquals("Locant 42 is not present", 0, frag.getIDFromLocant("42"));
+		assertEquals(10, frag.getIDFromLocant("a"), "Locant a has ID 10");
+		assertEquals(20, frag.getIDFromLocant("silly"), "Locant silly has ID 20");
+		assertEquals(0, frag.getIDFromLocant("42"), "Locant 42 is not present");
 	}
 
 	@Test
@@ -113,9 +118,9 @@ public class FragmentTest {
 		Atom atom2 = new Atom(20, ChemEl.C, frag);
 		atom2.addLocant("silly");
 		frag.addAtom(atom2);
-		assertEquals("Locant a gets atom1", atom1, frag.getAtomByLocant("a"));
-		assertEquals("Locant silly gets atom2", atom2, frag.getAtomByLocant("silly"));
-		assertNull("Locant 42 is not present", frag.getAtomByLocant("42"));
+		assertEquals(atom1, frag.getAtomByLocant("a"), "Locant a gets atom1");
+		assertEquals(atom2, frag.getAtomByLocant("silly"), "Locant silly gets atom2");
+		assertNull(frag.getAtomByLocant("42"), "Locant 42 is not present");
 	}
 
 	@Test
@@ -124,9 +129,9 @@ public class FragmentTest {
 		frag.addAtom(atom1);
 		Atom atom2 = new Atom(20, ChemEl.C, frag);
 		frag.addAtom(atom2);
-		assertEquals("ID 10 gets atom1", atom1, frag.getAtomByID(10));
-		assertEquals("ID 20 gets atom2", atom2, frag.getAtomByID(20));
-		assertNull("ID 42 is not present", frag.getAtomByID(42));
+		assertEquals(atom1, frag.getAtomByID(10), "ID 10 gets atom1");
+		assertEquals(atom2, frag.getAtomByID(20), "ID 20 gets atom2");
+		assertNull(frag.getAtomByID(42), "ID 42 is not present");
 	}
 
 	@Test
@@ -139,48 +144,48 @@ public class FragmentTest {
 		fm.createBond(frag.getAtomByID(1), frag.getAtomByID(2), 1);
 		fm.createBond(frag.getAtomByID(1), frag.getAtomByID(3), 3);
 		Bond b = frag.findBond(2, 4);
-		assertNotNull("Found a bond", b);
-		assertEquals("..a double bond", 2, b.getOrder());
+		assertNotNull(b, "Found a bond");
+		assertEquals(2, b.getOrder(), "..a double bond");
 		b = frag.findBond(3, 1);
-		assertNotNull("Found a different bond", b);
-		assertEquals("..a triple bond", 3, b.getOrder());
+		assertNotNull(b, "Found a different bond");
+		assertEquals(3, b.getOrder(), "..a triple bond");
 		b = frag.findBond(2, 3);
-		assertNull("Don't find non-existent bonds", b);
+		assertNull(b, "Don't find non-existent bonds");
 	}
 
 	@Test
 	public void testGetChainLength() {
-		assertEquals("No chain", 0, frag.getChainLength());
+		assertEquals(0, frag.getChainLength(), "No chain");
 		Atom a1 =new Atom(1, ChemEl.C, frag);
 		a1.addLocant("1");
 		frag.addAtom(a1);
-		assertEquals("Methane", 1, frag.getChainLength());
+		assertEquals(1, frag.getChainLength(), "Methane");
 		Atom a2 =new Atom(2, ChemEl.C, frag);
 		a2.addLocant("2");
 		frag.addAtom(a2);
 		fm.createBond(frag.getAtomByID(1), frag.getAtomByID(2), 1);
-		assertEquals("ethane", 2, frag.getChainLength());
+		assertEquals(2, frag.getChainLength(), "ethane");
 		Atom a3 =new Atom(3, ChemEl.C, frag);
 		a3.addLocant("3");
 		frag.addAtom(a3);
 		fm.createBond(frag.getAtomByID(2), frag.getAtomByID(3), 1);
-		assertEquals("propane", 3, frag.getChainLength());
+		assertEquals(3, frag.getChainLength(), "propane");
 		Atom a4 =new Atom(4, ChemEl.C, frag);
 		frag.addAtom(a4);
 		a4.addLocant("4");
 		fm.createBond(frag.getAtomByID(2), frag.getAtomByID(4), 1);
-		assertEquals("isobutane", 3, frag.getChainLength());
+		assertEquals(3, frag.getChainLength(), "isobutane");
 		fm.removeBond(a2.getBondToAtom(a4));
 		fm.createBond(a3, a4, 1);
-		assertEquals("butane", 4, frag.getChainLength());
+		assertEquals(4, frag.getChainLength(), "butane");
 	}
 
 
 	@Test
 	public void testRelabelSuffixLocants() throws StructureBuildingException {
 		frag = fm.buildSMILES("C(N)N");
-		assertEquals("Can't find locant N in frag", 0, frag.getIDFromLocant("N"));
-		assertEquals("Can't find locant N' in frag", 0, frag.getIDFromLocant("N'"));
+		assertEquals(0, frag.getIDFromLocant("N"), "Can't find locant N in frag");
+		assertEquals(0, frag.getIDFromLocant("N'"), "Can't find locant N' in frag");
 		FragmentTools.assignElementLocants(frag, new ArrayList<Fragment>());
 		int idN = frag.getIDFromLocant("N");
 		int idNprime = frag.getIDFromLocant("N'");
@@ -195,19 +200,19 @@ public class FragmentTest {
 	public void testLabelCarbamimidamido() throws StructureBuildingException {
 		frag =  fm.buildSMILES("C(N)(=N)N-", NONCARBOXYLICACID_TYPE_VAL, NONE_LABELS_VAL);
 		FragmentTools.assignElementLocants(frag, new ArrayList<Fragment>());
-		assertEquals("Can find locant N in frag: ID = 4", 4, frag.getIDFromLocant("N"));
-		assertEquals("Can find locant N' in frag: ID = 2", 2, frag.getIDFromLocant("N'"));
-		assertEquals("Can find locant N'' in frag: ID = 3", 3, frag.getIDFromLocant("N''"));
+		assertEquals(4, frag.getIDFromLocant("N"), "Can find locant N in frag: ID = 4");
+		assertEquals(2, frag.getIDFromLocant("N'"), "Can find locant N' in frag: ID = 2");
+		assertEquals(3, frag.getIDFromLocant("N''"), "Can find locant N'' in frag: ID = 3");
 	}
 	
 	@Test
 	public void testLabelHydrazonoHydrazide() throws StructureBuildingException {
 		frag =  fm.buildSMILES("C(=NN)NN" , NONCARBOXYLICACID_TYPE_VAL, NONE_LABELS_VAL);
 		FragmentTools.assignElementLocants(frag, new ArrayList<Fragment>());
-		assertEquals("Can find locant N in frag: ID = 4", 4, frag.getIDFromLocant("N"));
-		assertEquals("Can find locant N' in frag: ID = 5", 5, frag.getIDFromLocant("N'"));
-		assertEquals("Can find locant N'' in frag: ID = 2", 2, frag.getIDFromLocant("N''"));
-		assertEquals("Can find locant N''' in frag: ID = 3", 3, frag.getIDFromLocant("N'''"));
+		assertEquals(4, frag.getIDFromLocant("N"), "Can find locant N in frag: ID = 4");
+		assertEquals(5, frag.getIDFromLocant("N'"), "Can find locant N' in frag: ID = 5");
+		assertEquals(2, frag.getIDFromLocant("N''"), "Can find locant N'' in frag: ID = 2");
+		assertEquals(3, frag.getIDFromLocant("N'''"), "Can find locant N''' in frag: ID = 3");
 	}
 	
 	
@@ -217,8 +222,8 @@ public class FragmentTest {
 		frag.addOutAtom(frag.getFirstAtom(), 1, true);
 		frag.addOutAtom(frag.getFirstAtom(), 1, true);
 		FragmentTools.assignElementLocants(frag, new ArrayList<Fragment>());
-		assertEquals("Can find locant N in frag: ID = 2", 2, frag.getIDFromLocant("N"));
-		assertEquals("Can find locant N in frag: ID = 1", 1, frag.getIDFromLocant("C"));
+		assertEquals(2, frag.getIDFromLocant("N"), "Can find locant N in frag: ID = 2");
+		assertEquals(1, frag.getIDFromLocant("C"), "Can find locant N in frag: ID = 1");
 	}
 	
 	@Test
@@ -229,11 +234,11 @@ public class FragmentTest {
 		suffixes.add(suffixfrag);
 		FragmentTools.assignElementLocants(frag, suffixes);
 		fm.incorporateFragment(suffixfrag, frag);
-		assertEquals("Can find locant N in frag: ID = 3", 3, frag.getIDFromLocant("N"));
-		assertEquals("Can find locant N'' in frag: ID = 5", 5, frag.getIDFromLocant("N''"));
+		assertEquals(3, frag.getIDFromLocant("N"), "Can find locant N in frag: ID = 3");
+		assertEquals(5, frag.getIDFromLocant("N''"), "Can find locant N'' in frag: ID = 5");
 		
 		//DEVIATION From systematic behaviour
-		assertEquals("Can find locant N' in frag: ID = 5", 5, frag.getIDFromLocant("N'"));
+		assertEquals(5, frag.getIDFromLocant("N'"), "Can find locant N' in frag: ID = 5");
 	}
 	
 	@Test
@@ -244,10 +249,10 @@ public class FragmentTest {
 		suffixes.add(suffixfrag);
 		FragmentTools.assignElementLocants(frag, suffixes);
 		fm.incorporateFragment(suffixfrag, frag);
-		assertEquals("Can find locant N' in frag: ID = 5", 5, frag.getIDFromLocant("N'"));
+		assertEquals(5, frag.getIDFromLocant("N'"), "Can find locant N' in frag: ID = 5");
 		
 		//DEVIATION From systematic behaviour
-		assertEquals("Can find locant N in frag: ID = 5", 5, frag.getIDFromLocant("N"));
+		assertEquals(5, frag.getIDFromLocant("N"), "Can find locant N in frag: ID = 5");
 	}
 	
 	@Test
@@ -261,8 +266,8 @@ public class FragmentTest {
 		FragmentTools.assignElementLocants(frag, suffixes);
 		fm.incorporateFragment(suffixfrag1, frag);
 		fm.incorporateFragment(suffixfrag2, frag);
-		assertEquals("Can find locant N in frag: ID = 8", 8, frag.getIDFromLocant("N"));
-		assertEquals("Can find locant N' in frag: ID = 10", 10, frag.getIDFromLocant("N'"));
+		assertEquals(8, frag.getIDFromLocant("N"), "Can find locant N in frag: ID = 8");
+		assertEquals(10, frag.getIDFromLocant("N'"), "Can find locant N' in frag: ID = 10");
 	}
 	
 	@Test
@@ -276,10 +281,10 @@ public class FragmentTest {
 		FragmentTools.assignElementLocants(frag, suffixes);
 		fm.incorporateFragment(suffixfrag1, frag);
 		fm.incorporateFragment(suffixfrag2, frag);
-		assertEquals("Can find locant N in frag: ID = 4", 4, frag.getIDFromLocant("N"));
-		assertEquals("Can find locant N' in frag: ID = 7", 7, frag.getIDFromLocant("N'"));
-		assertEquals("Can find locant N'' in frag: ID = 5", 5, frag.getIDFromLocant("N''"));
-		assertEquals("Can find locant N''' in frag: ID = 8", 8, frag.getIDFromLocant("N'''"));
+		assertEquals(4, frag.getIDFromLocant("N"), "Can find locant N in frag: ID = 4");
+		assertEquals(7, frag.getIDFromLocant("N'"), "Can find locant N' in frag: ID = 7");
+		assertEquals(5, frag.getIDFromLocant("N''"), "Can find locant N'' in frag: ID = 5");
+		assertEquals(8, frag.getIDFromLocant("N'''"), "Can find locant N''' in frag: ID = 8");
 	}
 	
 	
@@ -291,10 +296,10 @@ public class FragmentTest {
 		suffixes.add(suffix);
 		FragmentTools.assignElementLocants(frag, suffixes);
 		fm.incorporateFragment(suffix, frag);
-		assertEquals("Can find locant N in frag: ID = 6", 6, frag.getIDFromLocant("N"));
-		assertEquals("Can find locant N' in frag: ID = 7", 7, frag.getIDFromLocant("N'"));
-		assertEquals("Can't find locant N'' in frag", 0, frag.getIDFromLocant("N''"));
-		assertEquals("Can't find locant C in frag", 0, frag.getIDFromLocant("C"));
+		assertEquals(6, frag.getIDFromLocant("N"), "Can find locant N in frag: ID = 6");
+		assertEquals(7, frag.getIDFromLocant("N'"), "Can find locant N' in frag: ID = 7");
+		assertEquals(0, frag.getIDFromLocant("N''"), "Can't find locant N'' in frag");
+		assertEquals(0, frag.getIDFromLocant("C"), "Can't find locant C in frag");
 	}
 	
 	
@@ -311,7 +316,7 @@ public class FragmentTest {
 		else{
 			fail("Locants misassigned");
 		}
-		assertEquals("Can't find locant C in frag", 0, frag.getIDFromLocant("C"));
+		assertEquals(0, frag.getIDFromLocant("C"), "Can't find locant C in frag");
 	}
 	
 	@Test
@@ -322,8 +327,8 @@ public class FragmentTest {
 		suffixes.add(suffix);
 		FragmentTools.assignElementLocants(frag, suffixes);
 		fm.incorporateFragment(suffix, frag);
-		assertEquals("Can find locant S in frag: ID = 6", 6, frag.getIDFromLocant("S"));
-		assertEquals("Can't find locant S' in frag", 0, frag.getIDFromLocant("S'"));
+		assertEquals(6, frag.getIDFromLocant("S"), "Can find locant S in frag: ID = 6");
+		assertEquals(0, frag.getIDFromLocant("S'"), "Can't find locant S' in frag");
 		int idO = frag.getIDFromLocant("O");
 		int idOprime = frag.getIDFromLocant("O'");
 		if ((idO==4 && idOprime==5)|| (idO==5 && idOprime==4)){
@@ -341,7 +346,7 @@ public class FragmentTest {
 		suffixes.add(suffix);
 		FragmentTools.assignElementLocants(frag, suffixes);
 		fm.incorporateFragment(suffix, frag);
-		assertEquals("Can find locant N in frag: ID = 5", 5, frag.getIDFromLocant("N"));
+		assertEquals(5, frag.getIDFromLocant("N"), "Can find locant N in frag: ID = 5");
 	}
 	
 	
@@ -350,8 +355,8 @@ public class FragmentTest {
 	public void testLabelPyridine() throws StructureBuildingException {
 		frag =  fm.buildSMILES("n1ccccc1", RING_TYPE_VAL, "1/2/3/4/5/6");
 		FragmentTools.assignElementLocants(frag, new ArrayList<Fragment>());
-		assertEquals("Can find locant N in frag: ID = 1", 1, frag.getIDFromLocant("N"));
-		assertEquals("Can't find locant C in frag", 0, frag.getIDFromLocant("C"));
+		assertEquals(1, frag.getIDFromLocant("N"), "Can find locant N in frag: ID = 1");
+		assertEquals(0, frag.getIDFromLocant("C"), "Can't find locant C in frag");
 	}
 	
 	
@@ -366,7 +371,7 @@ public class FragmentTest {
 		else{
 			fail("Locants misassigned");
 		}
-		assertEquals("Can't find locant C in frag", 0, frag.getIDFromLocant("C"));
+		assertEquals(0, frag.getIDFromLocant("C"), "Can't find locant C in frag");
 	}
 	
 	@Test
@@ -377,26 +382,26 @@ public class FragmentTest {
 		suffixes.add(suffix);
 		FragmentTools.assignElementLocants(frag, suffixes);
 		fm.incorporateFragment(suffix, frag);
-		assertEquals("Can find locant N in frag: ID = 10", 10, frag.getIDFromLocant("N"));
-		assertEquals("Can find locant N' in frag: ID = 11", 11, frag.getIDFromLocant("N'"));
-		assertEquals("Can find locant N'' in frag: ID = 9", 9, frag.getIDFromLocant("N''"));
+		assertEquals(10, frag.getIDFromLocant("N"), "Can find locant N in frag: ID = 10");
+		assertEquals(11, frag.getIDFromLocant("N'"), "Can find locant N' in frag: ID = 11");
+		assertEquals(9, frag.getIDFromLocant("N''"), "Can find locant N'' in frag: ID = 9");
 	}
 
 	@Test
 	public void testIndicatedHydrogen() throws StructureBuildingException {
 		Fragment pyrrole = fm.buildSMILES("[nH]1cccc1");
-		assertEquals("Pyrrole has 1 indicated hydrogen", 1, pyrrole.getIndicatedHydrogen().size());
-		assertEquals("..and the indicated hydrogen is on the nitrogen", pyrrole.getFirstAtom(), pyrrole.getIndicatedHydrogen().get(0));
+		assertEquals(1, pyrrole.getIndicatedHydrogen().size(), "Pyrrole has 1 indicated hydrogen");
+		assertEquals(pyrrole.getFirstAtom(), pyrrole.getIndicatedHydrogen().get(0), "..and the indicated hydrogen is on the nitrogen");
 	}
 
 	@Test
 	public void testSpareValenciesOnAromaticAtoms() throws StructureBuildingException{
 		Fragment naphthalene = fm.buildSMILES("c1cccc2ccccc12");
 		for(Atom a : naphthalene.getAtomList()) {
-			assertEquals("All atoms have sv", true, a.hasSpareValency());
+			assertEquals(true, a.hasSpareValency(), "All atoms have sv");
 		}
 		for(Bond b : naphthalene.getBondSet()) {
-			assertEquals("All bonds are of order 1", 1, b.getOrder());
+			assertEquals(1, b.getOrder(), "All bonds are of order 1");
 		}
 	}
 
@@ -405,36 +410,36 @@ public class FragmentTest {
 		Fragment dhp = fm.buildSMILES("c1cCccC1");
 		FragmentTools.convertSpareValenciesToDoubleBonds(dhp);
 		for(Atom a : dhp.getAtomList()) {
-			assertEquals("All atoms have no sv", false, a.hasSpareValency());
+			assertEquals(false, a.hasSpareValency(), "All atoms have no sv");
 		}
 		Fragment funnydiene = fm.buildSMILES("C(=C)C=C");
 		FragmentTools.convertSpareValenciesToDoubleBonds(funnydiene);
 		for(Atom a : funnydiene.getAtomList()) {
-			assertEquals("All atoms have no sv", false, a.hasSpareValency());
+			assertEquals(false, a.hasSpareValency(), "All atoms have no sv");
 		}
 		Fragment naphthalene = fm.buildSMILES("c1cccc2ccccc12");
 		FragmentTools.convertSpareValenciesToDoubleBonds(naphthalene);
 		for(Atom a : naphthalene.getAtomList()) {
-			assertEquals("All atoms have no sv", false, a.hasSpareValency());
+			assertEquals(false, a.hasSpareValency(), "All atoms have no sv");
 		}
 		Fragment pentalene = fm.buildSMILES("c12c(ccc1)ccc2");
 		for(Atom a : pentalene.getAtomList()) {
-			assertEquals("All atoms have sv", true, a.hasSpareValency());
+			assertEquals(true, a.hasSpareValency(), "All atoms have sv");
 		}
 		FragmentTools.convertSpareValenciesToDoubleBonds(pentalene);
 		for(Atom a : pentalene.getAtomList()) {
-			assertEquals("All atoms have no sv", false, a.hasSpareValency());
+			assertEquals(false, a.hasSpareValency(), "All atoms have no sv");
 		}
 
 	}
 
 	@Test
-	public void testGetAtomNeighbours() throws StructureBuildingException{
+	public void testGetAtomNeighbours() throws StructureBuildingException {
 		Fragment naphthalene = fm.buildSMILES("C1=CC=CC2=CC=CC=C12");
-		assertEquals("Atom 1 has two neighbours",
-				2, naphthalene.getIntraFragmentAtomNeighbours(naphthalene.getAtomByID(1)).size());
-		assertEquals("Atom 5 has three neighbours",
-				3, naphthalene.getIntraFragmentAtomNeighbours(naphthalene.getAtomByID(5)).size());
+		assertEquals(2, naphthalene.getIntraFragmentAtomNeighbours(naphthalene.getAtomByID(1)).size(),
+				"Atom 1 has two neighbours");
+		assertEquals(3, naphthalene.getIntraFragmentAtomNeighbours(naphthalene.getAtomByID(5)).size(),
+				"Atom 5 has three neighbours");
 	}
 	
 	@Test

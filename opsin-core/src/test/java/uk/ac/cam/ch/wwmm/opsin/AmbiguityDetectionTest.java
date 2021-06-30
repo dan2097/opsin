@@ -1,25 +1,25 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 public class AmbiguityDetectionTest {
 	
 	private static NameToStructure n2s;
 
-	@BeforeClass
+	@BeforeAll
 	public static void setUp() {
 		n2s = NameToStructure.getInstance();
 	}
 	
-	@AfterClass
+	@AfterAll
 	public static void cleanUp(){
 		n2s = null;
 	}
@@ -42,7 +42,7 @@ public class AmbiguityDetectionTest {
 					continue;
 				}
 				OpsinResult result = n2s.parseChemicalName(line);
-				assertEquals(line + " gave unexpected result", isAmbiguous, result.nameAppearsToBeAmbiguous());
+				assertEquals(isAmbiguous, result.nameAppearsToBeAmbiguous(), line + " gave unexpected result");
 			}
 		}
 	}

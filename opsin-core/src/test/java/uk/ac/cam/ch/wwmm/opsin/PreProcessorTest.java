@@ -1,59 +1,62 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class PreProcessorTest {
 
-	@Test(expected=PreProcessingException.class)
-	public void testPreProcessBlankThrows() throws PreProcessingException {
+	@Test()
+	public void testPreProcessBlankThrows() {
+		assertThrows(PreProcessingException.class, () -> {
 		PreProcessor.preProcess("");
+		});
 	}
 
 	@Test
 	public void testPreProcessConvertsDollarA() throws PreProcessingException {
-		assertEquals("Convert dollar-a", "alpha-bromo", PreProcessor.preProcess("$a-bromo"));
+		assertEquals("alpha-bromo", PreProcessor.preProcess("$a-bromo"), "Convert dollar-a");
 	}
 
 	@Test
 	public void testPreProcessConvertsDollarB() throws PreProcessingException {
-		assertEquals("Convert dollar-b", "beta-bromo", PreProcessor.preProcess("$b-bromo"));
+		assertEquals("beta-bromo", PreProcessor.preProcess("$b-bromo"), "Convert dollar-b");
 	}
 
 	@Test
 	public void testPreProcessConvertsDollarG() throws PreProcessingException {
-		assertEquals("Convert dollar-g", "gamma-bromo", PreProcessor.preProcess("$g-bromo"));
+		assertEquals("gamma-bromo", PreProcessor.preProcess("$g-bromo"), "Convert dollar-g");
 	}
 
 	@Test
 	public void testPreProcessConvertsDollarD() throws PreProcessingException {
-		assertEquals("Convert dollar-d", "delta-bromo", PreProcessor.preProcess("$d-bromo"));
+		assertEquals("delta-bromo", PreProcessor.preProcess("$d-bromo"), "Convert dollar-d");
 	}
 
 	@Test
 	public void testPreProcessConvertsDollarE() throws PreProcessingException {
-		assertEquals("Convert dollar-e", "epsilon-bromo", PreProcessor.preProcess("$e-bromo"));
+		assertEquals("epsilon-bromo", PreProcessor.preProcess("$e-bromo"), "Convert dollar-e");
 	}
 
 	@Test
 	public void testPreProcessConvertsDollarL() throws PreProcessingException {
-		assertEquals("Convert dollar-l", "lambda-bromo", PreProcessor.preProcess("$l-bromo"));
+		assertEquals("lambda-bromo", PreProcessor.preProcess("$l-bromo"), "Convert dollar-l");
 	}
 
 	@Test
 	public void testPreProcessConvertsGreekLetterToWord() throws PreProcessingException {
-		assertEquals("Convert greek to word", "alpha-bromo", PreProcessor.preProcess("\u03b1-bromo"));
+		assertEquals("alpha-bromo", PreProcessor.preProcess("\u03b1-bromo"), "Convert greek to word");
 	}
 
 	@Test
 	public void testPreProcessConvertsSulphToSulf() throws PreProcessingException {
-		assertEquals("Converts 'sulph' to 'sulph'", "sulfur dioxide", PreProcessor.preProcess("sulphur dioxide"));
+		assertEquals("sulfur dioxide", PreProcessor.preProcess("sulphur dioxide"), "Converts 'sulph' to 'sulph'");
 	}
 	
 	@Test
 	public void testRemovalOfDotsFromGreekWords1() throws PreProcessingException {
-		assertEquals("Converts '.alpha.' to 'alpha'", "alpha-methyl-toluene", PreProcessor.preProcess(".alpha.-methyl-toluene"));
+		assertEquals("alpha-methyl-toluene", PreProcessor.preProcess(".alpha.-methyl-toluene"), "Converts '.alpha.' to 'alpha'");
 	}
 	
 	@Test
