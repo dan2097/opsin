@@ -123,7 +123,7 @@ class ComponentGenerator {
 
 		/* Converts open/close bracket elements to bracket elements and
 		 *  places the elements inbetween within the newly created bracket */
-		List<Element> brackets = new ArrayList<Element>();
+		List<Element> brackets = new ArrayList<>();
 		findAndStructureBrackets(substituentsAndRoot, brackets);
 
 		for (Element subOrRoot: substituentsAndRoot) {
@@ -397,7 +397,7 @@ class ComponentGenerator {
 	 * @return
 	 */
 	private static List<String> splitIntoIndividualLocants(String locantString) {
-		List<String> individualLocants = new ArrayList<String>();
+		List<String> individualLocants = new ArrayList<>();
 		char[] charArray = locantString.toCharArray();
 		boolean inBracket =false;
 		int indiceOfLastMatch =0;
@@ -498,7 +498,7 @@ class ComponentGenerator {
 	 * @param subOrRoot
 	 */
 	private void formAlkaneStemsFromComponents(Element subOrRoot) {
-		Deque<Element> alkaneStemComponents =new ArrayDeque<Element>(subOrRoot.getChildElements(ALKANESTEMCOMPONENT));
+		Deque<Element> alkaneStemComponents =new ArrayDeque<>(subOrRoot.getChildElements(ALKANESTEMCOMPONENT));
 		while(!alkaneStemComponents.isEmpty()){
 			Element alkaneStemComponent = alkaneStemComponents.removeFirst();
 			int alkaneChainLength =0;
@@ -846,7 +846,7 @@ class ComponentGenerator {
 	 */
 	void processStereochemistry(Element subOrRoot) throws ComponentGenerationException {
 		List<Element> stereoChemistryElements = subOrRoot.getChildElements(STEREOCHEMISTRY_EL);
-		List<Element> locantedUnbrackettedEzTerms = new ArrayList<Element>();
+		List<Element> locantedUnbrackettedEzTerms = new ArrayList<>();
 		for (Element stereoChemistryElement : stereoChemistryElements) {
 			if (stereoChemistryElement.getAttributeValue(TYPE_ATR).equals(STEREOCHEMISTRYBRACKET_TYPE_VAL)){
 				processStereochemistryBracket(stereoChemistryElement);
@@ -1080,7 +1080,7 @@ class ComponentGenerator {
 	}
 
 	private List<String> splitStereoBracketIntoDescriptors(String stereoBracket) {
-		List<String> stereoDescriptors = new ArrayList<String>();
+		List<String> stereoDescriptors = new ArrayList<>();
 		StringBuilder sb = new StringBuilder();
 		//ignore first and last character (opening and closing bracket)
 		for (int i = 1, l = stereoBracket.length() - 1; i < l; i++) {
@@ -1145,7 +1145,7 @@ class ComponentGenerator {
 	private void processUnbracketedAlphaBetaStereochemistry(Element stereoChemistryElement) throws ComponentGenerationException {
 		String txt = StringTools.removeDashIfPresent(stereoChemistryElement.getValue());
 		String[] stereoChemistryDescriptors = txt.split(",");
-		List<String> locants = new ArrayList<String>();
+		List<String> locants = new ArrayList<>();
 		boolean createLocantsEl =false;
 		for (String stereoChemistryDescriptor : stereoChemistryDescriptors) {
 			Matcher digitMatcher  = MATCH_DIGITS.matcher(stereoChemistryDescriptor);
@@ -1224,7 +1224,7 @@ class ComponentGenerator {
 	private void duplicateLocantFromStereoTermIfAdjacentToEneOrYlidene(List<Element> locantedUnbrackettedEzTerms) {
 		for (int i = 0, l = locantedUnbrackettedEzTerms.size(); i < l; i++) {
 			Element currentTerm = locantedUnbrackettedEzTerms.get(i);
-			List<Element> groupedTerms = new ArrayList<Element>();
+			List<Element> groupedTerms = new ArrayList<>();
 			groupedTerms.add(currentTerm);
 			while (i + 1 < l && locantedUnbrackettedEzTerms.get(i + 1).equals(OpsinTools.getNextSibling(currentTerm))) {
 				currentTerm = locantedUnbrackettedEzTerms.get(++i);
@@ -1247,7 +1247,7 @@ class ComponentGenerator {
 				if (name.equals(UNSATURATOR_EL) || name.equals(SUFFIX_EL)) {
 						if ((name.equals(UNSATURATOR_EL) && eneOrYlidene.getAttributeValue(VALUE_ATR).equals("2"))
 								|| (name.equals(SUFFIX_EL) && eneOrYlidene.getAttributeValue(VALUE_ATR).equals("ylidene"))) {
-						List<String> locants = new ArrayList<String>();
+						List<String> locants = new ArrayList<>();
 						for (Element stereochemistryTerm : groupedTerms) {
 							locants.add(stereochemistryTerm.getAttributeValue(LOCANT_ATR));
 						}
@@ -1302,7 +1302,7 @@ class ComponentGenerator {
 			List<String> currentInfixInformation;
 			if (suffix.getAttribute(INFIX_ATR)==null){
 				suffix.addAttribute(new Attribute(INFIX_ATR, ""));
-				currentInfixInformation = new ArrayList<String>();
+				currentInfixInformation = new ArrayList<>();
 			}
 			else{
 				currentInfixInformation = StringTools.arrayToList(suffix.getAttributeValue(INFIX_ATR).split(";"));
@@ -1418,7 +1418,7 @@ class ComponentGenerator {
 							(possibleHeteroatomOrMultiplier.getAttributeValue(VALUE_ATR).equals("spirobi")|| possibleHeteroatomOrMultiplier.getAttributeValue(VALUE_ATR).equals("spiroter"))))){
 				frontLocantsExpected = true;//a benzo fused ring e.g. 1lambda4,3-benzothiazole or a symmetrical poly cyclic spiro system
 			}
-			List<Element> heteroAtoms = new ArrayList<Element>();//contains the heteroatoms to apply the lambda values too. Can be empty if the values are applied to a group directly rather than to a heteroatom
+			List<Element> heteroAtoms = new ArrayList<>();//contains the heteroatoms to apply the lambda values too. Can be empty if the values are applied to a group directly rather than to a heteroatom
 			if (assignLambdasToHeteroAtoms){//populate heteroAtoms, multiplied heteroatoms are multiplied out
 				Element multiplier = null;
 				Element heteroatomOrMultiplier = OpsinTools.getNextSibling(lambdaConventionEl);
@@ -2064,7 +2064,7 @@ class ComponentGenerator {
 		multiplier.detach();
 
 		int alkylChainLength;
-		Deque<String> elementSymbolArray = new ArrayDeque<String>();
+		Deque<String> elementSymbolArray = new ArrayDeque<>();
 		String smiles =chainEl.getAttributeValue(VALUE_ATR);
 		char[] smilesArray =smiles.toCharArray();
 		for (int i = 0; i < smilesArray.length; i++) {//only able to interpret the SMILES that should be in an unmodified unbranched chain
@@ -2090,8 +2090,8 @@ class ComponentGenerator {
 		int bridgeLabelsUsed=3;//start labelling from 3 upwards
 		//3 and 4 will be the atoms on each end of one secondary bridge, 5 and 6 for the next etc.
 
-		List<HashMap<String, Integer>> bridges = new ArrayList<HashMap<String, Integer>>();
-		Map<Integer, ArrayList<Integer>> bridgeLocations = new HashMap<Integer, ArrayList<Integer>>(alkylChainLength);
+		List<HashMap<String, Integer>> bridges = new ArrayList<>();
+		Map<Integer, ArrayList<Integer>> bridgeLocations = new HashMap<>(alkylChainLength);
 		if (vonBaeyerBracket.indexOf("-")==5){
 			vonBaeyerBracket = vonBaeyerBracket.substring(7, vonBaeyerBracket.length()-1);//cut off cyclo-[ and terminal ]
 		}
@@ -2102,7 +2102,7 @@ class ComponentGenerator {
 		//all bridges from past the first 3 are secondary bridges and require specification of bridge position which will be partially in the subsequent position in the array
 		for (int i = 0; i < bridgeDescriptors.length; i++) {
 			String bridgeDescriptor = bridgeDescriptors[i];
-			HashMap<String, Integer> bridge = new HashMap<String, Integer>();
+			HashMap<String, Integer> bridge = new HashMap<>();
 			int bridgeLength =0;
 			if (i > 2){//this is a secondary bridge (chain start/end locations should have been specified)
 				i++;
@@ -2148,10 +2148,10 @@ class ComponentGenerator {
 					coordinates2=swap;
 				}
 				if (bridgeLocations.get(coordinates1)==null){
-					bridgeLocations.put(coordinates1, new ArrayList<Integer>());
+					bridgeLocations.put(coordinates1, new ArrayList<>());
 				}
 				if (bridgeLocations.get(coordinates2)==null){
-					bridgeLocations.put(coordinates2, new ArrayList<Integer>());
+					bridgeLocations.put(coordinates2, new ArrayList<>());
 				}
 				bridgeLocations.get(coordinates1).add(bridgeLabelsUsed);
 				bridge.put("AtomId_Larger_Label", bridgeLabelsUsed);
@@ -2231,7 +2231,7 @@ class ComponentGenerator {
 
 		//create list of secondary bridges that need to be added
 		//0 length bridges and the 3 main bridges are dropped
-		List<HashMap<String, Integer>> secondaryBridges = new ArrayList<HashMap<String, Integer>>();
+		List<HashMap<String, Integer>> secondaryBridges = new ArrayList<>();
 		for (HashMap<String, Integer> bridge : bridges) {
 			if(bridge.get("AtomId_Larger")!=null && bridge.get("Bridge Length")!=0){
 				secondaryBridges.add(bridge);
@@ -2244,7 +2244,7 @@ class ComponentGenerator {
 		List<HashMap<String, Integer>> dependantSecondaryBridges;
 		//add secondary bridges, recursively add dependent secondary bridges
 		do{
-			dependantSecondaryBridges = new ArrayList<HashMap<String, Integer>>();
+			dependantSecondaryBridges = new ArrayList<>();
 			for (HashMap<String, Integer> bridge : secondaryBridges) {
 				int bridgeLength =bridge.get("Bridge Length");
 				if (bridge.get("AtomId_Larger") > atomCounter){

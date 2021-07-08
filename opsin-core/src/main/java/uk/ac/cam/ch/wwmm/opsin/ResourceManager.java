@@ -32,9 +32,9 @@ class ResourceManager {
 	private final AutomatonInitialiser automatonInitialiser;
 	
 	/**A mapping between primitive tokens, and annotation->Token object mappings.*/
-	private final HashMap<String, Map<Character, TokenEl>> tokenDict = new HashMap<String, Map<Character, TokenEl>>();
+	private final HashMap<String, Map<Character, TokenEl>> tokenDict = new HashMap<>();
 	/**A mapping between regex tokens, and annotation->Token object mappings.*/
-	private final HashMap<Character, TokenEl> reSymbolTokenDict = new HashMap<Character, TokenEl>();
+	private final HashMap<Character, TokenEl> reSymbolTokenDict = new HashMap<>();
 
 
 	/**A mapping between annotation symbols and a trie of tokens.*/
@@ -232,7 +232,7 @@ class ResourceManager {
 	private void addToken(String text, TokenEl el, Character symbol, int index, boolean reversed) {
 		Map<Character, TokenEl> symbolToToken = tokenDict.get(text);
 		if(symbolToToken == null) {
-			symbolToToken = new HashMap<Character, TokenEl>();
+			symbolToToken = new HashMap<>();
 			tokenDict.put(text, symbolToToken);
 		}
 		symbolToToken.put(symbol, el);
@@ -257,7 +257,7 @@ class ResourceManager {
 
 	private void processRegexTokenFiles(boolean reversed) throws IOException{
 		XMLStreamReader reader = resourceGetter.getXMLStreamReader("regexTokens.xml");
-		Map<String, StringBuilder> tempRegexes = new HashMap<String, StringBuilder>();
+		Map<String, StringBuilder> tempRegexes = new HashMap<>();
 		Pattern matchRegexReplacement = Pattern.compile("%.*?%");
 		try {
 			while (reader.hasNext()) {
@@ -393,7 +393,7 @@ class ResourceManager {
 
 	private RunAutomaton processChemicalGrammar(boolean reversed) throws IOException {
 		XMLStreamReader reader = resourceGetter.getXMLStreamReader("regexes.xml");
-		Map<String, StringBuilder> regexDict = new HashMap<String, StringBuilder>();
+		Map<String, StringBuilder> regexDict = new HashMap<>();
 		Pattern matchRegexReplacement = Pattern.compile("%.*?%");
 		try {
 			while (reader.hasNext()) {

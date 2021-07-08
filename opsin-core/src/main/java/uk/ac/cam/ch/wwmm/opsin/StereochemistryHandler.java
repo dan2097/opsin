@@ -32,9 +32,9 @@ class StereochemistryHandler {
 	StereochemistryHandler(BuildState state, Map<Atom, StereoCentre> atomStereoCentreMap, Map<Bond, StereoBond> bondStereoBondMap) {
 		this.state = state;
 		this.atomStereoCentreMap = atomStereoCentreMap;
-		notExplicitlyDefinedStereoCentreMap = new HashMap<Atom, StereoCentre>(atomStereoCentreMap);
+		notExplicitlyDefinedStereoCentreMap = new HashMap<>(atomStereoCentreMap);
 		this.bondStereoBondMap = bondStereoBondMap;
-		notExplicitlyDefinedStereoBondMap = new HashMap<Bond, StereoBond>(bondStereoBondMap);
+		notExplicitlyDefinedStereoBondMap = new HashMap<>(bondStereoBondMap);
 	}
 
 	/**
@@ -43,9 +43,9 @@ class StereochemistryHandler {
 	 * @throws StructureBuildingException
 	 */
 	void applyStereochemicalElements(List<Element> stereoChemistryEls) throws StructureBuildingException {
-		List<Element> locantedStereoChemistryEls = new ArrayList<Element>();
-		List<Element> unlocantedStereoChemistryEls = new ArrayList<Element>();
-		List<Element> carbohydrateStereoChemistryEls = new ArrayList<Element>();
+		List<Element> locantedStereoChemistryEls = new ArrayList<>();
+		List<Element> unlocantedStereoChemistryEls = new ArrayList<>();
+		List<Element> carbohydrateStereoChemistryEls = new ArrayList<>();
 		List<Element> globalRacemicOrRelative = new ArrayList<>();
 		for (Element stereoChemistryElement : stereoChemistryEls) {
 			if (stereoChemistryElement.getAttributeValue(LOCANT_ATR)!=null){
@@ -190,7 +190,7 @@ class StereochemistryHandler {
 	 * @throws StructureBuildingException 
 	 */
 	private void processCarbohydrateStereochemistry(List<Element> carbohydrateStereoChemistryEls) throws StructureBuildingException {
-		Map<Element, List<Element>> groupToStereochemEls = new HashMap<Element, List<Element>>();
+		Map<Element, List<Element>> groupToStereochemEls = new HashMap<>();
 		for (Element carbohydrateStereoChemistryEl : carbohydrateStereoChemistryEls) {
 			Element nextGroup = OpsinTools.getNextSibling(carbohydrateStereoChemistryEl, GROUP_EL);
 			if (nextGroup ==null || (!SYSTEMATICCARBOHYDRATESTEMALDOSE_SUBTYPE_VAL.equals(nextGroup.getAttributeValue(SUBTYPE_ATR)) &&
@@ -198,7 +198,7 @@ class StereochemistryHandler {
 				throw new RuntimeException("OPSIN bug: Could not find carbohydrate chain stem to apply stereochemistry to");
 			}
 			if (groupToStereochemEls.get(nextGroup)==null){
-				groupToStereochemEls.put(nextGroup, new ArrayList<Element>());
+				groupToStereochemEls.put(nextGroup, new ArrayList<>());
 			}
 			groupToStereochemEls.get(nextGroup).add(carbohydrateStereoChemistryEl);
 		}
@@ -506,7 +506,7 @@ class StereochemistryHandler {
 	 * @return A sorted list
 	 */
 	private List<Bond> sortInterFragmentBonds(Set<Bond> interFragmentBonds, Fragment preferredOriginatingFragment) {
-		List<Bond> interFragmentBondList = new ArrayList<Bond>();
+		List<Bond> interFragmentBondList = new ArrayList<>();
 		for (Bond bond : interFragmentBonds) {
 			if (bond.getFromAtom().getFrag() ==preferredOriginatingFragment){
 				interFragmentBondList.add(0, bond);
@@ -590,7 +590,7 @@ class StereochemistryHandler {
 
 	private boolean attemptAssignmentOfCisTransRingStereoToFragment(Fragment fragment, Element stereoChemistryEl) throws StructureBuildingException {
 		List<Atom> atomList = fragment.getAtomList();
-		List<Atom> stereoAtoms = new ArrayList<Atom>();
+		List<Atom> stereoAtoms = new ArrayList<>();
 		for (Atom potentialStereoAtom : atomList) {
 			if (potentialStereoAtom.getAtomIsInACycle()){
 				List<Atom> neighbours = potentialStereoAtom.getAtomNeighbours();
@@ -635,7 +635,7 @@ class StereochemistryHandler {
 	private Set<Bond> determinePeripheryBonds(Fragment fragment) {
 		List<Ring> rings = SSSRFinder.getSetOfSmallestRings(fragment);
 		FusedRingNumberer.setupAdjacentFusedRingProperties(rings);
-		Set<Bond> bondsToConsider = new HashSet<Bond>();
+		Set<Bond> bondsToConsider = new HashSet<>();
 		for (Ring ring : rings) {
 			for (Bond bond : ring.getBondList()) {
 				bondsToConsider.add(bond);
@@ -879,7 +879,7 @@ class StereochemistryHandler {
 	private void assignCarbohydratePrefixStereochem(Element carbohydrateGroup, List<Element> carbohydrateStereoChemistryEls) throws StructureBuildingException {
 		Fragment carbohydrate = carbohydrateGroup.getFrag();
 		Set<Atom> atoms = notExplicitlyDefinedStereoCentreMap.keySet();
-		List<Atom> stereocentresInCarbohydrate = new ArrayList<Atom>();
+		List<Atom> stereocentresInCarbohydrate = new ArrayList<>();
 		for (Atom atom : atoms) {
 			if (carbohydrate.getAtomByID(atom.getID())!=null){
 				Boolean isAnomeric = atom.getProperty(Atom.ISANOMERIC);
@@ -891,7 +891,7 @@ class StereochemistryHandler {
 		//stereoconfiguration is specified from the farthest from C-1 to nearest to C-1
 		//but it is easier to set it the other way around hence this reverse
 		Collections.reverse(carbohydrateStereoChemistryEls);
-		List<String> stereocentreConfiguration = new ArrayList<String>();
+		List<String> stereocentreConfiguration = new ArrayList<>();
 		for (Element carbohydrateStereoChemistryEl: carbohydrateStereoChemistryEls) {
 			String[] values = carbohydrateStereoChemistryEl.getAttributeValue(VALUE_ATR).split("/");
 			Collections.addAll(stereocentreConfiguration, values);

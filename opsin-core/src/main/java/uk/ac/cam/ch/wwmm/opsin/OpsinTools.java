@@ -60,7 +60,7 @@ class OpsinTools {
 	 * @return The new list
 	 */
 	static List<Element> combineElementLists(List<Element> list1, List<Element> list2) {
-		List<Element> elementList = new ArrayList<Element>(list1.size() + list2.size());
+		List<Element> elementList = new ArrayList<>(list1.size() + list2.size());
 		elementList.addAll(list1);
 		elementList.addAll(list2);
 		return elementList;
@@ -165,9 +165,9 @@ class OpsinTools {
 	 * @return the matching atom or null
 	 */
 	static Atom depthFirstSearchForNonSuffixAtomWithLocant(Atom startingAtom, String targetLocant) {
-		Deque<Atom> stack = new ArrayDeque<Atom>();
+		Deque<Atom> stack = new ArrayDeque<>();
 		stack.add(startingAtom);
-		Set<Atom> atomsVisited = new HashSet<Atom>();
+		Set<Atom> atomsVisited = new HashSet<>();
 		while (stack.size() > 0) {
 			Atom currentAtom = stack.removeLast();
 			atomsVisited.add(currentAtom);
@@ -176,7 +176,7 @@ class OpsinTools {
 				if (atomsVisited.contains(neighbour)){//already visited
 					continue;
 				}
-				List<String> locants = new ArrayList<String>(neighbour.getLocants());
+				List<String> locants = new ArrayList<>(neighbour.getLocants());
 				locants.removeAll(neighbour.getElementSymbolLocants());
 
 				//A main group atom, would expect to only find one except in something strange like succinimide
@@ -200,9 +200,9 @@ class OpsinTools {
 	 * @return the matching atom or null
 	 */
 	static Atom depthFirstSearchForAtomWithNumericLocant(Atom startingAtom){
-		Deque<Atom> stack = new ArrayDeque<Atom>();
+		Deque<Atom> stack = new ArrayDeque<>();
 		stack.add(startingAtom);
-		Set<Atom> atomsVisited = new HashSet<Atom>();
+		Set<Atom> atomsVisited = new HashSet<>();
 		while (stack.size() > 0) {
 			Atom currentAtom = stack.removeLast();
 			atomsVisited.add(currentAtom);
@@ -405,7 +405,7 @@ class OpsinTools {
 	 * @return
 	 */
 	static List<Element> getNextSiblingsOfType(Element currentElem, String elName) {
-		List<Element> laterSiblingElementsOfType = new ArrayList<Element>();
+		List<Element> laterSiblingElementsOfType = new ArrayList<>();
 		Element parent = currentElem.getParent();
 		if (parent == null){
 			return laterSiblingElementsOfType;
@@ -427,7 +427,7 @@ class OpsinTools {
 	 * @return
 	 */
 	static List<Element> getNextAdjacentSiblingsOfType(Element currentElem, String elName) {
-		List<Element> siblingElementsOfType = new ArrayList<Element>();
+		List<Element> siblingElementsOfType = new ArrayList<>();
 		Element parent = currentElem.getParent();
 		if (parent == null){
 			return siblingElementsOfType;
@@ -448,7 +448,7 @@ class OpsinTools {
 	 * @return
 	 */
 	static List<Element> getNextSiblingsOfTypes(Element currentElem, String[] elNames){
-		List<Element> laterSiblingElementsOfTypes = new ArrayList<Element>();
+		List<Element> laterSiblingElementsOfTypes = new ArrayList<>();
 		currentElem = getNextSibling(currentElem);
 		while (currentElem != null){
 			String name = currentElem.getName();
@@ -471,7 +471,7 @@ class OpsinTools {
 	 * @return
 	 */
 	static List<Element> getPreviousSiblingsOfType(Element currentElem, String elName) {
-		List<Element> earlierSiblingElementsOfType = new ArrayList<Element>();
+		List<Element> earlierSiblingElementsOfType = new ArrayList<>();
 		Element parent = currentElem.getParent();
 		if (parent == null){
 			return earlierSiblingElementsOfType;
@@ -545,8 +545,8 @@ class OpsinTools {
 	 * @return
 	 */
 	static List<Element> getDescendantElementsWithTagName(Element startingElement, String elementName) {
-		List<Element> matchingElements = new ArrayList<Element>();
-		Deque<Element> stack = new ArrayDeque<Element>();
+		List<Element> matchingElements = new ArrayList<>();
+		Deque<Element> stack = new ArrayDeque<>();
 		for (int i = startingElement.getChildCount() - 1; i >= 0; i--) {
 			stack.add(startingElement.getChild(i));
 		}
@@ -569,8 +569,8 @@ class OpsinTools {
 	 * @return
 	 */
 	static List<Element> getDescendantElementsWithTagNames(Element startingElement, String[] elementNames) {
-		List<Element> matchingElements = new ArrayList<Element>();
-		Deque<Element> stack = new ArrayDeque<Element>();
+		List<Element> matchingElements = new ArrayList<>();
+		Deque<Element> stack = new ArrayDeque<>();
 		for (int i = startingElement.getChildCount() - 1; i >= 0; i--) {
 			stack.add(startingElement.getChild(i));
 		}
@@ -597,7 +597,7 @@ class OpsinTools {
 	 * @return
 	 */
 	static List<Element> getChildElementsWithTagNames(Element startingElement, String[] elementNames) {
-		List<Element> matchingElements = new ArrayList<Element>();
+		List<Element> matchingElements = new ArrayList<>();
 		for (int i = 0, l = startingElement.getChildCount(); i < l; i++) {
 			Element child = startingElement.getChild(i);
 			String currentElName = child.getName();
@@ -621,8 +621,8 @@ class OpsinTools {
 	 * @return
 	 */
 	static List<Element> getDescendantElementsWithTagNameAndAttribute(Element startingElement, String elementName, String attributeName, String attributeValue) {
-		List<Element> matchingElements = new ArrayList<Element>();
-		Deque<Element> stack = new ArrayDeque<Element>();
+		List<Element> matchingElements = new ArrayList<>();
+		Deque<Element> stack = new ArrayDeque<>();
 		for (int i = startingElement.getChildCount() - 1; i >= 0; i--) {
 			stack.add(startingElement.getChild(i));
 		}
@@ -648,7 +648,7 @@ class OpsinTools {
 	 * @return
 	 */
 	static List<Element> getChildElementsWithTagNameAndAttribute(Element startingElement, String elementName, String attributeName, String attributeValue) {
-		List<Element> matchingElements = new ArrayList<Element>();
+		List<Element> matchingElements = new ArrayList<>();
 		for (int i = 0, l = startingElement.getChildCount(); i < l; i++) {
 			Element child = startingElement.getChild(i);
 			if (child.getName().equals(elementName)){
@@ -669,7 +669,7 @@ class OpsinTools {
 	 */
 	static int[] countNumberOfElementsAndNumberOfChildLessElements(Element startingElement) {
 		int[] counts = new int[2];
-		Deque<Element> stack = new ArrayDeque<Element>();
+		Deque<Element> stack = new ArrayDeque<>();
 		stack.add(startingElement);
 		while (stack.size() > 0){
 			Element currentElement = stack.removeLast();
@@ -693,7 +693,7 @@ class OpsinTools {
 	 * @return
 	 */
 	static List<Element> getSiblingsUpToElementWithTagName(Element startingEl, String elName) {
-		List<Element> laterSiblings = new ArrayList<Element>();
+		List<Element> laterSiblings = new ArrayList<>();
 		Element nextEl = getNextSibling(startingEl);
 		while (nextEl != null && !nextEl.getName().equals(elName)){
 			laterSiblings.add(nextEl);

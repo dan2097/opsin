@@ -290,7 +290,7 @@ class StructureBuildingMethods {
 	 */
 	private static void performPerHalogenoSubstitution(BuildState state, Fragment perhalogenFrag, Element subBracketOrRoot) throws StructureBuildingException {
 		List<Fragment> fragmentsToAttachTo = findAlternativeFragments(subBracketOrRoot);
-		List<Atom> atomsToHalogenate = new ArrayList<Atom>();
+		List<Atom> atomsToHalogenate = new ArrayList<>();
 		for (Fragment fragment : fragmentsToAttachTo) {
 			FragmentTools.convertSpareValenciesToDoubleBonds(fragment);
 			for (Atom atom : fragment.getAtomList()) {
@@ -306,7 +306,7 @@ class StructureBuildingMethods {
 		if (atomsToHalogenate.size() == 0){
 			throw new RuntimeException("Failed to find any substitutable hydrogen to apply " + perhalogenFrag.getTokenEl().getValue() + " to!");
 		}
-		List<Fragment> halogens = new ArrayList<Fragment>();
+		List<Fragment> halogens = new ArrayList<>();
 		halogens.add(perhalogenFrag);
 		for (int i = 0; i < atomsToHalogenate.size() - 1; i++) {
 			halogens.add(state.fragManager.copyFragment(perhalogenFrag));
@@ -345,7 +345,7 @@ class StructureBuildingMethods {
 		int indexOfSubOrBracket = parentWordOrBracket.indexOf(subOrBracket);
 		subOrBracket.detach();
 
-		List<Element> elementsNotToBeMultiplied = new ArrayList<Element>();//anything before the multiplier in the sub/bracket
+		List<Element> elementsNotToBeMultiplied = new ArrayList<>();//anything before the multiplier in the sub/bracket
 		Element multiplierEl = subOrBracket.getFirstChildElement(MULTIPLIER_EL);
 		if (multiplierEl == null){
 			throw new RuntimeException("Multiplier not found where multiplier expected");
@@ -357,7 +357,7 @@ class StructureBuildingMethods {
 		}
 		multiplierEl.detach();
 
-		List<Element> multipliedElements = new ArrayList<Element>();
+		List<Element> multipliedElements = new ArrayList<>();
 		for (int i = multiplier - 1; i >=0; i--) {
 			Element currentElement;
 			if (i != 0){
@@ -470,11 +470,11 @@ class StructureBuildingMethods {
 		Element group = groups.get(0);
 		Fragment thisFrag = group.getFrag();
 
-		List<Element> unsaturators = new ArrayList<Element>();
-		List<Element> heteroatoms = new ArrayList<Element>();
-		List<Element> hydrogenElements = new ArrayList<Element>();
-		List<Element> subtractivePrefixElements = new ArrayList<Element>();
-		List<Element> isotopeSpecifications = new ArrayList<Element>();
+		List<Element> unsaturators = new ArrayList<>();
+		List<Element> heteroatoms = new ArrayList<>();
+		List<Element> hydrogenElements = new ArrayList<>();
+		List<Element> subtractivePrefixElements = new ArrayList<>();
+		List<Element> isotopeSpecifications = new ArrayList<>();
 
 		List<Element> children =subOrRoot.getChildElements();
 		for (Element currentEl : children) {
@@ -506,10 +506,10 @@ class StructureBuildingMethods {
 		 */
 		
 		if (!subtractivePrefixElements.isEmpty()) {
-			List<Atom> atomsToDehydro = new ArrayList<Atom>();
+			List<Atom> atomsToDehydro = new ArrayList<>();
 			//locanted substitution can be assumed to be irrelevant to subtractive operations hence perform all subtractive operations now
-			Map<ChemEl, Integer> unlocantedSubtractivePrefixes = new HashMap<ChemEl, Integer>();
-			Map<ChemEl, Integer> unlocantedHeteroatomRemovalPrefixes = new HashMap<ChemEl, Integer>();
+			Map<ChemEl, Integer> unlocantedSubtractivePrefixes = new HashMap<>();
+			Map<ChemEl, Integer> unlocantedHeteroatomRemovalPrefixes = new HashMap<>();
 	
 			for(int i = subtractivePrefixElements.size() -1; i >= 0; i--) {
 				Element subtractivePrefix = subtractivePrefixElements.get(i);
@@ -562,7 +562,7 @@ class StructureBuildingMethods {
 			if (atomsToDehydro.size() > 0){
 				boolean isCarbohydrateDehydro = false;
 				if (group.getAttributeValue(TYPE_ATR).equals(CARBOHYDRATE_TYPE_VAL)){
-					Set<Atom> uniquifiedDehydroAtoms = new HashSet<Atom>(atomsToDehydro);
+					Set<Atom> uniquifiedDehydroAtoms = new HashSet<>(atomsToDehydro);
 					if (uniquifiedDehydroAtoms.size()==atomsToDehydro.size()){//need to rule out case where dehydro is being used to form triple bonds on carbohydrates
 						isCarbohydrateDehydro = true;
 					}
@@ -579,8 +579,8 @@ class StructureBuildingMethods {
 					}
 				}
 				else{
-					List<Atom> atomsToFormDoubleBonds = new ArrayList<Atom>();
-					List<Atom> atomsToFormTripleBondsBetween = new ArrayList<Atom>();//dehydro on a double/aromatic bond forms a triple bond
+					List<Atom> atomsToFormDoubleBonds = new ArrayList<>();
+					List<Atom> atomsToFormTripleBondsBetween = new ArrayList<>();//dehydro on a double/aromatic bond forms a triple bond
 					
 					for (Atom a : atomsToDehydro) {
 						if (!a.hasSpareValency()){
@@ -790,7 +790,7 @@ class StructureBuildingMethods {
 	 */
 	private static void addDehydroInducedTripleBonds(List<Atom> atomsToFormTripleBondsBetween) throws StructureBuildingException {
 		if (atomsToFormTripleBondsBetween.size()>0){
-			Set<Atom> atoms = new HashSet<Atom>(atomsToFormTripleBondsBetween);
+			Set<Atom> atoms = new HashSet<>(atomsToFormTripleBondsBetween);
 			if (atomsToFormTripleBondsBetween.size() != atoms.size()){
 				throw new StructureBuildingException("locants specified for dehydro specify the same atom too many times");
 			}
@@ -871,10 +871,10 @@ class StructureBuildingMethods {
 		}
 		Fragment frag = groups.get(0).getFrag();
 
-		List<Integer> unsaturationBondOrders = new ArrayList<Integer>();
-		List<Element> heteroatoms = new ArrayList<Element>();
-		List<Element> hydrogenElements = new ArrayList<Element>();
-		List<Element> isotopeSpecifications = new ArrayList<Element>();
+		List<Integer> unsaturationBondOrders = new ArrayList<>();
+		List<Element> heteroatoms = new ArrayList<>();
+		List<Element> hydrogenElements = new ArrayList<>();
+		List<Element> isotopeSpecifications = new ArrayList<>();
 
 		List<Element> children = subOrRoot.getChildElements();
 		for (Element currentEl : children) {
@@ -934,8 +934,8 @@ class StructureBuildingMethods {
 		 * However names are not consistent as to whether they bother having the hydro tags do this!
 		 * The atoms in atomsWithSV are in atom order those that can take a hydro element and then those that shouldn't really take a hydro element as its absence is unambiguous
 		 */
-		List<Atom> atomsAcceptingHydroPrefix = new ArrayList<Atom>();
-		Set<Atom> atomsWhichImplicitlyHadTheirSVRemoved = new HashSet<Atom>();
+		List<Atom> atomsAcceptingHydroPrefix = new ArrayList<>();
+		Set<Atom> atomsWhichImplicitlyHadTheirSVRemoved = new HashSet<>();
 		List<Atom> atomList = frag.getAtomList();
 		for (Atom atom : atomList) {
 			if (atom.getType().equals(SUFFIX_TYPE_VAL)){
@@ -965,8 +965,8 @@ class StructureBuildingMethods {
 			}
 		}
 		
-		List<Atom> atomsWithDefiniteSV = new ArrayList<Atom>();
-		List<Atom> otherAtomsThatCanHaveHydro = new ArrayList<Atom>();
+		List<Atom> atomsWithDefiniteSV = new ArrayList<>();
+		List<Atom> otherAtomsThatCanHaveHydro = new ArrayList<>();
 		for(Atom a : atomsAcceptingHydroPrefix) {
 			if (atomsWhichImplicitlyHadTheirSVRemoved.contains(a)) {
 				otherAtomsThatCanHaveHydro.add(a);
@@ -987,7 +987,7 @@ class StructureBuildingMethods {
 				}
 			}
 		}
-		List<Atom> prioritisedAtomsAcceptingHydro = new ArrayList<Atom>(atomsWithDefiniteSV);
+		List<Atom> prioritisedAtomsAcceptingHydro = new ArrayList<>(atomsWithDefiniteSV);
 		prioritisedAtomsAcceptingHydro.addAll(otherAtomsThatCanHaveHydro);//these end up at the end of the list
 
 		if (hydrogenElsCount > prioritisedAtomsAcceptingHydro.size()) {
@@ -1050,7 +1050,7 @@ class StructureBuildingMethods {
 			if (!isCycloAlkaneSpecialCase(frag, numToUnsaturate, bondsThatCouldBeUnsaturated) &&
 					!HANTZSCHWIDMAN_SUBTYPE_VAL.equals(frag.getSubType())) {
 				if (alternativeBondsThatCouldBeUnsaturated.size() >= numToUnsaturate) {
-					List<Bond> allBonds = new ArrayList<Bond>(bondsThatCouldBeUnsaturated);
+					List<Bond> allBonds = new ArrayList<>(bondsThatCouldBeUnsaturated);
 					allBonds.addAll(alternativeBondsThatCouldBeUnsaturated);
 					if (!(AmbiguityChecker.allBondsEquivalent(allBonds) &&
 							numToUnsaturate == 1 )) {
@@ -1144,7 +1144,7 @@ class StructureBuildingMethods {
 	}
 
 	private static void applyUnlocantedHeteroatoms(BuildState state, Fragment frag, List<Element> heteroatoms) throws StructureBuildingException {
-		Map<HeteroAtomSmilesAndLambda, Integer> heteroatomDescriptionToCount = new HashMap<HeteroAtomSmilesAndLambda, Integer>();
+		Map<HeteroAtomSmilesAndLambda, Integer> heteroatomDescriptionToCount = new HashMap<>();
 		for (Element heteroatomEl : heteroatoms) {
 			String smiles = heteroatomEl.getAttributeValue(VALUE_ATR);
 			String lambdaConvention = heteroatomEl.getAttributeValue(LAMBDA_ATR);
@@ -1159,7 +1159,7 @@ class StructureBuildingMethods {
 			Atom heteroatom = state.fragManager.getHeteroatom(desc.smiles);
 			ChemEl heteroatomChemEl = heteroatom.getElement();
 			//finds an atom for which changing it to the specified heteroatom will not cause valency to be violated
-			List<Atom> atomsThatCouldBeReplaced = new ArrayList<Atom>();
+			List<Atom> atomsThatCouldBeReplaced = new ArrayList<>();
 			for (Atom atom : atomlist) {
 				if (atom.getType().equals(SUFFIX_TYPE_VAL)) {
 					continue;
@@ -1257,7 +1257,7 @@ class StructureBuildingMethods {
 					}
 				}
 				else {
-					List<Atom> parentAtomsToApplyTo = new ArrayList<Atom>();
+					List<Atom> parentAtomsToApplyTo = new ArrayList<>();
 					for (Atom atom : frag.getAtomList()) {
 						if (atom.getElement() == chemEl) {
 							parentAtomsToApplyTo.add(atom);
@@ -1332,7 +1332,7 @@ class StructureBuildingMethods {
 	
 
 	private static List<Bond> findAlternativeBondsToUnSaturate(Fragment frag, int bondOrder, Collection<Bond> bondsToIgnore) {
-		return findBondsToUnSaturate(frag, bondOrder, false, new HashSet<Bond>(bondsToIgnore));
+		return findBondsToUnSaturate(frag, bondOrder, false, new HashSet<>(bondsToIgnore));
 	}
 	
 	/**
@@ -1348,7 +1348,7 @@ class StructureBuildingMethods {
 	}
 	
 	private static List<Bond> findBondsToUnSaturate(Fragment frag, int bondOrder, boolean allowAdjacentUnsaturatedBonds, Set<Bond> bondsToIgnore) {
-		List<Bond> bondsToUnsaturate = new ArrayList<Bond>();
+		List<Bond> bondsToUnsaturate = new ArrayList<>();
 		mainLoop: for (Atom atom1 : frag.getAtomList()) {
 			if (atom1.hasSpareValency() || SUFFIX_TYPE_VAL.equals(atom1.getType()) || atom1.getProperty(Atom.ISALDEHYDE) !=null) {
 				continue;
@@ -1595,8 +1595,8 @@ class StructureBuildingMethods {
 	private static void multiplyOutAndAdditivelyBond(BuildState state, Element subOrBracket, Fragment fragToAdditivelyBondTo) throws StructureBuildingException {
 		int multiplier = Integer.parseInt(subOrBracket.getAttributeValue(MULTIPLIER_ATR));
 		subOrBracket.removeAttribute(subOrBracket.getAttribute(MULTIPLIER_ATR));
-		List<Element> clonedElements = new ArrayList<Element>();
-		List<Element> elementsNotToBeMultiplied = new ArrayList<Element>();//anything before the multiplier in the sub/bracket
+		List<Element> clonedElements = new ArrayList<>();
+		List<Element> elementsNotToBeMultiplied = new ArrayList<>();//anything before the multiplier in the sub/bracket
 		for (int i = multiplier -1; i >=0; i--) {
 			Element currentElement;
 			if (i != 0){
@@ -1668,7 +1668,7 @@ class StructureBuildingMethods {
 		String inLocantsString = multipliedParent.getAttributeValue(INLOCANTS_ATR);
 		if (inLocantsString != null){//true for the root of a multiplicative name
 			if (inLocantsString.equals(INLOCANTS_DEFAULT)){
-				inLocants = new ArrayList<String>(multiplier);
+				inLocants = new ArrayList<>(multiplier);
 				for (int i = 0; i < multiplier; i++) {
 					inLocants.add(INLOCANTS_DEFAULT);
 				}
@@ -1680,7 +1680,7 @@ class StructureBuildingMethods {
 				}
 			}
 		}
-		List<Element> clonedElements = new ArrayList<Element>();
+		List<Element> clonedElements = new ArrayList<>();
 		BuildResults newBr = new BuildResults();
 		for (int i = multiplier -1; i >=0; i--) {
 			Element multipliedElement;
@@ -1918,7 +1918,7 @@ class StructureBuildingMethods {
 				childDescendants = OpsinTools.getDescendantElementsWithTagNames(child, new String[]{SUBSTITUENT_EL, ROOT_EL});//will be returned in depth-first order
 			}
 			else{
-				childDescendants =new ArrayList<Element>();
+				childDescendants =new ArrayList<>();
 				childDescendants.add(child);
 			}
 			for (Element descendantChild : childDescendants) {
@@ -2257,7 +2257,7 @@ class StructureBuildingMethods {
 	 * @return A list of fragments in the order to try them as possible parent fragments (for substitutive operations)
 	 */
 	static List<Fragment> findAlternativeFragments(Element startingElement) {
-		List<Fragment> foundFragments = new ArrayList<Fragment>();
+		List<Fragment> foundFragments = new ArrayList<>();
 		FindAlternativeGroupsResult results = findAlternativeGroups(startingElement);
 		for (Element group : results.groups) {
 			foundFragments.add(group.getFrag());
@@ -2276,10 +2276,10 @@ class StructureBuildingMethods {
 	 * @return An object containing the groups in the order to try them as possible parent groups (for substitutive operations)
 	 */
 	static FindAlternativeGroupsResult findAlternativeGroups(Element startingElement) {
-		Deque<AlternativeGroupFinderState> stack = new ArrayDeque<AlternativeGroupFinderState>();
+		Deque<AlternativeGroupFinderState> stack = new ArrayDeque<>();
 		stack.add(new AlternativeGroupFinderState(startingElement.getParent(), false));
-		List<Element> groups = new ArrayList<Element>();
-		List<Element> groupsSubstitutionUnlikely = new ArrayList<Element>();//locanting into brackets is rarely the desired answer so keep these separate
+		List<Element> groups = new ArrayList<>();
+		List<Element> groupsSubstitutionUnlikely = new ArrayList<>();//locanting into brackets is rarely the desired answer so keep these separate
 		boolean doneFirstIteration = false;//check on index only done on first iteration to only get elements with an index greater than the starting element
 		while (stack.size() > 0) {
 			AlternativeGroupFinderState state = stack.removeLast();
@@ -2352,7 +2352,7 @@ class StructureBuildingMethods {
 	 * @throws StructureBuildingException
 	 */
 	private static Fragment findFragmentWithLocant(Element startingElement, String locant) throws StructureBuildingException {
-		Deque<Element> stack = new ArrayDeque<Element>();
+		Deque<Element> stack = new ArrayDeque<>();
 		stack.add(startingElement.getParent());
 		boolean doneFirstIteration = false;//check on index only done on first iteration to only get elements with an index greater than the starting element
 		Fragment monoNuclearHydride = null;//e.g. methyl/methane - In this case no locant would be expected as unlocanted substitution is always unambiguous. Hence deprioritise
@@ -2380,7 +2380,7 @@ class StructureBuildingMethods {
 			}
 			List<Element> siblings = OpsinTools.getChildElementsWithTagNames(currentElement, new String[]{BRACKET_EL, SUBSTITUENT_EL, ROOT_EL});
 
-			List<Element> bracketted = new ArrayList<Element>();
+			List<Element> bracketted = new ArrayList<>();
 			if (!doneFirstIteration) {//on the first iteration, ignore elements before the starting element and favour the element directly after the starting element (conditions apply)
 				int indexOfStartingEl = currentElement.indexOf(startingElement);
 				Element substituentToTryFirst = null;
@@ -2463,7 +2463,7 @@ class StructureBuildingMethods {
 	}
 
 	private static List<Element> getChildrenIgnoringLocantlessImplicitBrackets(Element implicitBracket) {
-		List<Element> childrenAndImplicitBracketChildren = new ArrayList<Element>();
+		List<Element> childrenAndImplicitBracketChildren = new ArrayList<>();
 		for (Element child : implicitBracket.getChildElements()) {
 			if (child.getName().equals(BRACKET_EL) && IMPLICIT_TYPE_VAL.equals(child.getAttributeValue(TYPE_ATR)) && child.getAttribute(LOCANT_EL) == null) {
 				childrenAndImplicitBracketChildren.addAll(getChildrenIgnoringLocantlessImplicitBrackets(child));

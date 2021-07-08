@@ -159,10 +159,10 @@ class FragmentTools {
 	 */
 	static void assignElementLocants(Fragment suffixableFragment, List<Fragment> suffixFragments) throws StructureBuildingException {
 		
-		Map<String,Integer> elementCount = new HashMap<String,Integer>();//keeps track of how many times each element has been seen
-		Set<Atom> atomsToIgnore = new HashSet<Atom>();//atoms which already have a symbolic locant
+		Map<String,Integer> elementCount = new HashMap<>();//keeps track of how many times each element has been seen
+		Set<Atom> atomsToIgnore = new HashSet<>();//atoms which already have a symbolic locant
 		
-		List<Fragment> allFragments = new ArrayList<Fragment>(suffixFragments);
+		List<Fragment> allFragments = new ArrayList<>(suffixFragments);
 		allFragments.add(suffixableFragment);
 		/*
 		 * First check whether any element locants have already been assigned, these will take precedence
@@ -239,7 +239,7 @@ class FragmentTools {
 	}
 
 	private static void processMainGroupLabelling(Fragment suffixableFragment, Map<String, Integer> elementCount, Set<Atom> atomsToIgnore) {
-		Set<String> elementToIgnore = new HashSet<String>(elementCount.keySet());
+		Set<String> elementToIgnore = new HashSet<>(elementCount.keySet());
 		List<Atom> atomList = suffixableFragment.getAtomList();
 		Collections.sort(atomList, new SortAtomsForMainGroupElementSymbols());
 		Atom atomToAddCLabelTo = null;//only add a C label if there is only one C in the main group
@@ -274,8 +274,8 @@ class FragmentTools {
 	}
 
 	private static void processSuffixLabelling(List<Fragment> suffixFragments, Map<String, Integer> elementCount, Set<Atom> atomsToIgnore) {
-		List<Atom> startingAtoms = new ArrayList<Atom>();
-		Set<Atom> atomsVisited = new HashSet<Atom>();
+		List<Atom> startingAtoms = new ArrayList<>();
+		Set<Atom> atomsVisited = new HashSet<>();
 		for (Fragment fragment : suffixFragments) {
 			Atom rAtom = fragment.getFirstAtom();
 			List<Atom> nextAtoms = getIntraFragmentNeighboursAndSetVisitedBondOrder(rAtom);
@@ -284,20 +284,20 @@ class FragmentTools {
 		}
 		Collections.sort(startingAtoms, new SortAtomsForElementSymbols());
 
-		Deque<Atom> atomsToConsider = new ArrayDeque<Atom>(startingAtoms);
+		Deque<Atom> atomsToConsider = new ArrayDeque<>(startingAtoms);
 		while (atomsToConsider.size() > 0){
 			assignLocantsAndExploreNeighbours(elementCount, atomsToIgnore, atomsVisited, atomsToConsider);
 		}
 	}
 
 	private static void processNonCarboxylicAcidLabelling(Fragment suffixableFragment, Map<String, Integer> elementCount, Set<Atom> atomsToIgnore) {
-		Set<Atom> atomsVisited = new HashSet<Atom>();
+		Set<Atom> atomsVisited = new HashSet<>();
 		Atom firstAtom = suffixableFragment.getFirstAtom();
 		List<Atom> startingAtoms = getIntraFragmentNeighboursAndSetVisitedBondOrder(firstAtom);
 		
 		Collections.sort(startingAtoms, new SortAtomsForElementSymbols());
 		atomsVisited.add(firstAtom);
-		Deque<Atom> atomsToConsider = new ArrayDeque<Atom>(startingAtoms);
+		Deque<Atom> atomsToConsider = new ArrayDeque<>(startingAtoms);
 		while (atomsToConsider.size() > 0){
 			assignLocantsAndExploreNeighbours(elementCount, atomsToIgnore, atomsVisited, atomsToConsider);
 		}
@@ -328,7 +328,7 @@ class FragmentTools {
 	 * @return
 	 */
 	private static List<Atom> getIntraFragmentNeighboursAndSetVisitedBondOrder(Atom atom) {
-		List<Atom> atomsToExplore = new ArrayList<Atom>();
+		List<Atom> atomsToExplore = new ArrayList<>();
 		List<Bond> bonds = atom.getBonds();
 		for (Bond bond : bonds) {
 			Atom neighbour = bond.getOtherAtom(atom);
@@ -451,7 +451,7 @@ class FragmentTools {
 	 */
 	static void relabelLocants(List<Atom> atomList, String stringToAdd) {
 		for (Atom atom : atomList) {
-			List<String> locants = new ArrayList<String>(atom.getLocants());
+			List<String> locants = new ArrayList<>(atom.getLocants());
 			atom.clearLocants();
 			for (String locant : locants) {
 				atom.addLocant(locant + stringToAdd);
@@ -466,7 +466,7 @@ class FragmentTools {
 	 */
 	static void relabelNumericLocants(List<Atom> atomList, String stringToAdd) {
 		for (Atom atom : atomList) {
-			List<String> locants = new ArrayList<String>(atom.getLocants());
+			List<String> locants = new ArrayList<>(atom.getLocants());
 			for (String locant : locants) {
 				if (MATCH_NUMERIC_LOCANT.matcher(locant).matches()){
 					atom.removeLocant(locant);
@@ -546,7 +546,7 @@ class FragmentTools {
 		*/
 		Atom atomToReduceValencyAt = null;
 		List<Atom> originalIndicatedHydrogen = frag.getIndicatedHydrogen();
-		List<Atom> indicatedHydrogen = new ArrayList<Atom>(originalIndicatedHydrogen.size());
+		List<Atom> indicatedHydrogen = new ArrayList<>(originalIndicatedHydrogen.size());
 		for (Atom atom : frag.getIndicatedHydrogen()) {
 			if (atom.hasSpareValency() && atom.getCharge() == 0) {
 				indicatedHydrogen.add(atom);
@@ -733,8 +733,8 @@ class FragmentTools {
 	static Atom getAtomByAminoAcidStyleLocant(Atom backboneAtom, String elementSymbol, String primes) {
 		//Search for appropriate atom by using the same algorithm as is used to assign locants initially
 
-		List<Atom> startingAtoms = new ArrayList<Atom>();
-		Set<Atom> atomsVisited = new HashSet<Atom>();
+		List<Atom> startingAtoms = new ArrayList<>();
+		Set<Atom> atomsVisited = new HashSet<>();
 		List<Atom> neighbours = getIntraFragmentNeighboursAndSetVisitedBondOrder(backboneAtom);
 		mainLoop: for (Atom neighbour : neighbours) {
 			atomsVisited.add(neighbour);
@@ -749,9 +749,9 @@ class FragmentTools {
 		}
 
 		Collections.sort(startingAtoms, new SortAtomsForElementSymbols());
-		Map<String,Integer> elementCount = new HashMap<String,Integer>();//keeps track of how many times each element has been seen
+		Map<String,Integer> elementCount = new HashMap<>();//keeps track of how many times each element has been seen
 	
-		Deque<Atom> atomsToConsider = new ArrayDeque<Atom>(startingAtoms);
+		Deque<Atom> atomsToConsider = new ArrayDeque<>(startingAtoms);
 		boolean hydrazoneSpecialCase =false;//look for special case violation of IUPAC rule where the locant of the =N- atom is skipped. This flag is set when =N- is encountered
 		while (atomsToConsider.size() > 0){
 			Atom atom = atomsToConsider.removeFirst();
@@ -976,7 +976,7 @@ class FragmentTools {
 	 * @return 
 	 */
 	static List<Atom> findHydroxyLikeTerminalAtoms(List<Atom> atoms, ChemEl chemEl) {
-		List<Atom> matches =new ArrayList<Atom>();
+		List<Atom> matches =new ArrayList<>();
 		for (Atom atom : atoms) {
 			if (atom.getElement() == chemEl && atom.getIncomingValency() == 1 &&
 				atom.getOutValency() == 0 && atom.getCharge() == 0){
@@ -997,8 +997,8 @@ class FragmentTools {
 		Atom toAtom = bond.getToAtom();
 		if (fromAtom.getAtomIsInACycle() && toAtom.getAtomIsInACycle()){//obviously both must be in rings
 			//attempt to get from the fromAtom to the toAtom in 6 or fewer steps.
-			List<Atom> visitedAtoms = new ArrayList<Atom>();
-			Deque<Atom> atomsToInvestigate = new ArrayDeque<Atom>();//A queue is not used as I need to make sure that only up to depth 6 is investigated
+			List<Atom> visitedAtoms = new ArrayList<>();
+			Deque<Atom> atomsToInvestigate = new ArrayDeque<>();//A queue is not used as I need to make sure that only up to depth 6 is investigated
 			List<Atom> neighbours =fromAtom.getAtomNeighbours();
 			neighbours.remove(toAtom);
 			for (Atom neighbour : neighbours) {
@@ -1009,7 +1009,7 @@ class FragmentTools {
 				if (atomsToInvestigate.isEmpty()){
 					break;
 				}
-				Deque<Atom> atomsToInvestigateNext = new ArrayDeque<Atom>();
+				Deque<Atom> atomsToInvestigateNext = new ArrayDeque<>();
 				while (!atomsToInvestigate.isEmpty()) {
 					Atom currentAtom =atomsToInvestigate.removeFirst();
 					if (currentAtom == toAtom){
@@ -1037,7 +1037,7 @@ class FragmentTools {
 	 * @throws StructureBuildingException 
 	 */
 	static List<Atom> findHydroxyGroups(Fragment frag) throws StructureBuildingException {
-		List<Atom> hydroxyAtoms = new ArrayList<Atom>();
+		List<Atom> hydroxyAtoms = new ArrayList<>();
 		List<Atom> atoms = frag.getAtomList();
 		for (Atom atom : atoms) {
 			if (atom.getElement() == ChemEl.O && atom.getIncomingValency() == 1 && atom.getOutValency() == 0 && atom.getCharge() == 0){
@@ -1065,7 +1065,7 @@ class FragmentTools {
 			throw new IllegalArgumentException("OPSIN Bug: preferredAtom should be part of the list of atoms to search through");
 		}
 		CyclicAtomList atoms = new CyclicAtomList(atomList, startingIndex - 1);//next() will retrieve the atom at the startingIndex
-		List<Atom> substitutableAtoms = new ArrayList<Atom>();
+		List<Atom> substitutableAtoms = new ArrayList<>();
 		if (atomCount == 1 && ELEMENTARYATOM_TYPE_VAL.equals(atomList.get(0).getFrag().getType())) {
 			Atom atom = atomList.get(0);
 			int timesAtomCanBeSubstituted = getTimesElementaryAtomCanBeSubstituted(atom);

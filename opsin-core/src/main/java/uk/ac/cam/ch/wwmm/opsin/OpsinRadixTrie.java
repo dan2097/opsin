@@ -48,7 +48,7 @@ class OpsinRadixTrie {
 		int untokenisedChemicalNameLength = chemicalName.length();
 		List<Integer> indexes = null;
 		if (rootNode.isEndPoint()) {
-			indexes = new ArrayList<Integer>();
+			indexes = new ArrayList<>();
 			indexes.add(posInName);
 		}
 		OpsinTrieNode node = rootNode;
@@ -67,7 +67,7 @@ class OpsinRadixTrie {
 			}
 			if (node.isEndPoint()) {
 				if (indexes == null) {
-					indexes = new ArrayList<Integer>();
+					indexes = new ArrayList<>();
 				}
 				indexes.add(i + 1);
 			}
@@ -84,7 +84,7 @@ class OpsinRadixTrie {
 	List<Integer> findMatchesReadingStringRightToLeft(String chemicalName, int posInName ) {
 		List<Integer> indexes = null;
 		if (rootNode.isEndPoint()) {
-			indexes = new ArrayList<Integer>();
+			indexes = new ArrayList<>();
 			indexes.add(posInName);
 		}
 		OpsinTrieNode node = rootNode;
@@ -103,7 +103,7 @@ class OpsinRadixTrie {
 			}
 			if (node.isEndPoint()) {
 				if (indexes == null) {
-					indexes = new ArrayList<Integer>();
+					indexes = new ArrayList<>();
 				}
 				indexes.add(i);
 			}

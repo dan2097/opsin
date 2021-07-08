@@ -5,7 +5,7 @@ import java.util.List;
 
 class GroupingEl extends Element{
 	
-	private final List<Element> children = new ArrayList<Element>();
+	private final List<Element> children = new ArrayList<>();
 	
 	GroupingEl(String name) {
 		super(name);
@@ -44,12 +44,12 @@ class GroupingEl extends Element{
 
 	@Override
 	List<Element> getChildElements() {
-		return new ArrayList<Element>(children);
+		return new ArrayList<>(children);
 	}
 	
 	@Override
 	List<Element> getChildElements(String name) {
-		List<Element> elements = new ArrayList<Element>(1);
+		List<Element> elements = new ArrayList<>(1);
 		for (Element element : children) {
 			if (element.name.equals(name)) {
 				elements.add(element);

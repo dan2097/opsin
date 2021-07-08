@@ -109,7 +109,7 @@ class WordRulesOmittedSpaceCorrector {
 								}
 							}
 							if (lastSubOrBracketWithoutLocantIdx != null && substitutionWouldBeAmbiguous(rootFrag, null)) {
-								List<Element> elsToFormEsterSub = new ArrayList<Element>();
+								List<Element> elsToFormEsterSub = new ArrayList<>();
 								for (int i = 0; i <= lastSubOrBracketWithoutLocantIdx ; i++) {
 									elsToFormEsterSub.add(substituents.get(i));
 								}
@@ -229,7 +229,7 @@ class WordRulesOmittedSpaceCorrector {
 			return false;
 		}
 		StereoAnalyser analyser = new StereoAnalyser(frag);
-		Set<String> uniqueEnvironments = new HashSet<String>();
+		Set<String> uniqueEnvironments = new HashSet<>();
 		for (Atom a : atomForEachSubstitutableHydrogen) {
 			uniqueEnvironments.add(AmbiguityChecker.getAtomEnviron(analyser, a));
 		}
@@ -269,7 +269,7 @@ class WordRulesOmittedSpaceCorrector {
 	}
 
 	private List<Atom> getAtomForEachSubstitutableHydrogen(Fragment frag) {
-		List<Atom> substitutableAtoms = new ArrayList<Atom>();
+		List<Atom> substitutableAtoms = new ArrayList<>();
 		List<Atom> atomList = frag.getAtomList();
 		for (Atom atom : atomList) {
 			if (FragmentTools.isCharacteristicAtom(atom)){

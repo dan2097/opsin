@@ -52,12 +52,12 @@ class SuffixApplier {
 		if (associatedSuffixFrags != null) {//null for non-final group in polycyclic spiro systems
 			associatedSuffixFrags.clear();
 		}
-		Map<String, List<Element>> suffixValToSuffixes = new LinkedHashMap<String, List<Element>>();//effectively undoes the effect of multiplying out suffixes
+		Map<String, List<Element>> suffixValToSuffixes = new LinkedHashMap<>();//effectively undoes the effect of multiplying out suffixes
 		for (Element suffix : suffixes) {
 			String suffixValue = suffix.getAttributeValue(VALUE_ATR);
 			List<Element> suffixesWithThisVal = suffixValToSuffixes.get(suffixValue);
 			if (suffixesWithThisVal == null) {
-				suffixesWithThisVal = new ArrayList<Element>();
+				suffixesWithThisVal = new ArrayList<>();
 				suffixValToSuffixes.put(suffixValue, suffixesWithThisVal);
 			}
 			suffixesWithThisVal.add(suffix);
@@ -86,7 +86,7 @@ class SuffixApplier {
 		}
 		
 		boolean reDetectCycles = false;
-		List<Fragment> fragsToMerge = new ArrayList<Fragment>();
+		List<Fragment> fragsToMerge = new ArrayList<>();
 		for (Entry<String, List<Element>> entry : suffixValToSuffixes.entrySet()) {
 			String suffixValue = entry.getKey();
 			List<Element> suffixesWithThisVal = entry.getValue();
@@ -143,7 +143,7 @@ class SuffixApplier {
 								}
 		
 								//create a new bond and associate it with the suffixfrag and both atoms. Remember the suffixFrag has not been imported into the frag yet
-								List<Bond> bonds = new ArrayList<Bond>(firstAtomInSuffix.getBonds());
+								List<Bond> bonds = new ArrayList<>(firstAtomInSuffix.getBonds());
 								for (Bond bondToSuffix : bonds) {
 									Atom suffixAtom = bondToSuffix.getOtherAtom(firstAtomInSuffix);
 									state.fragManager.createBond(fragAtomToUse, suffixAtom, bondToSuffix.getOrder());
@@ -242,7 +242,7 @@ class SuffixApplier {
 		}
 		for (Fragment suffixFrag : fragsToMerge) {
 			state.fragManager.removeAtomAndAssociatedBonds(suffixFrag.getFirstAtom());//the dummy R atom
-			Set<String> suffixLocants = new HashSet<String>(suffixFrag.getLocants());
+			Set<String> suffixLocants = new HashSet<>(suffixFrag.getLocants());
 			for (String suffixLocant : suffixLocants) {
 				if (Character.isDigit(suffixLocant.charAt(0))){//check that numeric locants do not conflict with the parent fragment e.g. hydrazide 2' with biphenyl 2'
 					if (frag.hasLocant(suffixLocant)){
@@ -292,7 +292,7 @@ class SuffixApplier {
 				}
 			}
 			else {
-				List<Atom> parentAtomsToApplyTo = new ArrayList<Atom>();
+				List<Atom> parentAtomsToApplyTo = new ArrayList<>();
 				for (Atom atom : atoms) {
 					if (atom.getElement() == chemEl) {
 						parentAtomsToApplyTo.add(atom);
@@ -344,7 +344,7 @@ class SuffixApplier {
 	 * @return
 	 */
 	private List<Atom> getProKetonePositions(List<Atom> atoms) {
-		List<Atom> proKetonePositions = new ArrayList<Atom>();
+		List<Atom> proKetonePositions = new ArrayList<>();
 		for (Atom atom : atoms) {
 			List<Bond> bonds = atom.getBonds();
 			if (bonds.size() == 2 && 
@@ -359,7 +359,7 @@ class SuffixApplier {
 	}
 	
 	private void processCycleFormingSuffix(Fragment suffixFrag, Fragment suffixableFragment, Element suffix) throws StructureBuildingException, ComponentGenerationException {
-		List<Atom> rAtoms = new ArrayList<Atom>();
+		List<Atom> rAtoms = new ArrayList<>();
 		for (Atom a : suffixFrag.getAtomList()) {
 			if (a.getElement() == ChemEl.R){
 				rAtoms.add(a);
@@ -478,10 +478,10 @@ class SuffixApplier {
 	 */
 	private void applyUnlocantedChargeModification(List<Atom> atomList, int chargeChange, int protonChange) {
 		//List of atoms that can accept this charge while remaining in a reasonable valency
-		List<Atom> nitrogens = new ArrayList<Atom>();//most likely
-		List<Atom> otherHeteroatoms = new ArrayList<Atom>();//plausible
-		List<Atom> carbonsAtoms = new ArrayList<Atom>();//rare
-		List<Atom> chargedAtoms = new ArrayList<Atom>();//very rare
+		List<Atom> nitrogens = new ArrayList<>();//most likely
+		List<Atom> otherHeteroatoms = new ArrayList<>();//plausible
+		List<Atom> carbonsAtoms = new ArrayList<>();//rare
+		List<Atom> chargedAtoms = new ArrayList<>();//very rare
 		if (atomList.isEmpty()) {
 			throw new RuntimeException("OPSIN Bug: List of atoms to add charge suffix to was empty");
 		}
@@ -528,7 +528,7 @@ class SuffixApplier {
 			if (AMINOACID_TYPE_VAL.equals(atomList.get(0).getFrag().getType())) {
 				//By convention treat names like lysinium as unambiguous (prefer alpha nitrogen)
 				if (listFromWhichToChoose.contains(atomList.get(0))){
-					listFromWhichToChoose = new ArrayList<Atom>();
+					listFromWhichToChoose = new ArrayList<>();
 					listFromWhichToChoose.add(atomList.get(0));
 				}
 			}
@@ -576,8 +576,8 @@ class SuffixApplier {
 				if (atomToSwapWith != null) {
 					if (atomToSwapWith != atom) {
 						//swap locants and element type
-						List<String> tempLocants1 = new ArrayList<String>(atom.getLocants());
-						List<String> tempLocants2 = new ArrayList<String>(atomToSwapWith.getLocants());
+						List<String> tempLocants1 = new ArrayList<>(atom.getLocants());
+						List<String> tempLocants2 = new ArrayList<>(atomToSwapWith.getLocants());
 						atom.clearLocants();
 						atomToSwapWith.clearLocants();
 						for (String locant : tempLocants1) {
@@ -606,7 +606,7 @@ class SuffixApplier {
 	 * @param suffixRAtom
 	 */
 	private void makeBondsToSuffix(Atom parentAtom, Atom suffixRAtom) {
-		List<Bond> bonds = new ArrayList<Bond>(suffixRAtom.getBonds());
+		List<Bond> bonds = new ArrayList<>(suffixRAtom.getBonds());
 		for (Bond bondToSuffix : bonds) {
 			Atom suffixAtom = bondToSuffix.getOtherAtom(suffixRAtom);
 			state.fragManager.createBond(parentAtom, suffixAtom, bondToSuffix.getOrder());

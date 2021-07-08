@@ -122,24 +122,24 @@ class CipSequenceRules {
 	    	 * rule = 2 --> Rule 2 Higher atomic mass number precedes lower
 	    	 */
 	    	for (rule = 0; rule <= 2; rule++) {
-				List<Atom> atomsVisted = new ArrayList<Atom>();
+				List<Atom> atomsVisted = new ArrayList<>();
 				atomsVisted.add(chiralAtom);
 				AtomWithHistory aWithHistory = new AtomWithHistory(a, atomsVisted, null);
-				AtomWithHistory bWithHistory = new AtomWithHistory(b, new ArrayList<Atom>(atomsVisted), null);
+				AtomWithHistory bWithHistory = new AtomWithHistory(b, new ArrayList<>(atomsVisted), null);
 				
 	    		int compare = compareByCipRules(aWithHistory, bWithHistory);
 				if (compare != 0) {
 					return compare;
 				}
 				
-				List<AtomWithHistory> nextAtoms1 = new ArrayList<AtomWithHistory>();
+				List<AtomWithHistory> nextAtoms1 = new ArrayList<>();
 				nextAtoms1.add(aWithHistory);
 				
-				List<AtomWithHistory> nextAtoms2 = new ArrayList<AtomWithHistory>();
+				List<AtomWithHistory> nextAtoms2 = new ArrayList<>();
 				nextAtoms2.add(bWithHistory);
 
 				CipState startingState = new CipState(nextAtoms1, nextAtoms2);
-		    	Deque<CipState> cipStateQueue = new ArrayDeque<CipState>();
+		    	Deque<CipState> cipStateQueue = new ArrayDeque<>();
 		    	cipStateQueue.add(startingState);
 		    	/* Go through CIP states in a breadth-first manner:
 		    	 * Neighbours of the given atom/s (if multiple atoms this is because so far the two paths leading to them have been equivalent) are evaluated for both a and b
@@ -199,7 +199,7 @@ class CipSequenceRules {
 		}
 		
 		private List<List<AtomWithHistory>> getNextLevelNeighbours(List<AtomWithHistory> nextAtoms) {
-			List<List<AtomWithHistory>> neighbourLists = new ArrayList<List<AtomWithHistory>>();
+			List<List<AtomWithHistory>> neighbourLists = new ArrayList<>();
 			for (AtomWithHistory nextAtom : nextAtoms) {
 				neighbourLists.add(getNextAtomsWithAppropriateGhostAtoms(nextAtom));
 			}
@@ -218,9 +218,9 @@ class CipSequenceRules {
 		private List<List<AtomWithHistory>> formListsWithSamePriority(List<List<AtomWithHistory>> neighbourLists) {
 			int intialNeighbourListCount = neighbourLists.size();
 			if (intialNeighbourListCount > 1) {
-				List<List<AtomWithHistory>> listsToRemove  = new ArrayList<List<AtomWithHistory>>();
+				List<List<AtomWithHistory>> listsToRemove  = new ArrayList<>();
 				for (int i = 0; i < intialNeighbourListCount; i++) {
-					List<List<AtomWithHistory>> neighbourListsToCombine = new ArrayList<List<AtomWithHistory>>();
+					List<List<AtomWithHistory>> neighbourListsToCombine = new ArrayList<>();
 					List<AtomWithHistory> primaryAtomList = neighbourLists.get(i);
 					for (int j = i + 1; j < intialNeighbourListCount; j++) {
 						List<AtomWithHistory> neighbourListToCompareWith = neighbourLists.get(j);
@@ -240,7 +240,7 @@ class CipSequenceRules {
 				neighbourLists.removeAll(listsToRemove);
 			}
 
-			List<List<AtomWithHistory>> updatedNeighbourLists  = new ArrayList<List<AtomWithHistory>>();
+			List<List<AtomWithHistory>> updatedNeighbourLists  = new ArrayList<>();
 			//lists of same priority have already been combined (see above) e.g. [H,C,C] [H,C,C] -->[H,C,C,H,C,C]
 			//now sort these combined lists by CIP priority
 			//then group atoms that have the same CIP priority
@@ -248,12 +248,12 @@ class CipSequenceRules {
 				List<AtomWithHistory> neighbourList = neighbourLists.get(i);
 				Collections.sort(neighbourList, cipComparator);
 				AtomWithHistory lastAtom = null;
-				List<AtomWithHistory> currentAtomList = new ArrayList<AtomWithHistory>();
+				List<AtomWithHistory> currentAtomList = new ArrayList<>();
 				for (int j = 0, lstLen = neighbourList.size(); j < lstLen; j++) {
 					AtomWithHistory a = neighbourList.get(j);
 					if (lastAtom != null && compareByCipRules(lastAtom, a) != 0) {
 						updatedNeighbourLists.add(currentAtomList);
-						currentAtomList = new ArrayList<AtomWithHistory>();
+						currentAtomList = new ArrayList<>();
 					}
 					currentAtomList.add(a);
 					lastAtom = a;
@@ -362,10 +362,10 @@ class CipSequenceRules {
 			Atom atom = atomWithHistory.atom;
 			List<Atom> visitedAtoms = atomWithHistory.visitedAtoms;
 			Atom previousAtom = visitedAtoms.get(visitedAtoms.size()-1);
-			List<Atom> visitedAtomsIncludingCurrentAtom = new ArrayList<Atom>(visitedAtoms);
+			List<Atom> visitedAtomsIncludingCurrentAtom = new ArrayList<>(visitedAtoms);
 			visitedAtomsIncludingCurrentAtom.add(atom);
 
-			List<AtomWithHistory> neighboursWithHistory = new ArrayList<AtomWithHistory>();
+			List<AtomWithHistory> neighboursWithHistory = new ArrayList<>();
 			for(Bond b :  atom.getBonds()) {
 				Atom atomBondConnectsTo = b.getOtherAtom(atom);
 				if (!atomBondConnectsTo.equals(chiralAtom)) {//P-91.1.4.2.4 (higher order bonds to chiral centre do not involve duplication of atoms)

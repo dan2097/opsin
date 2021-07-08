@@ -21,7 +21,7 @@ class BuildState {
 	// counter is used for DL- racemic stereochemistry in oligomers, we place each one in a separate racemic group,
 	// there is implicitly one group in-case the input has a combination of (RS)- and then DL-
 	int numRacGrps = 1;
-	private final List<OpsinWarning> warnings = new ArrayList<OpsinWarning>();
+	private final List<OpsinWarning> warnings = new ArrayList<>();
 	
 	WordRule currentWordRule = null;
 
@@ -29,7 +29,7 @@ class BuildState {
 		this.n2sConfig = n2sConfig;
 		IDManager idManager = new IDManager();
 		fragManager = new FragmentManager(new SMILESFragmentBuilder(idManager), idManager);
-		xmlSuffixMap = new HashMap<Element, List<Fragment>>();
+		xmlSuffixMap = new HashMap<>();
 	}
 
 	List<OpsinWarning> getWarnings() {

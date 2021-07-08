@@ -62,11 +62,11 @@ public class ParseRules {
 	 */
 	public ParseRulesResults getParses(String chemicalWord) throws ParsingException {
 		String chemicalWordLowerCase = StringTools.lowerCaseAsciiString(chemicalWord);
-		ArrayDeque<AnnotatorState> asStack = new ArrayDeque<AnnotatorState>();
+		ArrayDeque<AnnotatorState> asStack = new ArrayDeque<>();
 		asStack.add(initialState);
 
 		int posInNameOfLastSuccessfulAnnotations = 0;
-		List<AnnotatorState> successfulAnnotations = new ArrayList<AnnotatorState>();
+		List<AnnotatorState> successfulAnnotations = new ArrayList<>();
 		AnnotatorState longestAnnotation = initialState;//this is the longest annotation. It does not necessarily end in an accept state
 		int stateSymbolsSize = stateSymbols.length;
 		while (!asStack.isEmpty()) {
@@ -129,7 +129,7 @@ public class ParseRules {
 				}
 			}
 		}
-		List<ParseTokens> outputList = new ArrayList<ParseTokens>();
+		List<ParseTokens> outputList = new ArrayList<>();
 		String uninterpretableName = chemicalWord;
 		String unparseableName = chemicalWord.substring(longestAnnotation.getPosInName());
 		if (successfulAnnotations.size() > 0){//at least some of the name could be interpreted into a substituent/full/functionalTerm
@@ -144,8 +144,8 @@ public class ParseRules {
 	}
 
 	private ParseTokens convertAnnotationStateToParseTokens(AnnotatorState as, String chemicalWord, String chemicalWordLowerCase) {
-		List<String> tokens = new ArrayList<String>();
-		List<Character> annotations = new ArrayList<Character>();
+		List<String> tokens = new ArrayList<>();
+		List<Character> annotations = new ArrayList<>();
 		AnnotatorState previousAs;
 		while ((previousAs = as.getPreviousAs()) != null) {
 			if (as.isCaseSensitive()) {

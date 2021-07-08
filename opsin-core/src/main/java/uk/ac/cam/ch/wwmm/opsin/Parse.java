@@ -13,7 +13,7 @@ class Parse {
 	/**The chemical name.*/
 	private final String name;
 	/**The words within the name, and their parsing data.*/
-	private final List<ParseWord> words = new ArrayList<ParseWord>();
+	private final List<ParseWord> words = new ArrayList<>();
 
 	/**
 	 * Creates a parse object for a chemicalName
