@@ -43,7 +43,7 @@
   </build>
    <dependencies>
       <dependency>
-        <groupId>dk.brics.automaton</groupId>
+        <groupId>dk.brics</groupId>
         <artifactId>automaton</artifactId>
       </dependency>
       <dependency>
