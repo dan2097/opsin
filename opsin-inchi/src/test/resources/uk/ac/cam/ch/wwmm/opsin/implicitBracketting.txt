@@ -23,5 +23,5 @@ bis-tetrabutylammonium phosphate	InChI=1S/2C16H36N.H3O4P/c2*1-5-9-13-17(14-10-6-
 tert-Butyl (4-bromophenyl)sulfonyl(phenyl)carbamate	InChI=1S/C17H18BrNO4S/c1-17(2,3)23-16(20)19(14-7-5-4-6-8-14)24(21,22)15-11-9-13(18)10-12-15/h4-12H,1-3H3
 N-methylmethyleneamine	InChI=1S/C2H5N/c1-3-2/h1H2,2H3
 Dimethylaminopropylamine	InChI=1S/C5H14N2/c1-7(2)5-3-4-6/h3-6H2,1-2H3
-//Counter example
+#Counter example
 Diisopropylazodicarboxylate	InChI=1S/C8H14N2O4/c1-5(2)13-7(11)9-10-8(12)14-6(3)4/h5-6H,1-4H3

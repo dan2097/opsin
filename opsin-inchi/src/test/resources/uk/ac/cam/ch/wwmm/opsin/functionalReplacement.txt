@@ -20,5 +20,5 @@ cyanooxalic acid	InChI=1S/C3HNO3/c4-1-2(5)3(6)7/h(H,6,7)
 phosphoroperoxoyldibenzene	InChI=1S/C12H11O3P/c13-15-16(14,11-7-3-1-4-8-11)12-9-5-2-6-10-12/h1-10,13H
 phosphoric methyl amide ethyl amide propyl amide	InChI=1S/C6H18N3OP/c1-4-6-9-11(10,7-3)8-5-2/h4-6H2,1-3H3,(H3,7,8,9,10)
 diethyl-thionophosphoric acid	InChI=1S/C4H11O3PS/c1-3-6-8(5,9)7-4-2/h3-4H2,1-2H3,(H,5,9)
-//Counter example
+#Counter example
 benzothiazol-2-ylthio-succinic anhydride	InChI=1S/C11H7NO3S2/c13-9-5-8(10(14)15-9)17-11-12-6-3-1-2-4-7(6)16-11/h1-4,8H,5H2

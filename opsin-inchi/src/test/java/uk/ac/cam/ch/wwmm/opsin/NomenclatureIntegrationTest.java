@@ -5,238 +5,179 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvFileSource;
 
 public class NomenclatureIntegrationTest {
+	
 	private static NameToStructure n2s;
+	private static NameToStructureConfig n2sConfig;
 
 	@BeforeAll
 	public static void setUp() {
 		n2s = NameToStructure.getInstance();
+		n2sConfig = NameToStructureConfig.getDefaultConfigInstance();
+		n2sConfig.setAllowRadicals(true);
 	}
 	
 	@AfterAll
 	public static void cleanUp(){
 		n2s = null;
-	}
-	
-	@Test
-	public void testRadicals() throws IOException{
-		NameToStructureConfig n2sConfig = NameToStructureConfig.getDefaultConfigInstance();
-		n2sConfig.setAllowRadicals(true);
-		String file = "radicals.txt";
-		checkNamesAgainstInChIs(file, n2sConfig);
-	}
-	
-	@Test
-	public void testAcetals() throws IOException{
-		NameToStructureConfig n2sConfig = NameToStructureConfig.getDefaultConfigInstance();
-		n2sConfig.setAllowRadicals(true);
-		String file = "acetals.txt";
-		checkNamesAgainstInChIs(file, n2sConfig);
-	}
-	
-	@Test
-	public void testAlcoholEsters() throws IOException{
-		NameToStructureConfig n2sConfig = NameToStructureConfig.getDefaultConfigInstance();
-		n2sConfig.setAllowRadicals(true);
-		String file = "alcoholEsters.txt";
-		checkNamesAgainstInChIs(file, n2sConfig);
-	}
-	
-	@Test
-	public void testCarbohydrates() throws IOException{
-		NameToStructureConfig n2sConfig = NameToStructureConfig.getDefaultConfigInstance();
-		n2sConfig.setAllowRadicals(true);
-		String file = "carbohydrates.txt";
-		checkNamesAgainstInChIs(file, n2sConfig);
+		n2sConfig = null;
 	}
 
-	@Test
-	public void testChargeBalancing() throws IOException{
-		NameToStructureConfig n2sConfig = NameToStructureConfig.getDefaultConfigInstance();
-		n2sConfig.setAllowRadicals(true);
-		String file = "chargeBalancing.txt";
-		checkNamesAgainstInChIs(file, n2sConfig);
+	@ParameterizedTest
+	@CsvFileSource(resources = "radicals.txt", delimiter='\t')
+	public void testRadicals(String name, String expectedInchi) {
+		checkName(name, expectedInchi);
 	}
 	
-	@Test
-	public void testConjunctiveNomenclature() throws IOException{
-		NameToStructureConfig n2sConfig = NameToStructureConfig.getDefaultConfigInstance();
-		n2sConfig.setAllowRadicals(true);
-		String file = "conjunctiveNomenclature.txt";
-		checkNamesAgainstInChIs(file, n2sConfig);
+	@ParameterizedTest
+	@CsvFileSource(resources = "acetals.txt", delimiter='\t')
+	public void testAcetals(String name, String expectedInchi) {
+		checkName(name, expectedInchi);
 	}
 	
-	@Test
-	public void testCyclicSuffixes() throws IOException{
-		NameToStructureConfig n2sConfig = NameToStructureConfig.getDefaultConfigInstance();
-		n2sConfig.setAllowRadicals(true);
-		String file = "cyclicSuffixes.txt";
-		checkNamesAgainstInChIs(file, n2sConfig);
+	@ParameterizedTest
+	@CsvFileSource(resources = "alcoholEsters.txt", delimiter='\t')
+	public void testAlcoholEsters(String name, String expectedInchi) {
+		checkName(name, expectedInchi);
 	}
 	
-	@Test
-	public void testEpoxyLike() throws IOException{
-		NameToStructureConfig n2sConfig = NameToStructureConfig.getDefaultConfigInstance();
-		n2sConfig.setAllowRadicals(true);
-		String file = "epoxyLike.txt";
-		checkNamesAgainstInChIs(file, n2sConfig);
-	}
-	
-	@Test
-	public void testFunctionalReplacement() throws IOException{
-		NameToStructureConfig n2sConfig = NameToStructureConfig.getDefaultConfigInstance();
-		n2sConfig.setAllowRadicals(true);
-		String file = "functionalReplacement.txt";
-		checkNamesAgainstInChIs(file, n2sConfig);
-	}
-	
-	@Test
-	public void testIsotopes() throws IOException{
-		NameToStructureConfig n2sConfig = NameToStructureConfig.getDefaultConfigInstance();
-		n2sConfig.setAllowRadicals(true);
-		String file = "isotopes.txt";
-		checkNamesAgainstInChIs(file, n2sConfig);
-	}
-	
-	@Test
-	public void testAdditiveNomenclature() throws IOException{
-		NameToStructureConfig n2sConfig = NameToStructureConfig.getDefaultConfigInstance();
-		n2sConfig.setAllowRadicals(true);
-		String file = "additiveNomenclature.txt";
-		checkNamesAgainstInChIs(file, n2sConfig);
-	}
-	
-	@Test
-	public void testMultiplicativeNomenclature() throws IOException{
-		NameToStructureConfig n2sConfig = NameToStructureConfig.getDefaultConfigInstance();
-		n2sConfig.setAllowRadicals(true);
-		String file = "multiplicativeNomenclature.txt";
-		checkNamesAgainstInChIs(file, n2sConfig);
-	}
-	
-	@Test
-	public void testOmittedSpaces() throws IOException{
-		NameToStructureConfig n2sConfig = NameToStructureConfig.getDefaultConfigInstance();
-		n2sConfig.setAllowRadicals(true);
-		String file = "omittedSpaces.txt";
-		checkNamesAgainstInChIs(file, n2sConfig);
-	}
-	
-	@Test
-	public void testFunctionalClassNomenclature() throws IOException{
-		NameToStructureConfig n2sConfig = NameToStructureConfig.getDefaultConfigInstance();
-		n2sConfig.setAllowRadicals(true);
-		String file = "functionalClasses.txt";
-		checkNamesAgainstInChIs(file, n2sConfig);
-	}
-	
-	@Test
-	public void testFusedRingNomenclature() throws IOException{
-		NameToStructureConfig n2sConfig = NameToStructureConfig.getDefaultConfigInstance();
-		n2sConfig.setAllowRadicals(true);
-		String file = "fusedRings.txt";
-		checkNamesAgainstInChIs(file, n2sConfig);
-	}
-	
-	@Test
-	public void testInorganicNomenclature() throws IOException{
-		NameToStructureConfig n2sConfig = NameToStructureConfig.getDefaultConfigInstance();
-		n2sConfig.setAllowRadicals(true);
-		String file = "inorganics.txt";
-		checkNamesAgainstInChIs(file, n2sConfig);
-	}
-	
-	@Test
-	public void testIonNomenclature() throws IOException{
-		NameToStructureConfig n2sConfig = NameToStructureConfig.getDefaultConfigInstance();
-		n2sConfig.setAllowRadicals(true);
-		String file = "ions.txt";
-		checkNamesAgainstInChIs(file, n2sConfig);
-	}
-	
-	@Test
-	public void testSpiroNomenclature() throws IOException{
-		NameToStructureConfig n2sConfig = NameToStructureConfig.getDefaultConfigInstance();
-		n2sConfig.setAllowRadicals(true);
-		String file = "spiro.txt";
-		checkNamesAgainstInChIs(file, n2sConfig);
-	}
-	
-	@Test
-	public void testOrganoMetallics() throws IOException{
-		NameToStructureConfig n2sConfig = NameToStructureConfig.getDefaultConfigInstance();
-		n2sConfig.setAllowRadicals(true);
-		String file = "organometallics.txt";
-		checkNamesAgainstInChIs(file, n2sConfig);
+	@ParameterizedTest
+	@CsvFileSource(resources = "carbohydrates.txt", delimiter='\t')
+	public void testCarbohydrates(String name, String expectedInchi) {
+		checkName(name, expectedInchi);
 	}
 
-	@Test
-	public void testImplicitBracketting() throws IOException{
-		NameToStructureConfig n2sConfig = NameToStructureConfig.getDefaultConfigInstance();
-		n2sConfig.setAllowRadicals(true);
-		String file = "implicitBracketting.txt";
-		checkNamesAgainstInChIs(file, n2sConfig);
+	@ParameterizedTest
+	@CsvFileSource(resources = "chargeBalancing.txt", delimiter='\t')
+	public void testChargeBalancing(String name, String expectedInchi) {
+		checkName(name, expectedInchi);
 	}
 	
-	@Test
-	public void testStereochemistry() throws IOException{
-		NameToStructureConfig n2sConfig = NameToStructureConfig.getDefaultConfigInstance();
-		n2sConfig.setAllowRadicals(true);
-		String file = "stereochemistry.txt";
-		checkNamesAgainstInChIs(file, n2sConfig);
+	@ParameterizedTest
+	@CsvFileSource(resources = "conjunctiveNomenclature.txt", delimiter='\t')
+	public void testConjunctiveNomenclature(String name, String expectedInchi) {
+		checkName(name, expectedInchi);
 	}
 	
-	@Test
-	public void testDetachablePrefixes() throws IOException{
-		NameToStructureConfig n2sConfig = NameToStructureConfig.getDefaultConfigInstance();
-		n2sConfig.setAllowRadicals(true);
-		String file = "detachablePrefixes.txt";
-		checkNamesAgainstInChIs(file, n2sConfig);
+	@ParameterizedTest
+	@CsvFileSource(resources = "cyclicSuffixes.txt", delimiter='\t')
+	public void testCyclicSuffixes(String name, String expectedInchi) {
+		checkName(name, expectedInchi);
 	}
-
-	@Test
-	public void testLetterCasing() throws IOException{
-		NameToStructureConfig n2sConfig = NameToStructureConfig.getDefaultConfigInstance();
-		n2sConfig.setAllowRadicals(true);
-		String file = "lettercasing.txt";
-		checkNamesAgainstInChIs(file, n2sConfig);
-	}
-
-	@Test
-	public void testMiscellany() throws IOException{
-		NameToStructureConfig n2sConfig = NameToStructureConfig.getDefaultConfigInstance();
-		n2sConfig.setAllowRadicals(true);
-		String file = "miscellany.txt";
-		checkNamesAgainstInChIs(file, n2sConfig);
-	}
-
-	private void checkNamesAgainstInChIs(String file, NameToStructureConfig n2sConfig) throws IOException {
-		try(BufferedReader input = new BufferedReader(new InputStreamReader(this.getClass().getResourceAsStream(file), StandardCharsets.UTF_8))) {
-			String line = null;
-			while ((line = input.readLine()) != null) {
-				if(line.startsWith("//")){
-					continue;
-				}
-				String[] lineArray = line.split("\t");
-				String inchi = NameToInchi.convertResultToInChI(n2s.parseChemicalName(lineArray[0], n2sConfig));
-				if (inchi!=null){
-					String opsinInchi = InchiPruner.mainChargeAndStereochemistryLayers(inchi);
-					String referenceInchi = InchiPruner.mainChargeAndStereochemistryLayers(lineArray[1]);
 	
-					if (!opsinInchi.equals(referenceInchi)){
-						fail(lineArray[0] +" was misinterpreted as: " + inchi);
-					}
-				} else {
-					fail(lineArray[0] +" was uninterpretable");
-				}
-			}
+	@ParameterizedTest
+	@CsvFileSource(resources = "epoxyLike.txt", delimiter='\t')
+	public void testEpoxyLike(String name, String expectedInchi) {
+		checkName(name, expectedInchi);
+	}
+	
+	@ParameterizedTest
+	@CsvFileSource(resources = "functionalReplacement.txt", delimiter='\t')
+	public void testFunctionalReplacement(String name, String expectedInchi) {
+		checkName(name, expectedInchi);
+	}
+	
+	@ParameterizedTest
+	@CsvFileSource(resources = "isotopes.txt", delimiter='\t')
+	public void testIsotopes(String name, String expectedInchi) {
+		checkName(name, expectedInchi);
+	}
+	
+	@ParameterizedTest
+	@CsvFileSource(resources = "additiveNomenclature.txt", delimiter='\t')
+	public void testAdditiveNomenclature(String name, String expectedInchi) {
+		checkName(name, expectedInchi);
+	}
+	
+	@ParameterizedTest
+	@CsvFileSource(resources = "multiplicativeNomenclature.txt", delimiter='\t')
+	public void testMultiplicativeNomenclature(String name, String expectedInchi) {
+		checkName(name, expectedInchi);
+	}
+	
+	@ParameterizedTest
+	@CsvFileSource(resources = "omittedSpaces.txt", delimiter='\t')
+	public void testOmittedSpaces(String name, String expectedInchi) {
+		checkName(name, expectedInchi);
+	}
+	
+	@ParameterizedTest
+	@CsvFileSource(resources = "functionalClasses.txt", delimiter='\t')
+	public void testFunctionalClassNomenclature(String name, String expectedInchi) {
+		checkName(name, expectedInchi);
+	}
+	
+	@ParameterizedTest
+	@CsvFileSource(resources = "fusedRings.txt", delimiter='\t')
+	public void testFusedRingNomenclature(String name, String expectedInchi) {
+		checkName(name, expectedInchi);
+	}
+	
+	@ParameterizedTest
+	@CsvFileSource(resources = "inorganics.txt", delimiter='\t')
+	public void testInorganicNomenclature(String name, String expectedInchi) {
+		checkName(name, expectedInchi);
+	}
+	
+	@ParameterizedTest
+	@CsvFileSource(resources = "ions.txt", delimiter='\t')
+	public void testIonNomenclature(String name, String expectedInchi) {
+		checkName(name, expectedInchi);
+	}
+	
+	@ParameterizedTest
+	@CsvFileSource(resources = "spiro.txt", delimiter='\t')
+	public void testSpiroNomenclature(String name, String expectedInchi) {
+		checkName(name, expectedInchi);
+	}
+	
+	@ParameterizedTest
+	@CsvFileSource(resources = "organometallics.txt", delimiter='\t')
+	public void testOrganoMetallics(String name, String expectedInchi) {
+		checkName(name, expectedInchi);
+	}
+
+	@ParameterizedTest
+	@CsvFileSource(resources = "implicitBracketting.txt", delimiter='\t')
+	public void testImplicitBracketting(String name, String expectedInchi) {
+		checkName(name, expectedInchi);
+	}
+	
+	@ParameterizedTest
+	@CsvFileSource(resources = "stereochemistry.txt", delimiter='\t')
+	public void testStereochemistry(String name, String expectedInchi) {
+		checkName(name, expectedInchi);
+	}
+	
+	@ParameterizedTest
+	@CsvFileSource(resources = "detachablePrefixes.txt", delimiter='\t')
+	public void testDetachablePrefixes(String name, String expectedInchi) {
+		checkName(name, expectedInchi);
+	}
+
+	@ParameterizedTest
+	@CsvFileSource(resources = "lettercasing.txt", delimiter='\t')
+	public void testLetterCasing(String name, String expectedInchi) {
+		checkName(name, expectedInchi);
+	}
+
+	@ParameterizedTest
+	@CsvFileSource(resources = "miscellany.txt", delimiter='\t')
+	public void testMiscellany(String name, String expectedInchi) {
+		checkName(name, expectedInchi);
+	}
+	
+	private void checkName(String name, String expectedInchI) {
+		String inchi = NameToInchi.convertResultToInChI(n2s.parseChemicalName(name, n2sConfig));
+		if (inchi != null) {
+			String opsinInchi = InchiPruner.mainChargeAndStereochemistryLayers(inchi);
+			String referenceInchi = InchiPruner.mainChargeAndStereochemistryLayers(expectedInchI);
+			assertEquals(referenceInchi, opsinInchi, name + " was misinterpreted as: " + inchi);
+		} else {
+			fail(name +" was uninterpretable");
 		}
 	}
 }

@@ -3,8 +3,6 @@ package uk.ac.cam.ch.wwmm.opsin;
 import java.util.ArrayList;
 import java.util.List;
 
-import uk.ac.cam.ch.wwmm.opsin.StringTools;
-
 public class InchiPruner {
 	/**
 	 * Return a modified version of the given InChI where the:

@@ -1,4 +1,4 @@
-//mostly ionic
+#mostly ionic
 sodium chloride	InChI=1S/ClH.Na/h1H;/q;+1/p-1
 sodium oxide	InChI=1S/2Na.O/q2*+1;-2
 sodium dioxide	InChI=1S/2Na.O2/c;;1-2/q2*+1;-2
@@ -12,7 +12,7 @@ silver monoxide	InChI=1S/2Ag.O/q2*+1;-2
 silver(I) oxide	InChI=1S/2Ag.O/q2*+1;-2
 silver(1+) oxide	InChI=1S/2Ag.O/q2*+1;-2
 argentous oxide	InChI=1S/2Ag.O/q2*+1;-2
-//mostly covalent
+#mostly covalent
 boron trifluoride	InChI=1S/BF3/c2-1(3)4
 silicon dioxide	InChI=1S/O2Si/c1-3-2
 carbon tetrachloride	InChI=1S/CCl4/c2-1(3,4)5
