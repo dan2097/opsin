@@ -1,16 +1,17 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
-import org.junit.Test;
-
+import org.junit.jupiter.api.Test;
 
 public class NameToStructureTest {
 
 	@Test
 	public void testNameToStructure() {
 		NameToStructure nts = NameToStructure.getInstance();
-		assertNotNull("Got a name to structure convertor", nts);
+		assertNotNull(nts, "Got a name to structure convertor");
 	}
 
 	@Test
@@ -21,7 +22,7 @@ public class NameToStructureTest {
 		// labels assigned and is correct.
 		// contains a molecule with same connectivity as 'frag of CML'
 
-		assertEquals("Parsing 'ethane'", "<cml xmlns=\"http://www.xml-cml.org/schema\" " +
+		assertEquals("<cml xmlns=\"http://www.xml-cml.org/schema\" " +
 				"convention=\"conventions:molecular\" " +
 				"xmlns:conventions=\"http://www.xml-cml.org/convention/\" " +
 				"xmlns:cmlDict=\"http://www.xml-cml.org/dictionary/cml/\" " +
@@ -44,8 +45,8 @@ public class NameToStructureTest {
 	            "<bond id=\"a2_a6\" atomRefs2=\"a2 a6\" order=\"S\"/>" +
 	            "<bond id=\"a2_a7\" atomRefs2=\"a2 a7\" order=\"S\"/>" +
 	            "<bond id=\"a2_a8\" atomRefs2=\"a2 a8\" order=\"S\"/>" +
-				"</bondArray></molecule></cml>", cml);
-		assertNull("Won't parse helloworld", nts.parseToCML("helloworld"));
+				"</bondArray></molecule></cml>", cml, "Parsing 'ethane'");
+		assertNull(nts.parseToCML("helloworld"), "Won't parse helloworld");
 	}
 	
 	@Test

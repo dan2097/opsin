@@ -1,12 +1,13 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 
 import java.util.List;
 
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+
 
 /**
  * Tests that fused ring numbering is working as expected. A heteroatom(n) has been placed at the expected locant 1 to make numbering unambiguous where due to symmetry geometric consideration are insufficient to deduce unique numbering
@@ -174,7 +175,7 @@ public class FusedRingNumbererTest {
 	}
 
 	@Test
-	@Ignore //Transient BUG in path finding code
+	@Disabled //Transient BUG in path finding code
 	public void ovalene() throws StructureBuildingException {
 		compareNumbering("c1cc2ccc3ccc4cc5ccc6ccc7ccc8cc91.c19c2c3c4c9c5c6c7c8c19", "1/2/2a/3/4/4a/5/6/6a/7/7a/8/9/9a/10/11/11a/12/13/13a/14/14a/14b/14c/14d/14e/14f/14g/14h/14i/14j/14k");
 	}
@@ -431,7 +432,7 @@ public class FusedRingNumbererTest {
 	}
 	
 	@Test
-	@Ignore
+	@Disabled
 	public void tripleSubstituedSevenMembered() throws StructureBuildingException {
 		compareNumbering("C1NCCN2c3ncccc3Cc4ccccc4C12", "1/2/3/4/5/5a/6/7/8/9/9a/10/10a/11/12/13/14/14a/14b");
 		compareNumbering("c1cccc2C3CNCCN3c4ncccc4Cc12", "1/2/3/4/5/5a/6/7/8/9/9a/10/10a/11/12/13/14/14a/14b");

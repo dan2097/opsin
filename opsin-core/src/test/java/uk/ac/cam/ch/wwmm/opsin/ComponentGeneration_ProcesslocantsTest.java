@@ -1,17 +1,18 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class ComponentGeneration_ProcesslocantsTest {
 	
 	private Element locant;
 	private Element substituent;
 	
-	@Before
+	@BeforeEach
 	public void setUpSubstituent(){
 		substituent = new GroupingEl(SUBSTITUENT_EL);
 		locant = new TokenEl(LOCANT_EL);
@@ -282,7 +283,7 @@ public class ComponentGeneration_ProcesslocantsTest {
 		OpsinTools.insertBefore(locant, multiplier);
 		ComponentGenerator.processLocants(substituent);
 		Element elBeforeMultiplier = OpsinTools.getPreviousSibling(multiplier);
-		assertNotNull("A locant should not be in front of the multiplier", elBeforeMultiplier);
+		assertNotNull(elBeforeMultiplier, "A locant should not be in front of the multiplier");
 		assertEquals(LOCANT_EL, elBeforeMultiplier.getName());
 		assertEquals("O,O',O''", elBeforeMultiplier.getValue());
 		Element group = OpsinTools.getNextSibling(multiplier);

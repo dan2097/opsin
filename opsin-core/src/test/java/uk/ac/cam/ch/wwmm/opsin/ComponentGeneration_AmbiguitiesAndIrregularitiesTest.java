@@ -1,9 +1,10 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.fail;
 import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class ComponentGeneration_AmbiguitiesAndIrregularitiesTest {
 	
@@ -61,17 +62,20 @@ public class ComponentGeneration_AmbiguitiesAndIrregularitiesTest {
 		}
 	}
 	
-	@Test(expected=ComponentGenerationException.class)//tetradec is 14 not 4 x 10
-	public void testMisTokenisedAlkane() throws ComponentGenerationException{
-		Element substituent = new GroupingEl(SUBSTITUENT_EL);
-		Element erroneousMultiplier = new TokenEl(MULTIPLIER_EL);
-		erroneousMultiplier.addAttribute(new Attribute(TYPE_ATR, BASIC_TYPE_VAL));
-		erroneousMultiplier.addAttribute(new Attribute(VALUE_ATR, "4"));
-		Element alkaneComponent2 = new TokenEl(ALKANESTEMCOMPONENT);
-		alkaneComponent2.addAttribute(new Attribute(VALUE_ATR, "10"));
-		substituent.addChild(erroneousMultiplier);
-		substituent.addChild(alkaneComponent2);
-		ComponentGenerator.resolveAmbiguities(substituent);
+	@Test() // tetradec is 14 not 4 x 10
+	public void testMisTokenisedAlkane() {
+
+		assertThrows(ComponentGenerationException.class, () -> {
+			Element substituent = new GroupingEl(SUBSTITUENT_EL);
+			Element erroneousMultiplier = new TokenEl(MULTIPLIER_EL);
+			erroneousMultiplier.addAttribute(new Attribute(TYPE_ATR, BASIC_TYPE_VAL));
+			erroneousMultiplier.addAttribute(new Attribute(VALUE_ATR, "4"));
+			Element alkaneComponent2 = new TokenEl(ALKANESTEMCOMPONENT);
+			alkaneComponent2.addAttribute(new Attribute(VALUE_ATR, "10"));
+			substituent.addChild(erroneousMultiplier);
+			substituent.addChild(alkaneComponent2);
+			ComponentGenerator.resolveAmbiguities(substituent);
+		});
 	}
 
 	@Test
@@ -94,48 +98,54 @@ public class ComponentGeneration_AmbiguitiesAndIrregularitiesTest {
 		}
 	}
 	
-	@Test(expected=ComponentGenerationException.class)//tetradec is 14 not 4 x 10
-	public void testLocantsIndicatingTokenizationIsIncorrect() throws ComponentGenerationException{
-		Element substituent = new GroupingEl(SUBSTITUENT_EL);
-		Element locant = new TokenEl(LOCANT_EL, "1");
-		substituent.addChild(locant);
-		Element erroneousMultiplier = new TokenEl(MULTIPLIER_EL);
-		erroneousMultiplier.addAttribute(new Attribute(TYPE_ATR, BASIC_TYPE_VAL));
-		erroneousMultiplier.addAttribute(new Attribute(VALUE_ATR, "4"));
-		Element alkaneComponent = new TokenEl(ALKANESTEMCOMPONENT);
-		alkaneComponent.addAttribute(new Attribute(VALUE_ATR, "10"));
-		substituent.addChild(erroneousMultiplier);
-		substituent.addChild(alkaneComponent);
-		ComponentGenerator.resolveAmbiguities(substituent);
+	@Test() // tetradec is 14 not 4 x 10
+	public void testLocantsIndicatingTokenizationIsIncorrect() {
+		assertThrows(ComponentGenerationException.class, () -> {
+			Element substituent = new GroupingEl(SUBSTITUENT_EL);
+			Element locant = new TokenEl(LOCANT_EL, "1");
+			substituent.addChild(locant);
+			Element erroneousMultiplier = new TokenEl(MULTIPLIER_EL);
+			erroneousMultiplier.addAttribute(new Attribute(TYPE_ATR, BASIC_TYPE_VAL));
+			erroneousMultiplier.addAttribute(new Attribute(VALUE_ATR, "4"));
+			Element alkaneComponent = new TokenEl(ALKANESTEMCOMPONENT);
+			alkaneComponent.addAttribute(new Attribute(VALUE_ATR, "10"));
+			substituent.addChild(erroneousMultiplier);
+			substituent.addChild(alkaneComponent);
+			ComponentGenerator.resolveAmbiguities(substituent);
+		});
 	}
 	
 	
-	@Test(expected=ComponentGenerationException.class)
-	public void testTetraphenShouldBeTetra_Phen1() throws ComponentGenerationException{//tetraphenyl
-		Element substituent = new GroupingEl(SUBSTITUENT_EL);
-		Element multiplier = new TokenEl(MULTIPLIER_EL);
-		multiplier.addAttribute(new Attribute(TYPE_ATR, BASIC_TYPE_VAL));
-		multiplier.addAttribute(new Attribute(VALUE_ATR, "4"));
-		Element phen = new TokenEl(HYDROCARBONFUSEDRINGSYSTEM_EL, "phen");
-		Element yl = new TokenEl(SUFFIX_EL, "yl");
-		substituent.addChild(multiplier);
-		substituent.addChild(phen);
-		substituent.addChild(yl);
-		ComponentGenerator.resolveAmbiguities(substituent);
+	@Test()
+	public void testTetraphenShouldBeTetra_Phen1() {// tetraphenyl
+		assertThrows(ComponentGenerationException.class, () -> {
+			Element substituent = new GroupingEl(SUBSTITUENT_EL);
+			Element multiplier = new TokenEl(MULTIPLIER_EL);
+			multiplier.addAttribute(new Attribute(TYPE_ATR, BASIC_TYPE_VAL));
+			multiplier.addAttribute(new Attribute(VALUE_ATR, "4"));
+			Element phen = new TokenEl(HYDROCARBONFUSEDRINGSYSTEM_EL, "phen");
+			Element yl = new TokenEl(SUFFIX_EL, "yl");
+			substituent.addChild(multiplier);
+			substituent.addChild(phen);
+			substituent.addChild(yl);
+			ComponentGenerator.resolveAmbiguities(substituent);
+		});
 	}
 	
-	@Test(expected=ComponentGenerationException.class)
-	public void testTetraphenShouldBeTetra_Phen2() throws ComponentGenerationException{//tetraphenoxy
-		Element substituent = new GroupingEl(SUBSTITUENT_EL);
-		Element multiplier = new TokenEl(MULTIPLIER_EL);
-		multiplier.addAttribute(new Attribute(TYPE_ATR, BASIC_TYPE_VAL));
-		multiplier.addAttribute(new Attribute(VALUE_ATR, "4"));
-		Element phen = new TokenEl(HYDROCARBONFUSEDRINGSYSTEM_EL, "phen");
-		Element yl = new TokenEl(SUFFIX_EL, "oxy");
-		substituent.addChild(multiplier);
-		substituent.addChild(phen);
-		substituent.addChild(yl);
-		ComponentGenerator.resolveAmbiguities(substituent);
+	@Test()
+	public void testTetraphenShouldBeTetra_Phen2() {// tetraphenoxy
+		assertThrows(ComponentGenerationException.class, () -> {
+			Element substituent = new GroupingEl(SUBSTITUENT_EL);
+			Element multiplier = new TokenEl(MULTIPLIER_EL);
+			multiplier.addAttribute(new Attribute(TYPE_ATR, BASIC_TYPE_VAL));
+			multiplier.addAttribute(new Attribute(VALUE_ATR, "4"));
+			Element phen = new TokenEl(HYDROCARBONFUSEDRINGSYSTEM_EL, "phen");
+			Element yl = new TokenEl(SUFFIX_EL, "oxy");
+			substituent.addChild(multiplier);
+			substituent.addChild(phen);
+			substituent.addChild(yl);
+			ComponentGenerator.resolveAmbiguities(substituent);
+		});
 	}
 	
 	@Test

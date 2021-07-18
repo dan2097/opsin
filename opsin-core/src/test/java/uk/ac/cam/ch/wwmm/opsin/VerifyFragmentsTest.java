@@ -4,11 +4,11 @@ import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.fail;
 import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
 
 public class VerifyFragmentsTest {
@@ -16,14 +16,14 @@ public class VerifyFragmentsTest {
 	private static ResourceGetter resourceGetter;
 	private static FragmentManager fm;
 
-	@BeforeClass
+	@BeforeAll
 	public static void setUp() {
 		resourceGetter = new ResourceGetter("uk/ac/cam/ch/wwmm/opsin/resources/");
 		IDManager idManager = new IDManager();
 		fm = new FragmentManager(new SMILESFragmentBuilder(idManager), idManager);
 	}
 	
-	@AfterClass
+	@AfterAll
 	public static void cleanUp(){
 		resourceGetter = null;
 		fm = null;

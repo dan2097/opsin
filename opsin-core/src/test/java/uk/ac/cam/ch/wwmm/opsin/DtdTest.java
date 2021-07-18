@@ -1,6 +1,6 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -14,7 +14,7 @@ import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
@@ -98,12 +98,12 @@ public class DtdTest {
 			case XMLStreamConstants.START_ELEMENT:
 				if (reader.getLocalName().equals("token")) {
 					String tokenString = reader.getElementText();
-					assertTrue(tokenString +" occurred more than once in a tokenList",!terms.contains(tokenString));
+					assertTrue(!terms.contains(tokenString), tokenString +" occurred more than once in a tokenList");
 					terms.add(tokenString);
 					char[] characters = tokenString.toCharArray();
 					for (char c : characters) {
-						assertTrue("Non ascii character found in token: " + tokenString + OpsinTools.NEWLINE + "An ASCII replacement should be used!" ,(int)c < 128);
-						assertTrue("Capital letter found in token: " + tokenString + OpsinTools.NEWLINE + "Only lower case letters should be used!" , !(c >='A' && c <='Z'));
+						assertTrue((int)c < 128, "Non ascii character found in token: " + tokenString + OpsinTools.NEWLINE + "An ASCII replacement should be used!");
+						assertTrue(!(c >='A' && c <='Z'), "Capital letter found in token: " + tokenString + OpsinTools.NEWLINE + "Only lower case letters should be used!");
 					}
 				}
 				break;

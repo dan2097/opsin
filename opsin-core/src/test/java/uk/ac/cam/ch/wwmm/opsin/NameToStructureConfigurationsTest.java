@@ -1,9 +1,11 @@
 package uk.ac.cam.ch.wwmm.opsin;
-import static org.junit.Assert.*;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import uk.ac.cam.ch.wwmm.opsin.OpsinResult.OPSIN_RESULT_STATUS;
 
@@ -11,12 +13,12 @@ public class NameToStructureConfigurationsTest {
 
 		private static NameToStructure n2s;
 
-		@BeforeClass
+		@BeforeAll
 		public static void setUp() {
 			n2s = NameToStructure.getInstance();
 		}
 		
-		@AfterClass
+		@AfterAll
 		public static void cleanUp() {
 			n2s = null;
 		}

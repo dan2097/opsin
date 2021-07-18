@@ -1,9 +1,10 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.mock;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import uk.ac.cam.ch.wwmm.opsin.Bond.SMILES_BOND_DIRECTION;
 import uk.ac.cam.ch.wwmm.opsin.BondStereo.BondStereoValue;
@@ -18,10 +19,10 @@ public class BondTest {
 		frag.addAtom(a1);
 		frag.addAtom(a2);
 		Bond bond = new Bond(a1, a2, 1);
-		assertNotNull("Got bond", bond);
-		assertEquals("From = 1", 1, bond.getFrom());
-		assertEquals("To = 2", 2, bond.getTo());
-		assertEquals("Order = 1", 1, bond.getOrder());
+		assertNotNull(bond, "Got bond");
+		assertEquals(1, bond.getFrom(), "From = 1");
+		assertEquals(2, bond.getTo(), "To = 2");
+		assertEquals(1, bond.getOrder(), "Order = 1");
 		assertEquals(a1, bond.getFromAtom());
 		assertEquals(a2, bond.getToAtom());
 		assertEquals(a2, bond.getOtherAtom(a1));
@@ -43,7 +44,7 @@ public class BondTest {
 		frag.addAtom(a4);
 		Bond bond = new Bond(a2, a3, 1);
 		bond.setOrder(2);
-		assertEquals("Order = 2", 2, bond.getOrder());
+		assertEquals(2, bond.getOrder(), "Order = 2");
 		BondStereo bondStereo = new BondStereo(new Atom[]{a1,a2,a3,a4}, BondStereoValue.TRANS);
 		bond.setBondStereo(bondStereo);
 		assertEquals(bondStereo, bond.getBondStereo());

@@ -1,20 +1,20 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.IOException;
 import java.util.List;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 public class TokenizerTest {
 
 	private static Tokeniser tokenizer;
 	private static ReverseParseRules reverseParseRules;
 
-	@BeforeClass
+	@BeforeAll
 	public static void setUp() throws IOException{
 		ResourceGetter rg = new ResourceGetter("uk/ac/cam/ch/wwmm/opsin/resources/");
 		ResourceManager rm = new ResourceManager(rg);
@@ -22,7 +22,7 @@ public class TokenizerTest {
 		reverseParseRules = new ReverseParseRules(rm);
 	}
 	
-	@AfterClass
+	@AfterAll
 	public static void cleanUp(){
 		tokenizer = null;
 		reverseParseRules = null;
@@ -37,118 +37,118 @@ public class TokenizerTest {
 		assertEquals("", result.getUnparsableName());
 		assertEquals("", result.getUnparsedName());
 		Parse parse = result.getParse();
-		assertEquals("One Word", 1, parse.getWords().size());
+		assertEquals(1, parse.getWords().size(), "One Word");
 		ParseWord w = parse.getWords().get(0);
-		assertEquals("One Parse", 1, w.getParseTokens().size());
+		assertEquals(1, w.getParseTokens().size(), "One Parse");
 		List<String> tokens = w.getParseTokens().get(0).getTokens();
-		assertEquals("Three tokens", 3, tokens.size());
-		assertEquals("First token: hex", "hex", tokens.get(0));
-		assertEquals("Second token: ane", "ane", tokens.get(1));
-		assertEquals("Third token: end of main group", "", tokens.get(2));
+		assertEquals(3, tokens.size(), "Three tokens");
+		assertEquals("hex", tokens.get(0), "First token: hex");
+		assertEquals("ane", tokens.get(1), "Second token: ane");
+		assertEquals("", tokens.get(2), "Third token: end of main group");
 	}
 	
 	@Test
 	public void hexachlorohexane() throws ParsingException{
 		Parse parse = tokenizer.tokenize("hexachlorohexane", true).getParse();
-		assertEquals("One Word", 1, parse.getWords().size());
+		assertEquals(1, parse.getWords().size(), "One Word");
 		ParseWord w = parse.getWords().get(0);
-		assertEquals("One Parse", 1, w.getParseTokens().size());
+		assertEquals(1, w.getParseTokens().size(), "One Parse");
 		List<String> tokens = w.getParseTokens().get(0).getTokens();
-		assertEquals("Seven tokens", 7, tokens.size());
-		assertEquals("First token: hex", "hex", tokens.get(0));
-		assertEquals("Second token: a", "a", tokens.get(1));
-		assertEquals("Third token: chloro", "chloro", tokens.get(2));
-		assertEquals("Fourth token: end of main substituent", "", tokens.get(3));
-		assertEquals("Fifth token: hex", "hex", tokens.get(4));
-		assertEquals("Sixth token: ane", "ane", tokens.get(5));
-		assertEquals("Seventh token: end of main group", "", tokens.get(6));
+		assertEquals(7, tokens.size(), "Seven tokens");
+		assertEquals("hex", tokens.get(0), "First token: hex");
+		assertEquals("a", tokens.get(1), "Second token: a");
+		assertEquals("chloro", tokens.get(2), "Third token: chloro");
+		assertEquals("", tokens.get(3), "Fourth token: end of main substituent");
+		assertEquals("hex", tokens.get(4), "Fifth token: hex");
+		assertEquals("ane", tokens.get(5), "Sixth token: ane");
+		assertEquals("", tokens.get(6), "Seventh token: end of main group");
 	}
 	
 	@Test
 	public void ethylChloride() throws ParsingException {
 		Parse parse = tokenizer.tokenize("ethyl chloride", true).getParse();
-		assertEquals("Two Words", 2, parse.getWords().size());
+		assertEquals(2, parse.getWords().size(), "Two Words");
 		ParseWord w = parse.getWord(0);
-		assertEquals("One Parse", 1, w.getParseTokens().size());
+		assertEquals(1, w.getParseTokens().size(), "One Parse");
 		List<String> tokens = w.getParseTokens().get(0).getTokens();
-		assertEquals("Three tokens", 3, tokens.size());
-		assertEquals("First token: eth", "eth", tokens.get(0));
-		assertEquals("Second token: yl", "yl", tokens.get(1));
-		assertEquals("Third token: end of substituent", "", tokens.get(2));
+		assertEquals(3, tokens.size(), "Three tokens");
+		assertEquals("eth", tokens.get(0), "First token: eth");
+		assertEquals("yl", tokens.get(1), "Second token: yl");
+		assertEquals("", tokens.get(2), "Third token: end of substituent");
 		w = parse.getWord(1);
-		assertEquals("One Parse", 1, w.getParseTokens().size());
+		assertEquals(1, w.getParseTokens().size(), "One Parse");
 		tokens = w.getParseTokens().get(0).getTokens();
-		assertEquals("Two tokens", 2, tokens.size());
-		assertEquals("First token: chloride", "chloride", tokens.get(0));
-		assertEquals("Second token: end of functionalTerm", "", tokens.get(1));
+		assertEquals(2, tokens.size(), "Two tokens");
+		assertEquals("chloride", tokens.get(0), "First token: chloride");
+		assertEquals("", tokens.get(1), "Second token: end of functionalTerm");
 
 
 		parse = tokenizer.tokenize("ethylchloride", true).getParse();//missing space
-		assertEquals("Two Words", 2, parse.getWords().size());
+		assertEquals(2, parse.getWords().size(), "Two Words");
 		w = parse.getWord(0);
-		assertEquals("One Parse", 1, w.getParseTokens().size());
+		assertEquals(1, w.getParseTokens().size(), "One Parse");
 		tokens = w.getParseTokens().get(0).getTokens();
-		assertEquals("Three tokens", 3, tokens.size());
-		assertEquals("First token: eth", "eth", tokens.get(0));
-		assertEquals("Second token: yl", "yl", tokens.get(1));
-		assertEquals("Third token: end of substituent", "", tokens.get(2));
+		assertEquals(3, tokens.size(), "Three tokens");
+		assertEquals("eth", tokens.get(0), "First token: eth");
+		assertEquals("yl", tokens.get(1), "Second token: yl");
+		assertEquals("", tokens.get(2), "Third token: end of substituent");
 		w = parse.getWord(1);
-		assertEquals("One Parse", 1, w.getParseTokens().size());
+		assertEquals(1, w.getParseTokens().size(), "One Parse");
 		tokens = w.getParseTokens().get(0).getTokens();
-		assertEquals("Two tokens", 2, tokens.size());
-		assertEquals("First token: chloride", "chloride", tokens.get(0));
-		assertEquals("Second token: end of functionalTerm", "", tokens.get(1));
+		assertEquals(2, tokens.size(), "Two tokens");
+		assertEquals("chloride", tokens.get(0), "First token: chloride");
+		assertEquals("", tokens.get(1), "Second token: end of functionalTerm");
 	}
 	
 	@Test
 	public void hexachlorohexaneeeeeee() throws ParsingException{
 		TokenizationResult result = tokenizer.tokenize("hexachlorohexaneeeeeee", true);
-		assertEquals("Unparsable", false, result.isSuccessfullyTokenized());
+		assertEquals(false, result.isSuccessfullyTokenized(), "Unparsable");
 	}
 
 	@Test
 	public void bracketedHexachlorohexane() throws ParsingException{
 		Parse parse = tokenizer.tokenize("(hexachloro)hexane", true).getParse();
-		assertEquals("One Word", 1, parse.getWords().size());
+		assertEquals(1, parse.getWords().size(), "One Word");
 		ParseWord w = parse.getWords().get(0);
-		assertEquals("One Parse", 1, w.getParseTokens().size());
+		assertEquals(1, w.getParseTokens().size(), "One Parse");
 		List<String> tokens = w.getParseTokens().get(0).getTokens();
-		assertEquals("Nine tokens", 9, tokens.size());
-		assertEquals("First token: {", "(", tokens.get(0));
-		assertEquals("Second token: hex", "hex", tokens.get(1));
-		assertEquals("Third token: a", "a", tokens.get(2));
-		assertEquals("Fourth token: chloro", "chloro", tokens.get(3));
-		assertEquals("Fifth token: )", ")", tokens.get(4));
-		assertEquals("Sixth token: end of main substituent", "", tokens.get(5));
-		assertEquals("Seventh token: hex", "hex", tokens.get(6));
-		assertEquals("Eigth token: ane", "ane", tokens.get(7));
-		assertEquals("Ninth token: end of main group", "", tokens.get(8));
+		assertEquals(9, tokens.size(),"Nine tokens");
+		assertEquals("(", tokens.get(0), "First token: (");
+		assertEquals("hex", tokens.get(1), "Second token: hex");
+		assertEquals("a", tokens.get(2), "Third token: a");
+		assertEquals("chloro", tokens.get(3), "Fourth token: chloro");
+		assertEquals(")", tokens.get(4), "Fifth token: )");
+		assertEquals("", tokens.get(5), "Sixth token: end of main substituent");
+		assertEquals("hex", tokens.get(6), "Seventh token: hex");
+		assertEquals("ane", tokens.get(7), "Eigth token: ane");
+		assertEquals("", tokens.get(8), "Ninth token: end of main group");
 	}
 	
 	@Test
 	public void methyl() throws ParsingException{
 		Parse parse = tokenizer.tokenize("methyl", true).getParse();
-		assertEquals("One Word", 1, parse.getWords().size());
+		assertEquals(1, parse.getWords().size(), "One Word");
 		ParseWord w = parse.getWords().get(0);
-		assertEquals("One Parse", 1, w.getParseTokens().size());
+		assertEquals(1, w.getParseTokens().size(), "One Parse");
 		List<String> tokens = w.getParseTokens().get(0).getTokens();
-		assertEquals("Three tokens", 3, tokens.size());
-		assertEquals("First token: meth", "meth", tokens.get(0));
-		assertEquals("Second token: yl", "yl", tokens.get(1));
-		assertEquals("Third token: end of substituent", "", tokens.get(2));
+		assertEquals(3, tokens.size(), "Three tokens");
+		assertEquals("meth", tokens.get(0), "First token: meth");
+		assertEquals("yl", tokens.get(1), "Second token: yl");
+		assertEquals("", tokens.get(2), "Third token: end of substituent");
 	}
 	
 	@Test
 	public void aceticacid() throws ParsingException{
 		Parse parse = tokenizer.tokenize("acetic acid", true).getParse();
-		assertEquals("One Word", 1, parse.getWords().size());
+		assertEquals(1, parse.getWords().size(), "One Word");
 		ParseWord w = parse.getWords().get(0);
-		assertEquals("One Parse", 1, w.getParseTokens().size());
+		assertEquals(1, w.getParseTokens().size(), "One Parse");
 		List<String> tokens = w.getParseTokens().get(0).getTokens();
-		assertEquals("Three tokens", 3, tokens.size());
-		assertEquals("First token: acet", "acet", tokens.get(0));
-		assertEquals("Second token: ic acid", "ic acid", tokens.get(1));
-		assertEquals("Third token: end of main group", "", tokens.get(2));
+		assertEquals(3, tokens.size(), "Three tokens");
+		assertEquals("acet", tokens.get(0), "First token: acet");
+		assertEquals("ic acid", tokens.get(1), "Second token: ic acid");
+		assertEquals("", tokens.get(2), "Third token: end of main group");
 	}
 
 	@Test
@@ -195,38 +195,38 @@ public class TokenizerTest {
 		assertEquals("", result.getUnparsableName());
 		assertEquals("", result.getUnparsedName());
 		Parse parse = result.getParse();
-		assertEquals("Four Words", 4, parse.getWords().size());
+		assertEquals(4, parse.getWords().size(), "Four Words");
 		ParseWord w = parse.getWords().get(0);
-		assertEquals("One Parse", 1, w.getParseTokens().size());
+		assertEquals(1, w.getParseTokens().size(), "One Parse");
 		List<String> tokens = w.getParseTokens().get(0).getTokens();
-		assertEquals("Three tokens", 3, tokens.size());
-		assertEquals("First token: carbon", "carbon", tokens.get(0));
-		assertEquals("Second token: yl", "yl", tokens.get(1));
-		assertEquals("Third token: end of  substituent", "", tokens.get(2));
+		assertEquals(3, tokens.size(), "Three tokens");
+		assertEquals("carbon", tokens.get(0), "First token: carbon");
+		assertEquals("yl", tokens.get(1), "Second token: yl");
+		assertEquals("", tokens.get(2), "Third token: end of  substituent");
 		
 		w = parse.getWords().get(1);
-		assertEquals("One Parse", 1, w.getParseTokens().size());
+		assertEquals(1, w.getParseTokens().size(), "One Parse");
 		tokens = w.getParseTokens().get(0).getTokens();
-		assertEquals("Two tokens", 2, tokens.size());
-		assertEquals("First token: cyanide", "cyanide", tokens.get(0));
-		assertEquals("Second token: end of functionalTerm", "", tokens.get(1));
+		assertEquals(2, tokens.size(), "Two tokens");
+		assertEquals("cyanide", tokens.get(0), "First token: cyanide");
+		assertEquals("", tokens.get(1), "Second token: end of functionalTerm");
 		
 		w = parse.getWords().get(2);
-		assertEquals("One Parse", 1, w.getParseTokens().size());
+		assertEquals(1, w.getParseTokens().size(), "One Parse");
 		tokens = w.getParseTokens().get(0).getTokens();
-		assertEquals("Five tokens", 5, tokens.size());
-		assertEquals("First token: m-", "m-", tokens.get(0));
-		assertEquals("Second token: chloro", "chloro", tokens.get(1));
-		assertEquals("Third token: end of  substituent", "", tokens.get(2));
-		assertEquals("Fourth token: phenyl", "phenyl", tokens.get(3));
-		assertEquals("Fifth token: end of  substituent", "", tokens.get(4));
+		assertEquals(5, tokens.size(), "Five tokens");
+		assertEquals("m-", tokens.get(0), "First token: m-");
+		assertEquals("chloro", tokens.get(1), "Second token: chloro");
+		assertEquals("", tokens.get(2), "Third token: end of  substituent");
+		assertEquals("phenyl", tokens.get(3), "Fourth token: phenyl");
+		assertEquals("", tokens.get(4), "Fifth token: end of  substituent");
 		
 		w = parse.getWords().get(3);
-		assertEquals("One Parse", 1, w.getParseTokens().size());
+		assertEquals(1, w.getParseTokens().size(), "One Parse");
 		tokens = w.getParseTokens().get(0).getTokens();
-		assertEquals("Two tokens", 2, tokens.size());
-		assertEquals("First token: oxime", "oxime", tokens.get(0));
-		assertEquals("Second token: end of functionalTerm", "", tokens.get(1));
+		assertEquals(2, tokens.size(), "Two tokens");
+		assertEquals("oxime", tokens.get(0), "First token: oxime");
+		assertEquals("", tokens.get(1), "Second token: end of functionalTerm");
 	}
 	
 	@Test
@@ -238,38 +238,38 @@ public class TokenizerTest {
 		assertEquals("", result.getUnparsableName());
 		assertEquals("", result.getUnparsedName());
 		Parse parse = result.getParse();
-		assertEquals("Four Words", 4, parse.getWords().size());
+		assertEquals(4, parse.getWords().size(), "Four Words");
 		ParseWord w = parse.getWords().get(0);
-		assertEquals("One Parse", 1, w.getParseTokens().size());
+		assertEquals(1, w.getParseTokens().size(), "One Parse");
 		List<String> tokens = w.getParseTokens().get(0).getTokens();
-		assertEquals("Three tokens", 3, tokens.size());
-		assertEquals("First token: carbon", "carbon", tokens.get(0));
-		assertEquals("Second token: yl", "yl", tokens.get(1));
-		assertEquals("Third token: end of  substituent", "", tokens.get(2));
+		assertEquals(3, tokens.size(), "Three tokens");
+		assertEquals("carbon", tokens.get(0), "First token: carbon");
+		assertEquals("yl", tokens.get(1), "Second token: yl");
+		assertEquals("", tokens.get(2), "Third token: end of  substituent");
 		
 		w = parse.getWords().get(1);
-		assertEquals("One Parse", 1, w.getParseTokens().size());
+		assertEquals(1, w.getParseTokens().size(), "One Parse");
 		tokens = w.getParseTokens().get(0).getTokens();
-		assertEquals("Two tokens", 2, tokens.size());
-		assertEquals("First token: cyanide", "cyanide", tokens.get(0));
-		assertEquals("Second token: end of functionalTerm", "", tokens.get(1));
+		assertEquals(2, tokens.size(), "Two tokens");
+		assertEquals("cyanide", tokens.get(0), "First token: cyanide");
+		assertEquals("", tokens.get(1), "Second token: end of functionalTerm");
 		
 		w = parse.getWords().get(2);
-		assertEquals("One Parse", 1, w.getParseTokens().size());
+		assertEquals(1, w.getParseTokens().size(), "One Parse");
 		tokens = w.getParseTokens().get(0).getTokens();
-		assertEquals("Five tokens", 5, tokens.size());
-		assertEquals("First token: m-", "m-", tokens.get(0));
-		assertEquals("Second token: chloro", "chloro", tokens.get(1));
-		assertEquals("Third token: end of  substituent", "", tokens.get(2));
-		assertEquals("Fourth token: phenyl", "phenyl", tokens.get(3));
-		assertEquals("Fifth token: end of  substituent", "", tokens.get(4));
+		assertEquals(5, tokens.size(), "Five tokens");
+		assertEquals("m-", tokens.get(0), "First token: m-");
+		assertEquals("chloro", tokens.get(1), "Second token: chloro");
+		assertEquals("", tokens.get(2), "Third token: end of  substituent");
+		assertEquals("phenyl", tokens.get(3), "Fourth token: phenyl");
+		assertEquals("", tokens.get(4), "Fifth token: end of  substituent");
 		
 		w = parse.getWords().get(3);
-		assertEquals("One Parse", 1, w.getParseTokens().size());
+		assertEquals(1, w.getParseTokens().size(), "One Parse");
 		tokens = w.getParseTokens().get(0).getTokens();
-		assertEquals("Two tokens", 2, tokens.size());
-		assertEquals("First token: oxime", "oxime", tokens.get(0));
-		assertEquals("Second token: end of functionalTerm", "", tokens.get(1));
+		assertEquals(2, tokens.size(), "Two tokens");
+		assertEquals("oxime", tokens.get(0), "First token: oxime");
+		assertEquals("", tokens.get(1), "Second token: end of functionalTerm");
 	}
 	
 	@Test

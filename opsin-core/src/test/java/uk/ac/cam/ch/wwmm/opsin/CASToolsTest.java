@@ -1,12 +1,13 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.IOException;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 /**
  *
@@ -14,13 +15,13 @@ import org.junit.Test;
 public class CASToolsTest {
 	private static ParseRules parseRules;
 
-	@BeforeClass
+	@BeforeAll
 	public static void setUp() throws IOException{
 		ResourceGetter rg = new ResourceGetter("uk/ac/cam/ch/wwmm/opsin/resources/");
 		parseRules = new ParseRules(new ResourceManager(rg));
 	}
 	
-	@AfterClass
+	@AfterAll
 	public static void cleanUp() {
 		parseRules = null;
 	}
@@ -183,18 +184,24 @@ public class CASToolsTest {
 		assertEquals("benzamide trifluoroacetic acid salt", name);
 	}
 
-	@Test(expected=ParsingException.class)
-	public void notCas1() throws ParsingException{
+	@Test
+	public void notCas1(){		
+		assertThrows(ParsingException.class, () -> {
 		CASTools.uninvertCASName("hexanamine, hexylamine", parseRules);
+		});
 	}
 
-	@Test(expected=ParsingException.class)
-	public void notCas2() throws ParsingException{
+	@Test()
+	public void notCas2() {
+		assertThrows(ParsingException.class, () -> {
 		CASTools.uninvertCASName("cyclopropane-1,2-diyldicarbonyl diisocyanate, cyclopropane-1,2-diylbis(carbonyl)bisisocyanate", parseRules);
+		});
 	}
 	
-	@Test(expected=ParsingException.class)
-	public void notCas3() throws ParsingException{
+	@Test()
+	public void notCas3() {
+		assertThrows(ParsingException.class, () -> {
 		CASTools.uninvertCASName("benzoic acid, ester", parseRules);
+		});
 	}
 }

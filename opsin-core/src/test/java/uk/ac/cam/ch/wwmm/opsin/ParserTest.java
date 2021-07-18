@@ -1,33 +1,39 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
-import static org.junit.Assert.*;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.IOException;
 import java.util.List;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+
 
 public class ParserTest {
 	private static Parser parser;
 	private static NameToStructureConfig config;
 
-	@BeforeClass
+	@BeforeAll
 	public static void setUp() throws IOException{
 		parser = new Parser();
 		config = NameToStructureConfig.getDefaultConfigInstance();
 	}
 	
-	@AfterClass
+	@AfterAll
 	public static void cleanUp(){
 		parser = null;
 		config = null;
 	}
 
-	@Test(expected=ParsingException.class)
+	@Test()
 	public void testParseThrowsWhenNameIsUninterpretable() throws ParsingException {
-		parser.parse(config, "chunky bacon");
+		assertThrows(ParsingException.class, () -> {
+			parser.parse(config, "chunky bacon");
+		});
 	}
 
 	@Test
@@ -44,14 +50,18 @@ public class ParserTest {
 		assertEquals(2, parse.get(0).getChildElements(XmlDeclarations.WORDRULE_EL).size());
 	}
 
-	@Test(expected=ParsingException.class)
-	public void testParseThrowsWhenNameIsSubstituentOnly() throws ParsingException {
-		parser.parse(config, "chloro");
+	@Test()
+	public void testParseThrowsWhenNameIsSubstituentOnly() {
+		assertThrows(ParsingException.class, () -> {
+			parser.parse(config, "chloro");
+		});
 	}
 	
-	@Test(expected=ParsingException.class)
-	public void testNoParseForOneComponentSalt() throws ParsingException {
-		parser.parse(config, "pyridine salt");
+	@Test()
+	public void testNoParseForOneComponentSalt() {
+		assertThrows(ParsingException.class, () -> {
+			parser.parse(config, "pyridine salt");
+		});
 	}
 
 	@Test

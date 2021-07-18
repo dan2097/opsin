@@ -1,17 +1,18 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class HeteroAtomReplacementTest {
 
 	FragmentManager fragManager;
 	Atom a;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		IDManager idManager = new IDManager();
 		fragManager = new FragmentManager(new SMILESFragmentBuilder(idManager), idManager);
@@ -77,10 +78,12 @@ public class HeteroAtomReplacementTest {
 		assertEquals(4, StructureBuildingMethods.calculateSubstitutableHydrogenAtoms(a));
 	}
 	
-    @Test(expected=StructureBuildingException.class)
-	public void replaceChargedWithUnEquallyCharged() throws StructureBuildingException{
-		Atom a = new Atom(0, ChemEl.C, mock(Fragment.class));
-		a.addChargeAndProtons(1, -1);
-		fragManager.replaceAtomWithSmiles(a, "[NH2-]");
+	@Test()
+	public void replaceChargedWithUnEquallyCharged() {
+		assertThrows(StructureBuildingException.class, () -> {
+			Atom a = new Atom(0, ChemEl.C, mock(Fragment.class));
+			a.addChargeAndProtons(1, -1);
+			fragManager.replaceAtomWithSmiles(a, "[NH2-]");
+		});
 	}
 }

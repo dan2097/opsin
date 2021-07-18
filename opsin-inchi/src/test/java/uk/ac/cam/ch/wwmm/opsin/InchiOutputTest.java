@@ -1,22 +1,22 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import uk.ac.cam.ch.wwmm.opsin.OpsinResult.OPSIN_RESULT_STATUS;
 
 public class InchiOutputTest {
 
 	private static NameToInchi n2i;
-	@BeforeClass
+	@BeforeAll
 	public static void setUp() {
 		n2i = new NameToInchi();
 	}
 	
-	@AfterClass
+	@AfterAll
 	public static void cleanUp(){
 		n2i = null;
 	}
