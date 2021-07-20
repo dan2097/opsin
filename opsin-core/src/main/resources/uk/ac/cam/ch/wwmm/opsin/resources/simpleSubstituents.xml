@@ -285,7 +285,7 @@
 		<token value="-[P|5]=N">phosphinimyl</token>
 		<token value="-P=O">phosphoroso</token>
 		<token value="-P" usableAsAJoiner="yes">phosphino</token>
-		<token value="-[P|5]=O" usableAsAJoiner="yes">phosphinyl</token>
+    <!-- phosphinyl, see nonCarboxylicAcids-->
 		<token value="=[P|5]=O" usableAsAJoiner="yes">phosphinylidene|phosphinyliden</token>
 		<token value="=[P|5]=S" usableAsAJoiner="yes">phosphinothioylidene|phosphinothioyliden</token>
 		<token value="=P" usableAsAJoiner="yes">phosphinidene|phosphiniden</token>
@@ -296,7 +296,7 @@
 		<token value="-[As|5]=N">arsinimyl</token>
 		<token value="-[As]=O">arsoroso|arsenoso</token>
 		<token value="-[AsH2]" usableAsAJoiner="yes">arsino</token>
-		<token value="-[As|5]=O" usableAsAJoiner="yes">arsinyl</token>
+    <!-- arsinyl, see nonCarboxylicAcids-->
 		<token value="=[As|5]=O" usableAsAJoiner="yes">arsinylidene|arsinyliden</token>
 		<token value="=[As|5]=S" usableAsAJoiner="yes">arsinothioylidene|arsinothioyliden</token>
 		<token value="=[AsH]" usableAsAJoiner="yes">arsinidene|arsiniden</token>
