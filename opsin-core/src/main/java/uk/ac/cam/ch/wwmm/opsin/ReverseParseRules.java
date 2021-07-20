@@ -69,7 +69,7 @@ class ReverseParseRules {
 		AnnotatorState longestAnnotation = initialState;//this is the longest annotation. It does not necessarily end in an accept state
 		int stateSymbolsSize = stateSymbols.length;
 		while (!asStack.isEmpty()) {
-			AnnotatorState as = asStack.removeFirst();
+			AnnotatorState as = asStack.removeLast();//depth-first avoids pathological memory consumption if parsing ambiguity is encountered
 			int posInName = as.getPosInName();
 			if (chemAutomaton.isAccept(as.getState())){
 				if (posInName <= posInNameOfLastSuccessfulAnnotations){//this annotation is worthy of consideration
