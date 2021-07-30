@@ -980,7 +980,7 @@ public class StereochemistryTest {
 	public void testAmbiguousStereoTerm() {
 		OpsinResult result = n2s.parseChemicalName("trans-N-[2-Chloro-5-(2-methoxyethyl)benzyl]-N-cyclopropyl-4-hydroxy-4-(1-methyl-2-oxo-1,2-dihydro-4-pyridinyl)-3-piperidinecarboxamide");
 		assertEquals(OPSIN_RESULT_STATUS.WARNING, result.getStatus());
-		assertEquals(1, result.getWarnings());
+		assertEquals(1, result.getWarnings().size());
 		assertEquals(OpsinWarningType.APPEARS_AMBIGUOUS, result.getWarnings().get(0).getType());
 	}
 
