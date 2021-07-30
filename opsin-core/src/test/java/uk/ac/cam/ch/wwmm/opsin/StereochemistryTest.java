@@ -25,6 +25,8 @@ import java.util.AbstractMap;
 import java.util.Iterator;
 
 import uk.ac.cam.ch.wwmm.opsin.BondStereo.BondStereoValue;
+import uk.ac.cam.ch.wwmm.opsin.OpsinResult.OPSIN_RESULT_STATUS;
+import uk.ac.cam.ch.wwmm.opsin.OpsinWarning.OpsinWarningType;
 import uk.ac.cam.ch.wwmm.opsin.StereoAnalyser.StereoBond;
 import uk.ac.cam.ch.wwmm.opsin.StereoAnalyser.StereoCentre;
 
@@ -974,6 +976,14 @@ public class StereochemistryTest {
 		}
 	}
 	
+	@Test
+	public void testAmbiguousStereoTerm() {
+		OpsinResult result = n2s.parseChemicalName("trans-N-[2-Chloro-5-(2-methoxyethyl)benzyl]-N-cyclopropyl-4-hydroxy-4-(1-methyl-2-oxo-1,2-dihydro-4-pyridinyl)-3-piperidinecarboxamide");
+		assertEquals(OPSIN_RESULT_STATUS.WARNING, result.getStatus());
+		assertEquals(1, result.getWarnings());
+		assertEquals(OpsinWarningType.APPEARS_AMBIGUOUS, result.getWarnings().get(0).getType());
+	}
+
 	private String atomRefsToIdStr(Atom[] atomRefs4) {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < atomRefs4.length; i++) {

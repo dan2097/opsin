@@ -590,43 +590,55 @@ class StereochemistryHandler {
 
 	private boolean attemptAssignmentOfCisTransRingStereoToFragment(Fragment fragment, Element stereoChemistryEl) throws StructureBuildingException {
 		List<Atom> atomList = fragment.getAtomList();
-		List<Atom> stereoAtoms = new ArrayList<>();
+		List<Atom> chosenStereoAtoms = new ArrayList<>();
+		List<Atom> stereoAtomsWithTwoNonHydrogen = new ArrayList<>();
 		for (Atom potentialStereoAtom : atomList) {
 			if (potentialStereoAtom.getAtomIsInACycle()){
 				List<Atom> neighbours = potentialStereoAtom.getAtomNeighbours();
-				if (neighbours.size()==4){
-					int hydrogenCount =0;
-					int acylicOrNotInFrag =0;
+				if (neighbours.size() == 4) {
+					int hydrogenCount = 0;
+					int acylicOrNotInFrag = 0;
 					for (Atom neighbour : neighbours) {
-						if (neighbour.getElement() == ChemEl.H){
+						if (neighbour.getElement() == ChemEl.H) {
 							hydrogenCount++;
 						}
-						if (!neighbour.getAtomIsInACycle() || !atomList.contains(neighbour)){
+						if (!neighbour.getAtomIsInACycle() || !atomList.contains(neighbour)) {
 							acylicOrNotInFrag++;
 						}
 					}
-					if (hydrogenCount==1 || (hydrogenCount==0 && acylicOrNotInFrag ==1) ){
-						stereoAtoms.add(potentialStereoAtom);
+					if (hydrogenCount == 1 || (hydrogenCount == 0 && acylicOrNotInFrag == 1)) {
+						chosenStereoAtoms.add(potentialStereoAtom);
+					}
+					else if (hydrogenCount == 0 && acylicOrNotInFrag == 2 && notExplicitlyDefinedStereoCentreMap.containsKey(potentialStereoAtom)) {
+						stereoAtomsWithTwoNonHydrogen.add(potentialStereoAtom);
 					}
 				}
 			}
 		}
-		if (stereoAtoms.size()==2){
-			Atom a1 = stereoAtoms.get(0);
-			Atom a2 = stereoAtoms.get(1);
+		boolean chooseAtomByCip = false;
+		if (chosenStereoAtoms.size() < 2 && chosenStereoAtoms.size() + stereoAtomsWithTwoNonHydrogen.size() == 2) {
+			chosenStereoAtoms.addAll(stereoAtomsWithTwoNonHydrogen);
+			chooseAtomByCip = true;
+		}
+		if (chosenStereoAtoms.size() == 2) {
+			Atom a1 = chosenStereoAtoms.get(0);
+			Atom a2 = chosenStereoAtoms.get(1);
 
-			if (a1.getAtomParity()!=null && a2.getAtomParity()!=null){//one can have defined stereochemistry but not both
+			if (a1.getAtomParity() != null && a2.getAtomParity() != null){//one can have defined stereochemistry but not both
 				return false;
 			}
 
 			Set<Bond> peripheryBonds = determinePeripheryBonds(fragment);
 			List<List<Atom>> paths = CycleDetector.getPathBetweenAtomsUsingBonds(a1, a2, peripheryBonds);
-			if (paths.size()!=2){
+			if (paths.size() != 2) {
 				return false;
 			}
-			applyStereoChemistryToCisTransOnRing(a1, a2, paths, atomList, stereoChemistryEl.getAttributeValue(VALUE_ATR));
-			notExplicitlyDefinedStereoCentreMap.remove(stereoAtoms.get(0));
-			notExplicitlyDefinedStereoCentreMap.remove(stereoAtoms.get(1));
+			applyStereoChemistryToCisTransOnRing(a1, a2, paths, atomList, stereoChemistryEl.getAttributeValue(VALUE_ATR), chooseAtomByCip);
+			notExplicitlyDefinedStereoCentreMap.remove(chosenStereoAtoms.get(0));
+			notExplicitlyDefinedStereoCentreMap.remove(chosenStereoAtoms.get(1));
+			if (chooseAtomByCip) {
+				state.addIsAmbiguous("Ring cis/trans applied to stereocenter where no hydrogen was present. Cahn-Ingold-Prelog rules used to determine which substituents are cis/trans, but other conventions may be in use");
+			}
 			return true;
 		}
 		return false;
@@ -647,7 +659,7 @@ class StereochemistryHandler {
 		return bondsToConsider;
 	}
 
-	private void applyStereoChemistryToCisTransOnRing(Atom a1, Atom a2, List<List<Atom>> paths, List<Atom> fragmentAtoms, String cisOrTrans) throws StructureBuildingException {
+	private void applyStereoChemistryToCisTransOnRing(Atom a1, Atom a2, List<List<Atom>> paths, List<Atom> fragmentAtoms, String cisOrTrans, boolean chooseAtomByCip) throws StructureBuildingException {
 		List<Atom> a1Neighbours = a1.getAtomNeighbours();
 		Atom[] atomRefs4a1 = new Atom[4];
 		Atom firstPathAtom = paths.get(0).size()>0 ? paths.get(0).get(0) : a2;
@@ -659,7 +671,13 @@ class StereochemistryHandler {
 		if (firstPathAtom.equals(secondPathAtom)){
 			throw new StructureBuildingException("OPSIN Bug: cannot assign cis/trans on ring stereochemistry");
 		}
-		atomRefs4a1[1] = getHydrogenOrAcyclicOrOutsideOfFragment(a1Neighbours, fragmentAtoms);
+		if (chooseAtomByCip) {
+			atomRefs4a1[1] = getLowestCip(a1, a1Neighbours);
+		}
+		else {
+			atomRefs4a1[1] = getHydrogenOrAcyclicOrOutsideOfFragment(a1Neighbours, fragmentAtoms);
+		}
+
 		if (atomRefs4a1[1] ==null){
 			throw new StructureBuildingException("OPSIN Bug: cannot assign cis/trans on ring stereochemistry");
 		}
@@ -678,7 +696,13 @@ class StereochemistryHandler {
 		if (firstPathAtom.equals(secondPathAtom)){
 			throw new StructureBuildingException("OPSIN Bug: cannot assign cis/trans on ring stereochemistry");
 		}
-		atomRefs4a2[1] = getHydrogenOrAcyclicOrOutsideOfFragment(a2Neighbours, fragmentAtoms);
+		if (chooseAtomByCip) {
+			atomRefs4a2[1] = getLowestCip(a2, a2Neighbours);
+		}
+		else {
+			atomRefs4a2[1] = getHydrogenOrAcyclicOrOutsideOfFragment(a2Neighbours, fragmentAtoms);
+		}
+
 		if (atomRefs4a2[1] ==null){
 			throw new StructureBuildingException("OPSIN Bug: cannot assign cis/trans on ring stereochemistry");
 		}
@@ -724,6 +748,21 @@ class StereochemistryHandler {
 		}
 	}
 	
+	private Atom getLowestCip(Atom a, List<Atom> atomsToConsider) {
+		try {
+			List<Atom> neigh = new CipSequenceRules(a).getNeighbouringAtomsInCipOrder();
+			for (Atom atom : neigh) {
+				if (!atomsToConsider.contains(atom)) {
+					continue;
+				}
+				return atom;
+			}
+		} catch (CipOrderingException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
 	private Atom getHydrogenOrAcyclicOrOutsideOfFragment(List<Atom> atoms, List<Atom> fragmentAtoms) {
 		for (Atom atom : atoms) {
 			if (atom.getElement() == ChemEl.H){
@@ -734,7 +773,7 @@ class StereochemistryHandler {
 			if (!atom.getAtomIsInACycle() || !fragmentAtoms.contains(atom)){
 				return atom;
 			}
-		}
+		}		
 		return null;
 	}
 
