@@ -262,60 +262,57 @@ public class NameToStructure {
 
 		NameToStructureConfig n2sconfig = generateOpsinConfigObjectFromCmd(cmd);
 		
-		InputStream input;
-		OutputStream output;
+		InputStream input = System.in;
+		OutputStream output = System.out;
 		String[] unparsedArgs = cmd.getArgs();
-		if (unparsedArgs.length == 0){
-			input = System.in;
-			output = System.out;
+		if (unparsedArgs.length == 0) {
 			System.err.println("Run the jar using the -h flag for help. Enter a chemical name to begin:");
 		}
-		else if (unparsedArgs.length == 1){
+		else if (unparsedArgs.length == 1) {
 			input = new FileInputStream(new File(unparsedArgs[0]));
-			output = System.out;
 		}
-		else if (unparsedArgs.length == 2){
+		else if (unparsedArgs.length == 2) {
 			input = new FileInputStream(new File(unparsedArgs[0]));
 			output = new FileOutputStream(new File(unparsedArgs[1]));
 		}
 		else {
-			input = null;
-			output = null;
 			displayUsage(options);
 		}
-
-		String outputType = cmd.getOptionValue("o", "smi");
-		boolean outputName = cmd.hasOption("n");
-		if (outputType.equalsIgnoreCase("cml")) {
-			interactiveCmlOutput(input, output, n2sconfig);
+		try {
+			String outputType = cmd.getOptionValue("o", "smi");
+			boolean outputName = cmd.hasOption("n");
+			if (outputType.equalsIgnoreCase("cml")) {
+				interactiveCmlOutput(input, output, n2sconfig);
+			}
+			else if (outputType.equalsIgnoreCase("smi") || outputType.equalsIgnoreCase("smiles")) {
+				interactiveSmilesOutput(input, output, n2sconfig, false, outputName);
+			}
+			else if (outputType.equalsIgnoreCase("inchi")) {
+				interactiveInchiOutput(input, output, n2sconfig, InchiType.inchiWithFixedH, outputName);
+			}
+			else if (outputType.equalsIgnoreCase("stdinchi")) {
+				interactiveInchiOutput(input, output, n2sconfig, InchiType.stdInchi, outputName);
+			}
+			else if (outputType.equalsIgnoreCase("stdinchikey")) {
+				interactiveInchiOutput(input, output, n2sconfig, InchiType.stdInchiKey, outputName);
+			}
+			else if (outputType.equalsIgnoreCase("extendedsmi") || outputType.equalsIgnoreCase("extendedsmiles") || 
+					outputType.equalsIgnoreCase("cxsmi") || outputType.equalsIgnoreCase("cxsmiles")) {
+				interactiveSmilesOutput(input, output, n2sconfig, true, outputName);
+			}
+			else{
+				System.err.println("Unrecognised output format: " + outputType);
+				System.err.println("Expected output types are \"cml\", \"smi\", \"inchi\", \"stdinchi\" and \"stdinchikey\"");
+				System.exit(1);
+			}
 		}
-		else if (outputType.equalsIgnoreCase("smi") || outputType.equalsIgnoreCase("smiles")) {
-			interactiveSmilesOutput(input, output, n2sconfig, false, outputName);
-		}
-		else if (outputType.equalsIgnoreCase("inchi")) {
-			interactiveInchiOutput(input, output, n2sconfig, InchiType.inchiWithFixedH, outputName);
-		}
-		else if (outputType.equalsIgnoreCase("stdinchi")) {
-			interactiveInchiOutput(input, output, n2sconfig, InchiType.stdInchi, outputName);
-		}
-		else if (outputType.equalsIgnoreCase("stdinchikey")) {
-			interactiveInchiOutput(input, output, n2sconfig, InchiType.stdInchiKey, outputName);
-		}
-		else if (outputType.equalsIgnoreCase("extendedsmi") || outputType.equalsIgnoreCase("extendedsmiles") || 
-				outputType.equalsIgnoreCase("cxsmi") || outputType.equalsIgnoreCase("cxsmiles")) {
-			interactiveSmilesOutput(input, output, n2sconfig, true, outputName);
-		}
-		else{
-			System.err.println("Unrecognised output format: " + outputType);
-			System.err.println("Expected output types are \"cml\", \"smi\", \"inchi\", \"stdinchi\" and \"stdinchikey\"");
-			System.exit(1);
-		}
-		if (unparsedArgs.length == 1) {
-			input.close();
-		}
-		else if (unparsedArgs.length == 2) {
-			input.close();
-			output.close();
+		finally {
+			if (output != System.out) {
+				output.close();
+			}
+			if (input != System.in) {
+				input.close();
+			}
 		}
 	}
 
