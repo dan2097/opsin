@@ -347,7 +347,7 @@ class FunctionalReplacement {
 							infixAssignmentAmbiguous=true;
 						}
 					}
-					if (!acceptSingleBondedOxygen && (acceptDoubleBondedOxygen | nitrido)){
+					if (!acceptSingleBondedOxygen && (acceptDoubleBondedOxygen || nitrido)){
 						if (doubleBondedOxygen.size()==0){
 							throw new StructureBuildingException("Cannot find double bonded oxygen for infix with SMILES: "+ replacementSMILES+ " to modify!");
 						}
