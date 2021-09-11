@@ -10,6 +10,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import uk.ac.cam.ch.wwmm.opsin.BondStereo.BondStereoValue;
 import uk.ac.cam.ch.wwmm.opsin.OpsinWarning.OpsinWarningType;
 import uk.ac.cam.ch.wwmm.opsin.StereoAnalyser.StereoBond;
@@ -22,6 +25,8 @@ import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
  *
  */
 class StereochemistryHandler {
+	
+	private static final Logger LOG = LogManager.getLogger(StereochemistryHandler.class);
 	
 	private final BuildState state;
 	private final Map<Atom, StereoCentre> atomStereoCentreMap;
@@ -758,7 +763,7 @@ class StereochemistryHandler {
 				return atom;
 			}
 		} catch (CipOrderingException e) {
-			e.printStackTrace();
+			LOG.debug(e.getMessage(), e);
 		}
 		return null;
 	}
