@@ -2813,6 +2813,18 @@ class ComponentGenerator {
 				}
 			}
 		}
+		else if (groupValue.equals("pyruv")) {
+			//cf. methylselenopyruvate
+			Element precedingSubstituent = OpsinTools.getPreviousSibling(group.getParent());
+			if (precedingSubstituent != null && OpsinTools.getPreviousSibling(precedingSubstituent) != null) {
+				Element subGroup = precedingSubstituent.getFirstChildElement(GROUP_EL);
+				if (subGroup != null && 
+						FunctionalReplacement.matchChalcogenReplacement.matcher(subGroup.getValue()).matches() &&
+						OpsinTools.getNextSibling(subGroup) == null) {
+					OpsinTools.insertAfter(subGroup, new TokenEl(HYPHEN_EL));//discourage the use of the chalcogen term as functional replacement 
+				}
+			}
+		}
 		else if (ENDINIC_SUBTYPE_VAL.equals(groupSubType) && AMINOACID_TYPE_VAL.equals(groupType)) {
 			//aspartyl and glutamyl typically mean alpha-aspartyl/alpha-glutamyl
 			String[] suffixAppliesTo = group.getAttributeValue(SUFFIXAPPLIESTO_ATR).split(",");
