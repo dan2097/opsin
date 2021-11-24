@@ -457,6 +457,16 @@
     <!--Note that the monoanion is used when this is substituted-->
 		<token value="[C-]#[C-]">acetylide|acetylid</token>
 
+    <!--group 1/2 nitrides, nitrides are hard to handle systematically as the stoichiometry/exact structure can be ambiguous from the name-->
+		<token value="[Li+].[Li+].[Li+].[N-3]">lithium nitride|lithium nitrid</token>
+		<token value="[Na+].[Na+].[Na+].[N-3]">sodium nitride|sodium nitrid</token>
+		<token value="[K+].[K+].[K+].[N-3]">potassium nitride|potassium nitrid</token>
+
+		<token value="[Be+2].[Be+2].[Be+2].[N-3].[N-3]">beryllium nitride|beryllium nitrid</token>
+		<token value="[Ca+2].[Ca+2].[Ca+2].[N-3].[N-3]">calcium nitride|calcium nitrid</token>
+		<token value="[Mg+2].[Mg+2].[Mg+2].[N-3].[N-3]">magnesium nitride|magnesium nitrid</token>
+		<token value="[Sr+2].[Sr+2].[Sr+2].[N-3].[N-3]">strontium nitride|strontium nitrid</token>
+
 		<!--Most inorganic amides don't actually involve the amide anion-->
 		<token value="[NH2-].[Li+]">lithium amide</token>
 		<token value="[NH2-].[Na+]">sodium amide|natrium amide</token>
