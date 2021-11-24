@@ -4166,8 +4166,8 @@ class ComponentProcessor {
 		}
 		
 		Fragment frag = substituentGroup.getFrag();
-		String theSubstituentSubType = substituentGroup.getAttributeValue(SUBTYPE_ATR);
-		String theSubstituentType = substituentGroup.getAttributeValue(TYPE_ATR);
+		String substituentSubType = substituentGroup.getAttributeValue(SUBTYPE_ATR);
+		String substituentType = substituentGroup.getAttributeValue(TYPE_ATR);
 
 		//prevents alkyl chains being bracketed together e.g. ethylmethylamine
 		//...unless it's something like 2-methylethyl where the first appears to be locanted onto the second
@@ -4176,7 +4176,7 @@ class ComponentProcessor {
 		if (lastGroupOfElementBeforeSub == null) {
 			throw new ComponentGenerationException("No group where group was expected");
 		}
-		if (theSubstituentType.equals(CHAIN_TYPE_VAL) && theSubstituentSubType.equals(ALKANESTEM_SUBTYPE_VAL) &&
+		if (substituentType.equals(CHAIN_TYPE_VAL) && substituentSubType.equals(ALKANESTEM_SUBTYPE_VAL) &&
 				lastGroupOfElementBeforeSub.getAttributeValue(TYPE_ATR).equals(CHAIN_TYPE_VAL) && lastGroupOfElementBeforeSub.getAttributeValue(SUBTYPE_ATR).equals(ALKANESTEM_SUBTYPE_VAL)) {
 			boolean placeInImplicitBracket = false;
 
