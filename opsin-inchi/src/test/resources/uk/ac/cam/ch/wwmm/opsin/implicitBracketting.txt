@@ -25,3 +25,6 @@ N-methylmethyleneamine	InChI=1S/C2H5N/c1-3-2/h1H2,2H3
 Dimethylaminopropylamine	InChI=1S/C5H14N2/c1-7(2)5-3-4-6/h3-6H2,1-2H3
 #Counter example
 Diisopropylazodicarboxylate	InChI=1S/C8H14N2O4/c1-5(2)13-7(11)9-10-8(12)14-6(3)4/h5-6H,1-4H3
+tert-butyl(R)-3-vinylpyrrolidine-1-carboxylate	InChI=1S/C11H19NO2/c1-5-9-6-7-12(8-9)10(13)14-11(2,3)4/h5,9H,1,6-8H2,2-4H3/t9-/m0/s1
+4-(2-methoxy-acetyl)cis-3,5-dimethyl-piperazine	InChI=1S/C9H18N2O2/c1-7-4-10-5-8(2)11(7)9(12)6-13-3/h7-8,10H,4-6H2,1-3H3/t7-,8+
+methyl(R)-amino-(4-fluorophenyl)-acetate	InChI=1S/C9H10FNO2/c1-13-9(12)8(11)6-2-4-7(10)5-3-6/h2-5,8H,11H2,1H3/t8-/m1/s1

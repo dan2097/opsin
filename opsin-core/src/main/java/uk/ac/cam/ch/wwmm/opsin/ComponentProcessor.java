@@ -4117,7 +4117,7 @@ class ComponentProcessor {
 	 */
 	private void implicitlyBracketToPreviousSubstituentIfAppropriate(Element substituent, List<Element> brackets) throws ComponentGenerationException, StructureBuildingException {
 		String firstElInSubName = substituent.getChild(0).getName();
-		if (firstElInSubName.equals(LOCANT_EL) || firstElInSubName.equals(MULTIPLIER_EL)){
+		if (firstElInSubName.equals(LOCANT_EL) || firstElInSubName.equals(MULTIPLIER_EL) || firstElInSubName.equals(STEREOCHEMISTRY_EL)){
 			return;
 		}
 
@@ -4135,7 +4135,7 @@ class ComponentProcessor {
 				!elementBeforeSubstituent.getName().equals(BRACKET_EL)) {
 			return;
 		}
-		
+
 		// groups like carbonyl/sulfonyl should typically be implicitly bracketed e.g. tert-butoxy-carbonyl, unless they are part of multiplicative nomenclature
 		boolean sulfonylLike = matchGroupsThatAreAlsoInlineSuffixes.matcher(substituentGroup.getValue()).matches();
 		
