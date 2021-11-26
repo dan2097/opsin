@@ -4164,58 +4164,19 @@ class ComponentProcessor {
 		if (!sulfonylLike && elementDirectlyBeforeSubstituent.getName().equals(HYPHEN_EL)) {
 			return;
 		}
-		
-		Fragment frag = substituentGroup.getFrag();
-		String substituentSubType = substituentGroup.getAttributeValue(SUBTYPE_ATR);
-		String substituentType = substituentGroup.getAttributeValue(TYPE_ATR);
 
-		//prevents alkyl chains being bracketed together e.g. ethylmethylamine
-		//...unless it's something like 2-methylethyl where the first appears to be locanted onto the second
+
 		List<Element> groupElements = OpsinTools.getDescendantElementsWithTagName(elementBeforeSubstituent, GROUP_EL);//one for a substituent, possibly more for a bracket
 		Element lastGroupOfElementBeforeSub = groupElements.get(groupElements.size() - 1);
 		if (lastGroupOfElementBeforeSub == null) {
 			throw new ComponentGenerationException("No group where group was expected");
 		}
-		if (substituentType.equals(CHAIN_TYPE_VAL) && substituentSubType.equals(ALKANESTEM_SUBTYPE_VAL) &&
-				lastGroupOfElementBeforeSub.getAttributeValue(TYPE_ATR).equals(CHAIN_TYPE_VAL) && lastGroupOfElementBeforeSub.getAttributeValue(SUBTYPE_ATR).equals(ALKANESTEM_SUBTYPE_VAL)) {
-			boolean placeInImplicitBracket = false;
-
-			Element suffixAfterGroup = OpsinTools.getNextSibling(lastGroupOfElementBeforeSub, SUFFIX_EL);
-			//if the alkane ends in oxy, sulfinyl, sulfonyl etc. it's not a pure alkane
-			//the outatom check rules out things like "oyl" which don't extend the chain
-			if (suffixAfterGroup !=null && suffixAfterGroup.getFrag() != null && suffixAfterGroup.getFrag().getOutAtomCount() > 0) {
-				placeInImplicitBracket = true;
-			}
-			//look for locants and check whether they appear to be referring to the other chain
-			if (!placeInImplicitBracket) {
-				List<Element> childrenOfElementBeforeSubstituent = elementBeforeSubstituent.getChildElements();
-				Boolean foundLocantNotReferringToChain = null;
-				for (Element childOfElBeforeSub : childrenOfElementBeforeSubstituent) {
-					String currentElementName = childOfElBeforeSub.getName();
-					if (currentElementName.equals(LOCANT_EL)){
-						String locantText = childOfElBeforeSub.getValue();
-						if(!frag.hasLocant(locantText)){
-							foundLocantNotReferringToChain = true;
-							break;
-						}
-						else{
-							foundLocantNotReferringToChain = false;
-						}
-					}
-					else if (currentElementName.equals(STEREOCHEMISTRY_EL)){
-					}
-					else{
-						break;
-					}
-				}
-				if (foundLocantNotReferringToChain !=null && !foundLocantNotReferringToChain){//a locant was found and it appeared to refer to the other chain
-					placeInImplicitBracket = true;
-				}
-			}
-			if (!placeInImplicitBracket){
-				return;
-			}
+		//prevents alkyl chains being bracketed together e.g. ethylmethylamine
+		//...unless it's something like 2-methylethyl where the first appears to be locanted onto the second
+		if (substituentsAreEndToEndAlkyls(substituentGroup, lastGroupOfElementBeforeSub, elementBeforeSubstituent)) {
+			return;
 		}
+		Fragment frag = substituentGroup.getFrag();
 
 		//prevent bracketing to multi radicals unless through substitution they are likely to cease being multiradicals
 		if (lastGroupOfElementBeforeSub.getAttribute(ISAMULTIRADICAL_ATR) != null && lastGroupOfElementBeforeSub.getAttribute(ACCEPTSADDITIVEBONDS_ATR) == null && lastGroupOfElementBeforeSub.getAttribute(IMINOLIKE_ATR) == null) {
@@ -4399,6 +4360,50 @@ class ComponentProcessor {
 		}
 		parent.insertChild(bracket, startIndex);
 		brackets.add(bracket);
+	}
+
+	private boolean substituentsAreEndToEndAlkyls(Element group, Element precedingGroup, Element precedingGroupSubstituent) {
+		if (isPotentialAlkyl(group) && isPotentialAlkyl(precedingGroup)) {
+			Element suffixAfterGroup = OpsinTools.getNextSibling(precedingGroup, SUFFIX_EL);
+			//if the alkane ends in oxy, sulfinyl, sulfonyl etc. it's not a pure alkane
+			//the outatom check rules out things like "oyl" which don't extend the chain
+			if (suffixAfterGroup !=null && suffixAfterGroup.getFrag() != null && suffixAfterGroup.getFrag().getOutAtomCount() > 0) {
+				return false;
+			}
+
+			//look for locants and check whether they appear to be referring to the other chain
+			Fragment frag = group.getFrag();
+			boolean foundLocantInGroup = false;
+			boolean foundLocantNotInGroup = false;
+
+			for (Element childOfElBeforeSub : precedingGroupSubstituent.getChildElements()) {
+				String elName = childOfElBeforeSub.getName();
+				if (elName.equals(LOCANT_EL)){
+					String locantText = childOfElBeforeSub.getValue();
+					if(frag.hasLocant(locantText)){
+						foundLocantInGroup = true;
+					}
+					else{
+						foundLocantNotInGroup = true;
+						break;
+					}
+				}
+				else if (!elName.equals(STEREOCHEMISTRY_EL)){
+					break;
+				}
+			}
+			if (foundLocantInGroup && !foundLocantNotInGroup) {//a locant was found and it appeared to refer to the other chain
+				return false;//e.g. 2-methylethyl
+			}
+			return true;
+		}
+		return false;
+	}
+
+	private boolean isPotentialAlkyl(Element group) {
+		String type = group.getAttributeValue(TYPE_ATR);
+		return (type.equals(CHAIN_TYPE_VAL) && group.getAttributeValue(SUBTYPE_ATR).equals(ALKANESTEM_SUBTYPE_VAL) 
+				|| type.equals(ACIDSTEM_TYPE_VAL));		
 	}
 
 	private boolean implicitBracketWouldPreventAdditiveBonding(Element elementBeforeSubstituent, Element elementAftersubstituent) {
