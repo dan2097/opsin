@@ -4363,47 +4363,73 @@ class ComponentProcessor {
 	}
 
 	private boolean substituentsAreEndToEndAlkyls(Element group, Element precedingGroup, Element precedingGroupSubstituent) {
-		if (isPotentialAlkyl(group) && isPotentialAlkyl(precedingGroup)) {
-			Element suffixAfterGroup = OpsinTools.getNextSibling(precedingGroup, SUFFIX_EL);
-			//if the alkane ends in oxy, sulfinyl, sulfonyl etc. it's not a pure alkane
-			//the outatom check rules out things like "oyl" which don't extend the chain
-			if (suffixAfterGroup !=null && suffixAfterGroup.getFrag() != null && suffixAfterGroup.getFrag().getOutAtomCount() > 0) {
+		if (!isPotentialAlkyl(group) || !isPotentialAlkyl(precedingGroup)) {
+			return false;
+		}
+		Element suffixAfterGroup = OpsinTools.getNextSibling(precedingGroup, SUFFIX_EL);
+		//if the alkane ends in oxy, sulfinyl, sulfonyl etc. it's not a pure alkane
+		//the outatom check rules out things like "oyl" which don't extend the chain
+		if (suffixAfterGroup !=null && suffixAfterGroup.getFrag() != null && suffixAfterGroup.getFrag().getOutAtomCount() > 0) {
+			return false;
+		}
+
+		Element locant = null;
+		Element multiplier = null;
+		for (Element childOfElBeforeSub : precedingGroupSubstituent.getChildElements()) {
+			String elName = childOfElBeforeSub.getName();
+			if (elName.equals(LOCANT_EL)) {
+				locant = childOfElBeforeSub;
+				Element next = OpsinTools.getNextSibling(childOfElBeforeSub);
+				if (next != null && next.getName().equals(MULTIPLIER_EL)) {
+					multiplier = next;
+				}
+				break;
+			}
+			else if (!elName.equals(STEREOCHEMISTRY_EL)){
+				break;
+			}
+		}
+		if (locant != null) {
+			//It's very rare to have a locanted substituent followed by an unlocanted substituent
+			//Hence the more typical interpretation is that either:
+			//The first substituent connects to the latter e.g. 1,1-dimethylethyl
+			//The two substituents really should be joined end to end e.g. formylmethyl
+			//
+			//Both these scenarios are handled by returning that this isn't a end to end alkyl link and hence a bracket can be added
+
+			String[] locantVals = locant.getValue().split(",");
+			if (!fragHasLocants(group.getFrag(), locantVals) && 
+					(multiplier == null || Integer.parseInt(multiplier.getAttributeValue(VALUE_ATR)) == locantVals.length)
+					&& isSimpleAlkyl(group) && isSimpleAlkyl(precedingGroup)) {
+				//special case
+				//e.g. N,N-diethylmethylphosphonamidate (methyl is unlocanted)
+				return true;
+			}
+			return false;
+		}
+		return true;
+	}
+
+	private boolean fragHasLocants(Fragment frag, String[] locantVals) {
+		for (String locantVal : locantVals) {
+			if (!frag.hasLocant(locantVal)) {
 				return false;
 			}
-
-			//look for locants and check whether they appear to be referring to the other chain
-			Fragment frag = group.getFrag();
-			boolean foundLocantInGroup = false;
-			boolean foundLocantNotInGroup = false;
-
-			for (Element childOfElBeforeSub : precedingGroupSubstituent.getChildElements()) {
-				String elName = childOfElBeforeSub.getName();
-				if (elName.equals(LOCANT_EL)){
-					String locantText = childOfElBeforeSub.getValue();
-					if(frag.hasLocant(locantText)){
-						foundLocantInGroup = true;
-					}
-					else{
-						foundLocantNotInGroup = true;
-						break;
-					}
-				}
-				else if (!elName.equals(STEREOCHEMISTRY_EL)){
-					break;
-				}
-			}
-			if (foundLocantInGroup && !foundLocantNotInGroup) {//a locant was found and it appeared to refer to the other chain
-				return false;//e.g. 2-methylethyl
-			}
-			return true;
 		}
-		return false;
+		return true;
 	}
 
 	private boolean isPotentialAlkyl(Element group) {
 		String type = group.getAttributeValue(TYPE_ATR);
 		return (type.equals(CHAIN_TYPE_VAL) && group.getAttributeValue(SUBTYPE_ATR).equals(ALKANESTEM_SUBTYPE_VAL) 
 				|| type.equals(ACIDSTEM_TYPE_VAL));		
+	}
+	
+	private boolean isSimpleAlkyl(Element group) {
+		Element suffix= OpsinTools.getNextSibling(group, SUFFIX_EL);
+		String type = group.getAttributeValue(TYPE_ATR);
+		return type.equals(CHAIN_TYPE_VAL) && group.getAttributeValue(SUBTYPE_ATR).equals(ALKANESTEM_SUBTYPE_VAL) 
+				&& suffix != null && suffix.getValue().equals("yl") ;		
 	}
 
 	private boolean implicitBracketWouldPreventAdditiveBonding(Element elementBeforeSubstituent, Element elementAftersubstituent) {
