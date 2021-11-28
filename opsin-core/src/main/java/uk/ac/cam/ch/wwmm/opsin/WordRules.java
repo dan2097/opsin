@@ -52,6 +52,9 @@ class WordRules {
 		/** Only applicable for functionalTerms. The string value of the functionalTerm's type attribute*/
 		private final String functionalGroupType;
 		
+		/** Only applicable for functionalTerms. The string value of the functionalTerm's subType attribute*/
+		private final String functionalGroupSubType;
+		
 		/** The value of the type attribute of the last group element in the word e.g. maybe aminoAcid*/
 		private final String endsWithGroupType;
 		
@@ -68,41 +71,49 @@ class WordRules {
 			EndsWithGroup endsWithGroup = null;
 			Pattern endsWithPattern = null;
 			String functionalGroupType = null;
+			String functionalGroupSubType = null;
 			String endsWithGroupType = null;
 			String endsWithGroupSubType = null;
 			for (int i = 0, l = reader.getAttributeCount(); i < l; i++) {
-				String atrName = reader.getAttributeLocalName(i);
 				String atrValue = reader.getAttributeValue(i);
-				if (atrName.equals("type")){
+				switch (reader.getAttributeLocalName(i)) {
+				case "type":
 					type = WordType.valueOf(atrValue);
-				}
-				else if (atrName.equals("value")){
+					break;
+				case "value":
 					value = atrValue;
-				}
-				else if (atrName.equals("functionalGroupType")){
+					break;
+				case "functionalGroupType":
 					functionalGroupType = atrValue;
-				}
-				else if (atrName.equals("endsWith")){
+					break;
+				case "functionalGroupSubType":
+					functionalGroupSubType = atrValue;
+					break;
+				case "endsWith":
 					endsWithGroup = EndsWithGroup.valueOf(atrValue);
-				}
-				else if (atrName.equals("endsWithRegex")){
+					break;
+				case "endsWithRegex":
 					endsWithPattern = Pattern.compile(atrValue +"$", Pattern.CASE_INSENSITIVE);
-				}
-				else if (atrName.equals("endsWithGroupType")){
+					break;
+				case "endsWithGroupType":
 					endsWithGroupType = atrValue;
-				}
-				else if (atrName.equals("endsWithGroupSubType")){
+					break;
+				case "endsWithGroupSubType":
 					endsWithGroupSubType = atrValue;
+					break;
+				default:
+					break;
 				}
 			}
 			if (type == null) {
-				throw new RuntimeException("Malformed wordRules");
+				throw new RuntimeException("Malformed wordRule, no type specified");
 			}
 			this.type = type;
 			this.endsWithGroup = endsWithGroup;
 			this.endsWithPattern = endsWithPattern;
 			this.value = value;
 			this.functionalGroupType = functionalGroupType;
+			this.functionalGroupSubType = functionalGroupSubType;
 			this.endsWithGroupType = endsWithGroupType;
 			this.endsWithGroupSubType = endsWithGroupSubType;
 		}
@@ -125,6 +136,10 @@ class WordRules {
 
 		String getFunctionalGroupType() {
 			return functionalGroupType;
+		}
+		
+		String getFunctionalGroupSubType() {
+			return functionalGroupSubType;
 		}
 
 		String getEndsWithGroupType() {
@@ -264,7 +279,8 @@ class WordRules {
 						}
 
 						String functionalGroupTypePredicate = wd.getFunctionalGroupType();
-						if (functionalGroupTypePredicate != null) {
+						String functionalGroupSubTypePredicate = wd.getFunctionalGroupSubType();
+						if (functionalGroupTypePredicate != null || functionalGroupSubTypePredicate != null) {
 							if (!WordType.functionalTerm.toString().equals(wordEl.getAttributeValue(TYPE_ATR))){
 								continue wordRuleLoop;
 							}
@@ -278,7 +294,10 @@ class WordRules {
 									throw new ParsingException("OPSIN Bug: Cannot find the functional element in a functionalTerm");
 								}
 							}
-							if (!functionalGroupTypePredicate.equals(lastEl.getAttributeValue(TYPE_ATR))) {
+							if (functionalGroupTypePredicate != null && !functionalGroupTypePredicate.equals(lastEl.getAttributeValue(TYPE_ATR))) {
+								continue wordRuleLoop;
+							}
+							if (functionalGroupSubTypePredicate != null && !functionalGroupSubTypePredicate.equals(lastEl.getAttributeValue(SUBTYPE_ATR))) {
 								continue wordRuleLoop;
 							}
 						}
