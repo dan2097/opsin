@@ -3,18 +3,21 @@
 <!--functional classes typically have hard coded rules in the StructureBuilder detailing their behaviour-->
 	<tokenList tagname="functionalClass" type="functionalClass" symbol="°">
 		<token value="ester">ester</token>
+
+		<!--Treated as a hint that an ionic salt was desired e.g. acetic acid sodium salt = sodium acetate. Requires that the chemical name be formed of at least two words-->
+		<token value="salt">salt</token>
+	</tokenList>
+
+	<tokenList tagname="functionalClass" type="functionalClass" subType="glycolOrHalohydrin" symbol="°">
 		<token value="O">glycol</token>
 		<token value="F">fluorohydrin</token>
 		<token value="Cl">chlorohydrin</token>
 		<token value="Br">bromohydrin</token>
 		<token value="I">iodohydrin</token>
 		<token value="C#N">cyanohydrin</token>
-
-		<!--Treatedd as a hint that an ionic salt was desired e.g. acetic acid sodium salt = sodium acetate. Requires that the chemical name be formed of at least two words-->
-		<token value="salt">salt</token>
 	</tokenList>
 
-	<tokenList tagname="functionalGroup" type="functionalClass" subType="none" symbol="±">
+	<tokenList tagname="functionalGroup" type="functionalClass" subType="carbonylReplacement" symbol="±">
 		<!--Carbonyl replacement terms. The first atom replaces a carbonyl oxygen-->
 		<token value="=NO" labels="/O">oxime|oxim</token>
 		<token value="=NS" labels="/S">thioxime|thioxim</token>
@@ -32,7 +35,9 @@
 		<token value="=NNC(=O)C(=O)N" labels="1/2/3//4//5">semioxamazone|semioxamazon</token>
 		<token value="=N" labels="N">imide|imid</token>
 		<token value="=N" labels="N">imine|imin</token><!--technically should only be used with quinones but that doesn't seem to be common usage-->
+	</tokenList>
 
+	<tokenList tagname="functionalGroup" type="functionalClass" subType="chalcogenide" symbol="±">
 		<!--Indicate addition of chalcogen OR formation of chalcogen ether OR inorganic salt with chalcogen-->
 		<token value="O">oxide|oxid</token>
 		<token value="S">sulfide|sulfid</token>
@@ -51,7 +56,7 @@
 		<token value="N1CCCC1" labels="1/2/3/4/5">pyrrolidide|pyrrolidid</token>
 	</tokenList>
 
-	<tokenList tagname="functionalClass" type="functionalClass"  symbol="¿">
+	<tokenList tagname="functionalClass" type="functionalClass" subType="acetalLike" symbol="¿">
 		<token value="S,S">mercaptal</token>
 		<token value="O,O">acetal|ketal</token>
 		<token value="S,S">hemimercaptal</token>

@@ -197,7 +197,7 @@ Parsing will fail if the end result is not one or more full terms or a polymer.
 
 	<wordRule name="glycol" type="full">
 		<word type="substituent" endsWithRegex="(diyl|ylen[e]?)[\]\)\}]*" />
-		<word type="functionalTerm" endsWithRegex="(glycol|fluorohydrin|chlorohydrin|bromohydrin|iodohydrin|cyanohydrin)" functionalGroupType="functionalClass" />
+		<word type="functionalTerm" functionalGroupType="functionalClass"  functionalGroupSubType="glycolOrHalohydrin"/>
 	</wordRule>
 
 	<wordRule name="glycolEther" type="full">
@@ -222,34 +222,34 @@ Parsing will fail if the end result is not one or more full terms or a polymer.
 
 	<wordRule name="oxide" type="full">
 		<word type="full" endsWithRegex="(?&lt;!ic|ous)" />
-		<word type="functionalTerm" endsWithRegex="(oxid|sulfid|selenid|tellurid)[e]?" functionalGroupType="functionalClass" />
+		<word type="functionalTerm" functionalGroupType="functionalClass" functionalGroupSubType="chalcogenide"/>
 	</wordRule>
 
 	<wordRule name="oxide" type="full">
 		<word type="full" endsWithGroupType="elementaryAtom" />
-		<word type="functionalTerm" endsWithRegex="(oxid|sulfid|selenid|tellurid)[e]?" functionalGroupType="functionalClass" />
+		<word type="functionalTerm" functionalGroupType="functionalClass" functionalGroupSubType="chalcogenide"/>
 	</wordRule>
 
 	<wordRule name="carbonylDerivative" type="full">
 		<word type="full" />
 		<word type="substituent" />
-		<word type="functionalTerm" endsWithRegex="^((thi|selen|tellur)?oxim|hydrazon|(iso)?(semicarbazon|thiosemicarbazon|selenosemicarbazon|tellurosemicarbazon)|imid|imin|semioxamazon)[e]?[\]\)\}]*" />
+		<word type="functionalTerm" functionalGroupType="functionalClass" functionalGroupSubType="carbonylReplacement"/>
 	</wordRule>
 
 	<wordRule name="carbonylDerivative" type="full">
 		<word type="full" />
-		<word type="functionalTerm" endsWithRegex="((thi|selen|tellur)?oxim|hydrazon|semicarbazon|isosemicarbazon|isothiosemicarbazon|isoselenosemicarbazon|isotellurosemicarbazon|imid|imin|semioxamazon)[e]?[\]\)\}]*" />
+		<word type="functionalTerm" functionalGroupType="functionalClass" functionalGroupSubType="carbonylReplacement"/>
 	</wordRule>
 
 	<wordRule name="anhydride" type="full">
 		<word type="full" endsWith="acid"/>
 		<word type="full" endsWith="acid"/>
-		<word type="functionalTerm" endsWithRegex="anhydrid[e]?[\]\)\}]*"/>
+		<word type="functionalTerm" functionalGroupType="functionalClass" functionalGroupSubType="anhydride"/>
 	</wordRule>
 
 	<wordRule name="anhydride" type="full">
 		<word type="full" endsWith="acid"/>
-		<word type="functionalTerm" endsWithRegex="anhydrid[e]?[\]\)\}]*"/>
+		<word type="functionalTerm" functionalGroupType="functionalClass" functionalGroupSubType="anhydride"/>
 	</wordRule>
 
 	<wordRule name="acidHalideOrPseudoHalide" type="full">
@@ -290,12 +290,12 @@ Parsing will fail if the end result is not one or more full terms or a polymer.
 	<wordRule name="anhydride" type="full">
 		<word type="full" endsWithGroupType="aminoAcid"/>
 		<word type="full" endsWithGroupType="aminoAcid"/>
-		<word type="functionalTerm" endsWithRegex="anhydrid[e]?[\]\)\}]*"/>
+		<word type="functionalTerm" functionalGroupType="functionalClass" functionalGroupSubType="anhydride"/>
 	</wordRule>
 
 	<wordRule name="anhydride" type="full">
 		<word type="full" endsWithGroupType="aminoAcid"/>
-		<word type="functionalTerm" endsWithRegex="anhydrid[e]?[\]\)\}]*"/>
+		<word type="functionalTerm" functionalGroupType="functionalClass" functionalGroupSubType="anhydride"/>
 	</wordRule>
 
 	<wordRule name="additionCompound" type="full">
@@ -328,18 +328,18 @@ Parsing will fail if the end result is not one or more full terms or a polymer.
 		<word type="full" />
 		<word type="substituent" />
 		<word type="substituent" />
-		<word type="functionalTerm" endsWithRegex="(acetal|ketal|mercaptal)" />
+		<word type="functionalTerm" functionalGroupType="functionalClass" functionalGroupSubType="acetalLike"/>
 	</wordRule>
 
 	<wordRule name="acetal" type="full">
 		<word type="full" />
 		<word type="substituent" />
-		<word type="functionalTerm" endsWithRegex="(acetal|ketal|mercaptal)" />
+		<word type="functionalTerm" functionalGroupType="functionalClass" functionalGroupSubType="acetalLike"/>
 	</wordRule>
 
 	<wordRule name="acetal" type="full">
 		<word type="full" />
-		<word type="functionalTerm" endsWithRegex="(acetal|ketal|mercaptal)" />
+		<word type="functionalTerm" functionalGroupType="functionalClass" functionalGroupSubType="acetalLike"/>
 	</wordRule>
 
 	<wordRule name="amineDiConjunctiveSuffix" type="full">

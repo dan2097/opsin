@@ -462,6 +462,8 @@ class XmlDeclarations {
 	 * subType is expected to be present at minimum on all group elements
 	 */
 
+	/**Functional groups like acetal and mercaptal */
+	static final String ACETALLIKE_SUBTYPE_VAL = "acetalLike";
 	/**The stem of an alkane e.g. "eth" */
 	static final String ALKANESTEM_SUBTYPE_VAL ="alkaneStem";
 	/**An anhydride functional term e.g. "thioanhydride"*/
@@ -477,11 +479,15 @@ class XmlDeclarations {
 	static final String CARBOHYDRATESTEMALDOSE_SUBTYPE_VAL ="carbohydrateStemAldose";
 	/**A trivial carbohydrate stem for a ketose e.g. "fruct"*/
 	static final String CARBOHYDRATESTEMKETOSE_SUBTYPE_VAL ="carbohydrateStemKetose";
+	/**Functional groups like oxime and hydrazone that replace a carbonyl */
+	static final String CARBONYLREPLACEMENT_SUBTYPE_VAL = "carbonylReplacement";
+	/**The function group oxide, and its other chalcogen analogs */
+	static final String CHALCOGENIDE_SUBTYPE_VAL = "chalcogenide";
 	/**A suffix that forms a cycle e.g. imide, lactam, sultam*/
 	static final String CYCLEFORMER_SUBTYPE_VAL ="cycleformer";
 	/**A hydrocarbon stem that is typically followed by an unsaturator e.g. "adamant" */
 	static final String CYCLICUNSATURABLEHYDROCARBON_SUBTYPE_VAL ="cyclicUnsaturableHydrocarbon";
-	/**Replacmenet terms that are not substituents e.g.  amido/hydrazido/imido/nitrido*/
+	/**Replacement terms that are not substituents e.g.  amido/hydrazido/imido/nitrido*/
 	static final String DEDICATEDFUNCTIONALREPLACEMENTPREFIX_SUBTYPE_VAL = "dedicatedFunctionalReplacementPrefix";
 	/**An amino acid that ends in an e.g. tryptoph */
 	static final String ENDINAN_SUBTYPE_VAL ="endInAn";
@@ -493,6 +499,8 @@ class XmlDeclarations {
 	static final String EPOXYLIKE_SUBTYPE_VAL ="epoxyLike";
 	/**A ring that will be fused onto another ring e.g. "benzo", "pyrido", "pyridino" */
 	static final String FUSIONRING_SUBTYPE_VAL ="fusionRing";
+	/**Functional terms like glcycol or chlorohydrin that add an oxygen and another atom to opposite ends of a chain */
+	static final String GLYCOLORHALOHYDRIN_SUBTYPE_VAL = "glycolOrHalohydrin";	
 	/**A group that can be suffixed e.g. "hydrazin" */
 	static final String GROUPSTEM_SUBTYPE_VAL ="groupStem";
 	/**A halide or pseudo halide e.g. "bromo", "cyano". Can be functional replacment terms when preceding certain non-carboxylic acids */
