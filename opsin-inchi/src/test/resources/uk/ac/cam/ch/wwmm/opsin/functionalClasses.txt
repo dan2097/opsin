@@ -30,3 +30,5 @@ N-Succinyl-L-phenylalanine-p-nitroanilide	InChI=1S/C19H19N3O6/c23-17(10-11-18(24
 ethyl chloride	InChI=1S/C2H5Cl/c1-2-3/h2H2,1H3
 Butyltin chloride dihydroxide	InChI=1S/C4H9.ClH.2H2O.Sn/c1-3-4-2;;;;/h1,3-4H2,2H3;1H;2*1H2;/q;;;;+3/p-3
 2-Hydroxy-5-methoxy-benzaldehyde chloroxime	InChI=1S/C8H8ClNO3/c1-13-5-2-3-7(11)6(4-5)8(9)10-12/h2-4,11-12H,1H3
+2-Hydroxy-5-methoxy-benzaldehyde chlorooxime	InChI=1S/C8H8ClNO3/c1-13-5-2-3-7(11)6(4-5)8(9)10-12/h2-4,11-12H,1H3
+4-NITROBENZALDEHYDE S-(4-NITROPHENYL)THIOOXIME	InChI=1S/C13H9N3O4S/c17-15(18)11-3-1-10(2-4-11)9-14-21-13-7-5-12(6-8-13)16(19)20/h1-9H

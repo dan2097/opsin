@@ -20,18 +20,18 @@
 	<tokenList tagname="functionalGroup" type="functionalClass" subType="carbonylReplacement" symbol="±">
 		<!--Carbonyl replacement terms. The first atom replaces a carbonyl oxygen-->
 		<token value="=NO" labels="/O">oxime|oxim</token>
-		<token value="=NS" labels="/S">thioxime|thioxim</token>
-		<token value="=N[Se|2]" labels="/Se">selenoxime|selenoxim</token>
-		<token value="=N[Te|2]" labels="/Te">telluroxime|telluroxim</token>
-		<token value="=NO.Br-" labels="/O/">bromoxime|bromoxim</token>
-		<token value="=NO.Cl-" labels="/O/">chloroxime|chloroxim</token>
-		<token value="=NO.F-" labels="/O/">fluoroxime|fluoroxim</token>
-		<token value="=NO.I-" labels="/O/">iodoxime|iodoxim</token>
+		<token value="=NS" labels="/S">thioxime|thioxim|thiooxime|thiooxim|thio-oxime|thio-oxim</token>
+		<token value="=N[Se|2]" labels="/Se">selenoxime|selenoxim|selenooxime|selenooxim|seleno-oxime|seleno-oxim</token>
+		<token value="=N[Te|2]" labels="/Te">telluroxime|telluroxim|tellurooxime|tellurooxim|telluro-oxime|telluro-oxim</token>
+		<token value="=NO.Br-" labels="/O/">bromoxime|bromoxim|bromooxime|bromooxim|bromo-oxime|bromo-oxim</token>
+		<token value="=NO.Cl-" labels="/O/">chloroxime|chloroxim|chlorooxime|chlorooxim|chloro-oxime|chloro-oxim</token>
+		<token value="=NO.F-" labels="/O/">fluoroxime|fluoroxim|fluorooxime|fluorooxim|fluoro-oxime|fluoro-oxim</token>
+		<token value="=NO.I-" labels="/O/">iodoxime|iodoxim|iodooxime|iodooxim|iodo-oxime|iodo-oxim</token>
 		<token value="=NN" labels="/1,N">hydrazone|hydrazon</token>
 		<token value="=NNC(=O)N" labels="1/2/3//4">semicarbazone|semicarbazon</token>
-		<token value="=NNC(=S)N" labels="1/2/3//4">thiosemicarbazone|thiosemicarbazon</token>
-		<token value="=NNC(=[Se])N" labels="1/2/3//4">selenosemicarbazone|selenosemicarbazon</token>
-		<token value="=NNC(=[Te])N" labels="1/2/3//4">tellurosemicarbazone|tellurosemicarbazon</token>
+		<token value="=NNC(=S)N" labels="1/2/3//4">thiosemicarbazone|thiosemicarbazon|thio-semicarbazone|thio-semicarbazon</token>
+		<token value="=NNC(=[Se])N" labels="1/2/3//4">selenosemicarbazone|selenosemicarbazon|seleno-semicarbazone|seleno-semicarbazon</token>
+		<token value="=NNC(=[Te])N" labels="1/2/3//4">tellurosemicarbazone|tellurosemicarbazon|telluro-semicarbazone|telluro-semicarbazon</token>
 		<token value="=NNC(O)=N">isosemicarbazone|isosemicarbazon</token>
 		<token value="=NNC(S)=N">isothiosemicarbazone|isothiosemicarbazon</token>
 		<token value="=NNC([SeH])=N">isoselenosemicarbazone|isoselenosemicarbazon</token>
