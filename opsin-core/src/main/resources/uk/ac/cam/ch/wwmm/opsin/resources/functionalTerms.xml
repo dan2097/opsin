@@ -23,6 +23,10 @@
 		<token value="=NS" labels="/S">thioxime|thioxim</token>
 		<token value="=N[Se|2]" labels="/Se">selenoxime|selenoxim</token>
 		<token value="=N[Te|2]" labels="/Te">telluroxime|telluroxim</token>
+		<token value="=NO.Br-" labels="/O/">bromoxime|bromoxim</token>
+		<token value="=NO.Cl-" labels="/O/">chloroxime|chloroxim</token>
+		<token value="=NO.F-" labels="/O/">fluoroxime|fluoroxim</token>
+		<token value="=NO.I-" labels="/O/">iodoxime|iodoxim</token>
 		<token value="=NN" labels="/1,N">hydrazone|hydrazon</token>
 		<token value="=NNC(=O)N" labels="1/2/3//4">semicarbazone|semicarbazon</token>
 		<token value="=NNC(=S)N" labels="1/2/3//4">thiosemicarbazone|thiosemicarbazon</token>

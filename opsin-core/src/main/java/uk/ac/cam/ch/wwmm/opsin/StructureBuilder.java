@@ -790,13 +790,26 @@ class StructureBuilder {
 					}
 				}
 			}
-			if (replacementFrag.getOutAtomCount() !=1) {
+			
+			if (replacementFrag.getOutAtomCount() == 2) {
+				//e.g. chloroxime
+				Atom carbonylCarbon = carbonylOxygen.getFirstBond().getOtherAtom(carbonylOxygen);
+				OutAtom outAtom = replacementFrag.getOutAtom(1);
+				replacementFrag.removeOutAtom(outAtom);
+				if (carbonylCarbon.getIncomingValency() >=4) {
+					throw new StructureBuildingException("Insufficient substitutable hydrogen for haloxime");
+				}
+				state.fragManager.createBond(carbonylCarbon, outAtom.getAtom(), outAtom.getValency());
+			}
+			
+			if (replacementFrag.getOutAtomCount() != 1) {
 				throw new RuntimeException("OPSIN Bug: Carbonyl replacement fragment expected to have one outatom");
 			}
 			Atom atomToReplaceCarbonylOxygen = replacementFrag.getOutAtom(0).getAtom();
 			replacementFrag.removeOutAtom(0);
 			state.fragManager.replaceAtomWithAnotherAtomPreservingConnectivity(carbonylOxygen, atomToReplaceCarbonylOxygen);
 			atomToReplaceCarbonylOxygen.setType(carbonylOxygen.getType());//copy the type e.g. if the carbonyl was a suffix this should appear as a suffix
+			
 			if (replacementFrag.getTokenEl().getParent() == null) {//incorporate only for the case that replacementFrag came from a functional class element
 				state.fragManager.incorporateFragment(replacementFrag, carbonylFrag);
 			}

@@ -423,7 +423,7 @@ class Atom {
 	 */
 	int getIncomingValency() {
 		int v = 0;
-		for (int i = 0, l = bonds.size(); i < l; i++) {
+		for (int i = 0, len = bonds.size(); i < len; i++) {
 			v += bonds.get(i).getOrder();
 		}
 		return v;
