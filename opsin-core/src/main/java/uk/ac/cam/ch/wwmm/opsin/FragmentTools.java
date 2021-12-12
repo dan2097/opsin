@@ -591,7 +591,7 @@ class FragmentTools {
 		 * Double-bonds go between pairs of atoms so if there are an off number of candidate atoms (e.g. pyrrole) an atom must be chosen
 		 * The atom with indicated hydrogen (see above) is used in preference else heuristics are used to chose a candidate
 		 */
-		if((svCount % 2) == 1) {
+		if((svCount & 1) == 1) {
 			if (atomToReduceValencyAt == null) {
 				atomToReduceValencyAt = findBestAtomToRemoveSpareValencyFrom(frag, atomCollection);
 			}
