@@ -8,6 +8,7 @@
       <includes>
         <include>uk.ac.cam.ch.opsin:opsin-core</include>
         <include>uk.ac.cam.ch.opsin:opsin-inchi</include>
+        <include>uk.ac.cam.ch.opsin:opsin-cli</include>
       </includes>
       <sources>
         <includeModuleDirectory>false</includeModuleDirectory>

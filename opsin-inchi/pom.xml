@@ -6,46 +6,26 @@
       <version>3.0-SNAPSHOT</version>
    </parent>
   <artifactId>opsin-inchi</artifactId>
-  <name>OPSIN_InChI_Support</name>
+  <name>OPSIN InChI Support</name>
   <description>Adds NameToInchi class for converting names directly to InChIs</description>
-  <build>
-    <plugins>
-       <plugin>
-          <artifactId>maven-assembly-plugin</artifactId>
-          <configuration>
-          <descriptorRefs>
-            <descriptorRef>jar-with-dependencies</descriptorRef>
-          </descriptorRefs>
-           <archive>
-              <manifest>
-                 <mainClass>uk.ac.cam.ch.wwmm.opsin.NameToInchi</mainClass>
-              </manifest>
-           </archive>
-         </configuration>
-       </plugin>
-    </plugins>
-  </build>
-   <dependencies>
-      <dependency>
-        <groupId>uk.ac.cam.ch.opsin</groupId>
-        <artifactId>opsin-core</artifactId>
-      </dependency>
-      <dependency>
-        <groupId>net.sf.jni-inchi</groupId>
-        <artifactId>jni-inchi</artifactId>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.logging.log4j</groupId>
-        <artifactId>log4j-api</artifactId>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.logging.log4j</groupId>
-        <artifactId>log4j-core</artifactId>
-      </dependency>
-      <dependency>
-        <groupId>org.junit.jupiter</groupId>
-        <artifactId>junit-jupiter</artifactId>
-        <scope>test</scope>
-      </dependency>
-   </dependencies>
+  <dependencies>
+    <dependency>
+      <groupId>uk.ac.cam.ch.opsin</groupId>
+      <artifactId>opsin-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>net.sf.jni-inchi</groupId>
+      <artifactId>jni-inchi</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-core</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
 </project>
