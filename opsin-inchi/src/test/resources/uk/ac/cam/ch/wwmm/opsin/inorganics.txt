@@ -29,3 +29,4 @@ dichlorine	InChI=1S/Cl2/c1-2
 dibromine	InChI=1S/Br2/c1-2
 diiodine	InChI=1S/I2/c1-2
 molecular iodine	InChI=1S/I2/c1-2
+oganesson	InChI=1S/Og

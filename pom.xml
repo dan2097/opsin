@@ -227,9 +227,9 @@
         <version>2.15.0</version>
       </dependency>
       <dependency>
-        <groupId>net.sf.jni-inchi</groupId>
-        <artifactId>jni-inchi</artifactId>
-        <version>0.8</version>
+        <groupId>io.github.dan2097</groupId>
+        <artifactId>jna-inchi-core</artifactId>
+        <version>1.0</version>
       </dependency>
       <dependency>
         <groupId>commons-io</groupId>

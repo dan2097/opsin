@@ -14,8 +14,8 @@
       <artifactId>opsin-core</artifactId>
     </dependency>
     <dependency>
-      <groupId>net.sf.jni-inchi</groupId>
-      <artifactId>jni-inchi</artifactId>
+      <groupId>io.github.dan2097</groupId>
+      <artifactId>jna-inchi-core</artifactId>
     </dependency>
     <dependency>
       <groupId>org.junit.jupiter</groupId>

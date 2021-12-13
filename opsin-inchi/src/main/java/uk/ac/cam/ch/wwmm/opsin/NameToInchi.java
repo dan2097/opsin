@@ -1,6 +1,5 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
@@ -8,18 +7,20 @@ import java.util.Set;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import net.sf.jniinchi.INCHI_BOND_TYPE;
-import net.sf.jniinchi.INCHI_OPTION;
-import net.sf.jniinchi.INCHI_PARITY;
-import net.sf.jniinchi.INCHI_RET;
-import net.sf.jniinchi.JniInchiAtom;
-import net.sf.jniinchi.JniInchiBond;
-import net.sf.jniinchi.JniInchiException;
-import net.sf.jniinchi.JniInchiInput;
-import net.sf.jniinchi.JniInchiOutput;
-import net.sf.jniinchi.JniInchiOutputKey;
-import net.sf.jniinchi.JniInchiStereo0D;
-import net.sf.jniinchi.JniInchiWrapper;
+import io.github.dan2097.jnainchi.InchiAtom;
+import io.github.dan2097.jnainchi.InchiBond;
+import io.github.dan2097.jnainchi.InchiBondType;
+import io.github.dan2097.jnainchi.InchiFlag;
+import io.github.dan2097.jnainchi.InchiInput;
+import io.github.dan2097.jnainchi.InchiKeyOutput;
+import io.github.dan2097.jnainchi.InchiOptions;
+import io.github.dan2097.jnainchi.InchiStereo;
+import io.github.dan2097.jnainchi.InchiOptions.InchiOptionsBuilder;
+import io.github.dan2097.jnainchi.InchiOutput;
+import io.github.dan2097.jnainchi.InchiStatus;
+import io.github.dan2097.jnainchi.InchiStereoParity;
+import io.github.dan2097.jnainchi.JnaInchi;
+
 import uk.ac.cam.ch.wwmm.opsin.BondStereo.BondStereoValue;
 
 /**
@@ -99,8 +100,8 @@ public class NameToInchi {
 		String stdInchi = convertResultToInChI(result, true);
 		if (stdInchi != null){
 			try {
-				JniInchiOutputKey key = JniInchiWrapper.getInchiKey(stdInchi);
-				return key.getKey();
+				InchiKeyOutput key = JnaInchi.inchiToInchiKey(stdInchi);
+				return key.getInchiKey();
 			} catch (Exception e) {
 				if (LOG.isDebugEnabled()){
 					LOG.debug(e.getMessage(), e);
@@ -135,31 +136,31 @@ public class NameToInchi {
 		return null;
 	}
 
-	private static String opsinFragmentToInchi(Fragment frag, boolean produceStdInChI) throws JniInchiException {
-		HashMap<Integer, JniInchiAtom> opsinIdAtomMap = new HashMap<>();
-		JniInchiInput input;
-		List<INCHI_OPTION> options = new ArrayList<>();
-		options.add(INCHI_OPTION.AuxNone);
+	private static String opsinFragmentToInchi(Fragment frag, boolean produceStdInChI) {
+		HashMap<Integer, InchiAtom> opsinIdAtomMap = new HashMap<>();
+		InchiOptionsBuilder optionsBuilder = new InchiOptions.InchiOptionsBuilder();
+		optionsBuilder.withFlag(InchiFlag.AuxNone);
+
 		if (!produceStdInChI){
-			options.add(INCHI_OPTION.FixedH);
+			optionsBuilder.withFlag(InchiFlag.FixedH);
 		}
-		input = new JniInchiInput(options);
+		InchiInput input = new InchiInput();
 
 		List<Atom> atomList =frag.getAtomList();
 		// Generate atoms
 		for (Atom atom : atomList) {
-			JniInchiAtom jAtom = input.addAtom(new JniInchiAtom(0.0, 0.0, 0.0, atom.getElement().toString()));
-			jAtom.setCharge(atom.getCharge());
+			InchiAtom inchiAtom = new InchiAtom(atom.getElement().toString());
+			input.addAtom(inchiAtom);
+			inchiAtom.setCharge(atom.getCharge());
 			Integer isotope = atom.getIsotope();
-			if (isotope !=null){
-				jAtom.setIsotopicMass(isotope);
+			if (isotope != null) {
+				inchiAtom.setIsotopicMass(isotope);
 			}
-			jAtom.setImplicitH(0);
-			opsinIdAtomMap.put(atom.getID(), jAtom);
+			opsinIdAtomMap.put(atom.getID(), inchiAtom);
 		}
-		Set<Bond> bondList =frag.getBondSet();
+		Set<Bond> bondList = frag.getBondSet();
 		for (Bond bond : bondList) {
-			input.addBond(new JniInchiBond(opsinIdAtomMap.get(bond.getFrom()), opsinIdAtomMap.get(bond.getTo()), INCHI_BOND_TYPE.getValue(bond.getOrder())));
+			input.addBond(new InchiBond(opsinIdAtomMap.get(bond.getFrom()), opsinIdAtomMap.get(bond.getTo()), InchiBondType.of((byte)bond.getOrder())));
 		}
 
 		for (Atom atom : atomList) {//add atomParities
@@ -177,15 +178,14 @@ public class NameToInchi {
 			for (int i = 0; i < atomRefs4.length; i++) {
 				atomRefs4AsInt[i] = atomRefs4[i].getID();
 			}
-			INCHI_PARITY parity =INCHI_PARITY.UNKNOWN;
+			InchiStereoParity parity = InchiStereoParity.UNKNOWN;
 			if (atomParity.getParity() > 0){
-				parity =INCHI_PARITY.EVEN;
+				parity = InchiStereoParity.EVEN;
 			}
 			else if (atomParity.getParity() < 0){
-				parity =INCHI_PARITY.ODD;
+				parity = InchiStereoParity.ODD;
 			}
-			input.addStereo0D(JniInchiStereo0D.createNewTetrahedralStereo0D(opsinIdAtomMap.get(atom.getID()), opsinIdAtomMap.get(atomRefs4AsInt[0]), opsinIdAtomMap.get(atomRefs4AsInt[1]), opsinIdAtomMap.get(atomRefs4AsInt[2]), opsinIdAtomMap.get(atomRefs4AsInt[3]), parity));
-
+			input.addStereo(InchiStereo.createTetrahedralStereo(opsinIdAtomMap.get(atom.getID()), opsinIdAtomMap.get(atomRefs4AsInt[0]), opsinIdAtomMap.get(atomRefs4AsInt[1]), opsinIdAtomMap.get(atomRefs4AsInt[2]), opsinIdAtomMap.get(atomRefs4AsInt[3]), parity));
         }
 
 		for (Bond bond : bondList) {//add bondStereos
@@ -197,25 +197,22 @@ public class NameToInchi {
 					atomRefs4Ids[i] = atomRefs4[i].getID();
 				}
 				if (BondStereoValue.CIS.equals(bondStereo.getBondStereoValue())){
-					input.addStereo0D(JniInchiStereo0D.createNewDoublebondStereo0D(opsinIdAtomMap.get(atomRefs4Ids[0]), opsinIdAtomMap.get(atomRefs4Ids[1]), opsinIdAtomMap.get(atomRefs4Ids[2]), opsinIdAtomMap.get(atomRefs4Ids[3]), INCHI_PARITY.ODD));
+					input.addStereo(InchiStereo.createDoubleBondStereo(opsinIdAtomMap.get(atomRefs4Ids[0]), opsinIdAtomMap.get(atomRefs4Ids[1]), opsinIdAtomMap.get(atomRefs4Ids[2]), opsinIdAtomMap.get(atomRefs4Ids[3]), InchiStereoParity.ODD));
 				}
 				else if (BondStereoValue.TRANS.equals(bondStereo.getBondStereoValue())){
-					input.addStereo0D(JniInchiStereo0D.createNewDoublebondStereo0D(opsinIdAtomMap.get(atomRefs4Ids[0]), opsinIdAtomMap.get(atomRefs4Ids[1]), opsinIdAtomMap.get(atomRefs4Ids[2]), opsinIdAtomMap.get(atomRefs4Ids[3]), INCHI_PARITY.EVEN));
+					input.addStereo(InchiStereo.createDoubleBondStereo(opsinIdAtomMap.get(atomRefs4Ids[0]), opsinIdAtomMap.get(atomRefs4Ids[1]), opsinIdAtomMap.get(atomRefs4Ids[2]), opsinIdAtomMap.get(atomRefs4Ids[3]), InchiStereoParity.EVEN));
 				}
 			}
         }
-		JniInchiOutput output = JniInchiWrapper.getInchi(input);
-		if (output ==null){
-			return null;
-		}
-    	INCHI_RET ret = output.getReturnStatus();
+		InchiOutput output = JnaInchi.toInchi(input, optionsBuilder.build());
+    	InchiStatus ret = output.getStatus();
     	if (LOG.isDebugEnabled()){
     		LOG.debug("Inchi generation status: " + ret);
-    		if (!INCHI_RET.OKAY.equals(ret)){
+    		if (InchiStatus.SUCCESS != ret){
     			LOG.debug(output.getMessage());
     		}
     	}
-    	if (!INCHI_RET.OKAY.equals(ret) && !INCHI_RET.WARNING.equals(ret)){
+    	if (InchiStatus.SUCCESS != ret && InchiStatus.WARNING != ret) {
     		return null;
     	}
     	return output.getInchi();
