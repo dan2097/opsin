@@ -112,9 +112,9 @@ Running `mvn package` in the root of OPSIN's source will build:
 
 | Artifact                                        | Location           | Description                                                       |
 |-------------------------------------------------|--------------------|-------------------------------------------------------------------|
-| opsin-cli-<version>-jar-with-dependencies.jar   | opsin-cli/target   | Standalone command-line application with SMILES/CML/InChI support |
-| opsin-core-<version>-jar-with-dependencies.jar  | opsin-core/target  | Library with SMILES/CML support                                   |
-| opsin-inchi-<version>-jar-with-dependencies.jar | opsin-inchi/target | Library with SMILES/CML/InChI support                             |
+| opsin-cli-\<version\>-jar-with-dependencies.jar   | opsin-cli/target   | Standalone command-line application with SMILES/CML/InChI support |
+| opsin-core-\<version\>-jar-with-dependencies.jar  | opsin-core/target  | Library with SMILES/CML support                                   |
+| opsin-inchi-\<version\>-jar-with-dependencies.jar | opsin-inchi/target | Library with SMILES/CML/InChI support                             |
 
 ### About OPSIN
 
