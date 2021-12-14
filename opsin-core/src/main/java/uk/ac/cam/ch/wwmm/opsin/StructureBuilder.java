@@ -2284,7 +2284,7 @@ class StructureBuilder {
 				}
 			}
 			else if (AMINOACID_TYPE_VAL.equals(group.getAttributeValue(TYPE_ATR))) {
-				for (Atom atom : group.getFrag().getAtomList()) {
+				for (Atom atom : group.getFrag()) {
 					if (atom.getElement().isChalcogen() && atom.getElement() != ChemEl.O &&
 							atom.getBondCount() == 3 && atom.getIncomingValency() == 3 && atom.getCharge() == 0) {
 						atom.addChargeAndProtons(1, 1);

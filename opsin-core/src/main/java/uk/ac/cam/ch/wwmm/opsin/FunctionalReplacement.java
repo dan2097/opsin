@@ -542,7 +542,7 @@ class FunctionalReplacement {
 				Fragment acidReplacingFrag = state.fragManager.buildSMILES(groupValue, SUFFIX_TYPE_VAL, labelsValue != null ? labelsValue : NONE_LABELS_VAL);
 				Fragment acidFragment = groupToBeModified.getFrag();
 				if (acidFragment.hasLocant("2")){//prefer numeric locants on group to those of replacing group
-					for (Atom atom : acidReplacingFrag.getAtomList()) {
+					for (Atom atom : acidReplacingFrag) {
 						atom.clearLocants();
 					}
 				}

@@ -428,12 +428,12 @@ public class SMILESWriterTest {
 	@Test
 	public void testLabelling1() throws StructureBuildingException {
 		Fragment f = fm.buildSMILES("CCC", "", XmlDeclarations.NONE_LABELS_VAL);
-		for (Atom a : f.getAtomList()) {
+		for (Atom a : f) {
 			assertEquals(0, a.getLocants().size());
 		}
 		
 		Fragment f2 = fm.buildSMILES("CCC", "", "");
-		for (Atom a : f2.getAtomList()) {
+		for (Atom a : f2) {
 			assertEquals(0, a.getLocants().size());
 		}
 	}

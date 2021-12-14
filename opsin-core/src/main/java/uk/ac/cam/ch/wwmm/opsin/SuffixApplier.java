@@ -360,7 +360,7 @@ class SuffixApplier {
 	
 	private void processCycleFormingSuffix(Fragment suffixFrag, Fragment suffixableFragment, Element suffix) throws StructureBuildingException, ComponentGenerationException {
 		List<Atom> rAtoms = new ArrayList<>();
-		for (Atom a : suffixFrag.getAtomList()) {
+		for (Atom a : suffixFrag) {
 			if (a.getElement() == ChemEl.R){
 				rAtoms.add(a);
 			}

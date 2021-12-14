@@ -397,7 +397,7 @@ public class FragmentTest {
 	@Test
 	public void testSpareValenciesOnAromaticAtoms() throws StructureBuildingException{
 		Fragment naphthalene = fm.buildSMILES("c1cccc2ccccc12");
-		for(Atom a : naphthalene.getAtomList()) {
+		for(Atom a : naphthalene) {
 			assertEquals(true, a.hasSpareValency(), "All atoms have sv");
 		}
 		for(Bond b : naphthalene.getBondSet()) {
@@ -409,25 +409,25 @@ public class FragmentTest {
 	public void testConvertSpareValenciesToDoubleBonds() throws StructureBuildingException{
 		Fragment dhp = fm.buildSMILES("c1cCccC1");
 		FragmentTools.convertSpareValenciesToDoubleBonds(dhp);
-		for(Atom a : dhp.getAtomList()) {
+		for(Atom a : dhp) {
 			assertEquals(false, a.hasSpareValency(), "All atoms have no sv");
 		}
 		Fragment funnydiene = fm.buildSMILES("C(=C)C=C");
 		FragmentTools.convertSpareValenciesToDoubleBonds(funnydiene);
-		for(Atom a : funnydiene.getAtomList()) {
+		for(Atom a : funnydiene) {
 			assertEquals(false, a.hasSpareValency(), "All atoms have no sv");
 		}
 		Fragment naphthalene = fm.buildSMILES("c1cccc2ccccc12");
 		FragmentTools.convertSpareValenciesToDoubleBonds(naphthalene);
-		for(Atom a : naphthalene.getAtomList()) {
+		for(Atom a : naphthalene) {
 			assertEquals(false, a.hasSpareValency(), "All atoms have no sv");
 		}
 		Fragment pentalene = fm.buildSMILES("c12c(ccc1)ccc2");
-		for(Atom a : pentalene.getAtomList()) {
+		for(Atom a : pentalene) {
 			assertEquals(true, a.hasSpareValency(), "All atoms have sv");
 		}
 		FragmentTools.convertSpareValenciesToDoubleBonds(pentalene);
-		for(Atom a : pentalene.getAtomList()) {
+		for(Atom a : pentalene) {
 			assertEquals(false, a.hasSpareValency(), "All atoms have no sv");
 		}
 

@@ -101,7 +101,7 @@ class FragmentManager {
 		for (Entry<Fragment, Set<Bond>> entry : fragToInterFragmentBond.entrySet()) {
 			Fragment f = entry.getKey();
 			Set<Bond> interFragmentBonds = entry.getValue();
-			for(Atom atom : f.getAtomList()) {
+			for(Atom atom : f) {
 				uniFrag.addAtom(atom);
 			}
 			for(Bond bond : f.getBondSet()) {
@@ -132,7 +132,7 @@ class FragmentManager {
      * @throws StructureBuildingException
 	 */
 	void incorporateFragment(Fragment childFrag, Fragment parentFrag) throws StructureBuildingException {
-		for(Atom atom : childFrag.getAtomList()) {
+		for(Atom atom : childFrag) {
 			parentFrag.addAtom(atom);
 		}
 		for(Bond bond : childFrag.getBondSet()) {

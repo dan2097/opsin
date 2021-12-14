@@ -293,7 +293,7 @@ class StructureBuildingMethods {
 		List<Atom> atomsToHalogenate = new ArrayList<>();
 		for (Fragment fragment : fragmentsToAttachTo) {
 			FragmentTools.convertSpareValenciesToDoubleBonds(fragment);
-			for (Atom atom : fragment.getAtomList()) {
+			for (Atom atom : fragment) {
 				int substitutableHydrogen = calculateSubstitutableHydrogenAtoms(atom);
 				if (substitutableHydrogen > 0 && FragmentTools.isCharacteristicAtom(atom)){
 					continue;
@@ -1258,7 +1258,7 @@ class StructureBuildingMethods {
 				}
 				else {
 					List<Atom> parentAtomsToApplyTo = new ArrayList<>();
-					for (Atom atom : frag.getAtomList()) {
+					for (Atom atom : frag) {
 						if (atom.getElement() == chemEl) {
 							parentAtomsToApplyTo.add(atom);
 						}
@@ -1349,7 +1349,7 @@ class StructureBuildingMethods {
 	
 	private static List<Bond> findBondsToUnSaturate(Fragment frag, int bondOrder, boolean allowAdjacentUnsaturatedBonds, Set<Bond> bondsToIgnore) {
 		List<Bond> bondsToUnsaturate = new ArrayList<>();
-		mainLoop: for (Atom atom1 : frag.getAtomList()) {
+		mainLoop: for (Atom atom1 : frag) {
 			if (atom1.hasSpareValency() || SUFFIX_TYPE_VAL.equals(atom1.getType()) || atom1.getProperty(Atom.ISALDEHYDE) !=null) {
 				continue;
 			}

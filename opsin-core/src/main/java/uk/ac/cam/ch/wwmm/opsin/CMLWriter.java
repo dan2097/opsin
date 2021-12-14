@@ -97,7 +97,7 @@ class CMLWriter {
 		
 		if (structure != null) {
 			writer.writeStartElement("atomArray");
-			for(Atom atom : structure.getAtomList()) {
+			for(Atom atom : structure) {
 				writeAtom(atom);
 			}
 			writer.writeEndElement();

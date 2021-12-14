@@ -251,7 +251,7 @@ class ComponentProcessor {
 		applyHomologyGroupLabelsIfSpecified(group, thisFrag);
 		if (ELEMENTARYATOM_TYPE_VAL.equals(group.getAttributeValue(TYPE_ATR))) {
 			//these do not have implicit hydrogen e.g. phosphorus is literally just a phosphorus atom
-			for (Atom a : thisFrag.getAtomList()) {
+			for (Atom a : thisFrag) {
 				a.setImplicitHydrogenAllowed(false);
 			}
 		}
@@ -675,7 +675,7 @@ class ComponentProcessor {
 			String[] vals = homologyValsStr.split(";");
 			
 			List<Atom> homologyAtoms = new ArrayList<>();
-			for (Atom a : frag.getAtomList()) {
+			for (Atom a : frag) {
 				if (a.getElement() == ChemEl.R) {
 					homologyAtoms.add(a);
 				}
@@ -4189,7 +4189,7 @@ class ComponentProcessor {
 			}
 			//being not substitutable doesn't mean it can't form additive bonds cf. oxy. Additive bonds can still benefit from implicit bracketing
 			boolean isSubstitutable = false;
-			for (Atom atom : frag.getAtomList()) {
+			for (Atom atom : frag) {
 				if (StructureBuildingMethods.calculateSubstitutableHydrogenAtoms(atom) > 0){
 					isSubstitutable = true;
 					break;

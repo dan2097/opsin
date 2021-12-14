@@ -15,7 +15,7 @@ public class CycleDetectorTest {
 	@Test
 	public void testAssignCyclic1() throws StructureBuildingException {
 		Fragment frag = sBuilder.build("CCCC");
-		for (Atom a : frag.getAtomList()) {
+		for (Atom a : frag) {
 			assertEquals(false, a.getAtomIsInACycle(), "Should be acylic");
 		}
 	}
@@ -23,7 +23,7 @@ public class CycleDetectorTest {
 	@Test
 	public void testAssignCyclic2() throws StructureBuildingException {
 		Fragment frag = sBuilder.build("c1ccccc1");
-		for (Atom a : frag.getAtomList()) {
+		for (Atom a : frag) {
 			assertEquals(true, a.getAtomIsInACycle(), "Should be cylic");
 		}
 	}
@@ -31,7 +31,7 @@ public class CycleDetectorTest {
 	@Test
 	public void testAssignCyclic3() throws StructureBuildingException {
 		Fragment frag = sBuilder.build("c12.c23.c34.c45.c56.c61");
-		for (Atom a : frag.getAtomList()) {
+		for (Atom a : frag) {
 			assertEquals(true, a.getAtomIsInACycle(), "Should be cylic");
 		}
 	}
