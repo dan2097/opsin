@@ -10,14 +10,21 @@ class AtomParity {
 	 * A dummy hydrogen atom. Used to represent an implicit hydrogen that is attached to a tetrahedral stereocentre
 	 */
 	static final Atom hydrogen = new Atom(ChemEl.H);
+
 	/**
 	 * A dummy hydrogen atom. Used to represent the hydrogen that replaced a hydroxy at a tetrahedral stereocentre
 	 */
 	static final Atom deoxyHydrogen = new Atom(ChemEl.H);
+	
+	/**
+	 * Typical case where of an absolute stereocentre in group number 1
+	 */
+	private static final StereoGroup ABSOLUTE_STEREOGROUP = new StereoGroup(StereoGroupType.Abs);
+	
+
 	private Atom[] atomRefs4;
 	private int parity;
-	private StereoGroup stereoGroup = StereoGroup.Abs;
-	private int stereoGroupNum = 1;
+	private StereoGroup stereoGroup = ABSOLUTE_STEREOGROUP;
 	
 	/**
 	 * Create an atomParity from an array of 4 atoms and the parity of the chiral determinant
@@ -35,30 +42,24 @@ class AtomParity {
 	Atom[] getAtomRefs4() {
 		return atomRefs4;
 	}
+
 	void setAtomRefs4(Atom[] atomRefs4) {
 		this.atomRefs4 = atomRefs4;
 	}
+
 	int getParity() {
 		return parity;
 	}
+
 	void setParity(int parity) {
 		this.parity = parity;
 	}
 
-	public void setStereoGroup(StereoGroup stroGrp, int num) {
+	void setStereoGroup(StereoGroup stroGrp) {
 		this.stereoGroup = stroGrp;
-		this.stereoGroupNum = num;
 	}
 
-	public void setStereoGroup(StereoGroup stroGrp) {
-		setStereoGroup(stroGrp, 1);
-	}
-
-	public StereoGroup getStereoGroup() {
+	StereoGroup getStereoGroup() {
 		return this.stereoGroup;
-	}
-
-	public int getStereoGroupNum() {
-		return this.stereoGroupNum;
 	}
 }

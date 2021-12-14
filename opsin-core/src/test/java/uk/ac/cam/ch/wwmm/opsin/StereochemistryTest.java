@@ -21,7 +21,6 @@ import org.junit.jupiter.api.Test;
 
 import org.hamcrest.CoreMatchers;
 
-import java.util.AbstractMap;
 import java.util.Iterator;
 
 import uk.ac.cam.ch.wwmm.opsin.BondStereo.BondStereoValue;
@@ -250,14 +249,17 @@ public class StereochemistryTest {
 		int nRacAtoms = 0;
 		int nRelAtoms = 0;
 		int nAbsAtoms = 0;
-		for (Atom atom : f.getAtomList()) {
+		for (Atom atom : f) {
 			if (atom.getAtomParity() != null) {
-				if (atom.getStereoGroup() == StereoGroup.Rac)
+				if (atom.getStereoGroup().getType() == StereoGroupType.Rac) {
 					nRacAtoms++;
-				if (atom.getStereoGroup() == StereoGroup.Rel)
+				}
+				if (atom.getStereoGroup().getType() == StereoGroupType.Rel) {
 					nRelAtoms++;
-				else if (atom.getStereoGroup() == StereoGroup.Abs)
+				}
+				else if (atom.getStereoGroup().getType() == StereoGroupType.Abs) {
 					nAbsAtoms++;
+				}
 			}
 		}
 		assertEquals(nRacExp, nRacAtoms, "Incorrect number of racemic stereo centers");
@@ -378,16 +380,12 @@ public class StereochemistryTest {
 	@Test
 	public void racemicPeptides() throws StructureBuildingException {
 		Fragment f = n2s.parseChemicalName("DL-alanyl-DL-alanine").getStructure();
-		Map<Map.Entry<StereoGroup,Integer>, Integer> counter = new HashMap<>();
-		for (Atom atom : f.getAtomList()) {
+		Map<StereoGroup, Integer> counter = new HashMap<>();
+		for (Atom atom : f) {
 			if (atom.getAtomParity() != null) {
-				Map.Entry<StereoGroup,Integer> key
-						= new AbstractMap.SimpleImmutableEntry<>(atom.getAtomParity().getStereoGroup(),
-						                                         atom.getAtomParity().getStereoGroupNum());
+				StereoGroup key = atom.getStereoGroup();
 				Integer count = counter.get(key);
-				if (count == null)
-					count = 0;
-				counter.put(key, count+1);
+				counter.put(key, count != null ? count + 1 : 1);
 			}
 		}
 		assertEquals(2, counter.size());
@@ -399,17 +397,13 @@ public class StereochemistryTest {
 	@Test
 	public void racemicCarbohydrates() throws StructureBuildingException {
 		Fragment f = n2s.parseChemicalName("4-O-α-DL-Glucopyranosyl-α-DL-glucose").getStructure();
-		Map<Map.Entry<StereoGroup,Integer>, Integer> counter = new HashMap<>();
-		for (Atom atom : f.getAtomList()) {
+		Map<StereoGroup, Integer> counter = new HashMap<>();
+		for (Atom atom : f) {
 			if (atom.getAtomParity() != null &&
-				atom.getStereoGroup() == StereoGroup.Rac) {
-				Map.Entry<StereoGroup,Integer> key
-						= new AbstractMap.SimpleImmutableEntry<>(atom.getAtomParity().getStereoGroup(),
-						atom.getAtomParity().getStereoGroupNum());
+				atom.getStereoGroup().getType() == StereoGroupType.Rac) {
+				StereoGroup key = atom.getStereoGroup();
 				Integer count = counter.get(key);
-				if (count == null)
-					count = 0;
-				counter.put(key, count+1);
+				counter.put(key, count != null ? count + 1 : 1);
 			}
 		}
 		assertEquals(2, counter.size());
@@ -421,16 +415,12 @@ public class StereochemistryTest {
 	@Test
 	public void avoidCollisionOfRacemicDefinitions() throws StructureBuildingException {
 		Fragment f = n2s.parseChemicalName("DL-alanyl-(RS)-butan-2-ol").getStructure();
-		Map<Map.Entry<StereoGroup,Integer>, Integer> counter = new HashMap<>();
-		for (Atom atom : f.getAtomList()) {
+		Map<StereoGroup, Integer> counter = new HashMap<>();
+		for (Atom atom : f) {
 			if (atom.getAtomParity() != null) {
-				Map.Entry<StereoGroup,Integer> key
-						= new AbstractMap.SimpleImmutableEntry<>(atom.getAtomParity().getStereoGroup(),
-						atom.getAtomParity().getStereoGroupNum());
+				StereoGroup key = atom.getStereoGroup();
 				Integer count = counter.get(key);
-				if (count == null)
-					count = 0;
-				counter.put(key, count+1);
+				counter.put(key, count != null ? count + 1 : 1);
 			}
 		}
 		assertEquals(2, counter.size());
@@ -443,10 +433,9 @@ public class StereochemistryTest {
 	public void applyStereochemistryLocantedRandS() throws StructureBuildingException {
 		Fragment f         = n2s.parseChemicalName("(1R and S)-1-(1-pentyl-1H-pyrazol-5-yl)ethanol").getStructure();
 		int      nRacAtoms = 0;
-		for (Atom atom : f.getAtomList()) {
-			if (atom.getAtomParity() != null) {
-				if (atom.getStereoGroup() == StereoGroup.Rac)
-					nRacAtoms++;
+		for (Atom atom : f) {
+			if (atom.getAtomParity() != null && atom.getStereoGroup().getType() == StereoGroupType.Rac) {
+				nRacAtoms++;
 			}
 		}
 		assertEquals(1, nRacAtoms);

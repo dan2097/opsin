@@ -168,8 +168,8 @@ public class NameToInchi {
 			if (atomParity == null) {
 				continue;
 			}
-			StereoGroup stereoGroupType = atomParity.getStereoGroup();
-        	if ((stereoGroupType == StereoGroup.Rac || stereoGroupType == StereoGroup.Rel) &&
+			StereoGroupType stereoGroupType = atomParity.getStereoGroup().getType();
+        	if ((stereoGroupType == StereoGroupType.Rac || stereoGroupType == StereoGroupType.Rel) &&
 					countStereoGroup(atom) == 1) {
         		continue;
         	}
@@ -217,15 +217,18 @@ public class NameToInchi {
     	}
     	return output.getInchi();
 	}
-
+	
 	private static int countStereoGroup(Atom atom) {
+		StereoGroup refGroup = atom.getAtomParity().getStereoGroup();
 		int count = 0;
-		for (Atom a : atom.getFrag().getAtomList()) {
-			if (a.getAtomParity() == null)
+		for (Atom a : atom.getFrag()) {
+			AtomParity atomParity = a.getAtomParity();
+			if (atomParity == null) {
 				continue;
-			if (a.getAtomParity().getStereoGroup().equals(atom.getAtomParity().getStereoGroup()) &&
-					a.getAtomParity().getStereoGroupNum() == atom.getAtomParity().getStereoGroupNum())
+			}
+			if (atomParity.getStereoGroup().equals(refGroup)) {
 				count++;
+			}
 		}
 		return count;
 	}

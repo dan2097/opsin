@@ -157,7 +157,7 @@ public class ComponentProcessorTest {
 		ComponentProcessor processor = new ComponentProcessor(state, mock(SuffixApplier.class));
 		assertTrue(processor.applyDlStereochemistryToAminoAcid(aminoAcidEl, "dl"));
 		assertNotNull(f.getAtomByID(2).getAtomParity());
-		assertEquals(StereoGroup.Rac, f.getAtomByID(2).getAtomParity().getStereoGroup());
+		assertEquals(StereoGroupType.Rac, f.getAtomByID(2).getStereoGroup().getType());
 	}
 	
 	@Test

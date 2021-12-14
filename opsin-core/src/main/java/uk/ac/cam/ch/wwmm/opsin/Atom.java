@@ -66,6 +66,8 @@ class Atom {
 	static final PropertyKey<Boolean> ISANOMERIC = new PropertyKey<>("isAnomeric");
 	/** Transient integer used to indicate traversal of fragments*/
 	static final PropertyKey<Integer> VISITED = new PropertyKey<>("visited");
+	
+	private static final StereoGroup UNKNOWN_STEREOGROUP = new StereoGroup(StereoGroupType.Unk);
 
 	/**The fragment to which the atom belongs.*/
 	private Fragment frag;
@@ -632,16 +634,17 @@ class Atom {
 	 * Set the stereo group, ignored if the atom does not have any parity info.
 	 * @param stroGrp the stereo group.
 	 */
-	public void setStereoGroup(StereoGroup stroGrp) {
-		if (atomParity != null)
+	void setStereoGroup(StereoGroup stroGrp) {
+		if (atomParity != null) {
 			atomParity.setStereoGroup(stroGrp);
+		}
 	}
 
 	/**
 	 * Access the stereo group on the atom parity info.
 	 * @return the stereo group
 	 */
-	public StereoGroup getStereoGroup() {
-		return atomParity != null ? atomParity.getStereoGroup() : StereoGroup.Unk;
+	StereoGroup getStereoGroup() {
+		return atomParity != null ? atomParity.getStereoGroup() : UNKNOWN_STEREOGROUP;
 	}
 }

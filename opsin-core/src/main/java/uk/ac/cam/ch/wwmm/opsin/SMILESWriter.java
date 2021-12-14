@@ -13,7 +13,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 
 import uk.ac.cam.ch.wwmm.opsin.Bond.SMILES_BOND_DIRECTION;
@@ -157,7 +156,7 @@ class SMILESWriter {
 		Integer lastLabel = null;
 		Integer lastLocant = null;
 		int attachmentPointCounter = 1;
-		Map<StereoGrpKey,List<Integer>> enhancedStereo = null;
+		Map<StereoGroup,List<Integer>> enhancedStereo = null;
 		Set<Integer> seenAttachmentpoints = new HashSet<>();
 		List<Atom> polymerAttachPoints = structure.getPolymerAttachmentPoints();
 		boolean isPolymer = polymerAttachPoints != null && polymerAttachPoints.size() > 0;
@@ -222,13 +221,14 @@ class SMILESWriter {
 				positionVariationBonds.add(sb.toString());
 			}
 
-			if (a.getStereoGroup() != StereoGroup.Unk) {
-				if (enhancedStereo == null)
+			StereoGroup stereoGroup = a.getStereoGroup();
+			if (stereoGroup.getType() != StereoGroupType.Unk) {
+				if (enhancedStereo == null) {
 					enhancedStereo = new HashMap<>();
-				StereoGrpKey key = new StereoGrpKey(a.getAtomParity());
-				List<Integer> grps = enhancedStereo.get(key);
+				}
+				List<Integer> grps = enhancedStereo.get(stereoGroup);
 				if (grps == null) {
-					enhancedStereo.put(key, grps = new ArrayList<>());
+					enhancedStereo.put(stereoGroup, grps = new ArrayList<>());
 				}
 				grps.add(smilesOutputOrder.indexOf(a));
 			}
@@ -242,16 +242,17 @@ class SMILESWriter {
 		}
 		if (enhancedStereo != null && (options & SmilesOptions.CXSMILES_ENHANCED_STEREO) != 0) {
 			if (enhancedStereo.size() == 1) {
-				if (enhancedStereo.get(new StereoGrpKey(StereoGroup.Rac, 1)) != null ||
-					enhancedStereo.get(new StereoGrpKey(StereoGroup.Rac, 2)) != null) {
+				if (enhancedStereo.get(new StereoGroup(StereoGroupType.Rac, 1)) != null ||
+					enhancedStereo.get(new StereoGroup(StereoGroupType.Rac, 2)) != null) {
 					extendedSmiles.add("r");
-				} else if (enhancedStereo.get(new StereoGrpKey(StereoGroup.Rel, 1)) != null) {
-					List<Integer> idxs = enhancedStereo.get(new StereoGrpKey(StereoGroup.Rel, 1));
+				} else if (enhancedStereo.get(new StereoGroup(StereoGroupType.Rel, 1)) != null) {
+					List<Integer> idxs = enhancedStereo.get(new StereoGroup(StereoGroupType.Rel, 1));
 					StringBuilder sb   = new StringBuilder();
 					sb.append("o1:");
 					sb.append(idxs.get(0));
-					for (int i = 1; i < idxs.size(); i++)
+					for (int i = 1; i < idxs.size(); i++) {
 						sb.append(',').append(idxs.get(i));
+					}
 					extendedSmiles.add(sb.toString());
 				}
 				// Abs is ignored in this case since that is the default in smiles that
@@ -259,14 +260,14 @@ class SMILESWriter {
 			} else {
 				StringBuilder sb = new StringBuilder();
 				int numRac = 1, numRel = 1; // renumber
-				List<Map.Entry<StereoGrpKey, List<Integer>>> entires
+				List<Map.Entry<StereoGroup, List<Integer>>> entries
 						= new ArrayList<>(enhancedStereo.entrySet());
 				// ensure consistent output order
-				Collections.sort(entires,
-						new Comparator<Map.Entry<StereoGrpKey, List<Integer>>>() {
+				Collections.sort(entries,
+						new Comparator<Map.Entry<StereoGroup, List<Integer>>>() {
 							@Override
-							public int compare(Map.Entry<StereoGrpKey, List<Integer>> a,
-											   Map.Entry<StereoGrpKey, List<Integer>> b) {
+							public int compare(Map.Entry<StereoGroup, List<Integer>> a,
+											   Map.Entry<StereoGroup, List<Integer>> b) {
 								Collections.sort(a.getValue());
 								Collections.sort(b.getValue());
 								int len = Math.min(a.getValue().size(), b.getValue().size());
@@ -281,10 +282,10 @@ class SMILESWriter {
 								return a.getKey().compareTo(b.getKey()); // error?
 							}
 						});
-				for (Map.Entry<StereoGrpKey, List<Integer>> e : entires) {
+				for (Map.Entry<StereoGroup, List<Integer>> e : entries) {
 					sb.setLength(0);
-					StereoGrpKey key = e.getKey();
-					switch (key.group) {
+					StereoGroup key = e.getKey();
+					switch (key.getType()) {
 						case Abs:
 							// skip Abs this is the default in SMILES but we could be verbose about it
 							continue;
@@ -463,8 +464,8 @@ class SMILESWriter {
 		}
 		//When not outputting extended SMILES, treat rac/rel like undefined, when a stereogroup only has a single atom
 		//e.g. rac-(R)-chlorofluorobromomethane
-		StereoGroup stereoGroupType = parity.getStereoGroup();
-    	if ((stereoGroupType == StereoGroup.Rac || stereoGroupType == StereoGroup.Rel) &&
+		StereoGroupType stereoGroupType = parity.getStereoGroup().getType();
+    	if ((stereoGroupType == StereoGroupType.Rac || stereoGroupType == StereoGroupType.Rel) &&
 				countStereoGroup(atom) == 1) {
     		return false;
     	}
@@ -472,13 +473,16 @@ class SMILESWriter {
 	}
 
 	private int countStereoGroup(Atom atom) {
+		StereoGroup refGroup = atom.getAtomParity().getStereoGroup();
 		int count = 0;
-		for (Atom a : atom.getFrag().getAtomList()) {
-			if (a.getAtomParity() == null)
+		for (Atom a : atom.getFrag()) {
+			AtomParity atomParity = a.getAtomParity();
+			if (atomParity == null) {
 				continue;
-			if (a.getAtomParity().getStereoGroup().equals(atom.getAtomParity().getStereoGroup()) &&
-					a.getAtomParity().getStereoGroupNum() == atom.getAtomParity().getStereoGroupNum())
+			}
+			if (atomParity.getStereoGroup().equals(refGroup)) {
 				count++;
+			}
 		}
 		return count;
 	}
@@ -911,45 +915,4 @@ class SMILESWriter {
 		return bondSmiles;
 	}
 
-	private static final class StereoGrpKey implements Comparable<StereoGrpKey> {
-		private final StereoGroup group;
-		private final int number;
-
-		public StereoGrpKey(StereoGroup group, int number) {
-			this.group = group;
-			this.number = number;
-		}
-
-		public StereoGrpKey(AtomParity parity) {
-			this(parity.getStereoGroup(), parity.getStereoGroupNum());
-		}
-
-		@Override
-		public boolean equals(Object o) {
-			if (this == o) return true;
-			if (o == null || getClass() != o.getClass()) return false;
-			StereoGrpKey that = (StereoGrpKey) o;
-			return number == that.number && group == that.group;
-		}
-
-		@Override
-		public int hashCode() {
-			return Objects.hash(group, number);
-		}
-
-		public int compareTo(StereoGrpKey that) {
-			int cmp = this.group.compareTo(that.group);
-			if (cmp != 0)
-				return cmp;
-			return Integer.compare(this.number, that.number);
-		}
-
-		@Override
-		public String toString() {
-			return "StereoGrpKey{" +
-					"group=" + group +
-					", number=" + number +
-					'}';
-		}
-	}
 }

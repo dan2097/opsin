@@ -866,7 +866,7 @@ public class ComponentGeneration_StereochemistryTest {
 		assertEquals(STEREOCHEMISTRY_EL, newStereochemistryEl.getName());
 		assertEquals("2", newStereochemistryEl.getAttributeValue(LOCANT_ATR));
 		assertEquals("R", newStereochemistryEl.getAttributeValue(VALUE_ATR));
-		assertEquals(StereoGroup.Rac.name(),
+		assertEquals(StereoGroupType.Rac.name(),
 								 newStereochemistryEl.getAttributeValue(STEREOGROUP_ATR));
 		assertEquals(R_OR_S_TYPE_VAL, newStereochemistryEl.getAttributeValue(TYPE_ATR));
 	}
@@ -885,7 +885,7 @@ public class ComponentGeneration_StereochemistryTest {
 		assertEquals(STEREOCHEMISTRY_EL, newStereochemistryEl.getName());
 		assertEquals(null, newStereochemistryEl.getAttributeValue(LOCANT_ATR));
 		assertEquals("R", newStereochemistryEl.getAttributeValue(VALUE_ATR));
-		assertEquals(StereoGroup.Rac.name(),
+		assertEquals(StereoGroupType.Rac.name(),
 								 newStereochemistryEl.getAttributeValue(STEREOGROUP_ATR));
 		assertEquals(R_OR_S_TYPE_VAL, newStereochemistryEl.getAttributeValue(TYPE_ATR));
 	}
@@ -904,7 +904,7 @@ public class ComponentGeneration_StereochemistryTest {
 		assertEquals(STEREOCHEMISTRY_EL, newStereochemistryEl.getName());
 		assertEquals(null, newStereochemistryEl.getAttributeValue(LOCANT_ATR));
 		assertEquals("R", newStereochemistryEl.getAttributeValue(VALUE_ATR));
-		assertEquals(StereoGroup.Rac.name(),
+		assertEquals(StereoGroupType.Rac.name(),
 								 newStereochemistryEl.getAttributeValue(STEREOGROUP_ATR));
 		assertEquals(R_OR_S_TYPE_VAL, newStereochemistryEl.getAttributeValue(TYPE_ATR));
 	}
@@ -923,7 +923,7 @@ public class ComponentGeneration_StereochemistryTest {
 		assertEquals(STEREOCHEMISTRY_EL, newStereochemistryEl.getName());
 		assertEquals(null, newStereochemistryEl.getAttributeValue(LOCANT_ATR));
 		assertEquals("S", newStereochemistryEl.getAttributeValue(VALUE_ATR));
-		assertEquals(StereoGroup.Rac.name(),
+		assertEquals(StereoGroupType.Rac.name(),
 								 newStereochemistryEl.getAttributeValue(STEREOGROUP_ATR));
 		assertEquals(R_OR_S_TYPE_VAL, newStereochemistryEl.getAttributeValue(TYPE_ATR));
 	}
@@ -942,7 +942,7 @@ public class ComponentGeneration_StereochemistryTest {
 		assertEquals(STEREOCHEMISTRY_EL, newStereochemistryEl1.getName());
 		assertEquals("2", newStereochemistryEl1.getAttributeValue(LOCANT_ATR));
 		assertEquals("R", newStereochemistryEl1.getAttributeValue(VALUE_ATR));
-		assertEquals(StereoGroup.Rac.name(),
+		assertEquals(StereoGroupType.Rac.name(),
 								 newStereochemistryEl1.getAttributeValue(STEREOGROUP_ATR));
 		assertEquals(R_OR_S_TYPE_VAL, newStereochemistryEl1.getAttributeValue(TYPE_ATR));
 		
@@ -950,7 +950,7 @@ public class ComponentGeneration_StereochemistryTest {
 		assertEquals(STEREOCHEMISTRY_EL, newStereochemistryEl2.getName());
 		assertEquals("4", newStereochemistryEl2.getAttributeValue(LOCANT_ATR));
 		assertEquals("S", newStereochemistryEl2.getAttributeValue(VALUE_ATR));
-		assertEquals(StereoGroup.Rac.name(),
+		assertEquals(StereoGroupType.Rac.name(),
 								 newStereochemistryEl2.getAttributeValue(STEREOGROUP_ATR));
 		assertEquals(R_OR_S_TYPE_VAL, newStereochemistryEl2.getAttributeValue(TYPE_ATR));
 	}
@@ -969,7 +969,7 @@ public class ComponentGeneration_StereochemistryTest {
 		assertEquals(STEREOCHEMISTRY_EL, newStereochemistryEl1.getName());
 		assertEquals("2", newStereochemistryEl1.getAttributeValue(LOCANT_ATR));
 		assertEquals("R", newStereochemistryEl1.getAttributeValue(VALUE_ATR));
-		assertEquals(StereoGroup.Rac.name(),
+		assertEquals(StereoGroupType.Rac.name(),
 								 newStereochemistryEl1.getAttributeValue(STEREOGROUP_ATR));
 		assertEquals(R_OR_S_TYPE_VAL, newStereochemistryEl1.getAttributeValue(TYPE_ATR));
 		
@@ -977,7 +977,7 @@ public class ComponentGeneration_StereochemistryTest {
 		assertEquals(STEREOCHEMISTRY_EL, newStereochemistryEl2.getName());
 		assertEquals("4", newStereochemistryEl2.getAttributeValue(LOCANT_ATR));
 		assertEquals("S", newStereochemistryEl2.getAttributeValue(VALUE_ATR));
-		assertEquals(StereoGroup.Rac.name(),
+		assertEquals(StereoGroupType.Rac.name(),
 								 newStereochemistryEl2.getAttributeValue(STEREOGROUP_ATR));
 		assertEquals(R_OR_S_TYPE_VAL, newStereochemistryEl2.getAttributeValue(TYPE_ATR));
 	}
@@ -1044,7 +1044,7 @@ public class ComponentGeneration_StereochemistryTest {
 		assertEquals(STEREOCHEMISTRY_EL, newStereochemistryEl.getName());
 		assertEquals(null, newStereochemistryEl.getAttributeValue(LOCANT_ATR));
 		assertEquals("R", newStereochemistryEl.getAttributeValue(VALUE_ATR));
-		assertEquals(StereoGroup.Rac.name(),
+		assertEquals(StereoGroupType.Rac.name(),
 								 newStereochemistryEl.getAttributeValue(STEREOGROUP_ATR));
 		assertEquals(R_OR_S_TYPE_VAL, newStereochemistryEl.getAttributeValue(TYPE_ATR));
 	}

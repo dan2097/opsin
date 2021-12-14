@@ -1305,7 +1305,7 @@ class ComponentProcessor {
 		if (dlStereochemistryValue.equals("dl")){
 			int grpnum = ++state.numRacGrps;
 			for (Atom atom : atomsWithParities) {
-				atom.getAtomParity().setStereoGroup(StereoGroup.Rac, grpnum);
+				atom.setStereoGroup(new StereoGroup(StereoGroupType.Rac, grpnum));
 			}
 		}
 		else{
@@ -1343,19 +1343,19 @@ class ComponentProcessor {
 			throw new ComponentGenerationException("D/L stereochemistry :" + dlStereochemistryValue + " found before achiral carbohydrate");//sounds like a vocab bug...
 		}
 
-		StereoGroup grp;
+		StereoGroupType grp;
 		int grpnum = 0;
 		boolean invert;
 		if (dlStereochemistryValue.equals("dl")){
 			invert = false;
-			grp = StereoGroup.Rac;
+			grp = StereoGroupType.Rac;
 			grpnum = ++state.numRacGrps;
 		} else if (dlStereochemistryValue.equals("d") || dlStereochemistryValue.equals("dg")){
 			invert = false;
-			grp = StereoGroup.Abs;
+			grp = StereoGroupType.Abs;
 		} else if (dlStereochemistryValue.equals("l") || dlStereochemistryValue.equals("lg")){
 			invert = true;
-			grp = StereoGroup.Abs;
+			grp = StereoGroupType.Abs;
 		} else{
 			throw new ComponentGenerationException("Unexpected value for D/L stereochemistry found before carbohydrate: " + dlStereochemistryValue );
 		}
@@ -1366,11 +1366,11 @@ class ComponentProcessor {
 		if (invert) {
 			for (Atom atom : atomsWithParities) {
 				atom.getAtomParity().setParity(-atom.getAtomParity().getParity());
-				atom.getAtomParity().setStereoGroup(grp, grpnum);
+				atom.setStereoGroup(new StereoGroup(grp, grpnum));
 			}
-		} else if (grp != StereoGroup.Abs) {
+		} else if (grp != StereoGroupType.Abs) {
 			for (Atom atom : atomsWithParities) {
-				atom.getAtomParity().setStereoGroup(grp, grpnum);
+				atom.setStereoGroup(new StereoGroup(grp, grpnum));
 			}
 		}
 	}
