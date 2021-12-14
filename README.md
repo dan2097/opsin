@@ -100,9 +100,21 @@ or
 #### Building from source
 To build OPSIN from source, download Maven 3 and download OPSIN's source code.
 
+#### OPSIN up to v2.5.0 
+
 Running `mvn package assembly:assembly` in the root of OPSIN's source will build the jar with dependencies
 
 Running `mvn assembly:assembly` in the opsin-core folder will build the "excludingInChI-jar-with-dependencies"
+
+#### OPSIN current snapshot (subject to change)
+
+Running `mvn package` in the root of OPSIN's source will build:
+
+| Artifact                                        | Location           | Description                                                       |
+|-------------------------------------------------|--------------------|-------------------------------------------------------------------|
+| opsin-cli-<version>-jar-with-dependencies.jar   | opsin-cli/target   | Standalone command-line application with SMILES/CML/InChI support |
+| opsin-core-<version>-jar-with-dependencies.jar  | opsin-core/target  | Library with SMILES/CML support                                   |
+| opsin-inchi-<version>-jar-with-dependencies.jar | opsin-inchi/target | Library with SMILES/CML/InChI support                             |
 
 ### About OPSIN
 

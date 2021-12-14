@@ -9,6 +9,25 @@
   <name>OPSIN Core</name>
   <description>Core files of OPSIN. Allows conversion of chemical names to CML (Chemical Markup Language)</description>
   <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>3.2.4</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+            <configuration>
+              <!-- outputFile avoids installing needless uber jar: "The created archive will neither replace the project's main artifact nor will it be attached"-->
+              <outputFile>target/opsin-core-${project.version}-jar-with-dependencies.jar</outputFile>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
     <resources>
       <resource>
         <directory>src/main/resources</directory>
