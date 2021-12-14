@@ -10,7 +10,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
 
 import javax.xml.stream.XMLOutputFactory;
@@ -224,34 +223,26 @@ public class Cli {
 		NameToStructure nts = NameToStructure.getInstance();
 		BufferedReader inputReader = new BufferedReader(new InputStreamReader(input, StandardCharsets.UTF_8));
 		BufferedWriter outputWriter = new BufferedWriter(new OutputStreamWriter(out, StandardCharsets.UTF_8));
-		Class<?> c;
-		try {
-			c = Class.forName("uk.ac.cam.ch.wwmm.opsin.NameToInchi");
-		} catch (ClassNotFoundException e) {
-			System.err.println("Could not initialise NameToInChI module. Is it on your classpath?");
-			throw new RuntimeException(e);
-		}
-		Method m;
-		switch (inchiType) {
-		case inchiWithFixedH:
-			m = c.getMethod("convertResultToInChI", new Class[] { OpsinResult.class });
-			break;
-		case stdInchi:
-			m = c.getMethod("convertResultToStdInChI", new Class[] { OpsinResult.class });
-			break;
-		case stdInchiKey:
-			m = c.getMethod("convertResultToStdInChIKey", new Class[] { OpsinResult.class });
-			break;
-		default:
-			throw new IllegalArgumentException("Unexepected enum value: " + inchiType);
-		}
-
 		String line;
 		while ((line = inputReader.readLine()) != null) {
 			int splitPoint = line.indexOf('\t');
 			String name = splitPoint >= 0 ? line.substring(0, splitPoint) : line;
 			OpsinResult result = nts.parseChemicalName(name, n2sconfig);
-			String output = (String) m.invoke(null, result);
+			String output;
+			switch (inchiType) {
+			case inchiWithFixedH:
+				output = NameToInchi.convertResultToInChI(result);
+				break;
+			case stdInchi:
+				output = NameToInchi.convertResultToStdInChI(result);
+				break;
+			case stdInchiKey:
+				output = NameToInchi.convertResultToStdInChIKey(result);
+				break;
+			default:
+				throw new IllegalArgumentException("Unexepected enum value: " + inchiType);
+			}
+
 			if (output == null) {
 				System.err.println(result.getMessage());
 			} else {
