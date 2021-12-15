@@ -215,7 +215,7 @@
       <dependency>
         <groupId>io.github.dan2097</groupId>
         <artifactId>jna-inchi-core</artifactId>
-        <version>1.0</version>
+        <version>1.0.1</version>
       </dependency>
       <dependency>
         <groupId>commons-io</groupId>
