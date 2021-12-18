@@ -4241,6 +4241,12 @@ class ComponentProcessor {
 			return;
 		}
 
+		if (frag.getAtomCount() == 1 && frag.getFirstAtom().getElement() == ChemEl.Si) {
+			//silyl is typically triple substituted, so more than just the preceding substituent potentially should be inside the implicit bracket
+			//e.g. ethoxydimethylsilylpropyl should be (ethoxydimethylsilyl)propyl
+			elementBeforeSubstituent = determineSubstitutentForSilylImplicitBracketting(elementBeforeSubstituent, 3);
+		}
+
 		/*
 		 * locant may need to be moved. This occurs when the group in elementBeforeSubstituent is not supposed to be locanted onto
 		 *  theSubstituentGroup
@@ -4405,6 +4411,17 @@ class ComponentProcessor {
 				//e.g. N,N-diethylmethylphosphonamidate (methyl is unlocanted)
 				return true;
 			}
+			if (multiplier != null && Integer.parseInt(multiplier.getAttributeValue(VALUE_ATR)) == 2) {
+				Element nextGroup = OpsinTools.getNextGroup(group);
+				if (nextGroup != null) {
+					Fragment frag = nextGroup.getFrag();
+					if (frag.getAtomCount() == 1 && frag.getFirstAtom().getElement() == ChemEl.Si) {
+						//special case
+						//e.g. 3-dimethylethoxysilylpropyl
+						return true;
+					}
+				}
+			}
 			return false;
 		}
 		return true;
@@ -4469,6 +4486,40 @@ class ComponentProcessor {
 			}
 		}
 		return false;
+	}
+	
+	private Element determineSubstitutentForSilylImplicitBracketting(Element el, int expectedSubstituents) {
+		Element elToUse = el;
+		while (elToUse != null && (elToUse.getName().equals(SUBSTITUENT_EL) ||  elToUse.getName().equals(BRACKET_EL))) {
+			int multiplier = 1;
+			boolean locantPresent = false;//locant can be present on the first substituent, but not others e.g. 3-dimethylethoxysilylpropyl
+			int index = 0;
+			int childCount = elToUse.getChildCount();
+			Element childToConsider = elToUse.getChild(index++);
+			if (childToConsider.getName().equals(LOCANT_EL)) {
+				locantPresent = true;
+				childToConsider = index < childCount ? elToUse.getChild(index++) : null;
+			}
+			if (childToConsider != null && childToConsider.getName().equals(MULTIPLIER_EL)) {
+				multiplier = Integer.parseInt(childToConsider.getAttributeValue(VALUE_ATR));
+				childToConsider = index < childCount ? elToUse.getChild(index++) : null;
+			}
+			if (childToConsider == null || !(childToConsider.getName().equals(GROUP_EL) || childToConsider.getName().equals(SUBSTITUENT_EL))) {
+				return el;//Not expected substituent content
+			}
+			expectedSubstituents -= multiplier;
+			if (expectedSubstituents <=0) {
+				if (expectedSubstituents < 0) {
+					return el;//Not expected substituent conten
+				}
+				return elToUse;//extend implicit bracket
+			}
+			if (locantPresent) {
+				return el;
+			}
+			elToUse = OpsinTools.getPreviousSibling(elToUse);
+		}
+		return el;
 	}
 
 	/**
