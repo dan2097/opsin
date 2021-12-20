@@ -1,3 +1,27 @@
+Version 2.6.0 (2021-12-21)
+OPSIN now requires Java 8 (or higher)
+OPSIN command-line functionality moved to opsin-cli module
+OPSIN standalone jars are now built with mvn package
+Updated from InChI 1.03 to InChI 1.06
+Support for capturing relative/racemic stereochemistry (output via CxSmiles) [contributed by John Mayfield]
+Support for deaza/dethia
+Support nitrile as a suffix on amino acids [contributed by John Mayfield]
+Support more glycero-n-phospho substituents
+Support for chloroxime and other haloximes
+Support cis/trans on rings where a stereocenter has two non-hydrogen substituents, using Cahn-Ingold-Prelog rules to determine which are relative
+Multiple improvements to implicit bracketting logic
+Corrected interpretation of methylselenopyruvate
+Added group 1/2 nitrides e.g. magnesium nitride
+Added molecular diatomics e.g. molecular hydrogen (or dihydrogen)
+Fixed out of memory error if a fusion bracket referenced an interior atom instead of a peripheral atom
+Fixed out of memory error while parsing very long ambiguous input, by switching parsing algorithm from breadth-first to depth-first
+
+Dependency changes:
+Updated logging from Log4J v1.2.17 to the latest Log4J2 (v2.17.0). Neither OPSIN 2.5.0 nor 2.6.0 are vulnerable to Log4Shell. The logging implementation is only included in the opsin-cli module.
+opsin-inchi now uses JNA-InChI (https://github.com/dan2097/jna-inchi) rather than JNI-InChI. This supports the latest version of InChI and also support new Macs with ARM64 processors
+Woodstox now uses groupid com.fasterxml.woodstox (the groupid change did not signify a break in API compatibility)
+dk.brics.automaton now uses groupid dk.brics (the groupid change did not signify a break in API compatibility)
+
 Version 2.5.0 (2020-10-04)
 OPSIN now requires Java 7 (or higher)
 Support for traditional oxidation state names e.g. ferric
