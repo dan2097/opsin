@@ -217,7 +217,7 @@ abstract class Element {
 			}
 		}
 		else{
-			result.append(getValue());
+			result.append(OpsinTools.xmlEncode(getValue()));
 		}
 		result.append("</");
 		result.append(name);

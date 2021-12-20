@@ -32,43 +32,10 @@ class Attribute {
 	}
 
 	String toXML() {
-		return getName() + "=\"" + escapeText(value) + "\"";
+		return getName() + "=\"" + OpsinTools.xmlEncode(value) + "\"";
 	}
 
 	public String toString() {
 		return name +"\t" + value;
-	}
-
-	private String escapeText(String s) {
-		StringBuilder result = new StringBuilder();
-		for (int i = 0, l = s.length(); i < l; i++) {
-			char c = s.charAt(i);
-			switch (c) {
-			case '\t':
-				result.append("&#x09;");
-				break;
-			case '\n':
-				result.append("&#x0A;");
-				break;
-			case '\r':
-				result.append("&#x0D;");
-				break;
-			case '"':
-				result.append("&quot;");
-				break;
-			case '&':
-				result.append("&amp;");
-				break;
-			case '<':
-				result.append("&lt;");
-				break;
-			case '>':
-				result.append("&gt;");
-				break;
-			default:
-				result.append(c);
-			}
-		}
-		return result.toString();
 	}
 }

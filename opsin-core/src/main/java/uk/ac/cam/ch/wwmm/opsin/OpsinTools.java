@@ -701,4 +701,42 @@ class OpsinTools {
 		}
 		return laterSiblings;
 	}
+	
+	/**
+	 * Replaces newlines/tabs and &quot;&amp;&lt;&gt; with XML entities
+	 * @param str
+	 * @return
+	 */
+	static String xmlEncode(String str) {
+		StringBuilder result = new StringBuilder();
+		for (int i = 0, len = str.length(); i < len; i++) {
+			char c = str.charAt(i);
+			switch (c) {
+			case '\t':
+				result.append("&#x09;");
+				break;
+			case '\n':
+				result.append("&#x0A;");
+				break;
+			case '\r':
+				result.append("&#x0D;");
+				break;
+			case '"':
+				result.append("&quot;");
+				break;
+			case '&':
+				result.append("&amp;");
+				break;
+			case '<':
+				result.append("&lt;");
+				break;
+			case '>':
+				result.append("&gt;");
+				break;
+			default:
+				result.append(c);
+			}
+		}
+		return result.toString();
+	}
 }
