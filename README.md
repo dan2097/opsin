@@ -1,5 +1,5 @@
 [![Maven Central](https://img.shields.io/maven-central/v/uk.ac.cam.ch.opsin/opsin-core.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22uk.ac.cam.ch.opsin%22)
-[![Javadoc](http://javadoc.io/badge/uk.ac.cam.ch.opsin/opsin-core.svg)](http://javadoc.io/doc/uk.ac.cam.ch.opsin/opsin-core)
+[![Javadoc](https://javadoc.io/badge/uk.ac.cam.ch.opsin/opsin-core.svg)](https://javadoc.io/doc/uk.ac.cam.ch.opsin/opsin-core)
 [![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Build Status](https://github.com/dan2097/opsin/workflows/Java%20CI%20with%20Maven/badge.svg)](https://github.com/dan2097/opsin/actions)
 
@@ -7,7 +7,7 @@ OPSIN - Open Parser for Systematic IUPAC Nomenclature
 =====================================================
 __Version 2.5.0 (see ReleaseNotes.txt for what's new in this version)__  
 __Source code: <https://github.com/dan2097/opsin>__  
-__Web interface and informational site: <http://opsin.ch.cam.ac.uk/>__  
+__Web interface and informational site: <https://opsin.ch.cam.ac.uk/>__  
 __License: [MIT License](https://opensource.org/licenses/MIT)__  
 
 OPSIN is a Java library for IUPAC name-to-structure conversion offering high recall and precision on organic chemical nomenclature. 
