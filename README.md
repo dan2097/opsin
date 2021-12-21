@@ -77,11 +77,11 @@ NOTE: (Std)InChI cannot be generated for polymers or radicals generated in combi
 
 ### Availability
 OPSIN is available as a standalone JAR from GitHub, <https://github.com/dan2097/opsin/releases>  
-`opsin-cli-2.6.0-jar-with-dependencies.jar` can be executed as command-line application. It includes SMILES/CML/InChI support and bundles a logging implementation.
-`opsin-core-2.6.0-jar-with-dependencies.jar` includes just SMILES/CML support.
+* `opsin-cli-2.6.0-jar-with-dependencies.jar` can be executed as a command-line application. It includes SMILES/CML/InChI support and bundles a logging implementation.
+* `opsin-core-2.6.0-jar-with-dependencies.jar` includes just SMILES/CML support.
 
 OPSIN is also available from the Maven Central Repository. 
-For SMILES/CML output support one would include:
+For SMILES/CML output support you would include:
 
     <dependency>
        <groupId>uk.ac.cam.ch.opsin</groupId>
