@@ -1,4 +1,6 @@
 [![Maven Central](https://img.shields.io/maven-central/v/uk.ac.cam.ch.opsin/opsin-core.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22uk.ac.cam.ch.opsin%22)
+[![Javadoc](http://javadoc.io/badge/uk.ac.cam.ch.opsin/opsin-core.svg)](http://javadoc.io/doc/uk.ac.cam.ch.opsin/opsin-core)
+[![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Build Status](https://github.com/dan2097/opsin/workflows/Java%20CI%20with%20Maven/badge.svg)](https://github.com/dan2097/opsin/actions)
 
 OPSIN - Open Parser for Systematic IUPAC Nomenclature
