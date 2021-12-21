@@ -119,8 +119,8 @@ public class OpsinResult {
 	}
 	
 	/**
-	 * Generates the CML corresponding to the molecule described by the name
-	 * If name generation failed i.e. the OPSIN_RESULT_STATUS is FAILURE then null is returned
+	 * Generates the CML corresponding to the molecule described by the name<br>
+	 * If name generation failed i.e. the OPSIN_RESULT_STATUS is FAILURE then null is returned<br>
 	 * The CML is indented
 	 * @return Idented Chemical Markup Language as a String
 	 */
@@ -137,7 +137,7 @@ public class OpsinResult {
 	}
 
 	/**
-	 * Generates the SMILES corresponding to the molecule described by the name
+	 * Generates the SMILES corresponding to the molecule described by the name<br>
 	 * If name generation failed i.e. the OPSIN_RESULT_STATUS is FAILURE then null is returned
 	 * @return SMILES as a String
 	 */
@@ -146,7 +146,7 @@ public class OpsinResult {
 	}
 
 	/**
-	 * Generates the SMILES corresponding to the molecule described by the name
+	 * Generates the SMILES corresponding to the molecule described by the name<br>
 	 * If name generation failed i.e. the OPSIN_RESULT_STATUS is FAILURE then null is returned.
 	 * <br>
 	 * The <code>options</code> parameter is used to control the output by a set of binary flags. This is
@@ -155,7 +155,7 @@ public class OpsinResult {
 	 * // only the include the enhanced stereo layers
 	 * result.getSmiles(SmilesOptions.CXSMILES_ENHANCED_STEREO);
 	 * // only the include the enhanced stereo and polymer layers
-	 * result.getSmiles(SmilesOptions.CXSMILES_ENHANCED_STEREO +
+	 * result.getSmiles(SmilesOptions.CXSMILES_ENHANCED_STEREO |
 	 *                  SmilesOptions.CXSMILES_POLYMERS);
 	 * </pre>
 	 *

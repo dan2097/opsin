@@ -13,11 +13,11 @@ public interface SmilesOptions {
 	 */
 	int DEFAULT                  = 0x0;
 	/**
-	 * Include atom labels in CXSMILES.
+	 * Include atom labels in CXSMILES. These can provide semantics to * atoms e.g. a label of _AP1 is the first attachment point.
 	 */
 	int CXSMILES_ATOM_LABELS     = 0x1;
 	/**
-	 * Include atom values in CXSMILES - these are the locant values.
+	 * Include atom values in CXSMILES. The first locant value of each atom is used for this.
 	 */
 	int CXSMILES_ATOM_VALUES     = 0x2;
 	/**
@@ -29,7 +29,7 @@ public interface SmilesOptions {
 	 */
 	int CXSMILES_ENHANCED_STEREO = 0x8;
 	/**
-	 * Include all CXSMILES layers that are relevant. This option is equivalent to turning on all CXSMILES features.s
+	 * Include all CXSMILES layers that are relevant. This option is equivalent to turning on all CXSMILES features.
 	 */
 	int CXSMILES                 = CXSMILES_ATOM_LABELS |
 			                       CXSMILES_ATOM_VALUES |
