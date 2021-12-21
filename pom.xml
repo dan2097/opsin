@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>uk.ac.cam.ch.opsin</groupId>
   <artifactId>opsin</artifactId>
-  <version>2.6.0</version>
+  <version>3.0-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>OPSIN</name>
   <description>Open Parser for Systematic IUPAC Nomenclature</description>
@@ -21,7 +21,7 @@
     <developerConnection>
       scm:git:https://github.com/dan2097/opsin
     </developerConnection>
-    <tag>2.6.0</tag>
+    <tag>HEAD</tag>
   </scm>
   <developers>
     <developer>
