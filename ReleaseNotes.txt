@@ -17,10 +17,11 @@ Fixed out of memory error if a fusion bracket referenced an interior atom instea
 Fixed out of memory error while parsing very long ambiguous input, by switching parsing algorithm from breadth-first to depth-first
 
 Dependency changes:
-Updated logging from Log4J v1.2.17 to the latest Log4J2 (v2.17.0). Neither OPSIN 2.5.0 nor 2.6.0 are vulnerable to Log4Shell. The logging implementation is only included in the opsin-cli module.
+Updated logging from Log4J v1.2.17 to the latest Log4J2 (v2.17.0). Neither OPSIN 2.5.0 nor 2.6.0 are vulnerable to Log4Shell. The logging implementation is only included in the opsin-cli module
 opsin-inchi now uses JNA-InChI (https://github.com/dan2097/jna-inchi) rather than JNI-InChI. This supports the latest version of InChI and also support new Macs with ARM64 processors
 Woodstox now uses groupid com.fasterxml.woodstox (the groupid change did not signify a break in API compatibility)
 dk.brics.automaton now uses groupid dk.brics (the groupid change did not signify a break in API compatibility)
+commons-cli is only used by the opsin-cli module
 
 Version 2.5.0 (2020-10-04)
 OPSIN now requires Java 7 (or higher)
