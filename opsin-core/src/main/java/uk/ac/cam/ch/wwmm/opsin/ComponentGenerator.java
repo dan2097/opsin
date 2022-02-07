@@ -532,10 +532,6 @@ class ComponentGenerator {
 		List<Element> alkaneStemModifiers = subOrRoot.getChildElements(ALKANESTEMMODIFIER_EL);
 		for (Element alkaneStemModifier : alkaneStemModifiers) {
 			Element alkane = OpsinTools.getNextSibling(alkaneStemModifier);
-			if (alkane ==null || !CHAIN_TYPE_VAL.equals(alkane.getAttributeValue(TYPE_ATR))
-					|| !ALKANESTEM_SUBTYPE_VAL.equals(alkane.getAttributeValue(SUBTYPE_ATR))){
-				throw new ComponentGenerationException("OPSIN Bug: AlkaneStem not found after alkaneStemModifier");
-			}
 			String type;
 			if (alkaneStemModifier.getAttribute(VALUE_ATR)!=null){
 				type = alkaneStemModifier.getAttributeValue(VALUE_ATR);//identified by token;
@@ -555,45 +551,59 @@ class ComponentGenerator {
 				}
 			}
 			alkaneStemModifier.detach();
-			int chainLength = alkane.getAttributeValue(VALUE_ATR).length();
+			if (alkane ==null){
+				throw new ComponentGenerationException("OPSIN Bug: AlkaneStem not found after alkaneStemModifier");
+			}
+			String subType = alkane.getAttributeValue(SUBTYPE_ATR);
+			boolean isAmyl;
+			if (AMYL_SUBTYPE_VAL.equals(subType)) {
+				isAmyl = true;
+			}
+			else if (CHAIN_TYPE_VAL.equals(alkane.getAttributeValue(TYPE_ATR)) && ALKANESTEM_SUBTYPE_VAL.equals(subType)) {
+				isAmyl = false;
+			}
+			else {
+				throw new ComponentGenerationException("OPSIN Bug: AlkaneStem not found after alkaneStemModifier");
+			}
+			int chainLength = isAmyl ? 5 : alkane.getAttributeValue(VALUE_ATR).length();
 			String smiles;
 			String labels = NONE_LABELS_VAL;
-			if (type.equals("normal")){
+			if (type.equals("normal")) {
 				//normal behaviour is default so don't need to do anything
 				//n-methyl and n-ethyl contain redundant information and are probably intended to mean N-methyl/N-ethyl
-				if ((chainLength==1 || chainLength ==2) && alkaneStemModifier.getValue().equals("n-")){
+				if ((chainLength == 1 || chainLength == 2) && alkaneStemModifier.getValue().equals("n-")){
 					Element locant = new TokenEl(LOCANT_EL, "N");
 					OpsinTools.insertBefore(alkane, locant);
 				}
 				continue;
 			}
 			else if (type.equals("tert")){
-				if (chainLength <4){
-					throw new ComponentGenerationException("ChainLength to small for tert modifier, required minLength 4. Found: " +chainLength);
+				if (chainLength < 4) {
+					throw new ComponentGenerationException("ChainLength to small for tert modifier, required minLength 4. Found: " + chainLength);
 				}
-				if (chainLength >8){
-					throw new ComponentGenerationException("Interpretation of tert on an alkane chain of length: " + chainLength +" is ambiguous");
+				if (chainLength > 8) {
+					throw new ComponentGenerationException("Interpretation of tert on an alkane chain of length: " + chainLength + " is ambiguous");
 				}
-				if (chainLength ==8){
+				if (chainLength == 8) {
 					smiles = "C(C)(C)CC(C)(C)C";
 				}
 				else{
-					smiles ="C(C)(C)C" + StringTools.multiplyString("C", chainLength-4);
+					smiles = "C(C)(C)C" + StringTools.multiplyString("C", chainLength-4);
 				}
 			}
 			else if (type.equals("iso")){
-				if (chainLength <3){
+				if (chainLength < 3) {
 					throw new ComponentGenerationException("ChainLength to small for iso modifier, required minLength 3. Found: " +chainLength);
 				}
-				boolean suffixPresent = subOrRoot.getChildElements(SUFFIX_EL).size() > 0;
-				if (chainLength==3 && !suffixPresent){
+				boolean suffixPresent = isAmyl || subOrRoot.getChildElements(SUFFIX_EL).size() > 0;
+				if (chainLength == 3 && !suffixPresent){
 					throw new ComponentGenerationException("iso has no meaning without a suffix on an alkane chain of length 3");
 				}
-				if (chainLength ==8 && !suffixPresent){
+				if (chainLength == 8 && !suffixPresent){
 					smiles = "C(C)(C)CC(C)(C)C";
 				}
 				else{
-					smiles =StringTools.multiplyString("C", chainLength - 3) +"C(C)C";
+					smiles = StringTools.multiplyString("C", chainLength - 3) +"C(C)C";
 					StringBuilder sb = new StringBuilder();
 					for (int c = 1; c <= chainLength - 2; c++) {
 						sb.append(c);
@@ -603,28 +613,31 @@ class ComponentGenerator {
 					labels = sb.toString();
 				}
 			}
-			else if (type.equals("sec")){
-				if (chainLength <3){
+			else if (type.equals("sec")) {
+				if (chainLength < 3) {
 					throw new ComponentGenerationException("ChainLength to small for sec modifier, required minLength 3. Found: " +chainLength);
 				}
-				boolean suffixPresent = subOrRoot.getChildElements(SUFFIX_EL).size() > 0;
-				if (!suffixPresent){
+				boolean suffixPresent = isAmyl || subOrRoot.getChildElements(SUFFIX_EL).size() > 0;
+				if (!suffixPresent) {
 					throw new ComponentGenerationException("sec has no meaning without a suffix on an alkane chain");
 				}
-				smiles ="C(C)C" + StringTools.multiplyString("C", chainLength-3);
+				smiles = "C(C)C" + StringTools.multiplyString("C", chainLength-3);
 			}
-			else if (type.equals("neo")){
-				if (chainLength <5){
+			else if (type.equals("neo")) {
+				if (chainLength < 5) {
 					throw new ComponentGenerationException("ChainLength to small for neo modifier, required minLength 5. Found: " +chainLength);
 				}
-				smiles = StringTools.multiplyString("C", chainLength-5) + "CC(C)(C)C";
+				smiles = StringTools.multiplyString("C", chainLength - 5) + "CC(C)(C)C";
 			}
 			else{
 				throw new ComponentGenerationException("Unrecognised alkaneStem modifier");
 			}
+			if (isAmyl) {
+				smiles = alkane.getAttributeValue(VALUE_ATR).substring(0,1) + smiles;//include - or = indicating yl/ylidene
+			}
 			alkane.getAttribute(VALUE_ATR).setValue(smiles);
-			alkane.removeAttribute(alkane.getAttribute(USABLEASJOINER_ATR));
 			alkane.getAttribute(LABELS_ATR).setValue(labels);
+			alkane.removeAttribute(alkane.getAttribute(USABLEASJOINER_ATR));
 		}
 	}
 
