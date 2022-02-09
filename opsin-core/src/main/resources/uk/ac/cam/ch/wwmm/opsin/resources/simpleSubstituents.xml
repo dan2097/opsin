@@ -24,17 +24,10 @@
 		<token value="=N" usableAsAJoiner="yes">aminylidene|aminyliden</token>
 		<token value="#N">aminylidyne|aminylidyn</token>
 		<token value="-OCCCCC" labels="/1/2/3/4/5">amoxy</token>
-		<token value="-CCCCC" labels="1/2/3/4/5">amyl|normalamyl|normal amyl|normal-amyl</token>
-		<token value="=CCCCC" labels="1/2/3/4/5">amylidene|amyliden</token>
 		<token value="=Cc1ccccc1" labels="/1/2,ortho/3,meta/4,para/5/6" addGroup="OC defaultLocant 4" frontLocantsExpected="2,ortho,3,meta,4,para,5,6">anisal</token>
 		<token value="-c1c(OC)cc(OC)c(OC)c1">asaryl</token>
 		<token value="-N=[N+]=[N-]">azidyl</token>
 		<token value="-OCCC(C)C" labels="/1/2/3//">iso-amoxy|isoamoxy</token>
-		<token value="-CCC(C)C" labels="1/2/3//">iso-amyl|isoamyl</token>
-		<token value="=CCC(C)C" labels="1/2/3//">iso-amylidene|isoamylidene|iso-amyliden|isoamyliden</token>
-		<token value="-CC(C)(C)C">neo-amyl|neoamyl</token>
-		<token value="-C(C)CCC">secamyl|sec.amyl|sec-amyl|sec.-amyl|secondaryamyl|secondary amyl|secondary-amyl</token>
-		<token value="-C(C)(C)CC">tertiaryamyl|tertiary amyl|tertiary-amyl|tert-amyl|tertamyl|tert.-amyl|tert.amyl|t-amyl</token>
 		<token value="-Nc1ccccc1" labels="/1/2,ortho/3,meta/4,para/5/6">anilino</token>
 		<token value="COc1ccccc1" labels="alpha//1/2,ortho/3,meta/4,para/5/6" addGroup="N defaultLocant 4" outIDs="9" frontLocantsExpected="2,ortho,3,meta,4,para,5,6">anisidino</token>
 		<token value="=Cc1ccccc1" labels="alpha/1/2,ortho/3,meta/4,para/5/6">benzal|benzylene</token>
@@ -170,7 +163,7 @@
 		<token value="-NCCCCN">putrescinyl</token>
 		<token value="-N1CCCC1" labels="1/2/3/4/5">pyrrolidino</token>
 		<token value="=Cc1c(O)cccc1" labels="/1/2,ortho//3,meta/4,para/5/6">salicylal</token>
-		<token value="-C(C)C(C)C">sec-iso-amyl|sec.-iso-amyl|sec-isoamyl|sec.-isoamyl|secisoamyl</token>
+		<token value="-C(C)C(C)C">sec-iso-amyl|sec.-iso-amyl|sec-isoamyl|sec.-isoamyl|secisoamyl|sec-iso-pentyl|sec.-iso-pentyl|sec-isopentyl|sec.-isopentyl|secisopentyl</token>
 		<token value="-OC(C)CC">sec-butoxyl|sec.-butoxyl|secbutoxyl</token>
 		<token value="-[Se](O)">seleneno</token>
 		<token value="-[Se](=O)(O)">selenino</token>
@@ -551,5 +544,11 @@
 		<token value="-[I|1]">periodo</token>
 		<token value="-[2H]">perdeuterio|perdeutero</token>
 		<token value="-[3H]">pertritio</token>
+	</tokenList>
+
+<!--can take an alkaneStemModifier-->
+	<tokenList tagname="group" type="substituent" subType="amyl" symbol="Ą">
+		<token value="-CCCCC" labels="1/2/3/4/5" usableAsAJoiner="yes">amyl</token>
+		<token value="=CCCCC" labels="1/2/3/4/5" usableAsAJoiner="yes">amylidene|amyliden</token>
 	</tokenList>
 </tokenLists>

@@ -466,6 +466,8 @@ class XmlDeclarations {
 	static final String ACETALLIKE_SUBTYPE_VAL = "acetalLike";
 	/**The stem of an alkane e.g. "eth" */
 	static final String ALKANESTEM_SUBTYPE_VAL ="alkaneStem";
+	/**Amyl/amylidene */
+	static final String AMYL_SUBTYPE_VAL = "amyl";
 	/**An anhydride functional term e.g. "thioanhydride"*/
 	static final String ANHYDRIDE_SUBTYPE_VAL ="anhydride";
 	/**An aryl subsituent or stem e.g. "phenyl", "styr" */

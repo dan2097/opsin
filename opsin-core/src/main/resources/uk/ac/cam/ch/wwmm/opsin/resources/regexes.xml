@@ -166,6 +166,7 @@ does not define a CFG.
 	<regex name="%unbrackettedR%" value="ā"/>
 	<regex name="%notPrecededByLetter%" value="Ă"/>
 	<regex name="%notFollowedByLetter%" value="ă"/>
+	<regex name="%amyl%" value="Ą"/>
 
 <!-- composite regexes-->
 
@@ -240,7 +241,7 @@ does not define a CFG.
 	<regex name="%chainGroup%" value = "(%heteroChain%|%alternatingHeteroChain%|%alkaneStemModifier%?%alkaneStem%(%a%?%unsaturationBlock%|%ylium%))"/>
 	<regex name="%nitrogenChainSubstituent%" value = "(((%multiplierNotGroup%%nitrogenHeteroStem%%unsaturationBlock%)|(%nitrogenHeteroStem%%hyphen%?%ane%))%oMeaningYl%)"/>
 	<regex name="%alkYlene%" value = "((%alkaneStemSystematic%%unsaturationBlock%?|%alkaneStemTrivial%%unsaturationBlock%)%optLocantGroupNoOMP%%ylene%)"/>
-	<regex name="%chainSubstituent%" value = "(%chainGroup%%inlineEndings%|%alkaneStemModifier%?%alkaneStem%(%optLocantGroupNoOMP%|%a%%hyphen%?%locant%|%hyphen%?%ezBeforeYlidene%)%unlocantedInlineSuffixGroup%%repeatableInlineSuffixGroup%*|%nitrogenChainSubstituent%|%alkYlene%)"/>
+	<regex name="%chainSubstituent%" value = "(%chainGroup%%inlineEndings%|%alkaneStemModifier%?(%alkaneStem%(%optLocantGroupNoOMP%|%a%%hyphen%?%locant%|%hyphen%?%ezBeforeYlidene%)%unlocantedInlineSuffixGroup%%repeatableInlineSuffixGroup%*|%amyl%)|%nitrogenChainSubstituent%|%alkYlene%)"/>
 
 	<regex name="%aminoMonoAcid%" value="(%dlStereochemistryPrefix%?((%aminoAcidEndsInIne%|%aminoAcidEndsInCompulsoryIne%)%ine%|%aminoAcidEndsInAn%%ane%))"/>
 	<regex name="%aminoAcidSubstituentStem%" value="(%dlStereochemistryPrefix%?(%aminoAcidEndsInIne%%ine%?|%aminoAcidEndsInCompulsoryIne%%ine%|%aminoAcidEndsInAn%%ane%?|%aminoAcidEndsInIc%))"/>
