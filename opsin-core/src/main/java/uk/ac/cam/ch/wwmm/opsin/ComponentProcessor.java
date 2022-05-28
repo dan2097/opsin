@@ -1428,10 +1428,18 @@ class ComponentProcessor {
 				Attribute anomericId = carbohydrate.getAttribute(SUFFIXAPPLIESTO_ATR);
 				if (anomericId != null){
 					Atom anomericCarbon = carbohydrateFrag.getAtomByID(carbohydrateFrag.getIdOfFirstAtom() + Integer.parseInt(anomericId.getValue()) -1);
-					applyAlphaBetaStereoToCyclisedCarbohydrate(carbohydrate, anomericCarbon);
+					if (APIOFURANOSE_SUBTYPE_VAL.equals(subtype)) {
+						Element suffix = getNextSibling(carbohydrate);
+						if (suffix != null && suffix.getName().equals(SUFFIX_EL)) {
+							suffix.addAttribute(new Attribute(LOCANTID_ATR, String.valueOf(anomericCarbon.getID())));
+						}
+					}
+					else {
+						applyAlphaBetaStereoToCyclisedCarbohydrate(carbohydrate, anomericCarbon);
+					}
 					carbohydrate.removeAttribute(anomericId);
 				}
-				//trivial carbohydrates don't have suffixes
+				//trivial carbohydrates don't have suffixes (except apiofuranoses)
 				continue;
 			}
 			boolean cyclisationPerformed = false;

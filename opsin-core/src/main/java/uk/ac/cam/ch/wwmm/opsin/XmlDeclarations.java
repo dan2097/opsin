@@ -470,6 +470,8 @@ class XmlDeclarations {
 	static final String AMYL_SUBTYPE_VAL = "amyl";
 	/**An anhydride functional term e.g. "thioanhydride"*/
 	static final String ANHYDRIDE_SUBTYPE_VAL ="anhydride";
+	/**A CAS apio furanose stereoisomer*/
+	static final String APIOFURANOSE_SUBTYPE_VAL ="apioFuranose";
 	/**An aryl subsituent or stem e.g. "phenyl", "styr" */
 	static final String ARYLSUBSTITUENT_SUBTYPE_VAL ="arylSubstituent";
 	/**Nucleotides/nucleosides/natural products.

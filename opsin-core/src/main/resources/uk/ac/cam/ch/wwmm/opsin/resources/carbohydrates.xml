@@ -44,7 +44,7 @@ NOTE:A suffixAppliesTo is expected on all carbohydrates that may be effected by 
 		<token value="O=C[C@H](O)[C@](C=O)(O)[C@@H](O)C" labels="/1/2//3////4//5" suffixAppliesTo="2" naturalEntIsOpposite="yes">strept</token>
 		<token value="O=C[C@@H](O)[C@@](C)(O)[C@H](O)[C@H](O)C" labels="/1/2//3///4//5//6" suffixAppliesTo="2">eval</token>
 		<token value="O=CC[C@](C)([N+](=O)[O-])[C@@H](OC)[C@@H](O)C" labels="/1/2/3/////4///5//6" suffixAppliesTo="2" naturalEntIsOpposite="yes">evernitr</token>
-		<token value="O=C[C@H](O)C(CO)(O)CO" labels="/1/2//3////4/" suffixAppliesTo="2">api</token>
+		<token value="O=C[C@H](O)C(CO)(O)CO" labels="/1/2//3/4///5/" suffixAppliesTo="2">api</token>
 	</tokenList>
 
 	<tokenList tagname="group" type="carbohydrate" subType="carbohydrateStemKetose" symbol="á">
@@ -111,6 +111,18 @@ NOTE:A suffixAppliesTo is expected on all carbohydrates that may be effected by 
 		<token value="O=C[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6//7//8//9//10//11//12//13//14//15//16/" suffixAppliesTo="2">hexadec</token>
 	</tokenList>
 
+	<tokenList tagname="group" type="carbohydrate" subType="apioFuranose" symbol="ą">
+<!--used by CAS to describe cyclic apiose-->
+		<token value="O[C@@H]1[C@H](O)[C@](CO)(O)CO1" labels="/1/2//3/5///4/" suffixAppliesTo="2">apio-alpha-d-furan|d-apio-alpha-d-furan</token>
+		<token value="O[C@H]1[C@H](O)[C@](CO)(O)CO1" labels="/1/2//3/5///4/" suffixAppliesTo="2">apio-beta-d-furan|d-apio-beta-d-furan</token>
+		<token value="O[C@H]1[C@H](O)[C@@](CO)(O)CO1" labels="/1/2//3/5///4/" suffixAppliesTo="2">apio-alpha-l-furan|d-apio-alpha-l-furan</token>
+		<token value="O[C@@H]1[C@H](O)[C@@](CO)(O)CO1" labels="/1/2//3/5///4/" suffixAppliesTo="2">apio-beta-l-furan|d-apio-beta-l-furan</token>
+		<token value="O[C@@H]1[C@@H](O)[C@](CO)(O)CO1" labels="/1/2//3/5///4/" suffixAppliesTo="2">l-apio-alpha-d-furan</token>
+		<token value="O[C@H]1[C@@H](O)[C@](CO)(O)CO1" labels="/1/2//3/5///4/" suffixAppliesTo="2">l-apio-beta-d-furan</token>
+		<token value="O[C@H]1[C@@H](O)[C@@](CO)(O)CO1" labels="/1/2//3/5///4/" suffixAppliesTo="2">l-apio-alpha-l-furan</token>
+		<token value="O[C@@H]1[C@@H](O)[C@@](CO)(O)CO1" labels="/1/2//3/5///4/" suffixAppliesTo="2">l-apio-beta-l-furan</token>
+	</tokenList>
+
 	<tokenList tagname="group" type="carbohydrate" subType="simpleGroup" symbol="Þ">
 		<!--trivial, always open-chain-->
 		<token value="SC[C@H](O)[C@H](O)CS" labels="/1/2//3//4/">dithioerythritol</token>
@@ -160,18 +172,6 @@ NOTE:A suffixAppliesTo is expected on all carbohydrates that may be effected by 
 		<token value="O=C[C@H](O)CO" labels="/1/2//3/">d-glyceraldehyde|(d)-glyceraldehyde|d-glyceraldehyd|(d)-glyceraldehyd</token>
 		<token value="O=C[C@@H](O)CO" labels="/1/2//3/">l-glyceraldehyde|(l)-glyceraldehyde|l-glyceraldehyd|(l)-glyceraldehyd</token>
 		<token value="O=C[C@H](O)[C@@H](O)[C@H](O)[C@H](O)CO" labels="/1/2//3//4//5//6/">dextrose</token>
-	</tokenList>
-
-	<tokenList tagname="group" type="carbohydrate" subType="ring" symbol="G">
-<!--used by CAS to describe cyclic apiose-->
-		<token value="O[C@@H]1[C@H](O)[C@](CO)(O)CO1" labels="/1/2//3////4/">apio-alpha-d-furanose|d-apio-alpha-d-furanose</token>
-		<token value="O[C@H]1[C@H](O)[C@](CO)(O)CO1" labels="/1/2//3////4/">apio-beta-d-furanose|d-apio-beta-d-furanose</token>
-		<token value="O[C@@H]1[C@H](O)[C@@](CO)(O)CO1" labels="/1/2//3////4/">apio-alpha-l-furanose|d-apio-alpha-l-furanose</token>
-		<token value="O[C@H]1[C@H](O)[C@@](CO)(O)CO1" labels="/1/2//3////4/">apio-beta-l-furanose|d-apio-beta-l-furanose</token>
-		<token value="O[C@H]1[C@@H](O)[C@](CO)(O)CO1" labels="/1/2//3////4/">l-apio-alpha-d-furanose</token>
-		<token value="O[C@@H]1[C@@H](O)[C@](CO)(O)CO1" labels="/1/2//3////4/">l-apio-beta-d-furanose</token>
-		<token value="O[C@H]1[C@@H](O)[C@@](CO)(O)CO1" labels="/1/2//3////4/">l-apio-alpha-l-furanose</token>
-		<token value="O[C@@H]1[C@@H](O)[C@@](CO)(O)CO1" labels="/1/2//3////4/">l-apio-beta-l-furanose</token>
 	</tokenList>
 
 <!--trivial glycosyl-->
