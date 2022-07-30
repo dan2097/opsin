@@ -69,7 +69,7 @@ class ComponentGenerator {
 	//match a fusion bracket with only numerical locants. If this is followed by a HW group it probably wasn't a fusion bracket
 	private static final Pattern matchNumberLocantsOnlyFusionBracket = Pattern.compile("\\[\\d+(,\\d+)*\\]");
 	private static final Pattern matchCommaOrDot =Pattern.compile("[\\.,]");
-	private static final Pattern matchAnnulene = Pattern.compile("[\\[\\(\\{]([1-9]\\d*)[\\]\\)\\}]annulen");
+	private static final Pattern matchAnnulene = Pattern.compile("[\\[\\(\\{]([1-9]\\d*)[\\]\\)\\}]annul(en|yn)", Pattern.CASE_INSENSITIVE);
 	private static final String elementSymbols ="(?:He|Li|Be|B|C|N|O|F|Ne|Na|Mg|Al|Si|P|S|Cl|Ar|K|Ca|Sc|Ti|V|Cr|Mn|Fe|Co|Ni|Cu|Zn|Ga|Ge|As|Se|Br|Kr|Rb|Sr|Y|Zr|Nb|Mo|Tc|Ru|Rh|Pd|Ag|Cd|In|Sn|Sb|Te|I|Xe|Cs|Ba|La|Ce|Pr|Nd|Pm|Sm|Eu|Gd|Tb|Dy|Ho|Er|Tm|Yb|Lu|Hf|Ta|W|Re|Os|Ir|Pt|Au|Hg|Tl|Pb|Po|At|Rn|Fr|Ra|Ac|Th|Pa|U|Np|Pu|Am|Cm|Bk|Cf|Es|Fm|Md|No|Lr|Rf|Db|Sg|Bh|Hs|Mt|Ds)";
 	private static final Pattern matchStereochemistry = Pattern.compile("(.*?)(SR|R/?S|r/?s|[Rr]\\^?[*]|[Ss]\\^?[*]|[Ee][Zz]|[EZ][*]|[RSEZrsezabx]|[cC][iI][sS]|[tT][rR][aA][nN][sS]|[aA][lL][pP][hH][aA]|[bB][eE][tT][aA]|[xX][iI]|[eE][xX][oO]|[eE][nN][dD][oO]|[sS][yY][nN]|[aA][nN][tT][iI]|M|P|Ra|Sa|Sp|Rp|R(?:[Oo][Rr]|[Aa][Nn][Dd])S|S(?:[Oo][Rr]|[Aa][Nn][Dd])R|E(?:[Oo][Rr]|[Aa][Nn][Dd])Z|Z(?:[Oo][Rr]|[Aa][Nn][Dd])E)");
 	private static final Pattern matchRacemic = Pattern.compile("rac(\\.|em(\\.|ic)?)?-?", Pattern.CASE_INSENSITIVE);
@@ -1620,24 +1620,32 @@ class ComponentGenerator {
 	private void processHydroCarbonRings(Element subOrRoot) throws ComponentGenerationException {
 		List<Element> annulens = subOrRoot.getChildElements(ANNULEN_EL);
 		for (Element annulen : annulens) {
-			String annulenValue =annulen.getValue();
-	        Matcher match = matchAnnulene.matcher(annulenValue);
-	        match.matches();
-	        if (match.groupCount() !=1){
+			String annulenValue = annulen.getValue();
+	        Matcher m = matchAnnulene.matcher(annulenValue);
+	        if (!m.matches()) {
 	        	throw new ComponentGenerationException("Invalid annulen tag");
 	        }
 
-	        int annulenSize=Integer.valueOf(match.group(1));
-	        if (annulenSize <3){
-	        	throw new ComponentGenerationException("Invalid annulen tag");
+	        int annuleneSize = Integer.valueOf(m.group(1));
+	        if (annuleneSize < 3) {
+	        	throw new ComponentGenerationException("Invalid annulene size");
 	        }
 
 			//build [annulenSize]annulene ring as SMILES
-			String SMILES = "c1" +StringTools.multiplyString("c", annulenSize -1);
-			SMILES += "1";
+	        StringBuilder sb = new StringBuilder();
+	        if (m.group(2).equalsIgnoreCase("yn")) {
+	            sb.append("C1#C");
+	        }
+	        else {
+	            sb.append("c1c");
+	        }
+	        for (int i = 2; i < annuleneSize; i++) {
+				sb.append("c");
+			}
+	        sb.append('1');
 
-			Element group =new TokenEl(GROUP_EL, annulenValue);
-			group.addAttribute(new Attribute(VALUE_ATR, SMILES));
+			Element group = new TokenEl(GROUP_EL, annulenValue);
+			group.addAttribute(new Attribute(VALUE_ATR, sb.toString()));
 			group.addAttribute(new Attribute(LABELS_ATR, NUMERIC_LABELS_VAL));
 			group.addAttribute(new Attribute(TYPE_ATR, RING_TYPE_VAL));
 			group.addAttribute(new Attribute(SUBTYPE_ATR, RING_SUBTYPE_VAL));
