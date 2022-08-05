@@ -89,17 +89,6 @@ Parsing will fail if the end result is not one or more full terms or a polymer.
 		<word type="functionalTerm" functionalGroupType="acidReplacingFunctionalGroup"/>
 	</wordRule>
 
-	<wordRule name="acidReplacingFunctionalGroup" type="full">
-		<word type="full" endsWithGroupType="aminoAcid"/>
-		<word type="functionalTerm" functionalGroupType="acidReplacingFunctionalGroup"/>
-	</wordRule>
-
-	<wordRule name="acidReplacingFunctionalGroup" type="full">
-		<word type="full" endsWithGroupType="aminoAcid"/>
-		<word type="substituent" />
-		<word type="functionalTerm" functionalGroupType="acidReplacingFunctionalGroup"/>
-	</wordRule>
-
 	<wordRule name="functionGroupAsGroup" type="full">
 		<word type="substituent" />
 		<word type="functionalTerm" endsWithRegex="amid[e]?[\]\)\}]*"/>
@@ -280,22 +269,6 @@ Parsing will fail if the end result is not one or more full terms or a polymer.
 
 	<wordRule name="functionGroupAsGroup" type="full">
 		<word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
-	</wordRule>
-
-	<wordRule name="acidHalideOrPseudoHalide" type="full">
-		<word type="full" endsWithGroupType="aminoAcid"/>
-		<word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
-	</wordRule>
-
-	<wordRule name="anhydride" type="full">
-		<word type="full" endsWithGroupType="aminoAcid"/>
-		<word type="full" endsWithGroupType="aminoAcid"/>
-		<word type="functionalTerm" functionalGroupType="functionalClass" functionalGroupSubType="anhydride"/>
-	</wordRule>
-
-	<wordRule name="anhydride" type="full">
-		<word type="full" endsWithGroupType="aminoAcid"/>
-		<word type="functionalTerm" functionalGroupType="functionalClass" functionalGroupSubType="anhydride"/>
 	</wordRule>
 
 	<wordRule name="additionCompound" type="full">

@@ -566,7 +566,8 @@ class WordRules {
 					}
 				}
 				else if (elName.equals(GROUP_EL)) {
-					if (lastEl.getAttribute(FUNCTIONALIDS_ATR) != null && icOrOusAcid.matcher(lastEl.getValue()).find()) {
+					if (lastEl.getAttribute(FUNCTIONALIDS_ATR) != null && 
+							(icOrOusAcid.matcher(lastEl.getValue()).find() || AMINOACID_TYPE_VAL.equals(lastEl.getAttributeValue(TYPE_ATR)))) {
 						return true;
 					}
 				}
