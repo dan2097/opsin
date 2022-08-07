@@ -19,7 +19,7 @@ class Ring {
 	private List<Bond> cyclicBondList;
 	
 	Ring(List<Bond> bondList){
-		if (bondList==null || bondList.size()==0){
+		if (bondList==null || bondList.isEmpty()){
 			throw new IllegalArgumentException("Bond list is empty");
 		}
 		this.bondList = bondList;

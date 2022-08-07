@@ -340,7 +340,7 @@ class FunctionalReplacement {
 					}
 					boolean infixAssignmentAmbiguous =false;
 					if ((acceptSingleBondedOxygen ||nitrido)  && !acceptDoubleBondedOxygen){
-						if (singleBondedOxygen.size() ==0){
+						if (singleBondedOxygen.isEmpty()){
 							throw new StructureBuildingException("Cannot find single bonded oxygen for infix with SMILES: "+ replacementSMILES+ " to modify!");
 						}
 						if (singleBondedOxygen.size() !=1){
@@ -348,7 +348,7 @@ class FunctionalReplacement {
 						}
 					}
 					if (!acceptSingleBondedOxygen && (acceptDoubleBondedOxygen || nitrido)){
-						if (doubleBondedOxygen.size()==0){
+						if (doubleBondedOxygen.isEmpty()){
 							throw new StructureBuildingException("Cannot find double bonded oxygen for infix with SMILES: "+ replacementSMILES+ " to modify!");
 						}
 						if (doubleBondedOxygen.size() != 1){
@@ -447,10 +447,10 @@ class FunctionalReplacement {
 		
 		Element groupToBeModified = acidContainingRoot.getFirstChildElement(GROUP_EL);
 		List<Atom> oxygenAtoms = findFunctionalOxygenAtomsInApplicableSuffixes(groupToBeModified);
-		if (oxygenAtoms.size() == 0){
+		if (oxygenAtoms.isEmpty()){
 			oxygenAtoms = findFunctionalOxygenAtomsInGroup(groupToBeModified);
 		}
-		if (oxygenAtoms.size() == 0){
+		if (oxygenAtoms.isEmpty()){
 			List<Element> conjunctiveSuffixElements =OpsinTools.getNextSiblingsOfType(groupToBeModified, CONJUNCTIVESUFFIXGROUP_EL);
 			for (Element conjunctiveSuffixElement : conjunctiveSuffixElements) {
 				oxygenAtoms.addAll(findFunctionalOxygenAtomsInGroup(conjunctiveSuffixElement));
@@ -516,10 +516,10 @@ class FunctionalReplacement {
 			
 			Element groupToBeModified = acidContainingRoot.getFirstChildElement(GROUP_EL);
 			List<Atom> oxygenAtoms = findFunctionalOxygenAtomsInApplicableSuffixes(groupToBeModified);
-			if (oxygenAtoms.size()==0) {
+			if (oxygenAtoms.isEmpty()) {
 				oxygenAtoms = findFunctionalOxygenAtomsInGroup(groupToBeModified);
 			}
-			if (oxygenAtoms.size()==0) {
+			if (oxygenAtoms.isEmpty()) {
 				List<Element> conjunctiveSuffixElements =OpsinTools.getNextSiblingsOfType(groupToBeModified, CONJUNCTIVESUFFIXGROUP_EL);
 				for (Element conjunctiveSuffixElement : conjunctiveSuffixElements) {
 					oxygenAtoms.addAll(findFunctionalOxygenAtomsInGroup(conjunctiveSuffixElement));
@@ -628,7 +628,7 @@ class FunctionalReplacement {
 	 */
 	private int performChalcogenFunctionalReplacement(Element groupToBeModified, Element locantEl, int numberOfAtomsToReplace, String replacementSmiles) throws StructureBuildingException {
 		List<Atom> oxygenAtoms = findOxygenAtomsInApplicableSuffixes(groupToBeModified);
-		if (oxygenAtoms.size() == 0) {
+		if (oxygenAtoms.isEmpty()) {
 			oxygenAtoms = findOxygenAtomsInGroup(groupToBeModified);
 		}
 		if (locantEl != null) {//locants are used to indicate replacement on trivial groups
@@ -726,7 +726,7 @@ class FunctionalReplacement {
 	 */
 	private int performPeroxyFunctionalReplacement(Element groupToBeModified, Element locantEl, int numberOfAtomsToReplace) throws StructureBuildingException {
 		List<Atom> oxygenAtoms = findFunctionalOxygenAtomsInApplicableSuffixes(groupToBeModified);
-		if (oxygenAtoms.size()==0){
+		if (oxygenAtoms.isEmpty()){
 			oxygenAtoms = findEthericOxygenAtomsInGroup(groupToBeModified);
 			oxygenAtoms.addAll(findFunctionalOxygenAtomsInGroup(groupToBeModified));
 		}
@@ -796,7 +796,7 @@ class FunctionalReplacement {
 		}
 		replacementSmiles = replacementSmiles.substring(1);
 		List<Atom> oxygenAtoms = findOxygenAtomsInApplicableSuffixes(groupToBeModified);
-		if (oxygenAtoms.size()==0){
+		if (oxygenAtoms.isEmpty()){
 			oxygenAtoms = findOxygenAtomsInGroup(groupToBeModified);
 		}
 		if (locantEl !=null){//locants are used to indicate replacement on trivial groups
@@ -832,7 +832,7 @@ class FunctionalReplacement {
 			oxygenAtoms.addAll(terminalDoubleBondedOxygen);
 		}
 		else {
-			if (singleBondedOxygen.size()==0 || terminalDoubleBondedOxygen.size()==0){
+			if (singleBondedOxygen.isEmpty() || terminalDoubleBondedOxygen.isEmpty()){
 				throw new StructureBuildingException("Both a -OH and =O are required for nitrido prefix functional replacement");
 			}
 			oxygenAtoms.removeAll(singleBondedOxygen);

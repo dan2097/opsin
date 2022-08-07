@@ -694,7 +694,7 @@ class WordRules {
 			wordEls.remove(wordToPotentiallyCombineWith);
 			wordToPotentiallyCombineWith.detach();
 			List<Element> substituentEls = firstWord.getChildElements(SUBSTITUENT_EL);
-			if (substituentEls.size()==0){
+			if (substituentEls.isEmpty()){
 				throw new ParsingException("OPSIN Bug: Substituent element not found where substituent element expected");
 			}
 			Element finalSubstituent = substituentEls.get(substituentEls.size() - 1);

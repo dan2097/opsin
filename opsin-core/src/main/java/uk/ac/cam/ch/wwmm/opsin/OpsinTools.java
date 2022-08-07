@@ -100,7 +100,7 @@ class OpsinTools {
 		  previous = previous.getChild(previous.getChildCount() - 1);
 	  }
 	  List<Element> groups = previous.getParent().getChildElements(GROUP_EL);
-	  if (groups.size() == 0){
+	  if (groups.isEmpty()){
 		  return getPreviousGroup(previous);
 	  }
 	  else{
@@ -130,7 +130,7 @@ class OpsinTools {
 		  next = next.getChild(0);
 	  }
 	  List<Element> groups = next.getParent().getChildElements(GROUP_EL);
-	  if (groups.size() == 0){
+	  if (groups.isEmpty()){
 		  return getNextGroup(next);
 	  }
 	  else{

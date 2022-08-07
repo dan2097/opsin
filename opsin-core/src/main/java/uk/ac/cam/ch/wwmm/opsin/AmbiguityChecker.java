@@ -14,7 +14,7 @@ import java.util.Set;
 class AmbiguityChecker {
 
 	static boolean isSubstitutionAmbiguous(List<Atom> substitutableAtoms, int numberToBeSubstituted) {
-		if (substitutableAtoms.size() == 0) {
+		if (substitutableAtoms.isEmpty()) {
 			throw new IllegalArgumentException("OPSIN Bug: Must provide at least one substituable atom");
 		}
 		if (substitutableAtoms.size() < numberToBeSubstituted) {
@@ -129,7 +129,7 @@ class AmbiguityChecker {
 	}
 
 	static List<Atom> useAtomEnvironmentsToGivePlausibleSubstitution(List<Atom> substitutableAtoms, int numberToBeSubstituted) {
-		if (substitutableAtoms.size() == 0) {
+		if (substitutableAtoms.isEmpty()) {
 			throw new IllegalArgumentException("OPSIN Bug: Must provide at least one substituable atom");
 		}
 		if (substitutableAtoms.size() < numberToBeSubstituted) {

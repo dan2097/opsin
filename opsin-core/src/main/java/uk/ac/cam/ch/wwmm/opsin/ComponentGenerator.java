@@ -2640,7 +2640,7 @@ class ComponentGenerator {
 			if (next!=null && next.getName().equals(ROOT_EL)){
 				if (!(next.getChild(0).getName().equals(MULTIPLIER_EL))){
 					List<Element> suffixes = next.getChildElements(SUFFIX_EL);
-					if (suffixes.size()==0){//only case without locants is handled so far. suffixes only apply to one of the fragments rather than both!!!
+					if (suffixes.isEmpty()){//only case without locants is handled so far. suffixes only apply to one of the fragments rather than both!!!
 						Element newMultiplier = new TokenEl(MULTIPLIER_EL);
 						newMultiplier.addAttribute(new Attribute(VALUE_ATR, "2"));
 						next.insertChild(newMultiplier, 0);

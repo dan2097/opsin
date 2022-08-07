@@ -168,7 +168,7 @@ public class NameToStructure {
 				if (LOG.isDebugEnabled()) {
 					LOG.debug(parse.toXML());
 				}
-				if (state.getWarnings().size() == 0) {
+				if (state.getWarnings().isEmpty()) {
 					return new OpsinResult(frag, OPSIN_RESULT_STATUS.SUCCESS, "", name);
 				}
 				if (fragGeneratedWithWarning == null) {
