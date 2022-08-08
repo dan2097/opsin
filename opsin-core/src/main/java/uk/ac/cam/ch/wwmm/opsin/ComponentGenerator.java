@@ -69,7 +69,7 @@ class ComponentGenerator {
 	//match a fusion bracket with only numerical locants. If this is followed by a HW group it probably wasn't a fusion bracket
 	private static final Pattern matchNumberLocantsOnlyFusionBracket = Pattern.compile("\\[\\d+(,\\d+)*\\]");
 	private static final Pattern matchCommaOrDot =Pattern.compile("[\\.,]");
-	private static final Pattern matchAnnulene = Pattern.compile("[\\[\\(\\{]([1-9]\\d*)[\\]\\)\\}]annulen");
+	private static final Pattern matchAnnulene = Pattern.compile("[\\[\\(\\{]([1-9]\\d*)[\\]\\)\\}]annul(en|yn)", Pattern.CASE_INSENSITIVE);
 	private static final String elementSymbols ="(?:He|Li|Be|B|C|N|O|F|Ne|Na|Mg|Al|Si|P|S|Cl|Ar|K|Ca|Sc|Ti|V|Cr|Mn|Fe|Co|Ni|Cu|Zn|Ga|Ge|As|Se|Br|Kr|Rb|Sr|Y|Zr|Nb|Mo|Tc|Ru|Rh|Pd|Ag|Cd|In|Sn|Sb|Te|I|Xe|Cs|Ba|La|Ce|Pr|Nd|Pm|Sm|Eu|Gd|Tb|Dy|Ho|Er|Tm|Yb|Lu|Hf|Ta|W|Re|Os|Ir|Pt|Au|Hg|Tl|Pb|Po|At|Rn|Fr|Ra|Ac|Th|Pa|U|Np|Pu|Am|Cm|Bk|Cf|Es|Fm|Md|No|Lr|Rf|Db|Sg|Bh|Hs|Mt|Ds)";
 	private static final Pattern matchStereochemistry = Pattern.compile("(.*?)(SR|R/?S|r/?s|[Rr]\\^?[*]|[Ss]\\^?[*]|[Ee][Zz]|[EZ][*]|[RSEZrsezabx]|[cC][iI][sS]|[tT][rR][aA][nN][sS]|[aA][lL][pP][hH][aA]|[bB][eE][tT][aA]|[xX][iI]|[eE][xX][oO]|[eE][nN][dD][oO]|[sS][yY][nN]|[aA][nN][tT][iI]|M|P|Ra|Sa|Sp|Rp|R(?:[Oo][Rr]|[Aa][Nn][Dd])S|S(?:[Oo][Rr]|[Aa][Nn][Dd])R|E(?:[Oo][Rr]|[Aa][Nn][Dd])Z|Z(?:[Oo][Rr]|[Aa][Nn][Dd])E)");
 	private static final Pattern matchRacemic = Pattern.compile("rac(\\.|em(\\.|ic)?)?-?", Pattern.CASE_INSENSITIVE);
@@ -1620,24 +1620,32 @@ class ComponentGenerator {
 	private void processHydroCarbonRings(Element subOrRoot) throws ComponentGenerationException {
 		List<Element> annulens = subOrRoot.getChildElements(ANNULEN_EL);
 		for (Element annulen : annulens) {
-			String annulenValue =annulen.getValue();
-	        Matcher match = matchAnnulene.matcher(annulenValue);
-	        match.matches();
-	        if (match.groupCount() !=1){
+			String annulenValue = annulen.getValue();
+	        Matcher m = matchAnnulene.matcher(annulenValue);
+	        if (!m.matches()) {
 	        	throw new ComponentGenerationException("Invalid annulen tag");
 	        }
 
-	        int annulenSize=Integer.valueOf(match.group(1));
-	        if (annulenSize <3){
-	        	throw new ComponentGenerationException("Invalid annulen tag");
+	        int annuleneSize = Integer.valueOf(m.group(1));
+	        if (annuleneSize < 3) {
+	        	throw new ComponentGenerationException("Invalid annulene size");
 	        }
 
 			//build [annulenSize]annulene ring as SMILES
-			String SMILES = "c1" +StringTools.multiplyString("c", annulenSize -1);
-			SMILES += "1";
+	        StringBuilder sb = new StringBuilder();
+	        if (m.group(2).equalsIgnoreCase("yn")) {
+	            sb.append("C1#C");
+	        }
+	        else {
+	            sb.append("c1c");
+	        }
+	        for (int i = 2; i < annuleneSize; i++) {
+				sb.append("c");
+			}
+	        sb.append('1');
 
-			Element group =new TokenEl(GROUP_EL, annulenValue);
-			group.addAttribute(new Attribute(VALUE_ATR, SMILES));
+			Element group = new TokenEl(GROUP_EL, annulenValue);
+			group.addAttribute(new Attribute(VALUE_ATR, sb.toString()));
 			group.addAttribute(new Attribute(LABELS_ATR, NUMERIC_LABELS_VAL));
 			group.addAttribute(new Attribute(TYPE_ATR, RING_TYPE_VAL));
 			group.addAttribute(new Attribute(SUBTYPE_ATR, RING_SUBTYPE_VAL));
@@ -1932,13 +1940,44 @@ class ComponentGenerator {
 			numberOfSpiros = Integer.parseInt(multiplier.getAttributeValue(VALUE_ATR));
 			multiplier.detach();
 		}
-		int numberOfCarbonInDescriptors =0;
+		int numberOfCarbonInDescriptors = 0;
+		boolean hasSuperscripts = false;
 		for (int[] spiroDescriptor : spiroDescriptors) {
 			numberOfCarbonInDescriptors += spiroDescriptor[0];
+			if (spiroDescriptor[1] != -1) {
+				hasSuperscripts = true;
+			}
 		}
 		numberOfCarbonInDescriptors += numberOfSpiros;
-		if (numberOfCarbonInDescriptors != chainGroup.getAttributeValue(VALUE_ATR).length()){
-			throw new ComponentGenerationException("Disagreement between number of atoms in spiro descriptor: " + numberOfCarbonInDescriptors +" and number of atoms in chain: " + chainGroup.getAttributeValue(VALUE_ATR).length());
+		int expectedNumberOfCarbons = chainGroup.getAttributeValue(VALUE_ATR).length();
+		if (numberOfCarbonInDescriptors != expectedNumberOfCarbons) {
+			if (numberOfCarbonInDescriptors > expectedNumberOfCarbons && spiroDescriptors.length > 2 && !hasSuperscripts) {
+				//Can we infer where superscripts should have been?
+				//Assume that all 2+ digit spiro descriptors are actually single digit bridges followed by a superscripted locant
+				//Note that the locant can't be zero, so 10,20,30 etc. can't be split to a superscripted zero
+				int carbonsWithSuperscriptsInferred = 0;
+				for (int i = 0; i < spiroDescriptors.length; i++) {
+					int[] spiroDescriptor = spiroDescriptors[i];
+					int carbons = spiroDescriptor[0];
+					if (i > 1 && carbons >= 11) {
+						String str = String.valueOf(carbons);
+						carbons = Integer.parseInt(str.substring(0,1));
+						int locant = Integer.parseInt(str.substring(1));
+						if (locant > 0) {
+							spiroDescriptor[0] = carbons;
+							spiroDescriptor[1] = locant;
+						}
+					}
+					carbonsWithSuperscriptsInferred += carbons;
+				}
+				carbonsWithSuperscriptsInferred += numberOfSpiros;
+				if (carbonsWithSuperscriptsInferred == expectedNumberOfCarbons) {
+					numberOfCarbonInDescriptors = carbonsWithSuperscriptsInferred;
+				}
+			}
+			if (numberOfCarbonInDescriptors != expectedNumberOfCarbons) {
+				throw new ComponentGenerationException("Disagreement between number of atoms in spiro descriptor: " + numberOfCarbonInDescriptors +" and number of atoms in chain: " + expectedNumberOfCarbons);
+			}
 		}
 
 		int numOfOpenedBrackets = 1;
@@ -1946,18 +1985,18 @@ class ComponentGenerator {
 		String smiles = "C0" + StringTools.multiplyString("C", spiroDescriptors[0][0]) + "10(";
 
 		// for those molecules where no superstrings compare prefix number with curIndex.
-		for (int i=1; i< spiroDescriptors.length; i++) {
+		for (int i = 1; i < spiroDescriptors.length; i++) {
 			if (spiroDescriptors[i][1] >= 0) {
-				int ringOpeningPos = findIndexOfRingOpenings( smiles, spiroDescriptors[i][1] );
+				int ringOpeningPos = findIndexOfRingOpenings(smiles, spiroDescriptors[i][1]);
 				String ringOpeningLabel = String.valueOf(smiles.charAt(ringOpeningPos));
 				ringOpeningPos++;
-				if (ringOpeningLabel.equals("%")){
-					while (smiles.charAt(ringOpeningPos)>='0' && smiles.charAt(ringOpeningPos)<='9' && ringOpeningPos < smiles.length()) {
+				if (ringOpeningLabel.equals("%")) {
+					while (smiles.charAt(ringOpeningPos) >= '0' && smiles.charAt(ringOpeningPos) <= '9' && ringOpeningPos < smiles.length()) {
 						ringOpeningLabel += smiles.charAt(ringOpeningPos);
 						ringOpeningPos++;
 					}
 				}
-				if (smiles.indexOf("C" + ringOpeningLabel, ringOpeningPos)>=0) {
+				if (smiles.indexOf("C" + ringOpeningLabel, ringOpeningPos) >= 0) {
 					// this ring opening has already been closed
 					// i.e. this atom connects more than one ring in a spiro fusion
 
@@ -1990,7 +2029,7 @@ class ComponentGenerator {
 		}
 		chainGroup.getAttribute(VALUE_ATR).setValue(smiles);
 		chainGroup.getAttribute(TYPE_ATR).setValue(RING_TYPE_VAL);
-		if (chainGroup.getAttribute(USABLEASJOINER_ATR) !=null){
+		if (chainGroup.getAttribute(USABLEASJOINER_ATR) != null) {
 			chainGroup.removeAttribute(chainGroup.getAttribute(USABLEASJOINER_ATR));
 		}
 		spiroEl.detach();
@@ -2002,8 +2041,8 @@ class ComponentGenerator {
 	 * @return
 	 */
 	private String ringClosure(int ringClosure) {
-		if (ringClosure >9){
-			return "%" +Integer.toString(ringClosure);
+		if (ringClosure > 9) {
+			return "%" + Integer.toString(ringClosure);
 		}
 		else{
 			return Integer.toString(ringClosure);
@@ -2016,20 +2055,20 @@ class ComponentGenerator {
 	 * @return array with number of carbons in each group and associated index of spiro atom
 	 */
 	private int[][] getSpiroDescriptors(String text) {
-		if (text.indexOf("-")==5){
-			text= text.substring(7, text.length()-1);//cut off spiro-[ and terminal ]
+		if (text.indexOf("-") == 5) {
+			text = text.substring(7, text.length() - 1);//cut off spiro-[ and terminal ]
 		}
 		else{
-			text= text.substring(6, text.length()-1);//cut off spiro[ and terminal ]
+			text = text.substring(6, text.length() - 1);//cut off spiro[ and terminal ]
 		}
 
 		String[] spiroDescriptorStrings = matchCommaOrDot.split(text);
 
 		int[][] spiroDescriptors = new int[spiroDescriptorStrings.length][2]; // array of descriptors where number of elements and super string present
 
-		for (int i=0; i < spiroDescriptorStrings.length; i++) {
+		for (int i = 0; i < spiroDescriptorStrings.length; i++) {
 			String[] elements = matchNonDigit.split(spiroDescriptorStrings[i]);
-			if (elements.length >1) {//a "superscripted" number is present
+			if (elements.length > 1) {//a "superscripted" number is present
 				spiroDescriptors[i][0] = Integer.parseInt(elements[0]);
 				StringBuilder superScriptedNumber = new StringBuilder();
 				for (int j = 1; j < elements.length; j++){//may be more than one non digit as there are many ways of indicating superscripts
@@ -2054,23 +2093,22 @@ class ComponentGenerator {
 	 * @return index of ring openings
 	 * @throws ComponentGenerationException
 	 */
-	private Integer findIndexOfRingOpenings(String smiles, int locant) throws ComponentGenerationException{
+	private Integer findIndexOfRingOpenings(String smiles, int locant) throws ComponentGenerationException {
 		int count = 0;
 		int pos = -1;
-		for (int i=0; i<smiles.length(); i++){
+		for (int i = 0, len = smiles.length(); i < len; i++) {
 			if (smiles.charAt(i) == 'C') {
 				count++;
-			}
-			if (count==locant) {
-				pos=i;
-				break;
+				if (count == locant) {
+					pos = i;
+					break;
+				}
 			}
 		}
-		if (pos == -1){
+		if (pos == -1) {
 			throw new ComponentGenerationException("Unable to find atom corresponding to number indicated by superscript in spiro descriptor");
 		}
-		pos++;
-		return pos;
+		return pos + 1;
 	}
 
 	/**
@@ -2602,7 +2640,7 @@ class ComponentGenerator {
 			if (next!=null && next.getName().equals(ROOT_EL)){
 				if (!(next.getChild(0).getName().equals(MULTIPLIER_EL))){
 					List<Element> suffixes = next.getChildElements(SUFFIX_EL);
-					if (suffixes.size()==0){//only case without locants is handled so far. suffixes only apply to one of the fragments rather than both!!!
+					if (suffixes.isEmpty()){//only case without locants is handled so far. suffixes only apply to one of the fragments rather than both!!!
 						Element newMultiplier = new TokenEl(MULTIPLIER_EL);
 						newMultiplier.addAttribute(new Attribute(VALUE_ATR, "2"));
 						next.insertChild(newMultiplier, 0);

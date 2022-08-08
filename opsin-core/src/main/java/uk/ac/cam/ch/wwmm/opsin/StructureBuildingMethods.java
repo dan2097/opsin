@@ -303,7 +303,7 @@ class StructureBuildingMethods {
 				}
 			}
 		}
-		if (atomsToHalogenate.size() == 0){
+		if (atomsToHalogenate.isEmpty()){
 			throw new RuntimeException("Failed to find any substitutable hydrogen to apply " + perhalogenFrag.getTokenEl().getValue() + " to!");
 		}
 		List<Fragment> halogens = new ArrayList<>();
@@ -1812,7 +1812,7 @@ class StructureBuildingMethods {
 		}
 		if (newBr.getFragmentCount() >= 2) {
 			List<Element> siblings = OpsinTools.getNextSiblingsOfTypes(multipliedParent, new String[]{SUBSTITUENT_EL, BRACKET_EL, ROOT_EL});
-			if (siblings.size() == 0) {
+			if (siblings.isEmpty()) {
 				Element parentOfMultipliedEl = multipliedParent.getParent();
 				if (parentOfMultipliedEl.getName().equals(BRACKET_EL)) {//brackets are allowed
 					siblings = OpsinTools.getNextSiblingsOfTypes(parentOfMultipliedEl, new String[]{SUBSTITUENT_EL, BRACKET_EL, ROOT_EL});
@@ -2171,7 +2171,7 @@ class StructureBuildingMethods {
 			if (possibleSecondAtom != null) {
 				possibleSecondAtom.removeAll(Collections.singleton(firstAtomToJoinTo));
 			}
-			if (possibleSecondAtom == null || possibleSecondAtom.size() == 0) {
+			if (possibleSecondAtom == null || possibleSecondAtom.isEmpty()) {
 				throw new StructureBuildingException("Unable to find suitable atom to form bridge");
 			}
 			if (AmbiguityChecker.isSubstitutionAmbiguous(possibleSecondAtom, 1)) {

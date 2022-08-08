@@ -114,7 +114,7 @@ class Parser {
 		}
 		
 		List<Parse> parses = generateParseCombinations(parse);
-		if (parses.size()==0) {
+		if (parses.isEmpty()) {
 			throw new ParsingException("No parses could be found for " + name);
 		}
 		
@@ -126,18 +126,19 @@ class Parser {
 			for(ParseWord pw : pp.getWords()) {
 				Element word = new GroupingEl(WORD_EL);
 				moleculeEl.addChild(word);
-				if (pw.getParseTokens().size() != 1){
+				List<ParseTokens> parseTokens = pw.getParseTokens();
+				if (parseTokens.size() != 1){
 					throw new ParsingException("OPSIN bug: parseWord should have exactly 1 annotations after creating additional parses step");
 				}
-				ParseTokens tokensForWord = pw.getParseTokens().get(0);
+				ParseTokens tokensForWord = parseTokens.get(0);
 				WordType wordType = OpsinTools.determineWordType(tokensForWord.getAnnotations());
 				word.addAttribute(new Attribute(TYPE_ATR, wordType.toString()));
-				if (pw.getWord().startsWith("-")){//we want -functionalterm to be the same as functionalterm
-					word.addAttribute(new Attribute(VALUE_ATR, pw.getWord().substring(1)));
+				String value = pw.getWord();
+				if (value.startsWith("-")) {
+					//we want -functionalterm to be the same as functionalterm
+					value = value.substring(1);
 				}
-				else{
-					word.addAttribute(new Attribute(VALUE_ATR, pw.getWord()));
-				}
+				word.addAttribute(new Attribute(VALUE_ATR, value));
 				writeWordXML(word, tokensForWord.getTokens(), WordTools.chunkAnnotations(tokensForWord.getAnnotations()));
 			}
 			/* All words are placed into a wordRule.
@@ -167,7 +168,7 @@ class Parser {
 			}
 	
 		}
-		if (results.size() == 0) {
+		if (results.isEmpty()) {
 			if (preciseException != null) {
 				throw preciseException;
 			}

@@ -270,7 +270,7 @@ class FusedRingNumberer {
 			return;
 		}
 		List<List<Atom>> atomSequences = determinePossiblePeripheryAtomOrders(rings, atomList.size());
-		if (atomSequences.size()==0){
+		if (atomSequences.isEmpty()){
 			for (Atom atom : atomList) {
 				atom.clearLocants();
 			}
@@ -404,7 +404,7 @@ class FusedRingNumberer {
 		currentRing.makeCyclicLists(previousBond, atom);
 		List<RingConnectivityTable> generatedCts = new ArrayList<>();
 		List<FusionRingShape> allowedShapes = getAllowedShapesForRing(currentRing, previousBond);
-		if (allowedShapes.size() == 0) {
+		if (allowedShapes.isEmpty()) {
 			throw new RuntimeException("OPSIN limitation, unsupported ring size in fused ring numbering");
 		}
 		ct.usedRings.add(currentRing);
@@ -1014,7 +1014,7 @@ class FusedRingNumberer {
 				}
 			}
 		}
-		if (ringMaps.size()==0){
+		if (ringMaps.isEmpty()){
 			throw new StructureBuildingException("Fused ring systems with overlapping rings such as in helices cannot currently be numbered");
 		}
 		return ringMaps;

@@ -48,7 +48,7 @@
 
 	<regex name="%superScriptedVonBaeyerDescriptor%" regex="([\.,][0-9]+(\^[0-9]+,[0-9]+(\^\^)?|\^?%openBracket%([sS][uU][pP][ ]?)?[0-9]+,[0-9]+%closeBracket%|\~[0-9]+,[0-9]+\~|\*[0-9]+,[0-9]+\*|\&lt;[0-9]+,[0-9]+\&gt;|[0-9]+,[0-9]+))"/>
 	<regexToken regex="[cC][yY][cC][lL][oO]-?%openBracket%[0-9]+[\.,][0-9]+[\.,][0-9]+%superScriptedVonBaeyerDescriptor%*%closeBracket%-?" symbol="B" tagname="vonBaeyer" determinise="yes"/>
-	<regexToken regex="%openBracket%[1-9][0-9]*%closeBracket%[aA][nN][nN][uU][lL][eE][nN]" symbol="N" tagname="annulen" determinise="yes"/>
+	<regexToken regex="%openBracket%[1-9][0-9]*%closeBracket%[aA][nN][nN][uU][lL][eEyY][nN]" symbol="N" tagname="annulen" determinise="yes"/>
 
 	<regex name="%firstOrderFusion%" regex="(%locant%(,%locant%)+-([a-zA-Z]'*)+)"/><!--Numerical locants may be primed if component is multiplied. Primes on letters may occur if parent is multiplied-->
 	<regex name="%omittedLocantFirstOrderFusion%" regex="(([a-zA-Z]'*)+)"/>

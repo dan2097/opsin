@@ -45,6 +45,12 @@ public class NomenclatureIntegrationTest {
 	}
 	
 	@ParameterizedTest
+	@CsvFileSource(resources = "aminoAcids.txt", delimiter='\t')
+	public void testAminoAcids(String name, String expectedInchi) {
+		checkName(name, expectedInchi);
+	}
+	
+	@ParameterizedTest
 	@CsvFileSource(resources = "carbohydrates.txt", delimiter='\t')
 	public void testCarbohydrates(String name, String expectedInchi) {
 		checkName(name, expectedInchi);

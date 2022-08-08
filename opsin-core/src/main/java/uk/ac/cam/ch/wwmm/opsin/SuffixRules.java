@@ -154,7 +154,7 @@ class SuffixRules {
 			throw new ComponentGenerationException("Suffix Type: " + suffixTypeToUse + " does not have a corresponding groupType entry in suffixApplicability.xml");
 		}
 		List<ApplicableSuffix> potentiallyApplicableSuffixes = groupToSuffixMap.get(suffixValue);
-		if(potentiallyApplicableSuffixes == null || potentiallyApplicableSuffixes.size() == 0 ) {
+		if(potentiallyApplicableSuffixes == null || potentiallyApplicableSuffixes.isEmpty() ) {
 			throw new ComponentGenerationException("Suffix: " + suffixValue + " does not apply to the group it was associated with (type: " +	suffixTypeToUse + ") according to suffixApplicability.xml");
 		}
 		List<SuffixRule> suffixRules = null;

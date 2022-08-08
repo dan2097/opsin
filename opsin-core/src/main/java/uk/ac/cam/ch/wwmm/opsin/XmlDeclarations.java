@@ -48,7 +48,7 @@ class XmlDeclarations {
 	/**Something like tert/iso/sec Modifies an alkaneStem in the ComponentGenerator*/
 	static final String ALKANESTEMMODIFIER_EL ="alkaneStemModifier";
 
-	/**An annulene. Converted to a group by the ComponentGenerator*/
+	/**An annulene/annulyne. Converted to a group by the ComponentGenerator*/
 	static final String ANNULEN_EL ="annulen";
 
 	/**A bridge described in SMILES for used on rings*/

@@ -238,7 +238,7 @@ class StructureBuilder {
 				buildResultsToLocant.put(br, locant);
 			}
 		}
-		if (ateGroups.size() ==0){
+		if (ateGroups.isEmpty()){
 			throw new StructureBuildingException("OPSIN bug: Missing ate group in ester");
 		}
 
@@ -496,7 +496,7 @@ class StructureBuilder {
 		Element rightMostGroup;
 		if (words.get(0).getName().equals(WORDRULE_EL)){//e.g. Nicotinic acid N-oxide
 			List<Element> fullWords = OpsinTools.getDescendantElementsWithTagNameAndAttribute(words.get(0), WORD_EL, TYPE_ATR, WordType.full.toString());
-			if (fullWords.size()==0){
+			if (fullWords.isEmpty()){
 				throw new StructureBuildingException("OPSIN is entirely unsure where the oxide goes so has decided not to guess");
 			}
 			rightMostGroup = findRightMostGroupInBracket(fullWords.get(fullWords.size()-1));
@@ -1281,7 +1281,7 @@ class StructureBuilder {
 		}
 		Element finalGroup = findRightMostGroupInWordOrWordRule(glycol);
 		List<Atom> hydroxyAtoms = FragmentTools.findHydroxyGroups(finalGroup.getFrag());
-		if (hydroxyAtoms.size() == 0) {
+		if (hydroxyAtoms.isEmpty()) {
 			throw new StructureBuildingException("No hydroxy groups found in: " + finalGroup.getValue() + " to form ether");
 		}
 		if (hydroxyAtoms.size() < numOfEthers) {
@@ -1894,7 +1894,7 @@ class StructureBuilder {
 				neutralComponents.add(br);
 			}
 		}
-		if (negativelyChargedComponents.size() == 0 && (positivelyChargedComponents.size() > 0 || getMetalsThatCanBeImplicitlyCations(molecule).size() > 0)) {
+		if (negativelyChargedComponents.isEmpty() && (positivelyChargedComponents.size() > 0 || getMetalsThatCanBeImplicitlyCations(molecule).size() > 0)) {
 			for (int i = neutralComponents.size() - 1; i>=0; i--) {
 				List<Atom> functionalAtoms = new ArrayList<>();
 				for (Fragment f : neutralComponents.get(i).getFragments()) {
@@ -1967,7 +1967,7 @@ class StructureBuilder {
 		}
 		
 		if (!explicitStoichiometryPresent &&
-				(positivelyChargedComponents.size()==1 && cationicElements.size() ==0 && negativelyChargedComponents.size() >=1 || positivelyChargedComponents.size()>=1 && negativelyChargedComponents.size() ==1 )){
+				(positivelyChargedComponents.size()==1 && cationicElements.isEmpty() && negativelyChargedComponents.size() >=1 || positivelyChargedComponents.size()>=1 && negativelyChargedComponents.size() ==1 )){
 			boolean success = multiplyChargedComponents(negativelyChargedComponents, positivelyChargedComponents, componentToChargeMapping, overallCharge);
 			if (success){
 				return;
@@ -2224,7 +2224,7 @@ class StructureBuilder {
 					words.remove(words.get(i));
 				}
 			}
-			if (words.size()==0){
+			if (words.isEmpty()){
 				throw new StructureBuildingException("OPSIN bug: word element not found where expected");
 			}
 			return StructureBuildingMethods.findRightMostGroupInBracket(words.get(words.size()-1));

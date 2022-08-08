@@ -128,7 +128,7 @@ class ComponentProcessor {
 			Element finalSubOrRootInWord = word.getChild(word.getChildCount() - 1);
 			while (!finalSubOrRootInWord.getName().equals(ROOT_EL) && !finalSubOrRootInWord.getName().equals(SUBSTITUENT_EL)){
 				List<Element> children = OpsinTools.getChildElementsWithTagNames(finalSubOrRootInWord, new String[]{ROOT_EL, SUBSTITUENT_EL, BRACKET_EL});
-				if (children.size() == 0){
+				if (children.isEmpty()){
 					throw new ComponentGenerationException("Unable to find finalSubOrRootInWord");
 				}
 				finalSubOrRootInWord = children.get(children.size() - 1);
@@ -151,7 +151,7 @@ class ComponentProcessor {
 			}
 			for (int j = substituents.size() -1; j >=0; j--) {
 				Element substituent = substituents.get(j);
-				if (substituent.getChildElements(GROUP_EL).size() == 0) {
+				if (substituent.getChildElements(GROUP_EL).isEmpty()) {
 					boolean removed = removeAndMoveToAppropriateGroupIfHydroSubstituent(substituent);//this REMOVES a substituent just containing hydro/perhydro elements and moves these elements in front of an appropriate ring
 					if (!removed){
 						removed = removeAndMoveToAppropriateGroupIfSubtractivePrefix(substituent);
@@ -840,7 +840,7 @@ class ComponentProcessor {
 				if (groupToConsider != null) {
 					if (OpsinTools.isBiochemical(groupToConsider.getAttributeValue(TYPE_ATR), groupToConsider.getAttributeValue(SUBTYPE_ATR))){
 						biochemicalGroup = groupToConsider;
-						if (OpsinTools.getPreviousSiblingsOfType(biochemicalGroup, LOCANT_EL).size() == 0) {
+						if (OpsinTools.getPreviousSiblingsOfType(biochemicalGroup, LOCANT_EL).isEmpty()) {
 							break;
 						}
 					}
@@ -916,7 +916,7 @@ class ComponentProcessor {
 			while (nextSubOrRootOrBracket != null) {
 				Element groupToConsider = nextSubOrRootOrBracket.getFirstChildElement(GROUP_EL);
 				if (groupToConsider != null) {
-					if (containsCyclicAtoms(groupToConsider) && OpsinTools.getPreviousSiblingsOfType(groupToConsider, LOCANT_EL).size() == 0) {
+					if (containsCyclicAtoms(groupToConsider) && OpsinTools.getPreviousSiblingsOfType(groupToConsider, LOCANT_EL).isEmpty()) {
 						targetGroup = groupToConsider;
 						break;
 					}
@@ -1987,7 +1987,7 @@ class ComponentProcessor {
 					break;
 				}
 			}
-			if (conjunctiveGroups.size() ==0){
+			if (conjunctiveGroups.isEmpty()){
 				return;
 			}
 			if (ringGroup ==null){
@@ -2090,7 +2090,7 @@ class ComponentProcessor {
 				if (group.getAttribute(ADDBOND_ATR)!=null){//special case for partunsatring
 					//exception for where a locant is supposed to indicate the location of a double bond...
 					List<Element> deltas = subOrRoot.getChildElements(DELTA_EL);
-					if (deltas.size()==0){
+					if (deltas.isEmpty()){
 						Element delta =new TokenEl(DELTA_EL);
 						Element appropriateLocant = OpsinTools.getPreviousSiblingIgnoringCertainElements(group, new String[]{HETEROATOM_EL, MULTIPLIER_EL});
 						if (appropriateLocant !=null && appropriateLocant.getName().equals(LOCANT_EL) && appropriateLocant.getValue().split(",").length == 1){
@@ -2716,7 +2716,7 @@ class ComponentProcessor {
 				//This test needs to be here rather in the ComponentGenerator to correctly reject non substituted thioxanthates
 				Element wordRule = OpsinTools.getParentWordRule(group);
 				if (wordRule.getAttributeValue(WORDRULE_ATR).equals(WordRule.simple.toString())){
-					if (OpsinTools.getDescendantElementsWithTagName(wordRule, SUBSTITUENT_EL).size()==0){
+					if (OpsinTools.getDescendantElementsWithTagName(wordRule, SUBSTITUENT_EL).isEmpty()){
 						throw new ComponentGenerationException(groupValue +" describes a class of compounds rather than a particular compound");
 					}
 				}
@@ -3076,7 +3076,7 @@ class ComponentProcessor {
 				bondOrder = fragmentToResolveAndDuplicate.getOutAtom(0).getValency();
 			}
 			
-			boolean twoRingsJoinedUsingSuffixPosition = ringJoiningLocants.size() == 0 && mvalue == 2 && fragmentToResolveAndDuplicate.getOutAtomCount() == 1;
+			boolean twoRingsJoinedUsingSuffixPosition = ringJoiningLocants.isEmpty() && mvalue == 2 && fragmentToResolveAndDuplicate.getOutAtomCount() == 1;
 			if (!twoRingsJoinedUsingSuffixPosition && fragmentToResolveAndDuplicate.getOutAtomCount() == 1) {
 				//remove yl (or the like). Need to make sure that resolveUnLocantedFeatures doesn't consider 2,2'-bipyridyl ambiguous due to the location of the ul
 				fragmentToResolveAndDuplicate.removeOutAtom(0);
@@ -3658,7 +3658,7 @@ class ComponentProcessor {
 	 * @throws ComponentGenerationException 
 	 */
 	private void resolveFeaturesOntoGroup(List<Element> elementsToResolve) throws StructureBuildingException, ComponentGenerationException{
-		if (elementsToResolve.size()==0){
+		if (elementsToResolve.isEmpty()){
 			return;
 		}
 		Element substituentToResolve = new GroupingEl(SUBSTITUENT_EL);//temporary element containing elements that should be resolved before the ring is cloned
@@ -4352,7 +4352,7 @@ class ComponentProcessor {
 		 * Case when a multiplier should be moved
 		 * e.g. tripropan-2-yloxyphosphane -->tri(propan-2-yloxy)phosphane or trispropan-2-ylaminophosphane --> tris(propan-2-ylamino)phosphane
 		 */
-		if (locantRelatedElements.size() == 0) {
+		if (locantRelatedElements.isEmpty()) {
 			Element possibleMultiplier = childrenOfElementBeforeSubstituent.get(0);
 			if (possibleMultiplier.getName().equals(MULTIPLIER_EL) && (
 					sulfonylLike || possibleMultiplier.getAttributeValue(TYPE_ATR).equals(GROUP_TYPE_VAL))){
@@ -5074,7 +5074,7 @@ class ComponentProcessor {
 				throw new ComponentGenerationException("OPSIN bug: Only none or one multiplicative locant expected");
 			}
 			int multiVal = Integer.parseInt(multiplier.getAttributeValue(VALUE_ATR));
-			if (locants.size()==0){
+			if (locants.isEmpty()){
 				rightMostElement.addAttribute(new Attribute(INLOCANTS_ATR, INLOCANTS_DEFAULT));
 			}
 			else{
@@ -5108,7 +5108,7 @@ class ComponentProcessor {
 		if (siblingSubstituent != null && siblingSubstituent.getName().equals(SUBSTITUENT_EL)) {
 			List<Element> locants = getLocantsAtStartOfSubstituent(substituent);
 			if (locants.size() == 2 && locantsAreSingular(locants)
-					&& getLocantsAtStartOfSubstituent(siblingSubstituent).size() == 0) {
+					&& getLocantsAtStartOfSubstituent(siblingSubstituent).isEmpty()) {
 				Element bracket = new GroupingEl(BRACKET_EL);
 				bracket.addAttribute(new Attribute(TYPE_ATR, IMPLICIT_TYPE_VAL));
 				Element parent = substituent.getParent();
@@ -5208,7 +5208,7 @@ class ComponentProcessor {
 					}
 					parentElem.addAttribute(new Attribute(LOCANT_ATR, locant.getValue()));
 					locant.detach();
-					if (locants.size()==0){
+					if (locants.isEmpty()){
 						return;
 					}
 				}

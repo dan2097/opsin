@@ -475,6 +475,19 @@ class WordRules {
 							//don't apply this wordRule if doing so makes the number of components incorrect
 							continue wordRuleLoop;
 						}
+						int lastWordIndex = indexOfFirstWord + wordsInWordRule - 1;
+						if (wordEls.get(lastWordIndex).getAttribute(ISSALT_ATR) != null) {
+							//explicitly stated to be a salt, so shouldn't be bonded!
+							continue wordRuleLoop;
+						}
+
+						if (lastWordIndex + 1 < wordEls.size()) {
+							Element nextWord = wordEls.get(lastWordIndex + 1);
+							if (WordType.functionalTerm.toString().equals(nextWord.getAttributeValue(TYPE_ATR)) && nextWord.getAttributeValue(VALUE_ATR).equalsIgnoreCase("salt")) {
+								//explicitly stated to be a salt, so shouldn't be bonded!
+								continue wordRuleLoop;
+							}
+						}
 						break;
 					case monovalentFunctionalGroup:
 						Element potentialOxy = getLastElementInWord(wordEls.get(0));
@@ -522,6 +535,14 @@ class WordRules {
 				}
 			}
 			else if (WordType.functionalTerm.toString().equals(firstWord.getAttributeValue(TYPE_ATR)) && firstWord.getAttributeValue(VALUE_ATR).equalsIgnoreCase("salt")) {
+				if (indexOfFirstWord == 0) {
+					throw new ParsingException("The word salt appeared in an unexpected location");
+				}
+				Element previousWord = wordEls.get(indexOfFirstWord - 1);
+				if (previousWord.getAttribute(ISSALT_ATR) == null) {
+					previousWord.addAttribute(ISSALT_ATR, "yes");
+				}
+				
 				wordEls.remove(indexOfFirstWord);
 				firstWord.detach();
 				if (moleculeEl.getAttribute(ISSALT_ATR) == null) {
@@ -566,7 +587,8 @@ class WordRules {
 					}
 				}
 				else if (elName.equals(GROUP_EL)) {
-					if (lastEl.getAttribute(FUNCTIONALIDS_ATR) != null && icOrOusAcid.matcher(lastEl.getValue()).find()) {
+					if (lastEl.getAttribute(FUNCTIONALIDS_ATR) != null && 
+							(icOrOusAcid.matcher(lastEl.getValue()).find() || AMINOACID_TYPE_VAL.equals(lastEl.getAttributeValue(TYPE_ATR)))) {
 						return true;
 					}
 				}
@@ -672,7 +694,7 @@ class WordRules {
 			wordEls.remove(wordToPotentiallyCombineWith);
 			wordToPotentiallyCombineWith.detach();
 			List<Element> substituentEls = firstWord.getChildElements(SUBSTITUENT_EL);
-			if (substituentEls.size()==0){
+			if (substituentEls.isEmpty()){
 				throw new ParsingException("OPSIN Bug: Substituent element not found where substituent element expected");
 			}
 			Element finalSubstituent = substituentEls.get(substituentEls.size() - 1);

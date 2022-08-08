@@ -727,7 +727,7 @@ class FragmentManager {
 				for (Atom atomRef : atomRefs4) {
 					neighbours.remove(atomRef);
 				}
-				if (neighbours.size() == 0) {
+				if (neighbours.isEmpty()) {
 					throw new StructureBuildingException("OPSIN Bug: Unable to determine which atom has substituted a hydrogen at stereocentre");
 				}
 				else if (neighbours.size() == 1 && positionOfDeoxyHydrogen != null) {

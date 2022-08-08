@@ -330,7 +330,7 @@ class FusedRingBuilder {
 				if (unsaturator.getAttribute(LOCANT_ATR)==null && unsaturator.getAttributeValue(VALUE_ATR).equals("2")){
 					unsaturator.detach();
 					List<Bond> bondsToUnsaturate = StructureBuildingMethods.findBondsToUnSaturate(ring, 2, true);
-					if (bondsToUnsaturate.size() == 0) {
+					if (bondsToUnsaturate.isEmpty()) {
 						throw new RuntimeException("Failed to find bond to unsaturate on partially saturated HW ring");
 					}
 					Bond b = bondsToUnsaturate.get(0);
@@ -631,7 +631,7 @@ class FusedRingBuilder {
 			Atom atom = cyclicAtomList.previous();
 			//want non-bridgehead carbon atoms. Double-check that these carbon atoms are actually bonded (e.g. von baeyer systems have non-consecutive atom numbering!)
 			if (atom.getElement() == ChemEl.C && atom.getBondCount() == 2
-					&& (carbonAtomIndexes.size() == 0 || atom.getAtomNeighbours().contains(cyclicAtomList.peekNext()))){
+					&& (carbonAtomIndexes.isEmpty() || atom.getAtomNeighbours().contains(cyclicAtomList.peekNext()))){
 				carbonAtomIndexes.add(cyclicAtomList.getIndex());
 				if (carbonAtomIndexes.size() == edgeLength + 1){//as many carbons in a row as to give that edgelength ->use these side/s
 					Collections.reverse(carbonAtomIndexes);
@@ -666,7 +666,7 @@ class FusedRingBuilder {
 			Atom atom = cyclicAtomList.next();
 			//want non-bridgehead carbon atoms. Double-check that these carbon atoms are actually bonded (e.g. von baeyer systems have non-consecutive atom numbering!)
 			if (atom.getElement() == ChemEl.C && atom.getBondCount() == 2
-					&& (carbonLocants.size() == 0 || atom.getAtomNeighbours().contains(cyclicAtomList.peekPrevious()))){
+					&& (carbonLocants.isEmpty() || atom.getAtomNeighbours().contains(cyclicAtomList.peekPrevious()))){
 				carbonLocants.add(atom.getFirstLocant());
 				if (carbonLocants.size() == edgeLength + 1){//as many carbons in a row as to give that edgelength ->use these side/s
 					List<String> numericalLocantsOfChild = new ArrayList<>();

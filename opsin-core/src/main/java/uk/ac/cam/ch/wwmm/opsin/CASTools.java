@@ -98,7 +98,7 @@ class CASTools {
 							switch (firstWordType) {
 							case functionalTerm:
 								if (component.equalsIgnoreCase("ester")) {
-									if (seperateWordSubstituents.size() ==0){
+									if (seperateWordSubstituents.isEmpty()){
 										throw new ParsingException("ester encountered but no substituents were specified in potential CAS name!");
 									}
 									if (esterEncountered) {

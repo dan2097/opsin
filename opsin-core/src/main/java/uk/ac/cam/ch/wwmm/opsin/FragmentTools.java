@@ -79,10 +79,10 @@ class SortAtomsForMainGroupElementSymbols implements Comparator<Atom> {
     	}
     	List<String> locantsA = a.getLocants();
     	List<String> locantsB = b.getLocants();
-    	if (locantsA.size() == 0 &&  locantsB.size() > 0) {//having no locants preferred
+    	if (locantsA.isEmpty() && !locantsB.isEmpty()) {//having no locants preferred
     		return -1;
     	}
-    	if (locantsA.size() > 0 &&  locantsB.size() == 0) {
+    	if (!locantsA.isEmpty() && locantsB.isEmpty()) {
     		return 1;
     	}
     	return 0;
