@@ -124,7 +124,7 @@
           <dependency>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>extra-enforcer-rules</artifactId>
-            <version>1.5.1</version>
+            <version>1.6.1</version>
           </dependency>
         </dependencies>
       </plugin>
@@ -214,7 +214,7 @@
       <dependency>
         <groupId>com.fasterxml.woodstox</groupId>
         <artifactId>woodstox-core</artifactId>
-        <version>6.2.8</version>
+        <version>6.3.0</version>
       </dependency>
       <dependency>
         <groupId>org.apache.logging.log4j</groupId>
@@ -244,7 +244,7 @@
       <dependency>
         <groupId>org.junit.jupiter</groupId>
         <artifactId>junit-jupiter</artifactId>
-        <version>5.8.2</version>
+        <version>5.9.0</version>
         <scope>test</scope>
       </dependency>
       <dependency>
@@ -256,7 +256,7 @@
       <dependency>
         <groupId>org.mockito</groupId>
         <artifactId>mockito-core</artifactId>
-        <version>4.4.0</version>
+        <version>4.6.1</version>
         <scope>test</scope>
       </dependency>
     </dependencies>
