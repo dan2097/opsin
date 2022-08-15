@@ -48,18 +48,18 @@ public class NameToStructureConfigurationsTest {
 			assertEquals("C*", or.getSmiles());
 		}
 
-  @Test
-  public void testOutputRadicalsAsAttachments() {
-    NameToStructureConfig n2sConfig = NameToStructureConfig.getDefaultConfigInstance();
-    n2sConfig.setAllowRadicals(true);
-    n2sConfig.setOutputRadicalsAsWildCardAtoms(false);
-    OpsinResult or = n2s.parseChemicalName("methyl", n2sConfig);
-    assertEquals("[CH3]", or.getSmiles(SmilesOptions.CXSMILES_ATOM_LABELS));
-
-    n2sConfig.setOutputRadicalsAsWildCardAtoms(true);
-    or = n2s.parseChemicalName("methyl", n2sConfig);
-    assertEquals("C* |$;_AP1$|", or.getSmiles(SmilesOptions.CXSMILES_ATOM_LABELS));
-  }
+		@Test
+		public void testOutputRadicalsAsAttachments() {
+			NameToStructureConfig n2sConfig = NameToStructureConfig.getDefaultConfigInstance();
+			n2sConfig.setAllowRadicals(true);
+			n2sConfig.setOutputRadicalsAsWildCardAtoms(false);
+			OpsinResult or = n2s.parseChemicalName("methyl", n2sConfig);
+			assertEquals("[CH3]", or.getSmiles(SmilesOptions.CXSMILES_ATOM_LABELS));
+			
+			n2sConfig.setOutputRadicalsAsWildCardAtoms(true);
+			or = n2s.parseChemicalName("methyl", n2sConfig);
+			assertEquals("C* |$;_AP1$|", or.getSmiles(SmilesOptions.CXSMILES_ATOM_LABELS));
+		}
 		
 		@Test
 		public void testInterpretAcidsWithoutTheWordAcid() throws StructureBuildingException {
