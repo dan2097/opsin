@@ -385,8 +385,8 @@
 		<!--flavonoids-->
 		<token value="o1c(cc(=O)c2c(O)cc(O)cc12)c3ccc(O)cc3" labels="1/2/3/4//4a,10/5//6/7//8/8a,9/1'/2'/3'/4'//5'/6'">apigenin</token>
 		<token value="O1[C@@H]([C@@H](O)C(=O)c2c(O)cc(O)cc12)c3ccc(O)cc3" labels="1/2/3//4//4a/5//6/7//8/8a/1'/2'/3'/4'//5'/6'">aromadendrin|aromodendrin</token>
+		<token value="O1[C@@H]([C@@H](O)C(=O)c2c(O)cc(O)cc12)c3cc(O)c(O)cc3" labels="1/2/3//4//4a/5//6/7//8/8a/1'/2'/3'//4'//5'/6'">taxifolin|dihydroquercetin</token>
 		<token value="O1\C(=C/c2ccccc2)C(=O)c3ccccc13" labels="1/2/21/1'/2'/3'/4'/5'/6'/3//3a/4/5/6/7/7a">auron</token><!--21 should be 2 superscript 1 -->
-		<token value="o1c(cc(=O)c2c(O)cc(O)cc12)c3cc(OC)c(O)cc3" labels="1/2/3/4//4a/5//6/7//8/8a/1'/2'/3'///4'//5'/6'">chrysoeriol</token>
 		<token value="c1cccc2OCc3c4ccccc4oc3c12" labels="1/2/3/4/4a/5/6/6a/6b/7/8/9/10/10a/11/11a/11b">coumestan</token>
 		<token value="[o+]1c(c(O)cc2c(O)cc(O)cc12)c3cc(O)c(O)cc3" labels="1/2/3//4/4a/5//6/7//8/8a/1'/2'/3'//4'//5'/6'">cyanidin</token>
 		<token value="o1c(cc(=O)c2c(O)cc(O)cc12)c3cc(O)c(OC)cc3" labels="1/2/3/4//4a/5//6/7//8/8a/1'/2'/3'//4'///5'/6'">diosmetin</token>
@@ -408,6 +408,7 @@
 		<token value="O1C=CC(c2ccccc12)c3ccccc3" labels="1/2/3/4/4a/5/6/7/8/8a/1'/2'/3'/4'/5'/6'">neoflavan-2-en|neoflav-2-en|neo-flavan-2-en|neo-flav-2-en</token>
 		<token value="O1CC=C(c2ccccc12)c3ccccc3" labels="1/2/3/4/4a/5/6/7/8/8a/1'/2'/3'/4'/5'/6'">neoflavan-3-en|neoflav-3-en|neo-flavan-3-en|neo-flav-3-en</token>
 		<token value="o1c(=O)cc(c2ccccc12)c3ccccc3" labels="1/2//3/4/4a/5/6/7/8/8a/1'/2'/3'/4'/5'/6'">neoflavon|neo-flavon</token>
+		<token value="o1c(c(O)c(=O)c2c(O)cc(O)cc12)c3cc(O)c(O)cc3" labels="1/2/3//4//4a/5//6/7//8/8a/1'/2'/3'//4'//5'/6'">quercetin</token>
 
 		<!--misc-->
 		<token value="[nH]1cccc1cc2ccc(n2)cc3ccc(n3)cc4cccn4" labels="21/1/2/3/4/5/6/7/8/9/22/10/11/12/13/14/23/15/16/17/18/19/24">bilin</token>

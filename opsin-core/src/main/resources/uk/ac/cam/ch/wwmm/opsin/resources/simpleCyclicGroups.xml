@@ -159,5 +159,10 @@
 		<token value="[C@@H]1([C@H](OP(=O)(O)O)[C@H](O)[C@@H](CO)O1)n2c(=O)[nH]c(=O)cc2C(=O)O" labels="1'/2'//////3'//4'/5'///1/2//3/4//5/6///" functionalIDs="6,7">2'-orotidylic|2'-orotidylicacid|2'-orotidylic acid</token>
 		<token value="[C@@H]1([C@H](O)[C@H](OP(=O)(O)O)[C@@H](CO)O1)n2c(=O)[nH]c(=O)cc2C(=O)O" labels="1'/2'//3'//////4'/5'///1/2//3/4//5/6///" functionalIDs="8,9">3'-orotidylic|3'-orotidylicacid|3'-orotidylic acid</token>
 		<token value="[C@@H]1([C@H](O)[C@H](O)[C@@H](COP(=O)(O)O)O1)n2c(=O)[nH]c(=O)cc2C(=O)O" labels="1'/2'//3'//4'/5'///////1/2//3/4//5/6///" functionalIDs="11,12">5'-orotidylic|5'-orotidylicacid|5'-orotidylic acid</token>
+
+<!--misc-->
+		<token value="o1c(cc(=O)c2c(O)cc(O)cc12)c3cc(OC)c(O)cc3" labels="1/2/3/4//4a/5//6/7//8/8a/1'/2'/3'///4'//5'/6'">chrysoeriol</token>
+		<token value="O1[C@@H]([C@@H](O)C(=O)c2c(O)cc(O)cc12)c3ccc(O)cc3" labels="1/2/3//4//4a/5//6/7//8/8a/1'/2'/3'/4'//5'/6'">dihydrokaempferol</token>
+		<token value="o1c(c(O)c(=O)c2c(O)cc(O)cc12)c3ccc(O)cc3" labels="1/2/3//4//4a/5//6/7//8/8a/1'/2'/3'/4'//5'/6'">kaempferol</token>
 	</tokenList>
 </tokenLists>
