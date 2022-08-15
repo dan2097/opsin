@@ -81,6 +81,12 @@ public class NomenclatureIntegrationTest {
 	}
 	
 	@ParameterizedTest
+	@CsvFileSource(resources = "flavonoids.txt", delimiter='\t')
+	public void testFlavonoids(String name, String expectedInchi) {
+		checkName(name, expectedInchi);
+	}
+	
+	@ParameterizedTest
 	@CsvFileSource(resources = "functionalReplacement.txt", delimiter='\t')
 	public void testFunctionalReplacement(String name, String expectedInchi) {
 		checkName(name, expectedInchi);

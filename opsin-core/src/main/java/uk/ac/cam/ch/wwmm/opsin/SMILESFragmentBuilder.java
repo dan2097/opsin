@@ -129,13 +129,52 @@ class SMILESFragmentBuilder {
 		private final String smiles;
 		private final int endOfSmiles;
 		private final Fragment fragment;
+		private final int firstAtomOutValency;
+		private final int lastAtomOutValency;
 		
-		private int i = 0;
+		private int i;
 
-		public ParserInstance(String smiles, Fragment fragment) {
+		ParserInstance(String smiles, Fragment fragment) {
 			this.smiles = smiles;
-			this.endOfSmiles = smiles.length();
 			this.fragment = fragment;
+
+			int lastIndex = smiles.length();
+			
+			char firstChar = smiles.charAt(0);//used by OPSIN to specify the valency with which this fragment connects
+			if (firstChar == '-') {
+				this.firstAtomOutValency = 1;
+				this.i = 1;
+			}
+			else if (firstChar == '=') {
+				this.firstAtomOutValency = 2;
+				this.i = 1;
+			}
+			else if (firstChar == '#') {
+				this.firstAtomOutValency = 3;
+				this.i = 1;
+			}
+			else {
+				this.firstAtomOutValency = -1;
+				this.i = 0;
+			}
+			
+			char lastChar = smiles.charAt(lastIndex - 1);//used by OPSIN to specify the valency with which this fragment connects and to indicate it connects via the last atom in the SMILES
+			if (lastChar == '-') {
+				this.lastAtomOutValency = 1;
+				this.endOfSmiles = lastIndex - 1;
+			}
+			else if (lastChar == '=') {
+				this.lastAtomOutValency = 2;
+				this.endOfSmiles = lastIndex - 1;
+			}
+			else if (lastChar == '#') {
+				this.lastAtomOutValency = 3;
+				this.endOfSmiles = lastIndex - 1;
+			}
+			else {
+				this.lastAtomOutValency = -1;
+				this.endOfSmiles = lastIndex;
+			}
 		}
 		
 		void parseSmiles() throws StructureBuildingException {
@@ -256,6 +295,15 @@ class SMILESFragmentBuilder {
 			}
 			if (!ringClosures.isEmpty()){
 				throw new StructureBuildingException("Unmatched ring opening");
+			}
+			
+			if (firstAtomOutValency > 0) {
+				fragment.addOutAtom(fragment.getFirstAtom(), firstAtomOutValency, true);
+			}
+
+			if (lastAtomOutValency > 0) {
+				//note that in something like C(=O)- this would be the carbon not the oxygen
+				fragment.addOutAtom(getInscopeAtom(), lastAtomOutValency, true);
 			}
 		}
 
@@ -394,7 +442,7 @@ class SMILESFragmentBuilder {
 					if (chiralitySet){
 						throw new StructureBuildingException("Atom parity appeared to be specified twice for an atom in a square bracket!");
 					}
-					processTetrahedralStereochemistry(atom, previousAtom);
+					processTetrahedralStereochemistry(atom, previousAtom, fragment.getAtomCount() == 1);
 					chiralitySet = true;
 				}
 				else if (ch == 'H'){// hydrogenCount
@@ -478,24 +526,23 @@ class SMILESFragmentBuilder {
 		 * Adds an atomParity element to the given atom using the information at the current index
 		 * @param atom
 		 * @param previousAtom
+		 * @param isFirstAtom 
 		 */
-		private void processTetrahedralStereochemistry(Atom atom, Atom previousAtom){
+		private void processTetrahedralStereochemistry(Atom atom, Atom previousAtom, boolean isFirstAtom){
 			Boolean chiralityClockwise = false;
 			if (smiles.charAt(i + 1) == '@'){
 				chiralityClockwise = true;
 				i++;
 			}
-			AtomParity atomParity;
-			if (chiralityClockwise){
-				atomParity = new AtomParity(new Atom[4], 1);
-			}
-			else{
-				atomParity = new AtomParity(new Atom[4], -1);
-			}
-			Atom[] atomRefs4 = atomParity.getAtomRefs4();
+			Atom[] atomRefs4 = new Atom[4];
+			AtomParity atomParity = new AtomParity(atomRefs4, chiralityClockwise ? 1 : -1);
 			int index =0;
 			if (previousAtom != null){
 				atomRefs4[index] = previousAtom;
+				index++;
+			}
+			else if (isFirstAtom && firstAtomOutValency == 1) {
+				atomRefs4[index] = AtomParity.deoxyHydrogen;
 				index++;
 			}
 			if (smiles.charAt(i + 1) == 'H'){
@@ -668,26 +715,16 @@ class SMILESFragmentBuilder {
 	}
 	
 	private Fragment build(String smiles, Fragment fragment, String labelMapping) throws StructureBuildingException {	
-		if (smiles == null){
+		if (smiles == null) {
 			throw new IllegalArgumentException("SMILES specified is null");
 		}
-		if (labelMapping == null){
+		if (labelMapping == null) {
 			throw new IllegalArgumentException("labelMapping is null use \"none\" if you do not want any numbering or \"numeric\" if you would like default numbering");
 		}
-		if (smiles.length() == 0){
+		if (smiles.isEmpty()){
 			return fragment;
 		}
-		int firstIndex = 0;
-		int lastIndex = smiles.length();
-		char firstCharacter =smiles.charAt(0);
-		if(firstCharacter == '-' || firstCharacter == '=' || firstCharacter == '#') {//used by OPSIN to specify the valency with which this fragment connects
-			firstIndex++;
-		}
-		char lastCharacter =smiles.charAt(lastIndex - 1);
-		if(lastCharacter == '-' || lastCharacter == '=' || lastCharacter == '#') {//used by OPSIN to specify the valency with which this fragment connects and to indicate it connects via the last atom in the SMILES
-			lastIndex--;
-		}
-		ParserInstance instance = new ParserInstance(smiles.substring(firstIndex, lastIndex), fragment);
+		ParserInstance instance = new ParserInstance(smiles, fragment);
 		instance.parseSmiles();
 		
 		List<Atom> atomList = fragment.getAtomList();
@@ -696,28 +733,6 @@ class SMILESFragmentBuilder {
 		verifyAndTakeIntoAccountLonePairsInAtomParities(atomList);
 		addBondStereoElements(fragment);
 		
-		if(firstCharacter == '-'){
-			fragment.addOutAtom(fragment.getFirstAtom(), 1, true);
-		}
-		else if(firstCharacter == '='){
-			fragment.addOutAtom(fragment.getFirstAtom(), 2, true);
-		}
-		else if (firstCharacter == '#'){
-			fragment.addOutAtom(fragment.getFirstAtom(), 3, true);
-		}
-
-		if(lastCharacter == '-' || lastCharacter == '=' || lastCharacter == '#') {
-			Atom lastAtom = instance.getInscopeAtom();//note that in something like C(=O)- this would be the carbon not the oxygen
-			if (lastCharacter == '#'){
-				fragment.addOutAtom(lastAtom, 3, true);
-			}
-			else if (lastCharacter == '='){
-				fragment.addOutAtom(lastAtom, 2, true);
-			}
-			else{
-				fragment.addOutAtom(lastAtom, 1, true);
-			}
-		}
 
 		for (Atom atom : atomList) {
 			if (atom.getProperty(Atom.SMILES_HYDROGEN_COUNT) != null && atom.getLambdaConventionValency() == null){

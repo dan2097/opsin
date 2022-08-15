@@ -165,6 +165,7 @@ NOTE:A suffixAppliesTo is expected on all carbohydrates that may be effected by 
 		<token value="OC1[C@H](O)[C@@H](O)[C@H](O[C@H]2[C@H](O)[C@@H](O)[C@@H](O)[C@H](O2)CO)[C@H](O1)CO" labels="/1/2//3//4//1'/2'//3'//4'//5'//6'//5//6/" suffixAppliesTo="2">lactose</token>
 		<token value="OC1[C@H](N)[C@@H](O)[C@H](O[C@H]2[C@H](O)[C@@H](O)[C@@H](O)[C@H](O2)CO)[C@H](O1)CO" labels="/1/2//3//4//1'/2'//3'//4'//5'//6'//5//6/" suffixAppliesTo="2">lactosamine|lactosamin</token>
 		<token value="OC1[C@H](N)[C@@H](O)[C@H](O[C@H]2[C@H](N)[C@@H](O)[C@@H](O)[C@H](O2)CO)[C@H](O1)CO" labels="/1/2//3//4//1'/2'//3'//4'//5'//6'//5//6/" suffixAppliesTo="2">lactosediamine|lactosediamin</token>
+		<token value="O[C@H]1[C@H](O)[C@@H](O)[C@H](O)[C@H](O1)CO[C@H]2[C@H](O)[C@H](O)[C@@H](O)[C@@H](O2)C" labels="/1/2//3//4//5//6//1'/2'//3'//4'//5'//6'" suffixAppliesTo="2">rutinose</token>
 	</tokenList>
 
 	<tokenList tagname="group" type="carbohydrate" subType="simpleGroup" symbol="G">
@@ -191,6 +192,7 @@ NOTE:A suffixAppliesTo is expected on all carbohydrates that may be effected by 
 		<token value="-C1[C@H](O)[C@@H](O)[C@H](O[C@H]2[C@H](O)[C@@H](O)[C@@H](O)[C@H](O2)CO)[C@H](O1)CO" labels="1/2//3//4//1'/2'//3'//4'//5'//6'//5//6/" suffixAppliesTo="1">lactosyl</token>
 		<token value="-C1[C@H](N)[C@@H](O)[C@H](O[C@H]2[C@H](O)[C@@H](O)[C@@H](O)[C@H](O2)CO)[C@H](O1)CO" labels="1/2//3//4//1'/2'//3'//4'//5'//6'//5//6/" suffixAppliesTo="1">lactosaminyl</token>
 		<token value="-C1[C@H](N)[C@@H](O)[C@H](O[C@H]2[C@H](N)[C@@H](O)[C@@H](O)[C@H](O2)CO)[C@H](O1)CO" labels="1/2//3//4//1'/2'//3'//4'//5'//6'//5//6/" suffixAppliesTo="1">lactosediaminyl</token>
+		<token value="-[C@H]1[C@H](O)[C@@H](O)[C@H](O)[C@H](O1)CO[C@H]2[C@H](O)[C@H](O)[C@@H](O)[C@@H](O2)C" labels="1/2//3//4//5//6//1'/2'//3'//4'//5'//6'" suffixAppliesTo="1">rutinosyl</token>
 	</tokenList>
 
 <!--dummy substituent for aldehydo prefix. This triggers the swapping of additionalValue with value on some trivial carbohydrate names but otherwise is ignored as carbohydrates are by default in the acyclic form-->
