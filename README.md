@@ -5,36 +5,36 @@
 
 OPSIN - Open Parser for Systematic IUPAC Nomenclature
 =====================================================
-__Version 2.6.0 (see [ReleaseNotes.txt](https://raw.githubusercontent.com/dan2097/opsin/master/ReleaseNotes.txt) for what's new in this version)__  
+__Version 2.7.0 (see [ReleaseNotes.txt](https://raw.githubusercontent.com/dan2097/opsin/master/ReleaseNotes.txt) for what's new in this version)__  
 __Source code: <https://github.com/dan2097/opsin>__  
 __Web interface and informational site: <https://opsin.ch.cam.ac.uk/>__  
 __License: [MIT License](https://opensource.org/licenses/MIT)__  
 
 OPSIN is a Java library for IUPAC name-to-structure conversion offering high recall and precision on organic chemical nomenclature. 
 
-Java 8 (or higher) is required for OPSIN 2.6.0 
+Java 8 (or higher) is required for OPSIN 2.7.0 
 
 Supported outputs are SMILES, CML (Chemical Markup Language) and InChI (IUPAC International Chemical Identifier)
 
 ### Simple Usage Examples
 #### Convert a chemical name to SMILES
-`java -jar opsin-cli-2.6.0-jar-with-dependencies.jar -osmi input.txt output.txt`  
+`java -jar opsin-cli-2.7.0-jar-with-dependencies.jar -osmi input.txt output.txt`  
 where input.txt contains chemical name/s, one per line
 
     NameToStructure nts = NameToStructure.getInstance();
     String smiles = nts.parseToSmiles("acetamide");
 
 #### Convert a chemical name to CML
-`java -jar opsin-cli-2.6.0-jar-with-dependencies.jar -ocml input.txt output.txt`  
+`java -jar opsin-cli-2.7.0-jar-with-dependencies.jar -ocml input.txt output.txt`  
 where input.txt contains chemical name/s, one per line
 
     NameToStructure nts = NameToStructure.getInstance();
     String cml = nts.parseToCML("acetamide");
 
 #### Convert a chemical name to StdInChI/StdInChIKey/InChI with FixedH 
-`java -jar opsin-cli-2.6.0-jar-with-dependencies.jar -ostdinchi input.txt output.txt`  
-`java -jar opsin-cli-2.6.0-jar-with-dependencies.jar -ostdinchikey input.txt output.txt`  
-`java -jar opsin-cli-2.6.0-jar-with-dependencies.jar -oinchi input.txt output.txt`  
+`java -jar opsin-cli-2.7.0-jar-with-dependencies.jar -ostdinchi input.txt output.txt`  
+`java -jar opsin-cli-2.7.0-jar-with-dependencies.jar -ostdinchikey input.txt output.txt`  
+`java -jar opsin-cli-2.7.0-jar-with-dependencies.jar -oinchi input.txt output.txt`  
 where input.txt contains chemical name/s, one per line
 
     NameToInchi nti = new NameToInchi()
@@ -44,7 +44,7 @@ where input.txt contains chemical name/s, one per line
 
 NOTE: OPSIN's non-standard InChI includes an additional layer (FixedH) that indicates which tautomer the chemical name described. StdInChI aims to be tautomer independent.
 ### Advanced Usage
-OPSIN 2.6.0 allows enabling of the following options:
+OPSIN 2.7.0 allows enabling of the following options:
 
 * allowRadicals: Allows substituents to be interpretable e.g. allows interpretation of "ethyl"
 * wildcardRadicals: If allowRadicals is enabled, this option uses atoms in the output to represent radicals: 'R' in CML and '*' in SMILES e.g. changes the output of ethyl from C[CH2] to CC\*
@@ -54,7 +54,7 @@ OPSIN 2.6.0 allows enabling of the following options:
 * verbose: Enables debugging output (command-line only). This option has the effect of lowering the logging threshold on the uk.ac.cam.ch.wwmm.opsin package to DEBUG.
 
 The usage of these options on the command line is described in the command line's help dialog accessible via:
-`java -jar opsin-cli-2.6.0-jar-with-dependencies.jar -h`
+`java -jar opsin-cli-2.7.0-jar-with-dependencies.jar -h`
 
 These options may be controlled using the following code:
 
@@ -77,8 +77,8 @@ NOTE: (Std)InChI cannot be generated for polymers or radicals generated in combi
 
 ### Availability
 OPSIN is available as a standalone JAR from GitHub, <https://github.com/dan2097/opsin/releases>  
-* `opsin-cli-2.6.0-jar-with-dependencies.jar` can be executed as a command-line application. It includes SMILES/CML/InChI support and bundles a logging implementation.
-* `opsin-core-2.6.0-jar-with-dependencies.jar` includes just SMILES/CML support.
+* `opsin-cli-2.7.0-jar-with-dependencies.jar` can be executed as a command-line application. It includes SMILES/CML/InChI support and bundles a logging implementation.
+* `opsin-core-2.7.0-jar-with-dependencies.jar` includes just SMILES/CML support.
 
 OPSIN is also available from the Maven Central Repository. 
 For SMILES/CML output support you would include:
@@ -86,7 +86,7 @@ For SMILES/CML output support you would include:
     <dependency>
        <groupId>uk.ac.cam.ch.opsin</groupId>
        <artifactId>opsin-core</artifactId>
-       <version>2.6.0</version>
+       <version>2.7.0</version>
     </dependency>
 
 or if you also need InChI output support:
@@ -94,7 +94,7 @@ or if you also need InChI output support:
     <dependency>
        <groupId>uk.ac.cam.ch.opsin</groupId>
        <artifactId>opsin-inchi</artifactId>
-       <version>2.6.0</version>
+       <version>2.7.0</version>
     </dependency>
 
 #### Building from source

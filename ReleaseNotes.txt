@@ -1,3 +1,14 @@
+Version 2.7.0 (2022-08-16)
+Improved coverage of flavonoid parent structures
+Support for apiofuranosyl, added 5 locant to apiose
+Improved support for n-amyl
+Superscripted numbers in poly spiro systems are now intelligently determined if the input lacks superscript indication
+Support for annulynes
+Fixed issues where amino acid salts were being interpreted as functionalisation of the amino acid
+Fixed bug where annulene parsing was case sensitive
+Chalcone, in accordance with current IUPAC recommendations, is now interpreted as specifically the trans isomer
+Minor dependency updates
+
 Version 2.6.0 (2021-12-21)
 OPSIN now requires Java 8 (or higher)
 OPSIN command-line functionality moved to opsin-cli module
