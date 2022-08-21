@@ -35,6 +35,7 @@ abstract class Element implements Iterable<Element> {
 	void detach() {
 		if (parent != null) {
 			parent.removeChild(this);
+			parent = null;
 		}
 	}
 	
