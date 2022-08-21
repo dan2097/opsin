@@ -1,6 +1,7 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 class GroupingEl extends Element{
@@ -116,6 +117,11 @@ class GroupingEl extends Element{
 	
 	void setValue(String text) {
 		throw new UnsupportedOperationException("Token groups do not have a value");
+	}
+
+	@Override
+	public Iterator<Element> iterator() {
+		return children.iterator();
 	}
 
 }

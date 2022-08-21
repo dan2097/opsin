@@ -3,7 +3,7 @@ package uk.ac.cam.ch.wwmm.opsin;
 import java.util.ArrayList;
 import java.util.List;
 
-abstract class Element {
+abstract class Element implements Iterable<Element> {
 
 	protected String name;
 	protected Element parent = null;
