@@ -1,7 +1,6 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 class TokenEl extends Element {
@@ -120,11 +119,6 @@ class TokenEl extends Element {
 
 	void setValue(String text) {
 		this.value = text;
-	}
-
-	@Override
-	public Iterator<Element> iterator() {
-		return Collections.emptyIterator();
 	}
 
 }
