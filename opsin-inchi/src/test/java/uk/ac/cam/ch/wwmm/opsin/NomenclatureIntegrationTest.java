@@ -129,6 +129,12 @@ public class NomenclatureIntegrationTest {
 	}
 	
 	@ParameterizedTest
+	@CsvFileSource(resources = "hwRings.txt", delimiter='\t')
+	public void testHwRingNomenclature(String name, String expectedInchi) {
+		checkName(name, expectedInchi);
+	}
+	
+	@ParameterizedTest
 	@CsvFileSource(resources = "inorganics.txt", delimiter='\t')
 	public void testInorganicNomenclature(String name, String expectedInchi) {
 		checkName(name, expectedInchi);
