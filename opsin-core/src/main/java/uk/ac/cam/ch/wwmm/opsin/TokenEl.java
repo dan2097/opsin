@@ -74,6 +74,11 @@ class TokenEl extends Element {
 	}
 	
 	@Override
+	Element getLastChildElement() {
+		return null;
+	}
+	
+	@Override
 	Fragment getFrag() {
 		return frag;
 	}

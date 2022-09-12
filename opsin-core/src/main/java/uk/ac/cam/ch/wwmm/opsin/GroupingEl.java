@@ -67,6 +67,12 @@ class GroupingEl extends Element{
 		}
 		return null;
 	}
+	
+	@Override
+	Element getLastChildElement() {
+		int childCount = children.size();
+		return childCount > 0 ? children.get(childCount - 1) : null;
+	}
 
 	String getValue() {
 		int childCount = getChildCount();

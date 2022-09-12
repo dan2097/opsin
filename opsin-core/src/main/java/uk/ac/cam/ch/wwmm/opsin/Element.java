@@ -35,6 +35,7 @@ abstract class Element {
 	void detach() {
 		if (parent != null) {
 			parent.removeChild(this);
+			parent = null;
 		}
 	}
 	
@@ -110,6 +111,13 @@ abstract class Element {
 	 * @return
 	 */
 	abstract Element getFirstChildElement(String name);
+	
+	/**
+	 * Returns the last child element
+	 * 
+	 * @return
+	 */
+	abstract Element getLastChildElement();
 	
 	/**
 	 * Returns the fragment associated with this element (only applicable to tokens)

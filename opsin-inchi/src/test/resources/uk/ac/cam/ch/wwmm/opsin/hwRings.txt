@@ -1,0 +1,2 @@
+oxazole	InChI=1S/C3H3NO/c1-2-5-3-4-1/h1-3H
+trioxane	InChI=1S/C3H6O3/c1-4-2-6-3-5-1/h1-3H2
