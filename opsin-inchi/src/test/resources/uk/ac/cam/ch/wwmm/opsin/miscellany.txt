@@ -61,3 +61,4 @@ beta-methylselenopyruvate	InChI=1S/C4H6O3Se/c1-8-2-3(5)4(6)7/h2H2,1H3,(H,6,7)/p-
 sec-Amyl acetate	InChI=1S/C7H14O2/c1-4-5-6(2)9-7(3)8/h6H,4-5H2,1-3H3
 [8]ANNULENE	InChI=1S/C8H8/c1-2-4-6-8-7-5-3-1/h1-8H
 [12]annulyne	InChI=1S/C12H10/c1-2-4-6-8-10-12-11-9-7-5-3-1/h1-10H
+3-aminophthalhydrazide	InChI=1S/C8H7N3O2/c9-5-3-1-2-4-6(5)8(13)11-10-7(4)12/h1-3H,9H2,(H,10,12)(H,11,13)
