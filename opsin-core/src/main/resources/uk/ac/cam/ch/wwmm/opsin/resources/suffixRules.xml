@@ -129,6 +129,9 @@ sense of this -->
 	<rule value="dicarboximide">
 		<addgroup SMILES="[*]C(=O)NC(=O)[*]"/>
 	</rule>
+	<rule value="dicarboximido">
+		<addgroup SMILES="[*]C(=O)NC(=O)[*]" outIDs="4"/>
+	</rule>
 	<rule value="carboxylic">
 		<addgroup SMILES="[*]C(=O)O" functionalIDs="4"/>
 	</rule>

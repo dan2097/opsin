@@ -35,6 +35,7 @@
 	<!--Have two attachement points as indicated by the subType-->
 	<tokenList tagname="suffix" type="inline" subType="cycleformer" symbol="i">
 		<token value="imido">imido|imidyl</token>
+		<token value="dicarboximido">dicarboximido</token>
 	</tokenList>
 
 	<tokenList tagname="suffix" type="inline" symbol="w"><!--are allowed after another inline suffix, only the basic inline suffixes-->
