@@ -444,6 +444,8 @@
 		<token value="I">hydroiodicacid|hydroiodic acid|hydriodicacid|hydriodic acid</token>
 		<token value="[AtH]">hydroastaticacid|hydroastatic acid</token>
 
+		<token value="S(C)(=O)(=O)O">hydromethanesulfonate|hydromethanesulfonat</token><!-- contraction of hydrogen methanesulfonate, same as mesylate-->
+
 		<token value="[H][H]">molecular hydrogen</token>
 		<token value="N#N">molecular nitrogen</token>
 		<token value="O=O">molecular oxygen</token>
