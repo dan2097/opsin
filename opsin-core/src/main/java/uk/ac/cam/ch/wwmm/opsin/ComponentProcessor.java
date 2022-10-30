@@ -2737,6 +2737,16 @@ class ComponentProcessor {
 					}
 				}
 			}
+			else if (groupValue.equals("imidazol")) {
+				Element next = OpsinTools.getNextSibling(group);
+				if (next != null && next.getName().equals(SUFFIX_EL) && next.getValue().equals("ium")) {
+					Atom pos3 = group.getFrag().getAtomByLocant("3");
+					if (pos3 != null) {
+						//imidazolium = imidazol-3-ium
+						next.addAttribute(DEFAULTLOCANTID_ATR, String.valueOf(pos3.getID()));
+					}
+				}
+			}
 
 			if ("yes".equals(group.getAttributeValue(USABLEASJOINER_ATR)) 
 					&& group.getAttribute(DEFAULTINID_ATR) == null
