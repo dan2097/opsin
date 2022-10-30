@@ -678,7 +678,9 @@ class OpsinTools {
 				counts[1]++;
 			}
 			else{
-				stack.addAll(currentElement.getChildElements());
+				for (int i = 0; i < childCount; i++) {
+					stack.add(currentElement.getChild(i));
+				}
 				counts[0] += childCount;
 			}
 		}

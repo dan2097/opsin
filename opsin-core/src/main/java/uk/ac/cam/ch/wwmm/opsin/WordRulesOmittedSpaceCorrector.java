@@ -286,8 +286,7 @@ class WordRulesOmittedSpaceCorrector {
 
 	private void transformToEster(Element parentSimpleWordRule, Element substituentOrBracket) throws StructureBuildingException {
 		parentSimpleWordRule.getAttribute(WORDRULE_ATR).setValue(WordRule.ester.toString());
-		List<Element> childElsOfSub = substituentOrBracket.getChildElements();
-		Element lastChildElOfSub =childElsOfSub.get(childElsOfSub.size()-1);
+		Element lastChildElOfSub = substituentOrBracket.getChild(substituentOrBracket.getChildCount() - 1);
 		if (lastChildElOfSub.getName().equals(HYPHEN_EL)){
 			lastChildElOfSub.detach();
 		}
@@ -309,8 +308,8 @@ class WordRulesOmittedSpaceCorrector {
 	
 	private void transformToEster(Element parentSimpleWordRule, List<Element> elsToFormEsterSub) throws StructureBuildingException {
 		parentSimpleWordRule.getAttribute(WORDRULE_ATR).setValue(WordRule.ester.toString());
-		List<Element> childElsOfSub = elsToFormEsterSub.get(elsToFormEsterSub.size() - 1).getChildElements();
-		Element lastChildElOfSub =childElsOfSub.get(childElsOfSub.size() - 1);
+		Element sub = elsToFormEsterSub.get(elsToFormEsterSub.size() - 1);
+		Element lastChildElOfSub = sub.getChild(sub.getChildCount() - 1);
 		if (lastChildElOfSub.getName().equals(HYPHEN_EL)){
 			lastChildElOfSub.detach();
 		}

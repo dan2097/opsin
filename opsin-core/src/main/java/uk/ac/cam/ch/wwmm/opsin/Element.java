@@ -214,8 +214,10 @@ abstract class Element {
 			result.append(atr.toXML());
 		}
 		result.append('>');
-		if (getChildCount() > 0){
-			for (Element child : getChildElements()) {
+		int childCount = getChildCount();
+		if (childCount > 0) {
+			for (int i = 0; i < childCount; i++) {
+				Element child = getChild(i);
 				result.append(OpsinTools.NEWLINE);
 				result.append(child.toXML(indent + 1));
 			}
