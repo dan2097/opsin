@@ -674,17 +674,19 @@ class StructureBuilder {
 		List<String> locantForFunctionalTerm =new ArrayList<>();//usually not specified
 		if (!words.get(1).getAttributeValue(TYPE_ATR).equals(WordType.functionalTerm.toString())){//e.g. acetone O-ethyloxime or acetone 1-chloro-1-methylhydrazone
 			for (int i = 1; i < words.size(); i++) {
-				Fragment frag = findRightMostGroupInWordOrWordRule(words.get(i)).getFrag();
+				Element word = words.get(i);
+				Fragment frag = findRightMostGroupInWordOrWordRule(word).getFrag();
 				replacementFragments.add(frag);
-				List<Element> children =words.get(i).getChildElements();
-				if (children.size()==1 && children.get(0).getName().equals(BRACKET_EL) && children.get(0).getAttribute(LOCANT_ATR)!=null){
-					locantForFunctionalTerm.add(children.get(0).getAttributeValue(LOCANT_ATR));
+				int childCount = word.getChildCount();
+				if (childCount == 1 && word.getChild(0).getName().equals(BRACKET_EL) && word.getChild(0).getAttribute(LOCANT_ATR)!=null){
+					locantForFunctionalTerm.add(word.getChild(0).getAttributeValue(LOCANT_ATR));
 				}
-				else if (children.size()==2 && children.get(0).getAttribute(LOCANT_ATR)!=null ){
-					String locant =children.get(0).getAttributeValue(LOCANT_ATR);
-					if (children.get(1).getName().equals(ROOT_EL) && !frag.hasLocant(locant) && MATCH_NUMERIC_LOCANT.matcher(locant).matches()){ //e.g. 1,3-benzothiazole-2-carbaldehyde 2-phenylhydrazone
-						locantForFunctionalTerm.add(children.get(0).getAttributeValue(LOCANT_ATR));
-						children.get(0).removeAttribute(children.get(0).getAttribute(LOCANT_ATR));
+				else if (childCount == 2 && word.getChild(0).getAttribute(LOCANT_ATR) != null ){
+					Element firstChild = word.getChild(0);
+					String locant = firstChild.getAttributeValue(LOCANT_ATR);
+					if (word.getChild(1).getName().equals(ROOT_EL) && !frag.hasLocant(locant) && MATCH_NUMERIC_LOCANT.matcher(locant).matches()){ //e.g. 1,3-benzothiazole-2-carbaldehyde 2-phenylhydrazone
+						locantForFunctionalTerm.add(firstChild.getAttributeValue(LOCANT_ATR));
+						firstChild.removeAttribute(firstChild.getAttribute(LOCANT_ATR));
 					}
 				}
 			}
@@ -2415,10 +2417,9 @@ class StructureBuilder {
 	 */
 	private List<Element> findStereochemistryElsInProcessingOrder(Element parentEl) {
 		List<Element> matchingElements = new ArrayList<>();
-		List<Element> children =parentEl.getChildElements();
 		List<Element> stereochemistryElsAtThisLevel = new ArrayList<>();
-		for (int i = children.size()-1; i >=0; i--) {
-			Element child = children.get(i);
+		for (int i = parentEl.getChildCount() - 1; i >=0; i--) {
+			Element child = parentEl.getChild(i);
 			if (child.getName().equals(STEREOCHEMISTRY_EL)){
 				stereochemistryElsAtThisLevel.add(child);
 			}

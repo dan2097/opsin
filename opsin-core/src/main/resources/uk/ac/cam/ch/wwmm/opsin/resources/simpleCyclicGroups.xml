@@ -79,6 +79,7 @@
 		<token value="c1(cc(O)cc(C)c1)O">orcinol</token>
 		<token value="c1ccccc1C(=O)O[O-]" labels="2,ortho/3,meta/4,para/5/6/1////" functionalIDs="10">perbenzoate|perbenzoat</token>
 		<token value="c1ccccc1C(=O)OO" labels="2,ortho/3,meta/4,para/5/6/1////" functionalIDs="10">perbenzoic|perbenzoicacid|perbenzoic acid</token>
+		<token value="c1(C(=O)N2)c(C(=O)N2)cccc1" labels="1////2////3/4/5/6">phthalhydrazide|phthalhydrazid</token>
 		<token value="OCc1c(CO)cccc1" labels="//1/2,ortho///3,meta/4,para/5/6">phthalyl alcohol</token>
 		<token value="c1(ccccc1)O" labels="1/2,ortho/3,meta/4,para/5/6/">phenol</token>
 		<token value="c1(ccccc1)[O-]" labels="1/2,ortho/3,meta/4,para/5/6/">phenolate|phenolat</token>

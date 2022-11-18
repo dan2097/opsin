@@ -207,9 +207,8 @@ class FunctionalReplacement {
 						state.fragManager.removeFragment(group.getFrag());
 						substituent.removeChild(group);
 						groups.remove(group);
-						List<Element> remainingChildren =substituent.getChildElements();//there may be a locant that should be moved
-						for (int j = remainingChildren.size()-1; j>=0; j--){
-							Element child =substituent.getChild(j);
+						for (int j = substituent.getChildCount() - 1; j >= 0; j--){//there may be a locant that should be moved
+							Element child = substituent.getChild(j);
 							child.detach();
 							nextSubOrBracket.insertChild(child, 0);
 						}
