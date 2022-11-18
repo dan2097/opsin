@@ -2737,6 +2737,16 @@ class ComponentProcessor {
 					}
 				}
 			}
+			else if (groupValue.equals("imidazol")) {
+				Element next = OpsinTools.getNextSibling(group);
+				if (next != null && next.getName().equals(SUFFIX_EL) && next.getValue().equals("ium")) {
+					Atom pos3 = group.getFrag().getAtomByLocant("3");
+					if (pos3 != null) {
+						//imidazolium = imidazol-3-ium
+						next.addAttribute(DEFAULTLOCANTID_ATR, String.valueOf(pos3.getID()));
+					}
+				}
+			}
 
 			if ("yes".equals(group.getAttributeValue(USABLEASJOINER_ATR)) 
 					&& group.getAttribute(DEFAULTINID_ATR) == null
@@ -4390,7 +4400,8 @@ class ComponentProcessor {
 
 		Element locant = null;
 		Element multiplier = null;
-		for (Element childOfElBeforeSub : precedingGroupSubstituent.getChildElements()) {
+		for (int i = 0, len = precedingGroupSubstituent.getChildCount(); i < len; i++) {
+			Element childOfElBeforeSub = precedingGroupSubstituent.getChild(i);
 			String elName = childOfElBeforeSub.getName();
 			if (elName.equals(LOCANT_EL)) {
 				locant = childOfElBeforeSub;
@@ -4661,17 +4672,17 @@ class ComponentProcessor {
 	 * @return
 	 */
 	private List<Element> findLocantsThatCouldBeIndirectLocants(Element subOrRoot) {
-		List<Element> children = subOrRoot.getChildElements();
 		List<Element> locantEls = new ArrayList<>();
-		for (Element el : children) {
-			if (el.getName().equals(LOCANT_EL)){
+		for (int i = 0, len = subOrRoot.getChildCount(); i < len; i++) {
+			Element el = subOrRoot.getChild(i);
+			if (el.getName().equals(LOCANT_EL)) {
 				Element afterLocant = OpsinTools.getNextSibling(el);
-				if (afterLocant!=null && afterLocant.getName().equals(MULTIPLIER_EL)){//locant should not be followed by a multiplier. c.f. 1,2,3-tributyl 2-acetyloxypropane-1,2,3-tricarboxylate
+				if (afterLocant != null && afterLocant.getName().equals(MULTIPLIER_EL)){//locant should not be followed by a multiplier. c.f. 1,2,3-tributyl 2-acetyloxypropane-1,2,3-tricarboxylate
 					continue;
 				}
 				locantEls.add(el);
 			}
-			else if (el.getName().equals(GROUP_EL)){
+			else if (el.getName().equals(GROUP_EL)) {
 				break;
 			}
 		}

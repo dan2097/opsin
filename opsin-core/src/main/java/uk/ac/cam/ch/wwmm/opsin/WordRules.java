@@ -698,8 +698,7 @@ class WordRules {
 				throw new ParsingException("OPSIN Bug: Substituent element not found where substituent element expected");
 			}
 			Element finalSubstituent = substituentEls.get(substituentEls.size() - 1);
-			List<Element> finalSubstituentChildren = finalSubstituent.getChildElements();
-			if (!finalSubstituentChildren.get(finalSubstituentChildren.size() - 1).getName().equals(HYPHEN_EL)){//add an implicit hyphen if one is not already present
+			if (!finalSubstituent.getLastChildElement().getName().equals(HYPHEN_EL)){//add an implicit hyphen if one is not already present
 				Element implicitHyphen = new TokenEl(HYPHEN_EL, "-");
 				finalSubstituent.addChild(implicitHyphen);
 			}
