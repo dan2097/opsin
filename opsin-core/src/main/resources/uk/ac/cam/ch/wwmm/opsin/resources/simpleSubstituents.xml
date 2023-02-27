@@ -121,6 +121,9 @@
 		<token value="-NNC(O)=N" labels="1/2//3/4">isosemicarbazido</token>
 		<token value="-NC(O)=N" labels="1//2/3">isoureido</token><!--double bond position ambiguous-->
 		<token value="-NC(S)=N" labels="1//2/3">isothioureido</token><!--double bond position ambiguous-->
+		<token value="n1ccccc1" labels="1/2,ortho/3,meta/4,para/5/6" addGroup="C locant 2;C locant 6" frontLocantsExpected="2,3,4,5,6" outIDs="2">lutidin-2-yl</token>
+		<token value="n1ccccc1" labels="1/2,ortho/3,meta/4,para/5/6" addGroup="C locant 2;C locant 6" frontLocantsExpected="2,3,4,5,6" outIDs="3">lutidin-3-yl</token>
+		<token value="n1ccccc1" labels="1/2,ortho/3,meta/4,para/5/6" addGroup="C locant 2;C locant 6" frontLocantsExpected="2,3,4,5,6" outIDs="4">lutidin-4-yl</token>
 		<token value="-C(=O)C(=O)C(=O)O" labels="1//2//3//">mesoxalo</token>
 		<token value="-S(=O)(=O)C">mesyl</token>
 		<token value="-CC(C)=C">methallyl</token>
