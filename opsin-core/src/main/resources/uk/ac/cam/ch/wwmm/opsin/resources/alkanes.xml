@@ -23,6 +23,9 @@
 		<token value="8">oct</token>
 		<token value="9">non</token>
 	</tokenList>
+	<tokenList tagname="alkaneStemComponent" symbol="Ć"><!--eleven-->
+		<token value="11">undec</token>
+	</tokenList>
 	<tokenList tagname="alkaneStemComponent" symbol="Ð"><!--tens-->
 		<token value="10">dec</token>
 		<token value="20">cos|icos|eicos</token>

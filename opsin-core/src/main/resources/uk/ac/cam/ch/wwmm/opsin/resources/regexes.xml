@@ -168,6 +168,7 @@ does not define a CFG.
 	<regex name="%notFollowedByLetter%" value="ă"/>
 	<regex name="%amyl%" value="Ą"/>
 	<regex name="%carbohydrateApioFuran%" value="ą"/>
+	<regex name="%alkaneStemEleven%" value="Ć"/>
 
 <!-- composite regexes-->
 
@@ -218,7 +219,10 @@ does not define a CFG.
 	<regex name="%rootEnding%" value="(%inlineChargeGroup%?(%boughtonIsotope%?%locantedGroupAddingSuffixAllowedBeforeSuffix%?%suffixGroup%)?)"/>
 
 	<regex name="%locantOpenBracket%" value="(%stereochemistry%*(%dlStereochemistryPrefix%?(%relativeCisTrans%|%locantGroupNoStartingHyphen%{1,2}))?%stereochemistry%*(%multiplier%%locant%?)?%openBracket%%hyphen%?)"/>
-	<regex name="%alkaneStemSystematic%" value="((%alkaneStemUnits%%a%?)?(%alkaneStemTens%%a%?)?(%alkaneStemHundreds%%a%?)?%alkaneStemThousands%|(%alkaneStemUnits%%a%?)?(%alkaneStemTens%%a%?)?%alkaneStemHundreds%|(%alkaneStemUnits%%a%?)?%alkaneStemTens%)"/>
+	<regex name="%alkaneStemSystematicThousands%" value="(((%alkaneStemUnits%%a%?)?(%alkaneStemTens%%a%?)?|(%alkaneStemEleven%%a%?)?)(%alkaneStemHundreds%%a%?)?%alkaneStemThousands%)"/>
+	<regex name="%alkaneStemSystematicHundreds%" value="(((%alkaneStemUnits%%a%?)?(%alkaneStemTens%%a%?)?|(%alkaneStemEleven%%a%?)?)%alkaneStemHundreds%)"/>
+	<regex name="%alkaneStemSystematicTens%" value="((%alkaneStemUnits%%a%?)?%alkaneStemTens%)"/>
+	<regex name="%alkaneStemSystematic%" value="(%alkaneStemSystematicThousands%|%alkaneStemSystematicHundreds%|%alkaneStemSystematicTens%)"/>
 	<regex name="%alkaneStem%" value="(%alkaneStemSystematic%|%alkaneStemTrivial%)"/>
 
 	<regex name="%ringBridge%" value ="((%locantGroupNoStartingHyphen%|%colonOrSemiColonDelimitedLocant%?%multiplierNotGroup%)?(%alkaneStem%%ane%%bridgeFormingO%|%epoxy%)%hyphen%?)"/>
