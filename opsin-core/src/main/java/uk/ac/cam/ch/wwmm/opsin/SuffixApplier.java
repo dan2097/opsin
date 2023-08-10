@@ -196,6 +196,11 @@ class SuffixApplier {
 						String outValencyAtr = suffixRule.getAttributeValue(SUFFIXRULES_OUTVALENCY_ATR);
 						int outValency = outValencyAtr != null ? Integer.parseInt(outValencyAtr) : 1;
 						if (suffix.getAttribute(SUFFIXPREFIX_ATR) == null) {
+							if (!fragsToMerge.isEmpty()) {
+								//ensure suffix fragments that were just added can be referenced e.g. glucitol-O1-yl
+								mergeSuffixFrags(frag, fragsToMerge);
+								fragsToMerge.clear();
+							}
 							Atom fragAtomToUse = getFragAtomToUse(frag, suffix, suffixTypeToUse);
 							if (fragAtomToUse != null) {
 								frag.addOutAtom(fragAtomToUse, outValency, true);
@@ -240,7 +245,15 @@ class SuffixApplier {
 				}
 			}
 		}
-		for (Fragment suffixFrag : fragsToMerge) {
+		mergeSuffixFrags(frag, fragsToMerge);
+		if (reDetectCycles) {
+			CycleDetector.assignWhetherAtomsAreInCycles(frag);
+		}
+
+	}
+
+	private void mergeSuffixFrags(Fragment frag, List<Fragment> suffixFrags) throws StructureBuildingException {
+		for (Fragment suffixFrag : suffixFrags) {
 			state.fragManager.removeAtomAndAssociatedBonds(suffixFrag.getFirstAtom());//the dummy R atom
 			Set<String> suffixLocants = new HashSet<>(suffixFrag.getLocants());
 			for (String suffixLocant : suffixLocants) {
@@ -252,10 +265,6 @@ class SuffixApplier {
 			}
 			state.fragManager.incorporateFragment(suffixFrag, frag);
 		}
-		if (reDetectCycles) {
-			CycleDetector.assignWhetherAtomsAreInCycles(frag);
-		}
-
 	}
 	
 	private void applyIsotopeToSuffix(Fragment frag, Element isotopeSpecification, boolean mustBeApplied) throws StructureBuildingException {
