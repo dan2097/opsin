@@ -29,9 +29,12 @@ NOTE:A suffixAppliesTo is expected on all carbohydrates that may be effected by 
 		<token value="O=CCC[C@H](O)[C@H](O)C" labels="/1/2/3/4//5//6" suffixAppliesTo="2">amicet</token>
 		<token value="O=C[C@H](O)C[C@@H](O)[C@@H](O)C" labels="/1/2//3/4//5//6" suffixAppliesTo="2" naturalEntIsOpposite="yes">ascaryl</token>
 		<token value="O=CC[C@H](O)[C@@H](O)[C@H](O)C" labels="/1/2/3//4//5//6" suffixAppliesTo="2">boivin</token>
+		<token value="O=CC[C@H](OC)[C@@H](O)[C@H](O)C" labels="/1/2/3///4//5//6" suffixAppliesTo="2">sarment</token>
 		<token value="O=C[C@@H](O)C[C@H](O)[C@@H](O)C" labels="/1/2//3/4//5//6" suffixAppliesTo="2" naturalEntIsOpposite="yes">colit</token>
 		<token value="O=CC[C@H](O)[C@H](O)[C@H](O)C" labels="/1/2/3//4//5//6" suffixAppliesTo="2">digitox</token>
+		<token value="O=CC[C@H](OC)[C@H](O)[C@H](O)C" labels="/1/2/3///4//5//6" suffixAppliesTo="2">cymar</token>
 		<token value="O=C[C@@H](O)[C@H](O)[C@H](O)[C@@H](O)C" labels="/1/2//3//4//5//6" suffixAppliesTo="2" naturalEntIsOpposite="yes">fuc</token>
+		<token value="O=C[C@@H](O)[C@H](OC)[C@H](O)[C@@H](O)C" labels="/1/2//3///4//5//6" suffixAppliesTo="2" naturalEntIsOpposite="yes">digital</token>
 		<token value="O=C[C@H](O)C[C@H](O)[C@H](O)C" labels="/1/2//3/4//5//6" suffixAppliesTo="2">parat</token>
 		<token value="O=C[C@H](O)[C@@H](O)[C@H](O)[C@H](O)C" labels="/1/2//3//4//5//6" suffixAppliesTo="2">quinov</token>
 		<token value="O=C[C@H](O)[C@H](O)[C@@H](O)[C@@H](O)C" labels="/1/2//3//4//5//6" suffixAppliesTo="2" naturalEntIsOpposite="yes">rhamn</token>
