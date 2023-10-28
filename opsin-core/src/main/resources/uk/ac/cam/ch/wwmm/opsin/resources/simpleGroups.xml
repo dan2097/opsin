@@ -210,7 +210,7 @@
 		<token value="C(=O)(Cl)Cl">phosgene|phosgen</token>
 		<token value="[PH3]">phosphin</token>
 		<token value="P(=O)(N)(N)N" functionalIDs="3,4,5">phosphoramide|phosphoramid</token>
-    <!--phosphorous is a variant spelling of phosphorus in these names-->
+		<!--phosphorous is a variant spelling of phosphorus in these names-->
 		<token value="P(=O)(Br)(Br)Br">phosphorus oxybromide|phosphorus(v) oxybromide|phosphorusoxybromide|phosphorous oxybromide|phosphorous(v) oxybromide|phosphorousoxybromide|phosphorus oxybromid|phosphorus(v) oxybromid|phosphorusoxybromid|phosphorous oxybromid|phosphorous(v) oxybromid|phosphorousoxybromid</token>
 		<token value="P(=O)(Cl)(Cl)Cl">phosphorus oxychloride|phosphorus(v) oxychloride|phosphorusoxychloride|phosphorous oxychloride|phosphorous(v) oxychloride|phosphorousoxychloride|phosphorus oxychlorid|phosphorus(v) oxychlorid|phosphorusoxychlorid|phosphorous oxychlorid|phosphorous(v) oxychlorid|phosphorousoxychlorid</token>
 		<token value="P(=O)(F)(F)F">phosphorus oxyfluoride|phosphorus(v) oxyfluoride|phosphorusoxyfluoride|phosphorous oxyfluoride|phosphorous(v) oxyfluoride|phosphorousoxyfluoride|phosphorus oxyfluorid|phosphorus(v) oxyfluorid|phosphorusoxyfluorid|phosphorous oxyfluorid|phosphorous(v) oxyfluorid|phosphorousoxyfluorid</token>
@@ -444,7 +444,31 @@
 		<token value="I">hydroiodicacid|hydroiodic acid|hydriodicacid|hydriodic acid</token>
 		<token value="[AtH]">hydroastaticacid|hydroastatic acid</token>
 
-		<token value="S(C)(=O)(=O)O">hydromethanesulfonate|hydromethanesulfonat</token><!-- contraction of hydrogen methanesulfonate, same as mesylate-->
+		<!-- hydrogen acidate contracted to hydroacidate, these are not recommended by IUPAC, but occasionally used for common pharmaceutical salts-->
+		<token value="S(C)(=O)(=O)O">hydromethanesulfonate|hydromethanesulfonat</token><!-- same as mesylate-->
+		<token value="P(=O)([O-])([O-])O">hydrophosphate|hydrophosphat</token>
+		<token value="P(=O)([O-])(O)O">dihydrophosphate|dihydrophosphat</token>
+		<token value="P(=O)(O)(O)O">trihydrophosphate|trihydrophosphat</token>
+		<token value="S(=O)(=O)([O-])O">hydrosulfate|hydrosulfat</token>
+		<token value="S(=O)(=O)(O)O">dihydrosulfate|dihydrosulfat</token>
+		<token value="[N+](=O)([O-])O">hydronitrate|hydronitrat</token>
+		<token value="C(=O)(O)\C=C/C(=O)[O-]">hydromaleate|hydromaleat|monohydromaleate|monohydromaleat</token>
+		<token value="C(=O)(O)\C=C/C(=O)O">dihydromaleate|dihydromaleat</token>
+		<token value="CC(=O)O">hydroacetate|hydroacetat</token>
+		<token value="c1ccccc1C(=O)O">hydrobenzoate|hydrobenzoat</token>
+		<token value="C(=O)(O)CC(O)(C(=O)[O-])CC(=O)[O-]">hydrocitrate|hydrocitrat|monohydrocitrate|monohydrocitrat</token>
+		<token value="C(=O)(O)CC(O)(C(=O)O)CC(=O)[O-]">dihydrocitrate|dihydrocitrat</token>
+		<token value="C(=O)(O)CC(O)(C(=O)O)CC(=O)O">trihydrocitrate|trihydrocitrat</token>
+		<token value="C(=O)(O)\C=C\C(=O)[O-]">hydrofumarate|hydrofumarat|monohydrofumarate|monohydrofumarat</token>
+		<token value="C(=O)(O)\C=C\C(=O)O">dihydrofumarate|dihydrofumarat</token>
+		<token value="C(=O)(O)C(O)C(O)C(=O)[O-]">hydrotartrate|hydrotartrat|monohydrotartrate|monohydrotartrat</token>
+		<token value="C(=O)(O)C(O)C(O)C(=O)O">dihydrotartrate|dihydrotartrat</token>
+		<token value="C(=O)(O)C(O)C">hydrolactate|hydrolactat</token>
+		<token value="C(=O)(O)C(=O)[O-]">hydroxalate|hydroxalat|monohydroxalate|monohydroxalat|hydrooxalate|hydrooxalat|monohydrooxalate|monohydrooxalat</token>
+		<token value="C(=O)(O)C(=O)O">dihydroxalate|dihydroxalat|dihydrooxalate|dihydrooxalat</token>
+		<token value="C(=O)(O)CCC(=O)[O-]">hydrosuccinate|hydrosuccinat|monohydrosuccinate|monohydrosuccinat</token>
+		<token value="C(=O)(O)CCC(=O)O">dihydrosuccinate|dihydrosuccinat</token>
+		<token value="S(=O)(=O)(O)c1ccc(C)cc1">hydro-p-toluenesulfonate|hydro-p-toluenesulfonat</token>
 
 		<token value="[H][H]">molecular hydrogen</token>
 		<token value="N#N">molecular nitrogen</token>
@@ -456,10 +480,10 @@
 
 		<token value="O">water</token>
 
-    <!--Note that the monoanion is used when this is substituted-->
+		<!--Note that the monoanion is used when this is substituted-->
 		<token value="[C-]#[C-]">acetylide|acetylid</token>
 
-    <!--group 1/2 nitrides, nitrides are hard to handle systematically as the stoichiometry/exact structure can be ambiguous from the name-->
+		<!--group 1/2 nitrides, nitrides are hard to handle systematically as the stoichiometry/exact structure can be ambiguous from the name-->
 		<token value="[Li+].[Li+].[Li+].[N-3]">lithium nitride|lithium nitrid</token>
 		<token value="[Na+].[Na+].[Na+].[N-3]">sodium nitride|sodium nitrid</token>
 		<token value="[K+].[K+].[K+].[N-3]">potassium nitride|potassium nitrid</token>
