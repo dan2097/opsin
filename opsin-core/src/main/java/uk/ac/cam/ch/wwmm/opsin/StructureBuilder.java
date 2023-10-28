@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import uk.ac.cam.ch.wwmm.opsin.StereoAnalyser.StereoBond;
@@ -23,6 +24,8 @@ import static uk.ac.cam.ch.wwmm.opsin.StructureBuildingMethods.*;
  *
  */
 class StructureBuilder {
+	
+	private static final Pattern matchBoroHydrogenIsotope = Pattern.compile("boro(deuter|trit)ide?");
 	private final BuildState state;
 	private final List<Atom> polymerAttachmentPoints = new ArrayList<>();//rGroups need to be represented as normal atoms for the purpose of working out stereochemistry. They will be converted to a suitable representation later
 	
@@ -2249,8 +2252,9 @@ class StructureBuilder {
 	 * 
 	 * purine nucleosides/nucleotides are implicitly positively charged when 7-substituted
 	 * @param groups
+	 * @throws StructureBuildingException 
 	 */
-	private void processSpecialCases(List<Element> groups)  {
+	private void processSpecialCases(List<Element> groups) throws StructureBuildingException  {
 		for (Element group : groups) {
 			String subType = group.getAttributeValue(SUBTYPE_ATR);
 			if (OXIDOLIKE_SUBTYPE_VAL.equals(subType)){
@@ -2307,6 +2311,19 @@ class StructureBuilder {
 						if (atom.getElement() == ChemEl.N && atom.hasSpareValency() && atom.getBondCount() == 3 && atom.getIncomingValency() == 3 && atom.getCharge() == 0) {
 							atom.addChargeAndProtons(1, 1);
 						}
+					}
+				}
+			} else {
+				Matcher m = matchBoroHydrogenIsotope.matcher(group.getValue());
+				if (m.matches()) {
+					//The number of deuterium in borodeuteride will depend on how many have been substituted!
+					Fragment frag = group.getFrag();
+					int substitutableHydrogen = calculateSubstitutableHydrogenAtoms(frag.getFirstAtom());
+					boolean isDeuterium = m.group(1).equals("deuter");
+					for (int i = 0; i < substitutableHydrogen; i++) {
+						Fragment isotope = state.fragManager.buildSMILES(isDeuterium ? "[2H]" : "[3H]");
+						state.fragManager.createBond(frag.getFirstAtom(), isotope.getFirstAtom(), 1);
+						state.fragManager.incorporateFragment(isotope, frag);
 					}
 				}
 			}

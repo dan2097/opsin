@@ -34,7 +34,9 @@
 		<token value="NC(=O)NNC(N)=O">biurea</token>
 		<token value="NC(=O)NC(=O)N" labels="1/2//3/4//5">biuret</token>
 		<token value="OCCCCCCCCC/C=C/C=C\CCC">bombykol</token>
+		<token value="[BH4-]">borodeuteride|borodeuterid</token><!--deuterated after substitution by special case-->
 		<token value="[BH4-]">borohydride|borohydrid</token>
+		<token value="[BH4-]">borotritide|borotritid</token><!--tritiated after substitution by special case-->
 		<token value="O=CC(Br)(Br)Br">bromal</token>
 		<token value="NBr">bromamine|bromamide|bromamin|bromamid</token>
 		<token value="N(Br)Br">dibromamine|bromimide|dibromamin|bromimid</token>
