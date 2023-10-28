@@ -152,7 +152,7 @@
 		<token value="Cc1c(O)ccc(O)c1" labels="/1/2//3/4/5//6">gentis</token>
 		<token value="C/C=C(C)/CC/C=C(C)\C" labels="1/2/3//4/5/6///" defaultInID="9" usableAsAJoiner="yes">geran</token>
 		<token value="CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC" labels="numeric" usableAsAJoiner="yes">ghedd</token>
-		<token value="CC(O)CO">glycer</token>
+		<token value="CC(O)CO" labels="1/2//3/">glycer</token>
 		<token value="CC1CO1">glycid</token>
 		<token value="CCCCCCCCCC/C=C\CCCCCCCC" labels="numeric" usableAsAJoiner="yes">gondo</token>
 		<token value="CCc1ccc(OC)cc1" labels="/alpha/1/2,ortho/3,meta/4,para///5/6">homoanis</token>

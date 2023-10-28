@@ -2591,7 +2591,8 @@ class ComponentGenerator {
 				if (OpsinTools.isBiochemical(type, subType) ||
 						(YLFORACYL_SUBTYPE_VAL.equals(subType) &&
 								("glycol".equals(otherGroup.getValue()) || "diglycol".equals(otherGroup.getValue()))
-						)
+						) ||
+						(YLFORYL_SUBTYPE_VAL.equals(subType) && "glycer".equals(otherGroup.getValue()))
 					) {
 					group.getAttribute(VALUE_ATR).setValue("-P(=O)(O)O");
 					group.addAttribute(new Attribute(USABLEASJOINER_ATR, "yes"));
