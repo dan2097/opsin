@@ -1,3 +1,12 @@
+Version 2.8.0 (2022-10-29)
+Support for undecahectane/undecadictane (previously only hendeca was supported)
+Support for dicarboximido
+Improved support for lysergic acid derivatives
+Added a few more sugars e.g. digitalose
+Added borodeuteride and hydro contractions of pharmaceutical salts e.g. hydromethanesulfonate
+Support substitution on glyceric acid
+Corrected interpretation of imidazolium, trioxane and phthalhydrazide
+
 Version 2.7.0 (2022-08-16)
 Improved coverage of flavonoid parent structures
 Support for apiofuranosyl, added 5 locant to apiose
