@@ -508,6 +508,9 @@
 		<token value="[NH2-].[NH2-].[Sr+2]">strontium amide|strontium diamide</token>
 		<token value="[NH2-].[NH2-].[Ba+2]">barium amide|barium diamide</token>
 		<token value="[NH2-].[NH2-].[Ra+2]">radium amide|radium diamide</token>
+
+		<!--trivial names that clash with systematic names-->
+		<token value="c1ccc(cc1)OP(=O)(N=[N+]=[N-])Oc2ccccc2">diphenylphosphoryl azide|diphenylphosphoryl azid|diphenylphosphorylazide|diphenylphosphorylazid</token><!--should be diphenoxyphosphoryl azide-->
 	</tokenList>
 
 </tokenLists>
