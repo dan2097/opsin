@@ -1,6 +1,8 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 import java.util.List;
@@ -31,8 +33,8 @@ public class TokenizerTest {
 	@Test
 	public void hexane() throws ParsingException{
 		TokenizationResult result= tokenizer.tokenize("hexane", true);
-		assertEquals(true, result.isSuccessfullyTokenized());
-		assertEquals(true, result.isFullyInterpretable());
+		assertTrue(result.isSuccessfullyTokenized());
+		assertTrue(result.isFullyInterpretable());
 		assertEquals("", result.getUninterpretableName());
 		assertEquals("", result.getUnparsableName());
 		assertEquals("", result.getUnparsedName());
@@ -103,7 +105,7 @@ public class TokenizerTest {
 	@Test
 	public void hexachlorohexaneeeeeee() throws ParsingException{
 		TokenizationResult result = tokenizer.tokenize("hexachlorohexaneeeeeee", true);
-		assertEquals(false, result.isSuccessfullyTokenized(), "Unparsable");
+		assertFalse(result.isSuccessfullyTokenized(), "Unparsable");
 	}
 
 	@Test
@@ -153,44 +155,44 @@ public class TokenizerTest {
 
 	@Test
 	public void acceptableInterWordBreaks() throws ParsingException{
-		assertEquals(true, tokenizer.tokenize("methane ethane", false).isSuccessfullyTokenized());
-		assertEquals(true, tokenizer.tokenize("methane-ethane", false).isSuccessfullyTokenized());
-		assertEquals(true, tokenizer.tokenize("methane - ethane", false).isSuccessfullyTokenized());
-		assertEquals(false, tokenizer.tokenize("methane -ethane", false).isSuccessfullyTokenized());
-		assertEquals(false, tokenizer.tokenize("methane - ", false).isSuccessfullyTokenized());
+		assertTrue(tokenizer.tokenize("methane ethane", false).isSuccessfullyTokenized());
+		assertTrue(tokenizer.tokenize("methane-ethane", false).isSuccessfullyTokenized());
+		assertTrue(tokenizer.tokenize("methane - ethane", false).isSuccessfullyTokenized());
+		assertFalse(tokenizer.tokenize("methane -ethane", false).isSuccessfullyTokenized());
+		assertFalse(tokenizer.tokenize("methane - ", false).isSuccessfullyTokenized());
 		
-		assertEquals(true, tokenizer.tokenizeRightToLeft(reverseParseRules, "methane ethane", false).isSuccessfullyTokenized());
-		assertEquals(true, tokenizer.tokenizeRightToLeft(reverseParseRules, "methane-ethane", false).isSuccessfullyTokenized());
-		assertEquals(true, tokenizer.tokenizeRightToLeft(reverseParseRules, "methane - ethane", false).isSuccessfullyTokenized());
-		assertEquals(false, tokenizer.tokenizeRightToLeft(reverseParseRules, "methane -ethane", false).isSuccessfullyTokenized());
-		assertEquals(false, tokenizer.tokenizeRightToLeft(reverseParseRules, "methane - ", false).isSuccessfullyTokenized());
+		assertTrue(tokenizer.tokenizeRightToLeft(reverseParseRules, "methane ethane", false).isSuccessfullyTokenized());
+		assertTrue(tokenizer.tokenizeRightToLeft(reverseParseRules, "methane-ethane", false).isSuccessfullyTokenized());
+		assertTrue(tokenizer.tokenizeRightToLeft(reverseParseRules, "methane - ethane", false).isSuccessfullyTokenized());
+		assertFalse(tokenizer.tokenizeRightToLeft(reverseParseRules, "methane -ethane", false).isSuccessfullyTokenized());
+		assertFalse(tokenizer.tokenizeRightToLeft(reverseParseRules, "methane - ", false).isSuccessfullyTokenized());
 	}
 	
 	@Test
 	public void compoundWithValidUse() throws ParsingException{
 		TokenizationResult result =tokenizer.tokenize("benzene compound with toluene", true);
-		assertEquals(true, result.isSuccessfullyTokenized());
+		assertTrue(result.isSuccessfullyTokenized());
 		TokenizationResult result2 =tokenizer.tokenize("benzene and toluene", true);
-		assertEquals(true, result2.isSuccessfullyTokenized());
+		assertTrue(result2.isSuccessfullyTokenized());
 	}
 
 	@Test
 	public void compoundWithInvalidUse1() throws ParsingException{
 		TokenizationResult result =tokenizer.tokenize("ethyl and toluene", true);
-		assertEquals(false, result.isSuccessfullyTokenized());
+		assertFalse(result.isSuccessfullyTokenized());
 	}
 
 	@Test
 	public void compoundWithInvalidUse2() throws ParsingException{
 		TokenizationResult result =tokenizer.tokenize("and benzene", true);
-		assertEquals(false, result.isSuccessfullyTokenized());
+		assertFalse(result.isSuccessfullyTokenized());
 	}
 	
 	@Test
 	public void CCCP() throws ParsingException{
 		TokenizationResult result = tokenizer.tokenize("Carbonyl cyanide m-chlorophenyl oxime", true);
-		assertEquals(true, result.isSuccessfullyTokenized());
-		assertEquals(true, result.isFullyInterpretable());
+		assertTrue(result.isSuccessfullyTokenized());
+		assertTrue(result.isFullyInterpretable());
 		assertEquals("", result.getUninterpretableName());
 		assertEquals("", result.getUnparsableName());
 		assertEquals("", result.getUnparsedName());
@@ -232,8 +234,8 @@ public class TokenizerTest {
 	@Test
 	public void CCCP_RL() throws ParsingException{
 		TokenizationResult result = tokenizer.tokenizeRightToLeft(reverseParseRules, "Carbonyl cyanide m-chlorophenyl oxime", true);
-		assertEquals(true, result.isSuccessfullyTokenized());
-		assertEquals(true, result.isFullyInterpretable());
+		assertTrue(result.isSuccessfullyTokenized());
+		assertTrue(result.isFullyInterpretable());
 		assertEquals("", result.getUninterpretableName());
 		assertEquals("", result.getUnparsableName());
 		assertEquals("", result.getUnparsedName());
@@ -275,8 +277,8 @@ public class TokenizerTest {
 	@Test
 	public void partiallyInterpretatableLR() throws ParsingException{
 		TokenizationResult result =tokenizer.tokenize("ethyl-2H-foo|ene", true);
-		assertEquals(false, result.isSuccessfullyTokenized());
-		assertEquals(false, result.isFullyInterpretable());
+		assertFalse(result.isSuccessfullyTokenized());
+		assertFalse(result.isFullyInterpretable());
 		assertEquals("2H-foo|ene", result.getUninterpretableName());
 		assertEquals("foo|ene", result.getUnparsableName());
 		assertEquals("ethyl-2H-foo|ene", result.getUnparsedName());
@@ -285,8 +287,8 @@ public class TokenizerTest {
 	@Test
 	public void partiallyInterpretatableRL1() throws ParsingException{
 		TokenizationResult result =tokenizer.tokenizeRightToLeft(reverseParseRules, "ethyl-2H-foo|ene", true);
-		assertEquals(false, result.isSuccessfullyTokenized());
-		assertEquals(false, result.isFullyInterpretable());
+		assertFalse(result.isSuccessfullyTokenized());
+		assertFalse(result.isFullyInterpretable());
 		assertEquals("ethyl-2H-foo|ene", result.getUninterpretableName());
 		assertEquals("ethyl-2H-foo|", result.getUnparsableName());
 		assertEquals("ethyl-2H-foo|ene", result.getUnparsedName());
@@ -295,8 +297,8 @@ public class TokenizerTest {
 	@Test
 	public void partiallyInterpretatableRL2() throws ParsingException{
 		TokenizationResult result =tokenizer.tokenizeRightToLeft(reverseParseRules, "fooylpyridine oxide", true);
-		assertEquals(false, result.isSuccessfullyTokenized());
-		assertEquals(false, result.isFullyInterpretable());
+		assertFalse(result.isSuccessfullyTokenized());
+		assertFalse(result.isFullyInterpretable());
 		assertEquals("fooyl", result.getUninterpretableName());
 		assertEquals("f", result.getUnparsableName());//o as in the end of thio then oyl
 		assertEquals("fooylpyridine", result.getUnparsedName());
@@ -305,7 +307,7 @@ public class TokenizerTest {
 	@Test
 	public void tokenizeDoesNotTokenizeUnTokenizableName() throws ParsingException{
 		TokenizationResult result =tokenizer.tokenize("ethyl acet|foo toluene", true);
-		assertEquals(false, result.isSuccessfullyTokenized());
+		assertFalse(result.isSuccessfullyTokenized());
 	}
 
 	@Test
