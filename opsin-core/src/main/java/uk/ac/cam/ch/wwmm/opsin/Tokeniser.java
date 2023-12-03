@@ -225,7 +225,7 @@ class Tokeniser {
 			List<ParseTokens> backParseTokens = backResults.getParseTokensList();
 			String backUninterpretableName = backResults.getUninterpretableName();
 			String backParsedName = lastWordAndUnparsed.substring(0, lastWordAndUnparsed.length() - backUninterpretableName.length());
-			if (backParsedName.length() > pw.getWord().length() && backParseTokens.size() > 0 && (backUninterpretableName.equals("") || backUninterpretableName.charAt(0) == ' ' || backUninterpretableName.charAt(0) == '-')) {//a word was interpretable
+			if (backParsedName.length() > pw.getWord().length() && backParseTokens.size() > 0 && (backUninterpretableName.isEmpty() || backUninterpretableName.charAt(0) == ' ' || backUninterpretableName.charAt(0) == '-')) {//a word was interpretable
 				result.getParse().removeWord(pw);
 				List<ParseWord> parseWords = WordTools.splitIntoParseWords(backParseTokens, backParsedName);
 				for (ParseWord parseWord : parseWords) {
