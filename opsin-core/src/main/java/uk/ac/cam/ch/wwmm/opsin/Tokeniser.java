@@ -31,7 +31,7 @@ class Tokeniser {
 	 * @throws ParsingException 
 	 */
 	TokenizationResult tokenize(String name, boolean allowRemovalOfWhiteSpace) throws ParsingException {
-		TokenizationResult result = allowRemovalOfWhiteSpace ? new TokenizationResult(WordTools.removeWhiteSpaceIfBracketsAreUnbalanced(name)) :new TokenizationResult(name);
+		TokenizationResult result = new TokenizationResult(allowRemovalOfWhiteSpace ? WordTools.removeWhiteSpaceIfBracketsAreUnbalanced(name) : name);
 		TokenizationResult resultFromBeforeWhitespaceRemoval = null;
 
 		while (!result.isSuccessfullyTokenized()){
@@ -231,8 +231,8 @@ class Tokeniser {
 				for (ParseWord parseWord : parseWords) {
 					result.getParse().addWord(parseWord);
 				}
-				if (!backUninterpretableName.equals("")) {
-					result.setUnparsedName(backUninterpretableName.substring(1));//remove white space at start of uninterpretableName
+				if (!backUninterpretableName.isEmpty()) {
+					result.setUnparsedName(backUninterpretableName.substring(1));//remove delimiter at start of uninterpretableName
 				} else {
 					result.setUnparsedName(backUninterpretableName);
 				}

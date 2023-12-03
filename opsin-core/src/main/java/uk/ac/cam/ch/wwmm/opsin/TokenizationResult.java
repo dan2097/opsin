@@ -23,7 +23,7 @@ class TokenizationResult {
 	}
 
 	boolean isSuccessfullyTokenized() {
-		return unparsedName.length()==0;
+		return unparsedName.isEmpty();
 	}
 
 	Parse getParse() {
