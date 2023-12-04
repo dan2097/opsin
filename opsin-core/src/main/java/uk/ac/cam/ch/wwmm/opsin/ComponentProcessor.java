@@ -2974,6 +2974,20 @@ class ComponentProcessor {
 					heteroatom.detach();
 				}
 			}
+			if(name.equals("thithiazol")) {
+				//Dithiazolium implicitly has the charge on a sulfur, not a nitrogen
+				Element suffix = OpsinTools.getNextSibling(group);
+				if (suffix != null && CHARGE_TYPE_VAL.equals(suffix.getAttributeValue(TYPE_ATR)) && suffix.getAttribute(LOCANT_ATR) == null) {
+					String locant = null;
+					for (Atom atom : hwRing) {
+						if (atom.getElement() == ChemEl.S) {
+							locant = atom.getFirstLocant();
+							break;
+						}
+					}
+					suffix.addAttribute(LOCANT_EL, locant);
+				}
+			}
 		}
 	}
 
