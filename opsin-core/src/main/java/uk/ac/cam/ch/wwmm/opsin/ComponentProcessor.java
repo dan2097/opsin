@@ -2913,6 +2913,9 @@ class ComponentProcessor {
 				}
 				elementReplacement = m.group();
 				Atom a = hwRing.getAtomByLocantOrThrow(locant);
+				if (a.getElement() != ChemEl.C) {
+					throw new ComponentGenerationException("Duplicate locants present in Hantzsch-Widman system");
+				}
 				a.setElement(ChemEl.valueOf(elementReplacement));
 				if (heteroatom.getAttribute(LAMBDA_ATR) != null){
 					a.setLambdaConventionValency(Integer.parseInt(heteroatom.getAttributeValue(LAMBDA_ATR)));
