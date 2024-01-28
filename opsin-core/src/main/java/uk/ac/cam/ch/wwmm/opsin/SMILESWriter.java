@@ -198,7 +198,7 @@ class SMILESWriter {
 
 			String firstLocant = a.getFirstLocant();
 			if (firstLocant != null) {
-				atomLocants.add(firstLocant);
+				atomLocants.add(OpsinTools.correctPositionOfPrimeInLocant(firstLocant));
 				lastLocant = i;
 			}
 			else {

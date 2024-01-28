@@ -144,7 +144,7 @@ class CMLWriter {
 		}
 		for(String locant : atom.getLocants()) {
 			writer.writeStartElement("label");
-			writer.writeAttribute("value", locant);
+			writer.writeAttribute("value", OpsinTools.correctPositionOfPrimeInLocant(locant));
 			writer.writeAttribute("dictRef", "cmlDict:locant");
 			writer.writeEndElement();
 		}

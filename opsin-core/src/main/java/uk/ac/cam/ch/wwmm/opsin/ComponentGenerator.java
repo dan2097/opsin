@@ -86,6 +86,7 @@ class ComponentGenerator {
 	private static final Pattern matchRSLocantBracket = Pattern.compile("[RS]|R[,/]?S", Pattern.CASE_INSENSITIVE);
 	private static final Pattern matchSuperscriptedLocant = Pattern.compile("(" + elementSymbols +"'*)[\\^\\[\\(\\{~\\*\\<]*(?:[sS][uU][pP][ ]?)?([^\\^\\[\\(\\{~\\*\\<\\]\\)\\}\\>]+)[^\\[\\(\\{]*");
 	private static final Pattern matchIUPAC2004ElementLocant = Pattern.compile("(\\d+'*)-(" + elementSymbols +"'*)(.*)");
+	private static final Pattern matchNumericLocantWithLetterAndPrime = Pattern.compile("(\\d+)('+)([a-z])");
 	private static final Pattern matchGreek = Pattern.compile("alpha|beta|gamma|delta|epsilon|zeta|eta|omega", Pattern.CASE_INSENSITIVE);
 	private static final Pattern matchInlineSuffixesThatAreAlsoGroups = Pattern.compile("carbonyl|oxy|sulfenyl|sulfinyl|sulfonyl|selenenyl|seleninyl|selenonyl|tellurenyl|tellurinyl|telluronyl");
 
@@ -329,6 +330,13 @@ class ComponentGenerator {
 			Matcher m = matchIUPAC2004ElementLocant.matcher(locantText);
 			if (m.matches()){
 				locantText = m.group(2) + m.group(1) + m.group(3);
+			}
+		}
+		if (locantText.contains("'")) {
+			//2''a is correct but 2a'' is either to handle internally, so normalize to this form 
+			Matcher m = matchNumericLocantWithLetterAndPrime.matcher(locantText);
+			if (m.matches()){
+				locantText = m.group(1) + m.group(3) + m.group(2);
 			}
 		}
 
