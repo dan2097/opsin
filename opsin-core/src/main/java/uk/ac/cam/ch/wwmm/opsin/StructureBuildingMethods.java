@@ -716,12 +716,7 @@ class StructureBuildingMethods {
 		}
 		Atom atomToRemove = applicableTerminalAtoms.get(0);
 		if (FragmentTools.isFunctionalAtom(atomToRemove)) {//This can occur with aminoglycosides where the anomeric OH is removed by deoxy
-			for (int i = 0, len = fragment.getFunctionalAtomCount(); i < len; i++) {
-				if (atomToRemove.equals(fragment.getFunctionalAtom(i).getAtom())) {
-					fragment.removeFunctionalAtom(i);
-					break;
-				}
-			}
+			fragment.removeFunctionalAtom(atomToRemove);
 			fragment.addFunctionalAtom(atomToRemove.getFirstBond().getOtherAtom(atomToRemove));
 		}
 		FragmentTools.removeTerminalAtom(state, atomToRemove);
@@ -748,12 +743,7 @@ class StructureBuildingMethods {
 		for (int i = 0; i < count; i++) {
 			Atom atomToRemove = applicableTerminalAtoms.get(i);
 			if (FragmentTools.isFunctionalAtom(atomToRemove)) {//This can occur with aminoglycosides where the anomeric OH is removed by deoxy
-				for (int j = 0, len = fragment.getFunctionalAtomCount(); j < len; j++) {
-					if (atomToRemove.equals(fragment.getFunctionalAtom(j).getAtom())) {
-						fragment.removeFunctionalAtom(j);
-						break;
-					}
-				}
+				fragment.removeFunctionalAtom(atomToRemove);
 				fragment.addFunctionalAtom(atomToRemove.getFirstBond().getOtherAtom(atomToRemove));
 			}
 			FragmentTools.removeTerminalAtom(state, atomToRemove);
@@ -2124,6 +2114,9 @@ class StructureBuildingMethods {
 			from = possibleAtoms.get(0);
 		}
 		fragToBeJoined.removeOutAtom(out);
+		if (atomToJoinTo.getElement().isChalcogen() ) {
+			atomToJoinTo.getFrag().removeFunctionalAtom(atomToJoinTo);
+		}
 
 		state.fragManager.createBond(from, atomToJoinTo, bondOrder);
 		if (LOG.isTraceEnabled()){

@@ -381,7 +381,7 @@ class Fragment implements Iterable<Atom> {
 	}
 
 	/**
-	 * Gets the functionalAtom at a specific index of the functionalAtoms linkedList
+	 * Gets the functionalAtom at a specific index of the functionalAtoms list
 	 * @param i
 	 * @return
 	 */
@@ -405,7 +405,7 @@ class Fragment implements Iterable<Atom> {
 	}
 
 	/**
-	 * Removes the functionalAtom at a specific index of the functionalAtoms linkedList
+	 * Removes the functionalAtom at a specific index of the functionalAtoms list
 	 * @param i
 	 * @return 
 	 */
@@ -414,13 +414,26 @@ class Fragment implements Iterable<Atom> {
 	}
 
 	/**
-	 * Removes the specified functionalAtom from the functionalAtoms linkedList
+	 * Removes the specified functionalAtom from the functionalAtoms list
 	 * @param functionalAtom
 	 */
 	void removeFunctionalAtom(FunctionalAtom functionalAtom) {
 		functionalAtoms.remove(functionalAtom);
 	}
 	
+	/**
+	 * If the given atom is a function atom removes it
+	 * @param functionalAtom
+	 */
+	void removeFunctionalAtom(Atom functionalAtom) {
+		for (int i = 0, len = functionalAtoms.size(); i < len; i++) {
+			if (functionalAtom.equals(functionalAtoms.get(i).getAtom())) {
+				removeFunctionalAtom(i);
+				break;
+			}
+		}
+	}
+
 	List<Atom> getPolymerAttachmentPoints() {
 		return polymerAttachmentPoints;
 	}
