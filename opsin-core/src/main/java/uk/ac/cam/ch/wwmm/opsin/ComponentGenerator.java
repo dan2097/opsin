@@ -222,6 +222,15 @@ class ComponentGenerator {
 				}
 			}
 		}
+		Element group = subOrRoot.getFirstChildElement(GROUP_EL);
+		if (group != null && group.getValue().equals("then")) {
+			Element precedingEl = OpsinTools.getPrevious(group);
+			if (precedingEl != null && precedingEl.getName().equals(SUFFIX_EL) && precedingEl.getAttribute(SUBSEQUENTUNSEMANTICTOKEN_ATR) == null) {
+				if (precedingEl.getValue().equals("ylidene") || precedingEl.getValue().equals("ylidyne")) {
+					throw new ComponentGenerationException("Group should be ethenyl, not thenyl");
+				}
+			}
+		}
 	}
 
 

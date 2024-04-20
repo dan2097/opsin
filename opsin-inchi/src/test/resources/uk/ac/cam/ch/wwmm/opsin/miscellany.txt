@@ -71,3 +71,6 @@ lithium triethylborodeuteride	InChI=1S/C6H16B.Li/c1-4-7(5-2)6-3;/h7H,4-6H2,1-3H3
 2-Phosphoglyceric acid	InChI=1S/C3H7O7P/c4-1-2(3(5)6)10-11(7,8)9/h2,4H,1H2,(H,5,6)(H2,7,8,9)
 3-phosphoglyceric acid	InChI=1S/C3H7O7P/c4-2(3(5)6)1-10-11(7,8)9/h2,4H,1H2,(H,5,6)(H2,7,8,9)
 2-methylglyceric acid	InChI=1S/C4H8O4/c1-4(8,2-5)3(6)7/h5,8H,2H2,1H3,(H,6,7)
+#disambiguation of [yliden][ethenyl] vs [ylidene][thenyl]
+(2-cyclopropen-1-ylidenethenylidene)cyclohexane	InChI=1S/C11H12/c1-2-4-10(5-3-1)6-7-11-8-9-11/h8-9H,1-5H2
+(cycloprop-2-en-1-ylidenethenylidene)cyclohexane	InChI=1S/C11H12/c1-2-4-10(5-3-1)6-7-11-8-9-11/h8-9H,1-5H2
