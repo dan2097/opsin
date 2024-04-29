@@ -1949,7 +1949,7 @@ class ComponentGenerator {
 	 * @throws NumberFormatException
 	 */
 	private void processSpiroSystem(Element chainGroup, Element spiroEl) throws NumberFormatException, ComponentGenerationException {
-		int[][] spiroDescriptors = getSpiroDescriptors(StringTools.removeDashIfPresent(spiroEl.getValue()));
+		List<SpiroBridge> spiroBridges = getSpiroBridges(StringTools.removeDashIfPresent(spiroEl.getValue()));
 
 		Element multiplier = OpsinTools.getPreviousSibling(spiroEl);
 		int numberOfSpiros = 1;
@@ -1959,30 +1959,29 @@ class ComponentGenerator {
 		}
 		int numberOfCarbonInDescriptors = 0;
 		boolean hasSuperscripts = false;
-		for (int[] spiroDescriptor : spiroDescriptors) {
-			numberOfCarbonInDescriptors += spiroDescriptor[0];
-			if (spiroDescriptor[1] != -1) {
+		for (SpiroBridge spiroBridge : spiroBridges) {
+			numberOfCarbonInDescriptors += spiroBridge.getChainLength();
+			if (spiroBridge.hasSuperscriptedLocant()) {
 				hasSuperscripts = true;
 			}
 		}
 		numberOfCarbonInDescriptors += numberOfSpiros;
 		int expectedNumberOfCarbons = chainGroup.getAttributeValue(VALUE_ATR).length();
 		if (numberOfCarbonInDescriptors != expectedNumberOfCarbons) {
-			if (numberOfCarbonInDescriptors > expectedNumberOfCarbons && spiroDescriptors.length > 2 && !hasSuperscripts) {
+			if (numberOfCarbonInDescriptors > expectedNumberOfCarbons && spiroBridges.size() > 2 && !hasSuperscripts) {
 				//Can we infer where superscripts should have been?
 				//Assume that all 2+ digit spiro descriptors are actually single digit bridges followed by a superscripted locant
 				//Note that the locant can't be zero, so 10,20,30 etc. can't be split to a superscripted zero
 				int carbonsWithSuperscriptsInferred = 0;
-				for (int i = 0; i < spiroDescriptors.length; i++) {
-					int[] spiroDescriptor = spiroDescriptors[i];
-					int carbons = spiroDescriptor[0];
+				for (int i = 0; i < spiroBridges.size(); i++) {
+					SpiroBridge spiroBridge = spiroBridges.get(i);
+					int carbons = spiroBridge.getChainLength();
 					if (i > 1 && carbons >= 11) {
 						String str = String.valueOf(carbons);
 						carbons = Integer.parseInt(str.substring(0,1));
 						int locant = Integer.parseInt(str.substring(1));
 						if (locant > 0) {
-							spiroDescriptor[0] = carbons;
-							spiroDescriptor[1] = locant;
+							spiroBridges.set(i, new SpiroBridge(carbons, locant, false));
 						}
 					}
 					carbonsWithSuperscriptsInferred += carbons;
@@ -1999,12 +1998,13 @@ class ComponentGenerator {
 
 		int numOfOpenedBrackets = 1;
 		int curIndex = 2;
-		String smiles = "C0" + StringTools.multiplyString("C", spiroDescriptors[0][0]) + "10(";
+		String smiles = "C0" + StringTools.multiplyString("C", spiroBridges.get(0).getChainLength()) + "10(";
 
 		// for those molecules where no superstrings compare prefix number with curIndex.
-		for (int i = 1; i < spiroDescriptors.length; i++) {
-			if (spiroDescriptors[i][1] >= 0) {
-				int ringOpeningPos = findIndexOfRingOpenings(smiles, spiroDescriptors[i][1]);
+		for (int i = 1; i < spiroBridges.size(); i++) {
+			SpiroBridge spiroBridge = spiroBridges.get(i);
+			if (spiroBridge.getLocant() != null) {
+				int ringOpeningPos = findIndexOfRingOpenings(smiles, spiroBridge.getLocant());
 				String ringOpeningLabel = String.valueOf(smiles.charAt(ringOpeningPos));
 				ringOpeningPos++;
 				if (ringOpeningLabel.equals("%")) {
@@ -2021,15 +2021,15 @@ class ComponentGenerator {
 					smiles = smiles.substring(0, ringOpeningPos) + ringClosure(curIndex) + smiles.substring(ringOpeningPos);
 
 					// add ring in new brackets
-					smiles += "(" + StringTools.multiplyString("C", spiroDescriptors[i][0]) + ringClosure(curIndex) + ")";
+					smiles += "(" + StringTools.multiplyString("C", spiroBridge.getChainLength()) + ringClosure(curIndex) + ")";
 					curIndex++;
 				}
 				else {
-					smiles += StringTools.multiplyString("C", spiroDescriptors[i][0]) + ringOpeningLabel + ")";
+					smiles += StringTools.multiplyString("C", spiroBridge.getChainLength()) + ringOpeningLabel + ")";
 				}
 			}
 			else if (numOfOpenedBrackets >= numberOfSpiros) {
-				smiles += StringTools.multiplyString("C", spiroDescriptors[i][0]);
+				smiles += StringTools.multiplyString("C", spiroBridge.getChainLength());
 
 				// take the number before bracket as index for smiles
 				// we can open more brackets, this considered in prev if
@@ -2039,7 +2039,7 @@ class ComponentGenerator {
 				// from here start to decrease index for the following
 			}
 			else {
-				smiles += StringTools.multiplyString("C", spiroDescriptors[i][0]);
+				smiles += StringTools.multiplyString("C", spiroBridge.getChainLength());
 				smiles += "C" + ringClosure(curIndex++) + "(";
 				numOfOpenedBrackets++;
 			}
@@ -2069,9 +2069,9 @@ class ComponentGenerator {
 	/**
 	 * Prepares spiro string for processing
 	 * @param text - string with spiro e.g. spiro[2.2]
-	 * @return array with number of carbons in each group and associated index of spiro atom
+	 * @return
 	 */
-	private int[][] getSpiroDescriptors(String text) {
+	private List<SpiroBridge> getSpiroBridges(String text) {
 		if (text.indexOf("-") == 5) {
 			text = text.substring(7, text.length() - 1);//cut off spiro-[ and terminal ]
 		}
@@ -2080,26 +2080,33 @@ class ComponentGenerator {
 		}
 
 		String[] spiroDescriptorStrings = matchCommaOrDot.split(text);
+		
+		List<SpiroBridge> spiroBridges = new ArrayList<>(spiroDescriptorStrings.length);
+		for (String spiroDescriptorString : spiroDescriptorStrings) {
+			int chainLength;
+			Integer locant = null;
+			boolean hasSuperscriptedLocant = false;
 
-		int[][] spiroDescriptors = new int[spiroDescriptorStrings.length][2]; // array of descriptors where number of elements and super string present
-
-		for (int i = 0; i < spiroDescriptorStrings.length; i++) {
-			String[] elements = matchNonDigit.split(spiroDescriptorStrings[i]);
+			String[] elements = matchNonDigit.split(spiroDescriptorString);
 			if (elements.length > 1) {//a "superscripted" number is present
-				spiroDescriptors[i][0] = Integer.parseInt(elements[0]);
+				chainLength = Integer.parseInt(elements[0]);
 				StringBuilder superScriptedNumber = new StringBuilder();
 				for (int j = 1; j < elements.length; j++){//may be more than one non digit as there are many ways of indicating superscripts
 					superScriptedNumber.append(elements[j]);
 				}
-				spiroDescriptors[i][1] = Integer.parseInt(superScriptedNumber.toString());
+				locant = Integer.parseInt(superScriptedNumber.toString());
+				hasSuperscriptedLocant = true;
+			} else if (spiroDescriptorString.startsWith("0") && spiroDescriptorString.length() > 1) {
+				chainLength = 0;
+				locant = Integer.parseInt(spiroDescriptorString.substring(1));
+			} else {
+				//assume there is no locant, this can be reconsidered later if the spiro descriptor is contradictory
+				chainLength = Integer.parseInt(spiroDescriptorString);
 			}
-			else {
-				spiroDescriptors[i][0] = Integer.parseInt(spiroDescriptorStrings[i]);
-				spiroDescriptors[i][1] = -1;
-			}
+			
+			spiroBridges.add(new SpiroBridge(chainLength, locant, hasSuperscriptedLocant));
 		}
-
-		return spiroDescriptors;
+		return spiroBridges;
 	}
 
 	/**
