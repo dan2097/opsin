@@ -22,7 +22,7 @@
 	<regex name="%openBracket%" regex="[\[\(\{]"/>
 	<regex name="%closeBracket%" regex="[\]\)\}]"/>
 	<regex name="%superScriptedNumber%" regex="(\^[0-9]+(\^\^)?|\^?%openBracket%([sS][uU][pP][ ]?)?[0-9]+%closeBracket%|\~[0-9]+\~|\*[0-9]+\*|\&lt;[0-9]+\&gt;)"/><!--In cases where a superscript is expected anyway: ^num or ^num^^ or ^(num) or (num) or ~num~ or *num* or &lt;num&gt;-->
-	<regex name="%locant%" regex="([1-9][0-9]*[a-gA-C]?'*)"/><!--standard numeric locant with optional letter/primes-->
+	<regex name="%locant%" regex="([1-9][0-9]*('*[a-gA-C]?|[a-gA-C]'+))"/><!--standard numeric locant with optional letter/primes-->
 	<regex name="%locantDoesNotEndInLetter%" regex="([1-9][0-9]*([a-g]'+)?'*)"/><!--as above but doesn't end in a letter-->
 	<regex name="%greek%" regex="([aA][lL][pP][hH][aA]|[bB][eE][tT][aA]|[gG][aA][mM][mM][aA]|[dD][eE][lL][tT][aA]|[eE][pP][sS][iI][lL][oO][nN]|[zZ][eE][tT][aA]|[eE][tT][aA]|[oO][mM][eE][gG][aA])"/>
 	<regex name="%superScriptedLocant%" regex="(\^(%locant%|%greek%'*)(\^\^)?|\^?%openBracket%([sS][uU][pP][ ]?)?(%locant%|%greek%'*)%closeBracket%|\~(%locant%|%greek%'*)\~|\*(%locant%|%greek%'*)\*|\&lt;(%locant%|%greek%'*)\&gt;)"/><!--as superScriptedNumber but locant instead of number -->

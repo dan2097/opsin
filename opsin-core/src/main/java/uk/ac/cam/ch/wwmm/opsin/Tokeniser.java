@@ -31,7 +31,7 @@ class Tokeniser {
 	 * @throws ParsingException 
 	 */
 	TokenizationResult tokenize(String name, boolean allowRemovalOfWhiteSpace) throws ParsingException {
-		TokenizationResult result = allowRemovalOfWhiteSpace ? new TokenizationResult(WordTools.removeWhiteSpaceIfBracketsAreUnbalanced(name)) :new TokenizationResult(name);
+		TokenizationResult result = new TokenizationResult(allowRemovalOfWhiteSpace ? WordTools.removeWhiteSpaceIfBracketsAreUnbalanced(name) : name);
 		TokenizationResult resultFromBeforeWhitespaceRemoval = null;
 
 		while (!result.isSuccessfullyTokenized()){
@@ -225,14 +225,14 @@ class Tokeniser {
 			List<ParseTokens> backParseTokens = backResults.getParseTokensList();
 			String backUninterpretableName = backResults.getUninterpretableName();
 			String backParsedName = lastWordAndUnparsed.substring(0, lastWordAndUnparsed.length() - backUninterpretableName.length());
-			if (backParsedName.length() > pw.getWord().length() && backParseTokens.size() > 0 && (backUninterpretableName.equals("") || backUninterpretableName.charAt(0) == ' ' || backUninterpretableName.charAt(0) == '-')) {//a word was interpretable
+			if (backParsedName.length() > pw.getWord().length() && backParseTokens.size() > 0 && (backUninterpretableName.isEmpty() || backUninterpretableName.charAt(0) == ' ' || backUninterpretableName.charAt(0) == '-')) {//a word was interpretable
 				result.getParse().removeWord(pw);
 				List<ParseWord> parseWords = WordTools.splitIntoParseWords(backParseTokens, backParsedName);
 				for (ParseWord parseWord : parseWords) {
 					result.getParse().addWord(parseWord);
 				}
-				if (!backUninterpretableName.equals("")) {
-					result.setUnparsedName(backUninterpretableName.substring(1));//remove white space at start of uninterpretableName
+				if (!backUninterpretableName.isEmpty()) {
+					result.setUnparsedName(backUninterpretableName.substring(1));//remove delimiter at start of uninterpretableName
 				} else {
 					result.setUnparsedName(backUninterpretableName);
 				}

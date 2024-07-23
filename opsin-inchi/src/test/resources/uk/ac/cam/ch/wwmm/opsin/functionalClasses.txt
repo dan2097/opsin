@@ -33,3 +33,5 @@ Butyltin chloride dihydroxide	InChI=1S/C4H9.ClH.2H2O.Sn/c1-3-4-2;;;;/h1,3-4H2,2H
 2-Hydroxy-5-methoxy-benzaldehyde chloroxime	InChI=1S/C8H8ClNO3/c1-13-5-2-3-7(11)6(4-5)8(9)10-12/h2-4,11-12H,1H3
 2-Hydroxy-5-methoxy-benzaldehyde chlorooxime	InChI=1S/C8H8ClNO3/c1-13-5-2-3-7(11)6(4-5)8(9)10-12/h2-4,11-12H,1H3
 4-NITROBENZALDEHYDE S-(4-NITROPHENYL)THIOOXIME	InChI=1S/C13H9N3O4S/c17-15(18)11-3-1-10(2-4-11)9-14-21-13-7-5-12(6-8-13)16(19)20/h1-9H
+O-methyl phenylphosphonothioic chloride	InChI=1/C7H8ClOPS/c1-9-10(8,11)7-5-3-2-4-6-7/h2-6H,1H3
+O-(1-Methyl-2-methoxycarbonylvinyl) 4-Bromophenylthionophosphonic monochloride	InChI=1/C11H11BrClO3PS/c1-8(7-11(14)15-2)16-17(13,18)10-5-3-9(12)4-6-10/h3-7H,1-2H3

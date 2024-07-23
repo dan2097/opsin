@@ -216,12 +216,12 @@ class Parser {
 		int indiceToTruncateUpTo =  uninterpretableLR.length()-unparseableLR.length();
 		StringBuilder message = new StringBuilder();
 		message.append(name);
-		if (!uninterpretableRL.equals("")){
+		if (!uninterpretableRL.isEmpty()){
 			message.append(" was uninterpretable due to the following section of the name: ");
 			message.append(uninterpretableRL);
 			if (indiceToTruncateUpTo <= unparseableRL.length()){
 				String uninterpretableInContext = unparseableRL.substring(indiceToTruncateUpTo);
-				if (!uninterpretableInContext.equals("")){
+				if (!uninterpretableInContext.isEmpty()){
 					message.append("  The following was not understandable in the context it was used: ");
 					message.append(uninterpretableInContext);
 				}

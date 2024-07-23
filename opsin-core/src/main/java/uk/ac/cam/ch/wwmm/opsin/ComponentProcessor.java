@@ -2913,6 +2913,9 @@ class ComponentProcessor {
 				}
 				elementReplacement = m.group();
 				Atom a = hwRing.getAtomByLocantOrThrow(locant);
+				if (a.getElement() != ChemEl.C) {
+					throw new ComponentGenerationException("Duplicate locants present in Hantzsch-Widman system");
+				}
 				a.setElement(ChemEl.valueOf(elementReplacement));
 				if (heteroatom.getAttribute(LAMBDA_ATR) != null){
 					a.setLambdaConventionValency(Integer.parseInt(heteroatom.getAttributeValue(LAMBDA_ATR)));
@@ -2972,6 +2975,20 @@ class ComponentProcessor {
 						a.setLambdaConventionValency(Integer.parseInt(heteroatom.getAttributeValue(LAMBDA_ATR)));
 					}
 					heteroatom.detach();
+				}
+			}
+			if(name.equals("thithiazol")) {
+				//Dithiazolium implicitly has the charge on a sulfur, not a nitrogen
+				Element suffix = OpsinTools.getNextSibling(group);
+				if (suffix != null && CHARGE_TYPE_VAL.equals(suffix.getAttributeValue(TYPE_ATR)) && suffix.getAttribute(LOCANT_ATR) == null) {
+					String locant = null;
+					for (Atom atom : hwRing) {
+						if (atom.getElement() == ChemEl.S) {
+							locant = atom.getFirstLocant();
+							break;
+						}
+					}
+					suffix.addAttribute(LOCANT_EL, locant);
 				}
 			}
 		}
