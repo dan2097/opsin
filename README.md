@@ -115,6 +115,7 @@ The workings of OPSIN are more fully described in:
     Chemical Name to Structure: OPSIN, an Open Source Solution
     Daniel M. Lowe, Peter T. Corbett, Peter Murray-Rust, Robert C. Glen
     Journal of Chemical Information and Modeling 2011 51 (3), 739-753
+    https://doi.org/10.1021/ci100384d
 
 If you use OPSIN in your work, then it would be great if you could cite us.
 
