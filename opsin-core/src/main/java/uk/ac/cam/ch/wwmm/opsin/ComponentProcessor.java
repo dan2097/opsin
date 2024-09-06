@@ -4272,15 +4272,21 @@ class ComponentProcessor {
 			}
 		}
 		
-		//prevent bracketing perhalogeno terms 
-		if (PERHALOGENO_SUBTYPE_VAL.equals(lastGroupOfElementBeforeSub.getAttributeValue(SUBTYPE_ATR))) {
-			return;
+		//prevent bracketing unlocanted perhalogeno terms 
+		boolean isPerHalo = PERHALOGENO_SUBTYPE_VAL.equals(lastGroupOfElementBeforeSub.getAttributeValue(SUBTYPE_ATR));
+		if (isPerHalo) {
+			Element locant = OpsinTools.getPreviousSibling(lastGroupOfElementBeforeSub);
+			boolean isUnlocanted = (locant == null || !locant.getName().equals(LOCANT_EL));
+			boolean isAlkylAlkaneLink = isSimpleAlkyl(substituentGroup) && elementAftersubstituent != null && isSimpleAlkane(elementAftersubstituent);
+			if (isUnlocanted && !isAlkylAlkaneLink) {
+				return;
+			}
 		}
 
 		if (frag.getAtomCount() == 1 && frag.getFirstAtom().getElement() == ChemEl.Si) {
 			//silyl is typically triple substituted, so more than just the preceding substituent potentially should be inside the implicit bracket
 			//e.g. ethoxydimethylsilylpropyl should be (ethoxydimethylsilyl)propyl
-			elementBeforeSubstituent = determineSubstitutentForSilylImplicitBracketting(elementBeforeSubstituent, 3);
+			elementBeforeSubstituent = determineSubstituentForSilylImplicitBracketting(elementBeforeSubstituent, 3);
 		}
 
 		/*
@@ -4332,6 +4338,9 @@ class ComponentProcessor {
 						}
 					}
 				}
+			}
+			if (isPerHalo) {//per halo terms can't be locanted
+				moveLocants = true;
 			}
 
 			if (moveLocants && locantValues.length > 1) {
@@ -4485,6 +4494,19 @@ class ComponentProcessor {
 		return type.equals(CHAIN_TYPE_VAL) && group.getAttributeValue(SUBTYPE_ATR).equals(ALKANESTEM_SUBTYPE_VAL) 
 				&& suffix != null && suffix.getValue().equals("yl") ;		
 	}
+	
+	private boolean isSimpleAlkane(Element root) {
+		if (!root.getName().equals(ROOT_EL)) {
+			return false;
+		}
+		if (root.getChildCount() != 2) {
+			return false;
+		}
+		Element group = root.getChild(0);
+		Element suffix = root.getChild(1);
+		return group.getName().equals(GROUP_EL) && group.getAttributeValue(TYPE_ATR).equals(CHAIN_TYPE_VAL) && 
+				group.getAttributeValue(SUBTYPE_ATR).equals(ALKANESTEM_SUBTYPE_VAL) && suffix.getName().equals(UNSATURATOR_EL) && "1".equals(suffix.getAttributeValue(VALUE_ATR));
+	}
 
 	private boolean implicitBracketWouldPreventAdditiveBonding(Element elementBeforeSubstituent, Element elementAftersubstituent) {
 		if (elementAftersubstituent != null && elementAftersubstituent.getName().equals(SUBSTITUENT_EL)) {
@@ -4525,7 +4547,7 @@ class ComponentProcessor {
 		return false;
 	}
 	
-	private Element determineSubstitutentForSilylImplicitBracketting(Element el, int expectedSubstituents) {
+	private Element determineSubstituentForSilylImplicitBracketting(Element el, int expectedSubstituents) {
 		Element elToUse = el;
 		while (elToUse != null && (elToUse.getName().equals(SUBSTITUENT_EL) ||  elToUse.getName().equals(BRACKET_EL))) {
 			int multiplier = 1;
