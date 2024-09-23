@@ -20,7 +20,7 @@ Hence for cases that are unambiguous they are included here e.g. NOT indyl (coul
 		<token value="CCCCCCc1ccccc1" labels="alpha/beta/gamma/delta/epsilon/zeta/1/2,ortho/3,meta/4,para/5/6" suffixAppliesTo="1">phenhex</token>
 		<token value="[nH]1cccc1" labels="1/2/3/4/5">pyrr</token>
 		<token value="C=Cc1ccccc1" labels="alpha/beta/1/2,ortho/3,meta/4,para/5/6" suffixAppliesTo="1">styr</token>
-		<token value="c12ccccc1.C2" labels="1/2,ortho/3,meta/4,para/5/6/alpha" frontLocantsExpected="2,3,4">tol</token>
+		<token value="c1ccccc1" labels="1/2,ortho/3,meta/4,para/5/6" addGroup="C defaultLocant 4 alpha" frontLocantsExpected="2,ortho,3,meta,4,para" suffixAppliesTo="1">tol</token>
 	</tokenList>
 
 	<tokenList tagname="group" type="ring" subType="arylSubstituent" symbol="ß">
