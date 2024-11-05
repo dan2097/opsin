@@ -214,7 +214,7 @@
       <dependency>
         <groupId>com.fasterxml.woodstox</groupId>
         <artifactId>woodstox-core</artifactId>
-        <version>6.7.0</version>
+        <version>7.1.0</version>
       </dependency>
       <dependency>
         <groupId>org.apache.logging.log4j</groupId>
