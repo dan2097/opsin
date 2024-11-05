@@ -757,6 +757,9 @@ class StructureBuildingMethods {
 			throw new StructureBuildingException("Two locants are required before an anhydro prefix");
 		}
 		String[] locants = locantStr.split(",");
+		if (locants.length != 2) {
+			throw new StructureBuildingException("Two locants are required before an anhydro prefix");
+		}
 		Atom backBoneAtom1 = frag.getAtomByLocantOrThrow(locants[0]);
 		Atom backBoneAtom2 = frag.getAtomByLocantOrThrow(locants[1]);
 		List<Atom> applicableTerminalAtoms = FragmentTools.findHydroxyLikeTerminalAtoms(backBoneAtom1.getAtomNeighbours(), chemEl);

@@ -30,7 +30,6 @@ class ComponentProcessor {
 	private static final Pattern matchAddedHydrogenBracket =Pattern.compile("[\\[\\(\\{]([^\\[\\(\\{]*)H[\\]\\)\\}]");
 	private static final Pattern matchElementSymbolOrAminoAcidLocant = Pattern.compile("[A-Z][a-z]?'*(\\d+[a-z]?'*)?");
 	private static final Pattern matchChalcogenReplacement= Pattern.compile("thio|seleno|telluro");
-	private static final Pattern matchGroupsThatAreAlsoInlineSuffixes = Pattern.compile("carbon|oxy|sulfen|sulfin|sulfon|selenen|selenin|selenon|telluren|tellurin|telluron");
 	private static final String[] traditionalAlkanePositionNames =new String[]{"alpha", "beta", "gamma", "delta", "epsilon", "zeta"};
 	
 	private final FunctionalReplacement functionalReplacement;
@@ -4172,14 +4171,17 @@ class ComponentProcessor {
 			return;
 		}
 
+		Fragment frag = substituentGroup.getFrag();
 		// groups like carbonyl/sulfonyl should typically be implicitly bracketed e.g. tert-butoxy-carbonyl, unless they are part of multiplicative nomenclature
-		boolean sulfonylLike = matchGroupsThatAreAlsoInlineSuffixes.matcher(substituentGroup.getValue()).matches();
-		
+		int expectedSubstituents = 0;
+		if (substituentGroup.getAttributeValue(ACCEPTSADDITIVEBONDS_ATR) != null) {
+			expectedSubstituents = frag.getOutAtomCount() - 1;//e.g. sulfonyl = 1, phosphoryl = 2
+		}
 		Element elementAftersubstituent = OpsinTools.getNextSibling(substituent);
 		if (elementAftersubstituent != null) {
 			//Not preceded and followed by a bracket e.g. Not (benzyl)methyl(phenyl)amine	c.f. P-16.4.1.3 (draft 2004)
 			//carbonyl-like allowed due to empirical usage
-			if (!sulfonylLike && elementBeforeSubstituent.getName().equals(BRACKET_EL) && !IMPLICIT_TYPE_VAL.equals(elementBeforeSubstituent.getAttributeValue(TYPE_ATR)) && elementAftersubstituent.getName().equals(BRACKET_EL)) {
+			if (expectedSubstituents == 0 && elementBeforeSubstituent.getName().equals(BRACKET_EL) && !IMPLICIT_TYPE_VAL.equals(elementBeforeSubstituent.getAttributeValue(TYPE_ATR)) && elementAftersubstituent.getName().equals(BRACKET_EL)) {
 				Element firstChildElementOfElementAfterSubstituent = elementAftersubstituent.getChild(0);
 				if ((firstChildElementOfElementAfterSubstituent.getName().equals(SUBSTITUENT_EL) || firstChildElementOfElementAfterSubstituent.getName().equals(BRACKET_EL))
 					&& !OpsinTools.getPrevious(firstChildElementOfElementAfterSubstituent).getName().equals(HYPHEN_EL)) {
@@ -4197,7 +4199,7 @@ class ComponentProcessor {
 		//look for hyphen between substituents, this seems to indicate implicit bracketing was not desired e.g. dimethylaminomethane vs dimethyl-aminomethane
 		//an exception is made for groups like carbonyl/sulfonyl as these typically should be implicitly bracketed e.g. tert-butoxy-carbonyl
 		Element elementDirectlyBeforeSubstituent = OpsinTools.getPrevious(substituent.getChild(0));//can't return null as we know elementBeforeSubstituent is not null
-		if (!sulfonylLike && elementDirectlyBeforeSubstituent.getName().equals(HYPHEN_EL)) {
+		if (expectedSubstituents == 0 && elementDirectlyBeforeSubstituent.getName().equals(HYPHEN_EL)) {
 			return;
 		}
 
@@ -4212,7 +4214,6 @@ class ComponentProcessor {
 		if (substituentsAreEndToEndAlkyls(substituentGroup, lastGroupOfElementBeforeSub, elementBeforeSubstituent)) {
 			return;
 		}
-		Fragment frag = substituentGroup.getFrag();
 
 		//prevent bracketing to multi radicals unless through substitution they are likely to cease being multiradicals
 		if (lastGroupOfElementBeforeSub.getAttribute(ISAMULTIRADICAL_ATR) != null && lastGroupOfElementBeforeSub.getAttribute(ACCEPTSADDITIVEBONDS_ATR) == null && lastGroupOfElementBeforeSub.getAttribute(IMINOLIKE_ATR) == null) {
@@ -4272,15 +4273,23 @@ class ComponentProcessor {
 			}
 		}
 		
-		//prevent bracketing perhalogeno terms 
-		if (PERHALOGENO_SUBTYPE_VAL.equals(lastGroupOfElementBeforeSub.getAttributeValue(SUBTYPE_ATR))) {
-			return;
+		//prevent bracketing unlocanted perhalogeno terms 
+		boolean isPerHalo = PERHALOGENO_SUBTYPE_VAL.equals(lastGroupOfElementBeforeSub.getAttributeValue(SUBTYPE_ATR));
+		if (isPerHalo) {
+			Element locant = OpsinTools.getPreviousSibling(lastGroupOfElementBeforeSub);
+			boolean isUnlocanted = (locant == null || !locant.getName().equals(LOCANT_EL));
+			boolean isAlkylAlkaneLink = isSimpleAlkyl(substituentGroup) && elementAftersubstituent != null && isSimpleAlkane(elementAftersubstituent);
+			if (isUnlocanted && !isAlkylAlkaneLink) {
+				return;
+			}
 		}
 
 		if (frag.getAtomCount() == 1 && frag.getFirstAtom().getElement() == ChemEl.Si) {
 			//silyl is typically triple substituted, so more than just the preceding substituent potentially should be inside the implicit bracket
 			//e.g. ethoxydimethylsilylpropyl should be (ethoxydimethylsilyl)propyl
-			elementBeforeSubstituent = determineSubstitutentForSilylImplicitBracketting(elementBeforeSubstituent, 3);
+			elementBeforeSubstituent = determineSubstituentForMultiSubstituentImplicitBracketting(elementBeforeSubstituent, 3);
+		} else if (expectedSubstituents > 1) {//e.g. phosphoryl typically has two substituents
+			elementBeforeSubstituent = determineSubstituentForMultiSubstituentImplicitBracketting(elementBeforeSubstituent, expectedSubstituents);
 		}
 
 		/*
@@ -4333,13 +4342,16 @@ class ComponentProcessor {
 					}
 				}
 			}
+			if (isPerHalo) {//per halo terms can't be locanted
+				moveLocants = true;
+			}
 
 			if (moveLocants && locantValues.length > 1) {
 				if (elAfterLocant != null && elAfterLocant.getName().equals(MULTIPLIER_EL)) {
 					Element shouldBeAGroupOrSubOrBracket = OpsinTools.getNextSiblingIgnoringCertainElements(elAfterLocant, new String[]{MULTIPLIER_EL});
 					if (shouldBeAGroupOrSubOrBracket != null) {
 						if ((shouldBeAGroupOrSubOrBracket.getName().equals(GROUP_EL) && elAfterLocant.getAttributeValue(TYPE_ATR).equals(GROUP_TYPE_VAL))//e.g. 2,5-bisaminothiobenzene --> 2,5-bis(aminothio)benzene
-								|| sulfonylLike){//e.g. 4,4'-dimethoxycarbonyl-2,2'-bioxazole --> 4,4'-di(methoxycarbonyl)-2,2'-bioxazole
+								|| expectedSubstituents == 1){//e.g. 4,4'-dimethoxycarbonyl-2,2'-bioxazole --> 4,4'-di(methoxycarbonyl)-2,2'-bioxazole
 							locantRelatedElements.add(elAfterLocant);//e.g. 1,5-bis-(4-methylphenyl)sulfonyl --> 1,5-bis-((4-methylphenyl)sulfonyl)
 						}
 						else if (ORTHOMETAPARA_TYPE_VAL.equals(locantRelatedElements.get(0).getAttributeValue(TYPE_ATR))) {//e.g. p-dimethylamino[ring]
@@ -4383,7 +4395,7 @@ class ComponentProcessor {
 		if (locantRelatedElements.isEmpty()) {
 			Element possibleMultiplier = childrenOfElementBeforeSubstituent.get(0);
 			if (possibleMultiplier.getName().equals(MULTIPLIER_EL) && (
-					sulfonylLike || possibleMultiplier.getAttributeValue(TYPE_ATR).equals(GROUP_TYPE_VAL))){
+					expectedSubstituents == 1 || possibleMultiplier.getAttributeValue(TYPE_ATR).equals(GROUP_TYPE_VAL))){
 				Element desiredGroup = OpsinTools.getNextSiblingIgnoringCertainElements(possibleMultiplier, new String[]{MULTIPLIER_EL});
 				if (desiredGroup !=null && desiredGroup.getName().equals(GROUP_EL)) {
 					possibleMultiplier.detach();
@@ -4485,6 +4497,19 @@ class ComponentProcessor {
 		return type.equals(CHAIN_TYPE_VAL) && group.getAttributeValue(SUBTYPE_ATR).equals(ALKANESTEM_SUBTYPE_VAL) 
 				&& suffix != null && suffix.getValue().equals("yl") ;		
 	}
+	
+	private boolean isSimpleAlkane(Element root) {
+		if (!root.getName().equals(ROOT_EL)) {
+			return false;
+		}
+		if (root.getChildCount() != 2) {
+			return false;
+		}
+		Element group = root.getChild(0);
+		Element suffix = root.getChild(1);
+		return group.getName().equals(GROUP_EL) && group.getAttributeValue(TYPE_ATR).equals(CHAIN_TYPE_VAL) && 
+				group.getAttributeValue(SUBTYPE_ATR).equals(ALKANESTEM_SUBTYPE_VAL) && suffix.getName().equals(UNSATURATOR_EL) && "1".equals(suffix.getAttributeValue(VALUE_ATR));
+	}
 
 	private boolean implicitBracketWouldPreventAdditiveBonding(Element elementBeforeSubstituent, Element elementAftersubstituent) {
 		if (elementAftersubstituent != null && elementAftersubstituent.getName().equals(SUBSTITUENT_EL)) {
@@ -4525,7 +4550,7 @@ class ComponentProcessor {
 		return false;
 	}
 	
-	private Element determineSubstitutentForSilylImplicitBracketting(Element el, int expectedSubstituents) {
+	private Element determineSubstituentForMultiSubstituentImplicitBracketting(Element el, int expectedSubstituents) {
 		Element elToUse = el;
 		while (elToUse != null && (elToUse.getName().equals(SUBSTITUENT_EL) ||  elToUse.getName().equals(BRACKET_EL))) {
 			int multiplier = 1;
@@ -4541,13 +4566,14 @@ class ComponentProcessor {
 				multiplier = Integer.parseInt(childToConsider.getAttributeValue(VALUE_ATR));
 				childToConsider = index < childCount ? elToUse.getChild(index++) : null;
 			}
-			if (childToConsider == null || !(childToConsider.getName().equals(GROUP_EL) || childToConsider.getName().equals(SUBSTITUENT_EL))) {
+			if (childToConsider == null || !(childToConsider.getName().equals(GROUP_EL) || childToConsider.getName().equals(SUBSTITUENT_EL)
+					|| childToConsider.getName().equals(BRACKET_EL))) {
 				return el;//Not expected substituent content
 			}
 			expectedSubstituents -= multiplier;
 			if (expectedSubstituents <=0) {
 				if (expectedSubstituents < 0) {
-					return el;//Not expected substituent conten
+					return el;//Not expected substituent content
 				}
 				return elToUse;//extend implicit bracket
 			}
