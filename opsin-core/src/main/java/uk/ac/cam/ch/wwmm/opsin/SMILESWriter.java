@@ -516,19 +516,19 @@ class SMILESWriter {
 				SMILES_BOND_DIRECTION bond1Direction = SMILES_BOND_DIRECTION.LSLASH;
 				SMILES_BOND_DIRECTION bond2Direction = SMILES_BOND_DIRECTION.LSLASH;
 				if (bondStereo.getBondStereoValue() == BondStereoValue.CIS) {
-					bond2Direction = bond2Direction == SMILES_BOND_DIRECTION.LSLASH ? SMILES_BOND_DIRECTION.RSLASH : SMILES_BOND_DIRECTION.LSLASH;//flip the slash type to be used from \ to /
+					bond2Direction = bond2Direction.flipDirection();//flip the slash type to be used from \ to /
 				}
 				if (!bond1ToAtom.equals(atomRefs4[1])) {
-					bond1Direction = bond1Direction == SMILES_BOND_DIRECTION.LSLASH ? SMILES_BOND_DIRECTION.RSLASH : SMILES_BOND_DIRECTION.LSLASH;
+					bond1Direction = bond1Direction.flipDirection();
 				}
 				if (!bond2ToAtom.equals(atomRefs4[3])) {
-					bond2Direction = bond2Direction == SMILES_BOND_DIRECTION.LSLASH ? SMILES_BOND_DIRECTION.RSLASH : SMILES_BOND_DIRECTION.LSLASH;
+					bond2Direction = bond2Direction.flipDirection();
 				}
 
 				//One of the bonds may have already have a defined slash from a previous bond stereo. If so make sure that we don't change it.
 				if (bond1Slash != null && bond1Slash != bond1Direction || bond2Slash != null && bond2Slash != bond2Direction) {
-					bond1Direction = bond1Direction == SMILES_BOND_DIRECTION.LSLASH ? SMILES_BOND_DIRECTION.RSLASH : SMILES_BOND_DIRECTION.LSLASH;
-					bond2Direction = bond2Direction == SMILES_BOND_DIRECTION.LSLASH ? SMILES_BOND_DIRECTION.RSLASH : SMILES_BOND_DIRECTION.LSLASH;
+					bond1Direction = bond1Direction.flipDirection();
+					bond2Direction = bond2Direction.flipDirection();
 				}
 
 				//Also need to investigate the bonds which are implicitly set by the bondStereo
@@ -547,12 +547,12 @@ class SMILESWriter {
 				if (bondsFrom2ndAtom.size() == 1) {//can be 0 for imines
 					if (bondToNextAtomMap.containsKey(bondsFrom2ndAtom.get(0))) {//ignore bonds to implicit hydrogen
 						bond1Other = bondsFrom2ndAtom.get(0);
-						bond1OtherDirection = bond1Direction == SMILES_BOND_DIRECTION.LSLASH ? SMILES_BOND_DIRECTION.RSLASH : SMILES_BOND_DIRECTION.LSLASH;
+						bond1OtherDirection = bond1Direction.flipDirection();
 						if (!bond1ToAtom.equals(atomRefs4[1])) {
-							bond1OtherDirection = bond1OtherDirection == SMILES_BOND_DIRECTION.LSLASH ? SMILES_BOND_DIRECTION.RSLASH : SMILES_BOND_DIRECTION.LSLASH;
+							bond1OtherDirection = bond1OtherDirection.flipDirection();
 						}
 						if (!bondToNextAtomMap.get(bond1Other).equals(atomRefs4[1])) {
-							bond1OtherDirection = bond1OtherDirection == SMILES_BOND_DIRECTION.LSLASH ? SMILES_BOND_DIRECTION.RSLASH : SMILES_BOND_DIRECTION.LSLASH;
+							bond1OtherDirection = bond1OtherDirection.flipDirection();
 						}
 					}
 				}
@@ -563,31 +563,31 @@ class SMILESWriter {
 				if (bondsFrom3rdAtom.size() == 1) {
 					if (bondToNextAtomMap.containsKey(bondsFrom3rdAtom.get(0))) {
 						bond2Other = bondsFrom3rdAtom.get(0);
-						bond2OtherDirection = bond2Direction == SMILES_BOND_DIRECTION.LSLASH ? SMILES_BOND_DIRECTION.RSLASH : SMILES_BOND_DIRECTION.LSLASH;
+						bond2OtherDirection = bond2Direction.flipDirection();
 						if (!bond2ToAtom.equals(atomRefs4[3])) {
-							bond2OtherDirection = bond2OtherDirection == SMILES_BOND_DIRECTION.LSLASH ? SMILES_BOND_DIRECTION.RSLASH : SMILES_BOND_DIRECTION.LSLASH;
+							bond2OtherDirection = bond2OtherDirection.flipDirection();
 						}
 						if (!bondToNextAtomMap.get(bond2Other).equals(bond2Other.getOtherAtom(atomRefs4[2]))) {
-							bond2OtherDirection = bond2OtherDirection == SMILES_BOND_DIRECTION.LSLASH ? SMILES_BOND_DIRECTION.RSLASH : SMILES_BOND_DIRECTION.LSLASH;
+							bond2OtherDirection = bond2OtherDirection.flipDirection();
 						}
 					}
 				}
 
 				//One of the bonds may have already have a defined slash from a previous bond stereo. If so make sure that we don't change it.
 				if (bond1Other != null && bond1Other.getSmilesStereochemistry() != null && bond1Other.getSmilesStereochemistry() != bond1OtherDirection) {
-					bond1Direction = bond1Direction == SMILES_BOND_DIRECTION.LSLASH ? SMILES_BOND_DIRECTION.RSLASH : SMILES_BOND_DIRECTION.LSLASH;
-					bond2Direction = bond2Direction == SMILES_BOND_DIRECTION.LSLASH ? SMILES_BOND_DIRECTION.RSLASH : SMILES_BOND_DIRECTION.LSLASH;
-					bond1OtherDirection = bond1OtherDirection == SMILES_BOND_DIRECTION.LSLASH ? SMILES_BOND_DIRECTION.RSLASH : SMILES_BOND_DIRECTION.LSLASH;
+					bond1Direction = bond1Direction.flipDirection();
+					bond2Direction = bond2Direction.flipDirection();
+					bond1OtherDirection = bond1OtherDirection.flipDirection();
 					if (bond2Other != null) {
-						bond2OtherDirection = bond2OtherDirection == SMILES_BOND_DIRECTION.LSLASH ? SMILES_BOND_DIRECTION.RSLASH : SMILES_BOND_DIRECTION.LSLASH;
+						bond2OtherDirection = bond2OtherDirection.flipDirection();
 					}
 				}
 				else if (bond2Other != null && bond2Other.getSmilesStereochemistry() != null && bond2Other.getSmilesStereochemistry() != bond2OtherDirection) {
-					bond1Direction = bond1Direction == SMILES_BOND_DIRECTION.LSLASH ? SMILES_BOND_DIRECTION.RSLASH : SMILES_BOND_DIRECTION.LSLASH;
-					bond2Direction = bond2Direction == SMILES_BOND_DIRECTION.LSLASH ? SMILES_BOND_DIRECTION.RSLASH : SMILES_BOND_DIRECTION.LSLASH;
-					bond2OtherDirection = bond2OtherDirection == SMILES_BOND_DIRECTION.LSLASH ? SMILES_BOND_DIRECTION.RSLASH : SMILES_BOND_DIRECTION.LSLASH;
+					bond1Direction = bond1Direction.flipDirection();
+					bond2Direction = bond2Direction.flipDirection();
+					bond2OtherDirection = bond2OtherDirection.flipDirection();
 					if (bond1Other != null) {
-						bond1OtherDirection = bond1OtherDirection == SMILES_BOND_DIRECTION.LSLASH ? SMILES_BOND_DIRECTION.RSLASH : SMILES_BOND_DIRECTION.LSLASH;
+						bond1OtherDirection = bond1OtherDirection.flipDirection();
 					}
 				}
 

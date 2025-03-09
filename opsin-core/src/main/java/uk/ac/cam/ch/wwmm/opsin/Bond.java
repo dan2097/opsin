@@ -16,9 +16,13 @@ class Bond {
 	/** The bond order */
 	private int order;
 
-	static enum SMILES_BOND_DIRECTION{
+	static enum SMILES_BOND_DIRECTION {
 		RSLASH,
-		LSLASH
+		LSLASH;
+		
+		SMILES_BOND_DIRECTION flipDirection() {
+	        return this == LSLASH ? RSLASH : LSLASH;
+	    }
 	}
 	/** If this bond was built from SMILES can be set to either RSLASH or LSLASH. Subsequently read to add a bondStereoElement
 	 * null by default*/
