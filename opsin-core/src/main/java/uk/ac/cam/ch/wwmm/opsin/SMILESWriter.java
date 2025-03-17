@@ -496,114 +496,157 @@ class SMILESWriter {
 	 */
 	private void assignDoubleBondStereochemistrySlashes() {
 		Set<Bond> bonds = bondToNextAtomMap.keySet();
+		Deque<Bond> bondsToVisit = new ArrayDeque<Bond>();
 		for (Bond bond : bonds) {
 			bond.setSmilesStereochemistry(null);
+			if (bond.getBondStereo() != null) {
+				bondsToVisit.add(bond);
+			}
 		}
-		for (Bond bond : bonds) {
-			BondStereo bondStereo =bond.getBondStereo();
-			if (bondStereo != null) {
-				Atom[] atomRefs4 = bondStereo.getAtomRefs4();
-				Bond bond1 = atomRefs4[0].getBondToAtom(atomRefs4[1]);
-				Bond bond2 = atomRefs4[2].getBondToAtom(atomRefs4[3]);
-				if (bond1 == null || bond2 == null) {
-					throw new RuntimeException("OPSIN Bug: Bondstereo described atoms that are not bonded");
-				}
-				Atom bond1ToAtom = bondToNextAtomMap.get(bond1);
-				Atom bond2ToAtom = bondToNextAtomMap.get(bond2);
-				SMILES_BOND_DIRECTION bond1Slash = bond1.getSmilesStereochemistry();//null except in conjugated systems
-				SMILES_BOND_DIRECTION bond2Slash = bond2.getSmilesStereochemistry();
+		if (bondsToVisit.isEmpty()) {
+			return;
+		}
+		Set<Bond> visited = new HashSet<>();
+		while (!bondsToVisit.isEmpty()) {
+			Bond bondToAssign = bondsToVisit.removeFirst();
+			if (visited.contains(bondToAssign)) {
+				continue;
+			}
+			visited.add(bondToAssign);
+			//We need to visit conjugated double bonds in order to ensure the slashes are consistently assigned
+			//In something like C=C-C(=C)-C=C if we assigned the first and third bonds first it can be impossible to correctly assign the 2nd double bond 			
+			for (Bond b : assignDoubleBondStereochemistrySlashes(bondToAssign)) {
+				bondsToVisit.addFirst(b);
+			}
+		}
+	}
 
-				SMILES_BOND_DIRECTION bond1Direction = SMILES_BOND_DIRECTION.LSLASH;
-				SMILES_BOND_DIRECTION bond2Direction = SMILES_BOND_DIRECTION.LSLASH;
-				if (bondStereo.getBondStereoValue() == BondStereoValue.CIS) {
-					bond2Direction = bond2Direction.flipDirection();//flip the slash type to be used from \ to /
-				}
+	private List<Bond> assignDoubleBondStereochemistrySlashes(Bond bond) {
+		BondStereo bondStereo = bond.getBondStereo();
+		Atom[] atomRefs4 = bondStereo.getAtomRefs4();
+		Bond bond1 = atomRefs4[0].getBondToAtom(atomRefs4[1]);
+		Bond bond2 = atomRefs4[2].getBondToAtom(atomRefs4[3]);
+		if (bond1 == null || bond2 == null) {
+			throw new RuntimeException("OPSIN Bug: Bondstereo described atoms that are not bonded");
+		}
+		Atom bond1ToAtom = bondToNextAtomMap.get(bond1);
+		Atom bond2ToAtom = bondToNextAtomMap.get(bond2);
+		SMILES_BOND_DIRECTION bond1Slash = bond1.getSmilesStereochemistry();//null except in conjugated systems
+		SMILES_BOND_DIRECTION bond2Slash = bond2.getSmilesStereochemistry();
+
+		SMILES_BOND_DIRECTION bond1Direction = SMILES_BOND_DIRECTION.LSLASH;
+		SMILES_BOND_DIRECTION bond2Direction = SMILES_BOND_DIRECTION.LSLASH;
+		if (bondStereo.getBondStereoValue() == BondStereoValue.CIS) {
+			bond2Direction = bond2Direction.flipDirection();//flip the slash type to be used from \ to /
+		}
+		if (!bond1ToAtom.equals(atomRefs4[1])) {
+			bond1Direction = bond1Direction.flipDirection();
+		}
+		if (!bond2ToAtom.equals(atomRefs4[3])) {
+			bond2Direction = bond2Direction.flipDirection();
+		}
+
+		//One of the bonds may have already have a defined slash from a previous bond stereo. If so make sure that we don't change it.
+		if (bond1Slash != null && bond1Slash != bond1Direction || bond2Slash != null && bond2Slash != bond2Direction) {
+			bond1Direction = bond1Direction.flipDirection();
+			bond2Direction = bond2Direction.flipDirection();
+		}
+
+		//Also need to investigate the bonds which are implicitly set by the bondStereo
+		//F   Cl
+		// C=C
+		//N   O
+		//e.g. the bonds from the C-N and C-O (the higher priority atoms will always be used for bond1/2)
+		Bond bond1Other = null;
+		Bond bond2Other = null;
+		SMILES_BOND_DIRECTION bond1OtherDirection = null;
+		SMILES_BOND_DIRECTION bond2OtherDirection = null;
+
+		List<Bond> bondsFrom2ndAtom = new ArrayList<>(atomRefs4[1].getBonds());
+		bondsFrom2ndAtom.remove(bond1);
+		bondsFrom2ndAtom.remove(bond);
+		if (bondsFrom2ndAtom.size() == 1) {//can be 0 for imines
+			if (bondToNextAtomMap.containsKey(bondsFrom2ndAtom.get(0))) {//ignore bonds to implicit hydrogen
+				bond1Other = bondsFrom2ndAtom.get(0);
+				bond1OtherDirection = bond1Direction.flipDirection();
 				if (!bond1ToAtom.equals(atomRefs4[1])) {
-					bond1Direction = bond1Direction.flipDirection();
-				}
-				if (!bond2ToAtom.equals(atomRefs4[3])) {
-					bond2Direction = bond2Direction.flipDirection();
-				}
-
-				//One of the bonds may have already have a defined slash from a previous bond stereo. If so make sure that we don't change it.
-				if (bond1Slash != null && bond1Slash != bond1Direction || bond2Slash != null && bond2Slash != bond2Direction) {
-					bond1Direction = bond1Direction.flipDirection();
-					bond2Direction = bond2Direction.flipDirection();
-				}
-
-				//Also need to investigate the bonds which are implicitly set by the bondStereo
-				//F   Cl
-				// C=C
-				//N   O
-				//e.g. the bonds from the C-N and C-O (the higher priority atoms will always be used for bond1/2)
-				Bond bond1Other = null;
-				Bond bond2Other = null;
-				SMILES_BOND_DIRECTION bond1OtherDirection = null;
-				SMILES_BOND_DIRECTION bond2OtherDirection = null;
-
-				List<Bond> bondsFrom2ndAtom = new ArrayList<>(atomRefs4[1].getBonds());
-				bondsFrom2ndAtom.remove(bond1);
-				bondsFrom2ndAtom.remove(bond);
-				if (bondsFrom2ndAtom.size() == 1) {//can be 0 for imines
-					if (bondToNextAtomMap.containsKey(bondsFrom2ndAtom.get(0))) {//ignore bonds to implicit hydrogen
-						bond1Other = bondsFrom2ndAtom.get(0);
-						bond1OtherDirection = bond1Direction.flipDirection();
-						if (!bond1ToAtom.equals(atomRefs4[1])) {
-							bond1OtherDirection = bond1OtherDirection.flipDirection();
-						}
-						if (!bondToNextAtomMap.get(bond1Other).equals(atomRefs4[1])) {
-							bond1OtherDirection = bond1OtherDirection.flipDirection();
-						}
-					}
-				}
-
-				List<Bond> bondsFrom3rdAtom = new ArrayList<>(atomRefs4[2].getBonds());
-				bondsFrom3rdAtom.remove(bond2);
-				bondsFrom3rdAtom.remove(bond);
-				if (bondsFrom3rdAtom.size() == 1) {
-					if (bondToNextAtomMap.containsKey(bondsFrom3rdAtom.get(0))) {
-						bond2Other = bondsFrom3rdAtom.get(0);
-						bond2OtherDirection = bond2Direction.flipDirection();
-						if (!bond2ToAtom.equals(atomRefs4[3])) {
-							bond2OtherDirection = bond2OtherDirection.flipDirection();
-						}
-						if (!bondToNextAtomMap.get(bond2Other).equals(bond2Other.getOtherAtom(atomRefs4[2]))) {
-							bond2OtherDirection = bond2OtherDirection.flipDirection();
-						}
-					}
-				}
-
-				//One of the bonds may have already have a defined slash from a previous bond stereo. If so make sure that we don't change it.
-				if (bond1Other != null && bond1Other.getSmilesStereochemistry() != null && bond1Other.getSmilesStereochemistry() != bond1OtherDirection) {
-					bond1Direction = bond1Direction.flipDirection();
-					bond2Direction = bond2Direction.flipDirection();
 					bond1OtherDirection = bond1OtherDirection.flipDirection();
-					if (bond2Other != null) {
-						bond2OtherDirection = bond2OtherDirection.flipDirection();
-					}
 				}
-				else if (bond2Other != null && bond2Other.getSmilesStereochemistry() != null && bond2Other.getSmilesStereochemistry() != bond2OtherDirection) {
-					bond1Direction = bond1Direction.flipDirection();
-					bond2Direction = bond2Direction.flipDirection();
-					bond2OtherDirection = bond2OtherDirection.flipDirection();
-					if (bond1Other != null) {
-						bond1OtherDirection = bond1OtherDirection.flipDirection();
-					}
-				}
-
-				//Set slashes for all bonds that are not to implicit hydrogen
-				//In non conjugated systems this will yield redundant, but consistent, information
-				bond1.setSmilesStereochemistry(bond1Direction);
-				bond2.setSmilesStereochemistry(bond2Direction);
-
-				if (bond1Other != null) {
-					bond1Other.setSmilesStereochemistry(bond1OtherDirection);
-				}
-				if (bond2Other != null) {
-					bond2Other.setSmilesStereochemistry(bond2OtherDirection);
+				if (!bondToNextAtomMap.get(bond1Other).equals(atomRefs4[1])) {
+					bond1OtherDirection = bond1OtherDirection.flipDirection();
 				}
 			}
 		}
+
+		List<Bond> bondsFrom3rdAtom = new ArrayList<>(atomRefs4[2].getBonds());
+		bondsFrom3rdAtom.remove(bond2);
+		bondsFrom3rdAtom.remove(bond);
+		if (bondsFrom3rdAtom.size() == 1) {
+			if (bondToNextAtomMap.containsKey(bondsFrom3rdAtom.get(0))) {
+				bond2Other = bondsFrom3rdAtom.get(0);
+				bond2OtherDirection = bond2Direction.flipDirection();
+				if (!bond2ToAtom.equals(atomRefs4[3])) {
+					bond2OtherDirection = bond2OtherDirection.flipDirection();
+				}
+				if (!bondToNextAtomMap.get(bond2Other).equals(bond2Other.getOtherAtom(atomRefs4[2]))) {
+					bond2OtherDirection = bond2OtherDirection.flipDirection();
+				}
+			}
+		}
+
+		//One of the bonds may have already have a defined slash from a previous bond stereo. If so make sure that we don't change it.
+		if (bond1Other != null && bond1Other.getSmilesStereochemistry() != null && bond1Other.getSmilesStereochemistry() != bond1OtherDirection) {
+			bond1Direction = bond1Direction.flipDirection();
+			bond2Direction = bond2Direction.flipDirection();
+			bond1OtherDirection = bond1OtherDirection.flipDirection();
+			if (bond2Other != null) {
+				bond2OtherDirection = bond2OtherDirection.flipDirection();
+			}
+		}
+		else if (bond2Other != null && bond2Other.getSmilesStereochemistry() != null && bond2Other.getSmilesStereochemistry() != bond2OtherDirection) {
+			bond1Direction = bond1Direction.flipDirection();
+			bond2Direction = bond2Direction.flipDirection();
+			bond2OtherDirection = bond2OtherDirection.flipDirection();
+			if (bond1Other != null) {
+				bond1OtherDirection = bond1OtherDirection.flipDirection();
+			}
+		}
+		
+		List<Bond> bondsToProcessNext = new ArrayList<>();
+
+		//Set slashes for all bonds that are not to implicit hydrogen
+		//In non conjugated systems this will yield redundant, but consistent, information
+		bond1.setSmilesStereochemistry(bond1Direction);
+		bond2.setSmilesStereochemistry(bond2Direction);
+		for (Bond b : bond1.getOtherAtom(atomRefs4[1]).getBonds()) {
+			if (b.getBondStereo() != null) {
+				bondsToProcessNext.add(b);
+			}
+		}
+		for (Bond b : bond2.getOtherAtom(atomRefs4[2]).getBonds()) {
+			if (b.getBondStereo() != null) {
+				bondsToProcessNext.add(b);
+			}
+		}
+		
+
+		if (bond1Other != null) {
+			bond1Other.setSmilesStereochemistry(bond1OtherDirection);
+			for (Bond b : bond1Other.getOtherAtom(atomRefs4[1]).getBonds()) {
+				if (b.getBondStereo() != null) {
+					bondsToProcessNext.add(b);
+				}
+			}
+		}
+		if (bond2Other != null) {
+			bond2Other.setSmilesStereochemistry(bond2OtherDirection);
+			for (Bond b : bond2Other.getOtherAtom(atomRefs4[2]).getBonds()) {
+				if (b.getBondStereo() != null) {
+					bondsToProcessNext.add(b);
+				}
+			}
+		}
+		return bondsToProcessNext;
 	}
 
 
