@@ -426,6 +426,17 @@ public class SMILESWriterTest {
 	}
 	
 	@Test
+	public void testDoubleBondSupport9() throws StructureBuildingException {
+		//Adjacent double bonds need to be processed first to ensure we don't assign inconsistent slashes two the exocyclic double bond 
+		Fragment f = fm.buildSMILES("CN/1CCC2=C(\\C(=C/C(/C(=C1)/C(=O)[O-])=C\\OC)\\C1=CC=C(C=C1)C)C=C(C(=C2)OC)OC");
+		fm.makeHydrogensExplicit();
+		String smiles = SMILESWriter.generateSmiles(f);
+		if (!smiles.equals("CN/1CCC2=C(\\C(=C/C(/C(=C1)/C(=O)[O-])=C\\OC)\\C1=CC=C(C=C1)C)C=C(C(=C2)OC)OC")){
+			fail(smiles +" did not correspond to one of the expected SMILES strings");
+		}
+	}
+	
+	@Test
 	public void testLabelling1() throws StructureBuildingException {
 		Fragment f = fm.buildSMILES("CCC", "", XmlDeclarations.NONE_LABELS_VAL);
 		for (Atom a : f) {
