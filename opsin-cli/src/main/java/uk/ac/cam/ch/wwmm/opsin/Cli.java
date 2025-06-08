@@ -182,12 +182,13 @@ public class Cli {
 			int splitPoint = line.indexOf('\t');
 			String name = splitPoint >= 0 ? line.substring(0, splitPoint) : line;
 			OpsinResult result = nts.parseChemicalName(name, n2sconfig);
+			String message = result.getMessage();
+			if (!message.isEmpty()) {
+				System.err.println(message);
+			}
 			Fragment structure = result.getStructure();
 			cmlWriter.writeMolecule(structure, name, id++);
 			writer.flush();
-			if (structure == null) {
-				System.err.println(result.getMessage());
-			}
 		}
 		cmlWriter.writeCmlEnd();
 		writer.writeEndDocument();
@@ -205,9 +206,11 @@ public class Cli {
 			String name = splitPoint >= 0 ? line.substring(0, splitPoint) : line;
 			OpsinResult result = nts.parseChemicalName(name, n2sconfig);
 			String output = extendedSmiles ? result.getExtendedSmiles() : result.getSmiles();
-			if (output == null) {
-				System.err.println(result.getMessage());
-			} else {
+			String message = result.getMessage();
+			if (!message.isEmpty()) {
+				System.err.println(message);
+			}
+			if (output != null) {
 				outputWriter.write(output);
 			}
 			if (outputName) {
@@ -242,10 +245,12 @@ public class Cli {
 			default:
 				throw new IllegalArgumentException("Unexepected enum value: " + inchiType);
 			}
-
-			if (output == null) {
-				System.err.println(result.getMessage());
-			} else {
+			
+			String message = result.getMessage();
+			if (!message.isEmpty()) {
+				System.err.println(message);
+			}
+			if (output != null) {
 				outputWriter.write(output);
 			}
 			if (outputName) {
