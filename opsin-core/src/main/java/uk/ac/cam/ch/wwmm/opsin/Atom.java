@@ -564,7 +564,7 @@ class Atom {
 	 * @param takeIntoAccountExternalBonds
 	 * @throws StructureBuildingException
 	 */
-	void ensureSVIsConsistantWithValency(boolean takeIntoAccountExternalBonds) throws StructureBuildingException {
+	void ensureSvConsistentWithValency(boolean takeIntoAccountExternalBonds) throws StructureBuildingException {
 		if (spareValency) {
 			Integer maxValency;
 			if (lambdaConventionValency != null) {

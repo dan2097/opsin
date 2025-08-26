@@ -522,7 +522,7 @@ class FragmentTools {
 		 * Remove spare valency on atoms with valency precluding creation of double bonds
 		 */
 		for(Atom a : atomCollection) {
-			a.ensureSVIsConsistantWithValency(true);
+			a.ensureSvConsistentWithValency(true);
 		}
 
 		/*

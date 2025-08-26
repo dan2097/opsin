@@ -934,11 +934,11 @@ class StructureBuildingMethods {
 			if (atom.getType().equals(SUFFIX_TYPE_VAL)){
 				continue;
 			}
-			atom.ensureSVIsConsistantWithValency(false);//doesn't take into account suffixes
+			atom.ensureSvConsistentWithValency(false);//doesn't take into account suffixes
 			if (atom.hasSpareValency()) {
 				atomsAcceptingHydroPrefix.add(atom);
 				//if we take into account suffixes is the SV removed
-				atom.ensureSVIsConsistantWithValency(true);
+				atom.ensureSvConsistentWithValency(true);
 				if (!atom.hasSpareValency()) {
 					atomsWhichImplicitlyHadTheirSVRemoved.add(atom);
 				}
