@@ -74,7 +74,7 @@
 		<token value="c12cc3cc4c1.C2(=O)O.C3.C4" labels="1/2,ortho/3,meta/4,para/5/6/////" functionalIDs="9">mesitylenic|mesitylenic acid|mesitylenicacid</token>
 		<token value="c1(=O)c(=O)ccc2ccccc12" labels="1//2//3/4/4a/5/6/7/8/8a">naphtho-1,2-quinone|naphtho-1,2-quinon</token>
 		<token value="c1(=O)ccc(=O)c2ccccc12" labels="1//2/3/4//4a/5/6/7/8/8a">naphtho-1,4-quinone|naphtho-1,4-quinon</token>
-		<token value="n1cccc(c1)C2N(C)CCC2">nicotine|nicotin</token><!--not to be confused with nicotinic acid-->
+		<token value="n1cc(C2N(C)CCC2)ccc1" labels="1/2/3/2'/1'//5'/4'/3'/4/5/6">nicotine|nicotin</token><!--not to be confused with nicotinic acid-->
 		<token value="c1(cc(O)cc(CCCCC)c1)O">olivetol</token>
 		<token value="c1(cc(O)cc(C)c1)O">orcinol</token>
 		<token value="c1ccccc1C(=O)O[O-]" labels="2,ortho/3,meta/4,para/5/6/1////" functionalIDs="10">perbenzoate|perbenzoat</token>
