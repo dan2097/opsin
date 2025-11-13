@@ -124,22 +124,15 @@ class SMILESWriter {
 	}
 
 	String writeSmiles() {
-		assignSmilesOrder();
+		List<Atom> roots = assignSmilesOrder();
 		assignDoubleBondStereochemistrySlashes();
 
-		List<Atom> atomList = structure.getAtomList();
-		smilesOutputOrder = new ArrayList<>(atomList.size());
+		smilesOutputOrder = new ArrayList<>(structure.getAtomCount());
 
-		boolean isEmpty = true;
-		for (Atom currentAtom : atomList) {
-			Integer visitedDepth = currentAtom.getProperty(Atom.VISITED);
-			if (visitedDepth != null && visitedDepth ==0) {//new component
-				if (!isEmpty){
-					smilesBuilder.append('.');
-				}
-				traverseSmiles(currentAtom);
-				isEmpty = false;
-			}
+		for (Atom currentAtom : roots) {
+			if (smilesBuilder.length() != 0)
+				smilesBuilder.append('.');
+			traverseSmiles(currentAtom);
 		}
 
 		if ((options & SmilesOptions.CXSMILES) != 0) {
@@ -354,16 +347,38 @@ class SMILESWriter {
 	 * Walks through the fragment populating the Atom.VISITED property indicating how many bonds
 	 * an atom is from the start of the fragment walk. A new walk will be started for each disconnected component of the fragment
 	 */
-	private void assignSmilesOrder() {
+	private List<Atom> assignSmilesOrder() {
 		List<Atom> atomList = structure.getAtomList();
 		for (Atom atom : atomList) {
 			atom.setProperty(Atom.VISITED, null);
 		}
+
+		List<Atom> roots = new ArrayList<>();
+
+		// start from * atoms first to shorten the CXSMILES label ($;;;$) layer
+		// and generally emit nicer smiles
+		boolean more = false;
 		for (Atom a : atomList) {
-			if(a.getProperty(Atom.VISITED) == null && !isSmilesImplicitProton(a)){//true for only the first atom in a fully connected molecule
+			if (a.getProperty(Atom.VISITED) != null)
+				continue;
+			if (a.getElement() == ChemEl.R) {
 				traverseMolecule(a);
+				roots.add(a);
+			} else {
+				more = true;
 			}
 		}
+
+		if (more) {
+			for (Atom a : atomList) {
+				if (a.getProperty(Atom.VISITED) == null && !isSmilesImplicitProton(a)) {
+					//true for only the first atom in a fully connected molecule
+					traverseMolecule(a);
+					roots.add(a);
+				}
+			}
+		}
+		return roots;
 	}
 
 	private static class TraversalState {
@@ -406,6 +421,9 @@ class SMILESWriter {
 					continue;
 				}
 				Atom neighbour = bond.getOtherAtom(currentAtom);
+				// don't traverse interfragment bond
+				if (neighbour.getFrag() != currentAtom.getFrag())
+					continue;
 				if (isSmilesImplicitProton(neighbour)){
 					continue;
 				}
@@ -687,6 +705,11 @@ class SMILESWriter {
 					continue;
 				}
 				Atom neighbour = bond.getOtherAtom(currentAtom);
+
+				// don't traverse interfragment bond
+                if (neighbour.getFrag() != currentAtom.getFrag())
+                    continue;
+
 				Integer nDepth = neighbour.getProperty(Atom.VISITED);
 				if (nDepth != null && nDepth <= depth){
 					String closure = bondToClosureSymbolMap.get(bond);

@@ -242,7 +242,7 @@ public class SMILESWriterTest {
 		Fragment f = fm.buildSMILES("[H][R]");
 		fm.makeHydrogensExplicit();
 		String smiles = SMILESWriter.generateSmiles(f);
-		assertEquals("[H]*", smiles);
+		assertEquals("*[H]", smiles);
 	}
 	
 	@Test
@@ -461,5 +461,15 @@ public class SMILESWriterTest {
 		assertEquals("2", atoms.get(1).getLocants().get(0));
 		assertEquals("alpha", atoms.get(1).getLocants().get(1));
 		assertEquals("2'", atoms.get(1).getLocants().get(2));
+	}
+
+	@Test
+	void testAtomClassEmitted() throws StructureBuildingException {
+		Fragment f = fm.buildSMILES("CCO");
+		fm.makeHydrogensExplicit();
+		assertEquals("CCO", SMILESWriter.generateSmiles(f));
+		for (Atom a : f)
+			a.setProperty(Atom.ATOM_CLASS, a.getID());
+		assertEquals("[CH3:1][CH2:2][OH:3]", SMILESWriter.generateSmiles(f));
 	}
 }
