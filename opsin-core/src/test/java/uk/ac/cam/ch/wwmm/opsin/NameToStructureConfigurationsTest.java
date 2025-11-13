@@ -45,7 +45,7 @@ public class NameToStructureConfigurationsTest {
 
 			n2sConfig.setOutputRadicalsAsWildCardAtoms(true);
 			or = n2s.parseChemicalName("methyl", n2sConfig);
-			assertEquals("C*", or.getSmiles());
+			assertEquals("*C", or.getSmiles());
 		}
 
 		@Test
@@ -58,7 +58,7 @@ public class NameToStructureConfigurationsTest {
 			
 			n2sConfig.setOutputRadicalsAsWildCardAtoms(true);
 			or = n2s.parseChemicalName("methyl", n2sConfig);
-			assertEquals("C* |$;_AP1$|", or.getSmiles(SmilesOptions.CXSMILES_ATOM_LABELS));
+			assertEquals("*C |$_AP1$|", or.getSmiles(SmilesOptions.CXSMILES_ATOM_LABELS));
 		}
 		
 		@Test
