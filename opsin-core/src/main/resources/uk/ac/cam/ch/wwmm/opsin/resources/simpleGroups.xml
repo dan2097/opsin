@@ -511,6 +511,7 @@
 
 		<!--trivial names that clash with systematic names-->
 		<token value="c1ccc(cc1)OP(=O)(N=[N+]=[N-])Oc2ccccc2">diphenylphosphoryl azide|diphenylphosphoryl azid|diphenylphosphorylazide|diphenylphosphorylazid</token><!--should be diphenoxyphosphoryl azide-->
+		<token value="CCC(CCCC)COc4ccc(c1nc(nc(n1)c2ccc(cc2O)OCC(CC)CCCC)c3ccc(OC)cc3)c(O)c4">bis-ethylhexyloxyphenol methoxyphenyl triazine</token><!--INCI name for Bemotrizinol-->
 	</tokenList>
 
 </tokenLists>
