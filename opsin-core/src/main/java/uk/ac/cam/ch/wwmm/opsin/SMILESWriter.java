@@ -425,6 +425,7 @@ class SMILESWriter {
 				Atom neighbour = bond.getOtherAtom(currentAtom);
 				// don't traverse interfragment bond
 				if (neighbour.getFrag() != currentAtom.getFrag()) {
+					neighbour.setProperty(Atom.VISITED, null);//Ensure this isn't visited by traverseSmiles
 					continue;
 				}
 				if (isSmilesImplicitProton(neighbour)){
@@ -709,12 +710,7 @@ class SMILESWriter {
 				}
 				Atom neighbour = bond.getOtherAtom(currentAtom);
 
-				// don't traverse interfragment bond
-                if (neighbour.getFrag() != currentAtom.getFrag()) {
-                    continue;
-                }
-
-				Integer nDepth = neighbour.getProperty(Atom.VISITED);
+				Integer nDepth = neighbour.getProperty(Atom.VISITED);//null if outside fragment
 				if (nDepth != null && nDepth <= depth){
 					String closure = bondToClosureSymbolMap.get(bond);
 					smilesBuilder.append(closure);
@@ -726,7 +722,7 @@ class SMILESWriter {
 			}
 			for (Bond bond : bonds) {//ring openings
 				Atom neighbour = bond.getOtherAtom(currentAtom);
-				Integer nDepth = neighbour.getProperty(Atom.VISITED);
+				Integer nDepth = neighbour.getProperty(Atom.VISITED);//null if outside fragment
 				if (nDepth != null && nDepth > (depth +1)){
 					String closure = availableClosureSymbols.removeFirst();
 					bondToClosureSymbolMap.put(bond, closure);
@@ -748,7 +744,7 @@ class SMILESWriter {
 				//adjacent atoms which have not been previously written
 				Bond bond = bonds.get(i);
 				Atom neighbour = bond.getOtherAtom(currentAtom);
-				Integer nDepth = neighbour.getProperty(Atom.VISITED);
+				Integer nDepth = neighbour.getProperty(Atom.VISITED);//null if outside fragment
 				if (nDepth != null && nDepth == depth + 1){
 					if (!seenFirstBranch){
 						stack.add(new TraversalState(neighbour, bond, depth + 1));
