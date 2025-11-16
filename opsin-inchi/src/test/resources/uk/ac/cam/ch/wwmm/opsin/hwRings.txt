@@ -2,3 +2,5 @@ oxazole	InChI=1S/C3H3NO/c1-2-5-3-4-1/h1-3H
 trioxane	InChI=1S/C3H6O3/c1-4-2-6-3-5-1/h1-3H2
 1,2,3-dithiazolium	InChI=1S/C2H2NS2/c1-2-4-5-3-1/h1-2H/q+1
 4,5-Dichloro-1,2,3-dithiazolium chloride	InChI=1S/C2Cl2NS2.ClH/c3-1-2(4)6-7-5-1;/h;1H/q+1;/p-1
+triazine	InChI=1S/C3H3N3/c1-4-2-6-3-5-1/h1-3H
+1,2,3-benzotriazine	InChI=1S/C7H5N3/c1-2-4-7-6(3-1)5-8-10-9-7/h1-5H

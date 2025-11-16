@@ -37,46 +37,77 @@ class ComponentProcessor {
 	private final BuildState state;
 	
 	//rings that look like HW rings but have other meanings. For the HW like inorganics the true meaning is given
-	private static final Map<String, String[]> specialHWRings = new HashMap<>();
+	private static final Map<String, SpecialHwRing> specialHwRings = new HashMap<>();
+
+	enum HwRingInstruction {
+		/** Disallowed name*/
+	    BLOCKED,
+		/** Name can't be followed by ic acid*/
+	    NOT_IC_ACID,
+		/** Name must be suffixed but not by olate*/
+	    NOT_NOTHING_OR_OLATE,
+		/** Locants only applied when ring is not part of a fused ring system */
+	    AS_STANDALONE_RING,
+	    /** Name implies saturation */
+	    SATURATED,
+	    /** No special instructions */
+	    NONE
+	}
+
+	private static class SpecialHwRing {
+	    private final HwRingInstruction instruction;
+	    private final ChemEl[] elements;
+
+	    SpecialHwRing(HwRingInstruction instruction, ChemEl[] elements) {
+	        this.instruction = instruction;
+	        this.elements = elements;
+	    }
+	}
+	
 	static{
 		//The first entry of the array is a special instruction e.g. blocked or saturated. The correct order of the heteroatoms follows
-		//terminal e is ignored from all of the keys as it is optional in the input name
-		specialHWRings.put("oxin", new String[]{"blocked"});
-		specialHWRings.put("azin", new String[]{"blocked"});
+		//terminal e is ignored from all of the keys as it is optional in the input name		
+		addSpecialHwRing("oxin", HwRingInstruction.BLOCKED);
+		addSpecialHwRing("azin", HwRingInstruction.BLOCKED);
 		
-		specialHWRings.put("selenin", new String[]{"not_icacid", "Se","C","C","C","C","C"});
-		specialHWRings.put("tellurin", new String[]{"not_icacid", "Te","C","C","C","C","C"});
+		addSpecialHwRing("selenin", HwRingInstruction.NOT_IC_ACID, ChemEl.Se,ChemEl.C,ChemEl.C,ChemEl.C,ChemEl.C,ChemEl.C);
+		addSpecialHwRing("tellurin", HwRingInstruction.NOT_IC_ACID, ChemEl.Te,ChemEl.C,ChemEl.C,ChemEl.C,ChemEl.C,ChemEl.C);
 
-		specialHWRings.put("thiol", new String[]{"not_nothingOrOlate", "S","C","C","C","C"});
-		specialHWRings.put("selenol", new String[]{"not_nothingOrOlate", "Se","C","C","C","C"});
-		specialHWRings.put("tellurol", new String[]{"not_nothingOrOlate", "Te","C","C","C","C"});
+		addSpecialHwRing("thiol", HwRingInstruction.NOT_NOTHING_OR_OLATE, ChemEl.S,ChemEl.C,ChemEl.C,ChemEl.C,ChemEl.C);
+		addSpecialHwRing("selenol", HwRingInstruction.NOT_NOTHING_OR_OLATE, ChemEl.Se,ChemEl.C,ChemEl.C,ChemEl.C,ChemEl.C);
+		addSpecialHwRing("tellurol", HwRingInstruction.NOT_NOTHING_OR_OLATE, ChemEl.Te,ChemEl.C,ChemEl.C,ChemEl.C,ChemEl.C);
 		
-		specialHWRings.put("oxazol", new String[]{"","O","C","N","C","C"});
-		specialHWRings.put("thiazol", new String[]{"","S","C","N","C","C"});
-		specialHWRings.put("selenazol", new String[]{"","Se","C","N","C","C"});
-		specialHWRings.put("tellurazol", new String[]{"","Te","C","N","C","C"});
-		specialHWRings.put("oxazolidin", new String[]{"","O","C","N","C","C"});
-		specialHWRings.put("thiazolidin", new String[]{"","S","C","N","C","C"});
-		specialHWRings.put("selenazolidin", new String[]{"","Se","C","N","C","C"});
-		specialHWRings.put("tellurazolidin", new String[]{"","Te","C","N","C","C"});
-		specialHWRings.put("oxazolid", new String[]{"","O","C","N","C","C"});
-		specialHWRings.put("thiazolid", new String[]{"","S","C","N","C","C"});
-		specialHWRings.put("selenazolid", new String[]{"","Se","C","N","C","C"});
-		specialHWRings.put("tellurazolid", new String[]{"","Te","C","N","C","C"});
-		specialHWRings.put("oxazolin", new String[]{"","O","C","N","C","C"});
-		specialHWRings.put("thiazolin", new String[]{"","S","C","N","C","C"});
-		specialHWRings.put("selenazolin", new String[]{"","Se","C","N","C","C"});
-		specialHWRings.put("tellurazolin", new String[]{"","Te","C","N","C","C"});
+		addSpecialHwRing("oxazol", HwRingInstruction.NONE,ChemEl.O,ChemEl.C,ChemEl.N,ChemEl.C,ChemEl.C);
+		addSpecialHwRing("thiazol", HwRingInstruction.NONE,ChemEl.S,ChemEl.C,ChemEl.N,ChemEl.C,ChemEl.C);
+		addSpecialHwRing("selenazol", HwRingInstruction.NONE,ChemEl.Se,ChemEl.C,ChemEl.N,ChemEl.C,ChemEl.C);
+		addSpecialHwRing("tellurazol", HwRingInstruction.NONE,ChemEl.Te,ChemEl.C,ChemEl.N,ChemEl.C,ChemEl.C);
+		addSpecialHwRing("oxazolidin", HwRingInstruction.NONE,ChemEl.O,ChemEl.C,ChemEl.N,ChemEl.C,ChemEl.C);
+		addSpecialHwRing("thiazolidin", HwRingInstruction.NONE,ChemEl.S,ChemEl.C,ChemEl.N,ChemEl.C,ChemEl.C);
+		addSpecialHwRing("selenazolidin", HwRingInstruction.NONE,ChemEl.Se,ChemEl.C,ChemEl.N,ChemEl.C,ChemEl.C);
+		addSpecialHwRing("tellurazolidin", HwRingInstruction.NONE,ChemEl.Te,ChemEl.C,ChemEl.N,ChemEl.C,ChemEl.C);
+		addSpecialHwRing("oxazolid", HwRingInstruction.NONE,ChemEl.O,ChemEl.C,ChemEl.N,ChemEl.C,ChemEl.C);
+		addSpecialHwRing("thiazolid", HwRingInstruction.NONE,ChemEl.S,ChemEl.C,ChemEl.N,ChemEl.C,ChemEl.C);
+		addSpecialHwRing("selenazolid", HwRingInstruction.NONE,ChemEl.Se,ChemEl.C,ChemEl.N,ChemEl.C,ChemEl.C);
+		addSpecialHwRing("tellurazolid", HwRingInstruction.NONE,ChemEl.Te,ChemEl.C,ChemEl.N,ChemEl.C,ChemEl.C);
+		addSpecialHwRing("oxazolin", HwRingInstruction.NONE,ChemEl.O,ChemEl.C,ChemEl.N,ChemEl.C,ChemEl.C);
+		addSpecialHwRing("thiazolin", HwRingInstruction.NONE,ChemEl.S,ChemEl.C,ChemEl.N,ChemEl.C,ChemEl.C);
+		addSpecialHwRing("selenazolin", HwRingInstruction.NONE,ChemEl.Se,ChemEl.C,ChemEl.N,ChemEl.C,ChemEl.C);
+		addSpecialHwRing("tellurazolin", HwRingInstruction.NONE,ChemEl.Te,ChemEl.C,ChemEl.N,ChemEl.C,ChemEl.C);
 
-		specialHWRings.put("oxoxolan", new String[]{"","O","C","O","C","C"});
-		specialHWRings.put("oxoxol", new String[]{"","O","C","O","C","C"});
-		specialHWRings.put("oxoxan", new String[]{"","O","C","C","O","C","C"});
-		specialHWRings.put("oxoxin", new String[]{"","O","C","C","O","C","C"});
-		specialHWRings.put("oxoxoxan", new String[]{"","O","C","O","C","O","C"});
+		addSpecialHwRing("azazazin", HwRingInstruction.AS_STANDALONE_RING,ChemEl.N,ChemEl.C,ChemEl.N,ChemEl.C,ChemEl.N,ChemEl.C);
+		addSpecialHwRing("oxoxolan", HwRingInstruction.NONE,ChemEl.O,ChemEl.C,ChemEl.O,ChemEl.C,ChemEl.C);
+		addSpecialHwRing("oxoxol", HwRingInstruction.NONE,ChemEl.O,ChemEl.C,ChemEl.O,ChemEl.C,ChemEl.C);
+		addSpecialHwRing("oxoxan", HwRingInstruction.NONE,ChemEl.O,ChemEl.C,ChemEl.C,ChemEl.O,ChemEl.C,ChemEl.C);
+		addSpecialHwRing("oxoxin", HwRingInstruction.NONE,ChemEl.O,ChemEl.C,ChemEl.C,ChemEl.O,ChemEl.C,ChemEl.C);
+		addSpecialHwRing("oxoxoxan", HwRingInstruction.AS_STANDALONE_RING,ChemEl.O,ChemEl.C,ChemEl.O,ChemEl.C,ChemEl.O,ChemEl.C);
 
-		specialHWRings.put("boroxin", new String[]{"saturated","O","B","O","B","O","B"});
-		specialHWRings.put("borazin", new String[]{"saturated","N","B","N","B","N","B"});
-		specialHWRings.put("borthiin", new String[]{"saturated","S","B","S","B","S","B"});
+		addSpecialHwRing("boroxin", HwRingInstruction.SATURATED,ChemEl.O,ChemEl.B,ChemEl.O,ChemEl.B,ChemEl.O,ChemEl.B);
+		addSpecialHwRing("borazin", HwRingInstruction.SATURATED,ChemEl.N,ChemEl.B,ChemEl.N,ChemEl.B,ChemEl.N,ChemEl.B);
+		addSpecialHwRing("borthiin", HwRingInstruction.SATURATED,ChemEl.S,ChemEl.B,ChemEl.S,ChemEl.B,ChemEl.S,ChemEl.B);
+	}
+	
+	private static void addSpecialHwRing(String name, HwRingInstruction instruction, ChemEl... elements) {
+		specialHwRings.put(name, new SpecialHwRing(instruction, elements));
 	}
 
 	ComponentProcessor(BuildState state, SuffixApplier suffixApplier) {
@@ -2854,47 +2885,54 @@ class ComponentProcessor {
 			String name = nameSB.toString();
 			group.setValue(name);
 			if(noLocants && heteroatomsToProcess.size() > 0) {
-				String[] specialRingInformation = specialHWRings.get(name);
+				SpecialHwRing specialRingInformation = specialHwRings.get(name);
 				if(specialRingInformation != null) {
-					String specialInstruction =specialRingInformation[0];
-					if (!specialInstruction.equals("")){
-						if (specialInstruction.equals("blocked")){
-							throw new ComponentGenerationException("Blocked Hantzsch-Widman system");
+					boolean applyDefaultLocants = true;
+					switch (specialRingInformation.instruction) {
+					case BLOCKED:
+						throw new ComponentGenerationException("Blocked Hantzsch-Widman system");
+					case SATURATED:
+						for (Atom a: atomList) {
+							a.setSpareValency(false);
 						}
-						else if (specialInstruction.equals("saturated")){
-							for (Atom a: atomList) {
-								a.setSpareValency(false);
+						break;
+					case NOT_IC_ACID:
+						if (group.getAttribute(SUBSEQUENTUNSEMANTICTOKEN_ATR) == null){
+							Element nextEl = OpsinTools.getNextSibling(group);
+							if (nextEl != null && nextEl.getName().equals(SUFFIX_EL) && nextEl.getAttribute(LOCANT_ATR) == null && nextEl.getAttributeValue(VALUE_ATR).equals("ic")){
+								throw new ComponentGenerationException(name + nextEl.getValue() +" appears to be a generic class name, not a Hantzsch-Widman ring");
 							}
 						}
-						else if (specialInstruction.equals("not_icacid")){
-							if (group.getAttribute(SUBSEQUENTUNSEMANTICTOKEN_ATR) == null){
-								Element nextEl = OpsinTools.getNextSibling(group);
-								if (nextEl != null && nextEl.getName().equals(SUFFIX_EL) && nextEl.getAttribute(LOCANT_ATR) == null && nextEl.getAttributeValue(VALUE_ATR).equals("ic")){
-									throw new ComponentGenerationException(name + nextEl.getValue() +" appears to be a generic class name, not a Hantzsch-Widman ring");
-								}
+						break;
+					case NOT_NOTHING_OR_OLATE:
+						if (group.getAttribute(SUBSEQUENTUNSEMANTICTOKEN_ATR) == null){
+							Element nextEl = OpsinTools.getNextSibling(group);
+							if (nextEl==null || (nextEl!=null && nextEl.getName().equals(SUFFIX_EL) && nextEl.getAttribute(LOCANT_ATR)==null && nextEl.getAttributeValue(VALUE_ATR).equals("ate"))){
+								throw new ComponentGenerationException(name +" has the syntax for a Hantzsch-Widman ring but probably does not mean that in this context");
 							}
 						}
-						else if (specialInstruction.equals("not_nothingOrOlate")){
-							if (group.getAttribute(SUBSEQUENTUNSEMANTICTOKEN_ATR) == null){
-								Element nextEl = OpsinTools.getNextSibling(group);
-								if (nextEl==null || (nextEl!=null && nextEl.getName().equals(SUFFIX_EL) && nextEl.getAttribute(LOCANT_ATR)==null && nextEl.getAttributeValue(VALUE_ATR).equals("ate"))){
-									throw new ComponentGenerationException(name +" has the syntax for a Hantzsch-Widman ring but probably does not mean that in this context");
-								}
-							}
+						break;
+					case AS_STANDALONE_RING:
+						if (group.getParent().getChildElements(GROUP_EL).size() > 1) {
+							applyDefaultLocants = false;
 						}
-						else{
-							throw new ComponentGenerationException("OPSIN Bug: Unrecognised special Hantzsch-Widman ring instruction");
-						}
+						break;
+					case NONE:
+						break;
 					}
+
 					//something like oxazole where by convention locants go 1,3 or a inorganic HW-like system
-					for (int i = 1; i < specialRingInformation.length; i++) {
-						Atom a = hwRing.getAtomByLocantOrThrow(Integer.toString(i));
-						a.setElement(ChemEl.valueOf(specialRingInformation[i]));
+					if (applyDefaultLocants) {
+						ChemEl[] hwRingChemEls = specialRingInformation.elements;
+						for (int i = 0; i < hwRingChemEls.length; i++) {
+							Atom a = hwRing.getAtomByLocantOrThrow(Integer.toString(i + 1));
+							a.setElement(hwRingChemEls[i]);
+						}
+						for(Element p : heteroatomsToProcess){
+							p.detach();
+						}
+						heteroatomsToProcess.clear();
 					}
-					for(Element p : heteroatomsToProcess){
-						p.detach();
-					}
-					heteroatomsToProcess.clear();
 				}
 			}
 			
