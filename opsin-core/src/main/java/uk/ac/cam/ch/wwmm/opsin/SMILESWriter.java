@@ -130,8 +130,9 @@ class SMILESWriter {
 		smilesOutputOrder = new ArrayList<>(structure.getAtomCount());
 
 		for (Atom currentAtom : roots) {
-			if (smilesBuilder.length() != 0)
+			if (smilesBuilder.length() != 0) {
 				smilesBuilder.append('.');
+			}
 			traverseSmiles(currentAtom);
 		}
 
@@ -359,8 +360,9 @@ class SMILESWriter {
 		// and generally emit nicer smiles
 		boolean more = false;
 		for (Atom a : atomList) {
-			if (a.getProperty(Atom.VISITED) != null)
+			if (a.getProperty(Atom.VISITED) != null) {
 				continue;
+			}
 			if (a.getElement() == ChemEl.R) {
 				traverseMolecule(a);
 				roots.add(a);
@@ -422,8 +424,9 @@ class SMILESWriter {
 				}
 				Atom neighbour = bond.getOtherAtom(currentAtom);
 				// don't traverse interfragment bond
-				if (neighbour.getFrag() != currentAtom.getFrag())
+				if (neighbour.getFrag() != currentAtom.getFrag()) {
 					continue;
+				}
 				if (isSmilesImplicitProton(neighbour)){
 					continue;
 				}
@@ -707,8 +710,9 @@ class SMILESWriter {
 				Atom neighbour = bond.getOtherAtom(currentAtom);
 
 				// don't traverse interfragment bond
-                if (neighbour.getFrag() != currentAtom.getFrag())
+                if (neighbour.getFrag() != currentAtom.getFrag()) {
                     continue;
+                }
 
 				Integer nDepth = neighbour.getProperty(Atom.VISITED);
 				if (nDepth != null && nDepth <= depth){

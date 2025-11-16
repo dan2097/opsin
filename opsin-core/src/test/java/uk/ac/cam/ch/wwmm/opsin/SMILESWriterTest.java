@@ -464,12 +464,13 @@ public class SMILESWriterTest {
 	}
 
 	@Test
-	void testAtomClassEmitted() throws StructureBuildingException {
+	public void testAtomClassEmitted() throws StructureBuildingException {
 		Fragment f = fm.buildSMILES("CCO");
 		fm.makeHydrogensExplicit();
 		assertEquals("CCO", SMILESWriter.generateSmiles(f));
-		for (Atom a : f)
+		for (Atom a : f) {
 			a.setProperty(Atom.ATOM_CLASS, a.getID());
+		}
 		assertEquals("[CH3:1][CH2:2][OH:3]", SMILESWriter.generateSmiles(f));
 	}
 }
