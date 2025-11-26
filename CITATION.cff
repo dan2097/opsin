@@ -1,0 +1,30 @@
+cff-version: 1.2.0
+message: Please cite the following works when using this software.
+type: software
+authors:
+  - family-names: Lowe
+    given-names: Daniel M.
+  - family-names: Lowe
+    given-names: Daniel M.
+  - family-names: Corbett
+    given-names: Peter T.
+  - family-names: Murray-Rust
+    given-names: Peter
+  - family-names: Glen
+    given-names: Robert C.
+doi: 10.1021/CI100384D
+identifiers:
+  - type: doi
+    value: 10.1021/CI100384D
+  - type: other
+    value: urn:issn:1549-9596
+  - type: other
+    value: pmid:21384929
+keywords:
+  - OPSIN
+  - text mining
+  - IUPAC nomenclature of chemistry
+  - open-source software
+  - chemical name
+  - IUPAC name
+title: 'Chemical Name to Structure: OPSIN, an Open Source Solution'
