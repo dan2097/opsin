@@ -7,7 +7,7 @@ OPSIN - Open Parser for Systematic IUPAC Nomenclature
 =====================================================
 __Version 2.8.0 (see [ReleaseNotes.txt](https://raw.githubusercontent.com/dan2097/opsin/master/ReleaseNotes.txt) for what's new in this version)__  
 __Source code: <https://github.com/dan2097/opsin>__  
-__Web interface and informational site: <https://opsin.ch.cam.ac.uk/>__  
+__Web interface and informational site: <https://www.ebi.ac.uk/opsin/>__  
 __License: [MIT License](https://opensource.org/licenses/MIT)__  
 
 OPSIN is a Java library for IUPAC name-to-structure conversion offering high recall and precision on organic chemical nomenclature. 
