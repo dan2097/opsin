@@ -1,3 +1,39 @@
+Version 2.9.0 (2025-11-29)
+fcb28737 Updated commons-io to 2.21.0
+2844311e Updated commons-cli to 1.11.0
+e87a50ee Updated woodstox to 7.1.1
+6ab67de9 Updated jna-inchi to 1.3.1
+76387224 Updated Log4j to 2.25.2
+0635fa98 triazine is now interpreted as 1,3,5-triazine when not in a fused ring system
+e47047b7 bis-ethylhexyloxyphenol methoxyphenyl triazine is a trivial name
+9e282844 Ensure visited is null for atoms encountered that are not in the current fragment
+f4fe7511 Stylistic changes
+6757e9ea Improvements to the SMILESWriter
+5c95b8c6 Added numbering to nicotine
+6ebbb689 Corrected method name
+45c3eec2 Include warnings on stderr when calling OPSIN from command-line
+cfdac8d1 Added unit test
+212e03b7 Changed SMILES writer bond iteration order to process adjacent double bonds first
+d0b5c410 Added convenience method to flip value of SMILES_BOND_DIRECTION enum
+801d20c6 Tidy/simplify code
+32c2bb09 Dep updates (#266)
+93163ada Generalized recognition of terms that are typically implicitly bracketted to all groups accepting additive bonds
+953a6d4e Corrected locants on tolyl to be consistent with Blue book 1979 A-13.1
+f1583848 Fix out of bounds exception
+feaf19e9 Correctly support locanted perhalo terms and perhaloalkylalkanes
+79a8aa25 Dep updates (#262)
+91ae24fa Fixed bug in spiro superscript inferring when a bridge is length 0
+94eec729 Disambiguation [yliden][ethenyl] vs [ylidene][thenyl] in favour of [yliden][ethenyl]
+e5d206f8 Implicitly remove functional atoms when performing substitutions
+f252ea7b Added support for reading IUPAC recommended  primed number-letter locants e.g. 2''a
+22fb586b Reject invalid Hantzsch-Widman systems with duplicate locants
+0c0d96f4 Assign charge to sulfur on dithiazolium
+42f826e1 Use assertTrue/assertFalse
+a876bfaf Prefer isEmpty
+7cc825bf Code simplification
+5fe8a542 Corrected typo
+12c6f24b [maven-release-plugin] prepare for next development iteration
+
 Version 2.8.0 (2023-10-29)
 Support for undecahectane/undecadictane (previously only hendeca was supported)
 Support for dicarboximido
