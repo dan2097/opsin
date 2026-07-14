@@ -18,6 +18,7 @@ public class NameToStructureConfig implements Cloneable {
 	private boolean detailedFailureAnalysis = false;
 	private boolean interpretAcidsWithoutTheWordAcid = false;
 	private boolean warnRatherThanFailOnUninterpretableStereochemistry = false;
+	private boolean forceCovalent = false;
 
 	/**
 	 * Constructs a NameToStructureConfig with default settings:
@@ -114,6 +115,15 @@ public class NameToStructureConfig implements Cloneable {
 		this.warnRatherThanFailOnUninterpretableStereochemistry = warnRatherThanFailOnUninterpretableStereochemistry;
 	}
 
+
+	public void setForceCovalent(boolean forceCovalent) {
+		this.forceCovalent = forceCovalent;
+	}
+
+
+	public boolean isForceCovalent() {
+		return forceCovalent;
+	}
 
 	/**
 	 * Constructs a NameToStructureConfig with default settings:
