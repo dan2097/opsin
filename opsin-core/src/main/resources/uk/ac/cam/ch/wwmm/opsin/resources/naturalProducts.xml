@@ -81,6 +81,13 @@ Natural products are treated as cyclic biochemicals. Many natural products suppo
 		<token value="CC1=CC=C(C(C)C)CC1" labels="none">alpha-terpinen</token>
 		<token value="C=C1CC=C(C(C)C)CC1" labels="none">beta-terpinen</token>
 		<token value="CC=1CC=C(C(C)C)CC1" labels="none">gamma-terpinen</token>
+		<token value="CC1=CCC(C(=C)C)CC1" labels="none">limonen|dipenten</token>
+		<token value="CC1=C(C(CCC1)(C)C)C=CC(C)=O" labels="none">beta-ionon|ionon</token>
+		<token value="CC=1C(C(CCC1)(C)C)C=CC(C)=O" labels="none">alpha-ionon</token>
+		<token value="CC1=C(C(CC=C1)(C)C)C(C=CC)=O" labels="none">beta-damascenon|damascenon</token>
+		<token value="CC=1C(C(CCC1)(C)C)C(C=CC)=O" labels="none">alpha-damascenon</token>
+		<token value="CC1CC(CCCCCCCCCCCC1)=O" labels="none">muscon</token>
+		<token value="C1(CCCCCCCC=CCCCCCCC1)=O" labels="none">civeton</token>
 		<token value="CC1=CCC(=C(C)C)CC1" labels="none">delta-terpinen|terpinolen</token>
 
 <!--systematic carotenes, some also have trivial names-->
