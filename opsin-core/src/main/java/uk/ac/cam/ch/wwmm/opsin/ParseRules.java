@@ -37,6 +37,13 @@ public class ParseRules {
 	
 	private final AnnotatorState initialState;
 
+	/* Sparse (CSR) copy of chemAutomaton's transition table, restricted to the
+	 * stateSymbols alphabet. transitionRowStart[s]..transitionRowStart[s+1] indexes
+	 * transitionSymbolIndex/transitionNextState for the live transitions of state s. */
+	private final int[] transitionRowStart;
+	private final int[] transitionSymbolIndex;
+	private final int[] transitionNextState;
+
 	/**
 	 * Creates a left to right parser that can parse a substituent/full/functional word
 	 * @param resourceManager
@@ -48,6 +55,36 @@ public class ParseRules {
 		this.symbolRegexesDict = resourceManager.getSymbolRegexesDict();
 		this.stateSymbols = chemAutomaton.getCharIntervals();
 		this.initialState = new AnnotatorState(chemAutomaton.getInitialState(), '\0', 0, true, null);
+
+		int nStates = chemAutomaton.getSize();
+		int nSymbols = stateSymbols.length;
+		int[] rowStart = new int[nStates + 1];
+		int live = 0;
+		for (int s = 0; s < nStates; s++) {
+			rowStart[s] = live;
+			for (int i = 0; i < nSymbols; i++) {
+				if (chemAutomaton.step(s, stateSymbols[i]) != -1) {
+					live++;
+				}
+			}
+		}
+		rowStart[nStates] = live;
+		int[] symIdx = new int[live];
+		int[] nextSt = new int[live];
+		int p = 0;
+		for (int s = 0; s < nStates; s++) {
+			for (int i = 0; i < nSymbols; i++) {
+				int ns = chemAutomaton.step(s, stateSymbols[i]);
+				if (ns != -1) {
+					symIdx[p] = i;
+					nextSt[p] = ns;
+					p++;
+				}
+			}
+		}
+		this.transitionRowStart = rowStart;
+		this.transitionSymbolIndex = symIdx;
+		this.transitionNextState = nextSt;
 	}
 
 	/**Determines the possible annotations for a chemical word
@@ -89,10 +126,13 @@ public class ParseRules {
 				longestAnnotation = as;
 			}
 
-			for (int i = 0; i < stateSymbolsSize; i++) {
+			int currentState = as.getState();
+			int rowEnd = transitionRowStart[currentState + 1];
+			for (int r = transitionRowStart[currentState]; r < rowEnd; r++) {
+				int i = transitionSymbolIndex[r];
 				char annotationCharacter = stateSymbols[i];
-				int potentialNextState = chemAutomaton.step(as.getState(), annotationCharacter);
-				if (potentialNextState != -1) {//-1 means this state is not accessible from the previous state
+				int potentialNextState = transitionNextState[r];
+				{
 					OpsinRadixTrie possibleTokenisationsTrie = symbolTokenNamesDict[i];
 					if (possibleTokenisationsTrie != null) {
 						List<Integer> possibleTokenisations = possibleTokenisationsTrie.findMatches(chemicalWordLowerCase, posInName);
