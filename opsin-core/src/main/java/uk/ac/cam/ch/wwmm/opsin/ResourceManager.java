@@ -230,12 +230,18 @@ class ResourceManager {
 	}
 
 	private void addToken(String text, TokenEl el, Character symbol, int index, boolean reversed) {
-		Map<Character, TokenEl> symbolToToken = tokenDict.get(text);
-		if(symbolToToken == null) {
-			symbolToToken = new HashMap<>();
-			tokenDict.put(text, symbolToToken);
+		if (!reversed) {
+			//tokenDict is read by makeTokenElement, which only runs while writing the parse tree of a
+			//left to right parse. Repopulating it during the reverse pass, which detailedFailureAnalysis
+			//triggers lazily on the first uninterpretable name, would mutate a map that other threads are
+			//reading without synchronisation.
+			Map<Character, TokenEl> symbolToToken = tokenDict.get(text);
+			if(symbolToToken == null) {
+				symbolToToken = new HashMap<>();
+				tokenDict.put(text, symbolToToken);
+			}
+			symbolToToken.put(symbol, el);
 		}
-		symbolToToken.put(symbol, el);
 
 		if (!reversed){
 			OpsinRadixTrie trie = symbolTokenNamesDict[index];
