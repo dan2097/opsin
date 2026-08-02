@@ -1,0 +1,8 @@
+gamma-decanolactone	InChI=1S/C10H18O2/c1-2-3-4-5-6-9-7-8-10(11)12-9/h9H,2-8H2,1H3
+delta-decanolactone	InChI=1S/C10H18O2/c1-2-3-4-6-9-7-5-8-10(11)12-9/h9H,2-8H2,1H3
+gamma-octanolactone	InChI=1S/C8H14O2/c1-2-3-4-7-5-6-8(9)10-7/h7H,2-6H2,1H3
+gamma-dodecanolactone	InChI=1S/C12H22O2/c1-2-3-4-5-6-7-8-11-9-10-12(13)14-11/h11H,2-10H2,1H3
+gamma-butyrolactone	InChI=1S/C4H6O2/c5-4-2-1-3-6-4/h1-3H2
+delta-valerolactone	InChI=1S/C5H8O2/c6-5-3-1-2-4-7-5/h1-4H2
+epsilon-caprolactone	InChI=1S/C6H10O2/c7-6-4-2-1-3-5-8-6/h1-5H2
+gamma-decanolactam	InChI=1S/C10H19NO/c1-2-3-4-5-6-9-7-8-10(12)11-9/h9H,2-8H2,1H3,(H,11,12)

@@ -678,8 +678,16 @@ class ComponentProcessor {
 			}
 			Element possibleSuffix = OpsinTools.getNextSibling(group, SUFFIX_EL);
 			Boolean terminalSuffixWithNoSuffixPrefixPresent = false;
-			if (possibleSuffix!=null && TERMINAL_SUBTYPE_VAL.equals(possibleSuffix.getAttributeValue(SUBTYPE_ATR)) && possibleSuffix.getAttribute(SUFFIXPREFIX_ATR) == null){
-				terminalSuffixWithNoSuffixPrefixPresent = true;
+			if (possibleSuffix!=null && possibleSuffix.getAttribute(SUFFIXPREFIX_ATR) == null){
+				String suffixSubType = possibleSuffix.getAttributeValue(SUBTYPE_ATR);
+				//A cycleformer such as lactone, lactam or sultone closes onto the acid carbon,
+				//so that carbon is position 1 and the greek letters start at 2 exactly as they
+				//do for a terminal suffix. Treating them as neither shifted every greek locant
+				//by one, which silently built gamma-decanolactone as a four membered ring.
+				if (TERMINAL_SUBTYPE_VAL.equals(suffixSubType)
+						|| CYCLEFORMER_SUBTYPE_VAL.equals(suffixSubType)){
+					terminalSuffixWithNoSuffixPrefixPresent = true;
+				}
 			}
 			for (Atom atom : atomList) {
 				String firstLocant = atom.getFirstLocant();
