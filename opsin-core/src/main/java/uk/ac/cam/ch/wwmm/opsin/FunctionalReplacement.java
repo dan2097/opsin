@@ -297,6 +297,7 @@ class FunctionalReplacement {
 				LinkedList<Atom> singleBondedOxygen = new LinkedList<>();
 				LinkedList<Atom> doubleBondedOxygen = new LinkedList<>();
 				populateTerminalSingleAndDoubleBondedOxygen(atomList, singleBondedOxygen, doubleBondedOxygen);
+				removeOxygenThatIsAnOutAtom(fragToApplyInfixTo, singleBondedOxygen);
 				int oxygenAvailable = singleBondedOxygen.size() +doubleBondedOxygen.size();
 
 				/*
@@ -1152,6 +1153,28 @@ class FunctionalReplacement {
 		return oxygenAtoms;
 	}
 	
+
+	/**
+	 * Discards any oxygen that the fragment attaches to the rest of the molecule through.
+	 *
+	 * Such an oxygen looks terminal only because the substituent it bonds to has not been
+	 * attached yet, and it is what the suffix is named for: the oxygen of an oxy suffix is
+	 * the -O- link itself. Replacing it does not modify the suffix, it turns it into a
+	 * different suffix, so acetamidooxybenzene would be read as acet + amid infix + oxy and
+	 * give acetanilide, indistinguishable from acetamidobenzene and with the oxygen gone.
+	 * Leaving it out means that reading fails and the acetamido + oxy reading is used.
+	 *
+	 * Only single bonded oxygen is considered since an oxygen forming a double bond cannot
+	 * also be an attachment point. Functional atoms, e.g. the acidic oxygen an -ic acid
+	 * suffix loses on esterification, are not out atoms and stay replaceable, which is what
+	 * lets acetamidic acid remain acetamide.
+	 */
+	private void removeOxygenThatIsAnOutAtom(Fragment frag, List<Atom> singleBondedOxygen) {
+		int outAtomCount = frag.getOutAtomCount();
+		for (int i = 0; i < outAtomCount; i++) {
+			singleBondedOxygen.remove(frag.getOutAtom(i).getAtom());
+		}
+	}
 
 	private void populateTerminalSingleAndDoubleBondedOxygen(List<Atom> atomList, List<Atom> singleBondedOxygen, List<Atom> doubleBondedOxygen) throws StructureBuildingException {
 		for (Atom a : atomList) {
