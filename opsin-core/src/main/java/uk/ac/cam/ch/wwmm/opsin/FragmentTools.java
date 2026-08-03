@@ -592,6 +592,14 @@ class FragmentTools {
 		 * The atom with indicated hydrogen (see above) is used in preference else heuristics are used to chose a candidate
 		 */
 		if((svCount & 1) == 1) {
+			if (frag.isHydroPrefixOnBridgeIgnored()) {
+				//A hydro prefix cited a bridge atom that was already saturated and that citation
+				//was let through as redundant. Normally the leftover spare valency here is quenched
+				//by heuristic, but doing so would add a hydrogen the name never asked for and
+				//quietly return the wrong structure. The odd count says the hydro locants and the
+				//ring system disagree, so the name is not interpretable after all.
+				throw new StructureBuildingException("A hydro prefix cited an atom saturated by a ring bridge, and the remaining hydro prefixes do not account for the unsaturation of the ring system");
+			}
 			if (atomToReduceValencyAt == null) {
 				atomToReduceValencyAt = findBestAtomToRemoveSpareValencyFrom(frag, atomCollection);
 			}

@@ -617,7 +617,19 @@ class StructureBuildingMethods {
 				if (a.hasSpareValency()){
 					a.setSpareValency(false);
 				}
-				else{
+				else if (a.isPartOfRingBridge()) {
+					//An atom contributed by a bridge prefix is sp3 because the bridge made it so,
+					//not because a hydro prefix saturated it, so citing it in the hydro prefix is
+					//redundant rather than contradictory. Ignoring it lets names such as
+					//2,4,4a,7,7a,13-hexahydro-1H-4,12-methanobenzofuro[3,2-e]isoquinoline (morphine)
+					//be interpreted. The citation is only harmless if the spare valency that is
+					//left can still pair off by itself, so flag the fragment and let
+					//convertSpareValenciesToDoubleBonds reject the name if it cannot.
+					thisFrag.setHydroPrefixOnBridgeIgnored(true);
+				}
+				else {
+					//A hydro prefix landing on an atom that an earlier hydro prefix saturated
+					//usually signals a numbering mismatch, and that must keep throwing.
 					if (!acdNameSpiroIndicatedHydrogenBug(group, locant)){
 						throw new StructureBuildingException("hydrogen addition at locant: " + locant +" was requested, but this atom is not unsaturated");
 					}
