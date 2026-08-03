@@ -168,6 +168,11 @@ For these groups the charge on the first atom will be increased by 1 if they are
 		<token value="[N-]=C=[Se]">isoselenocyanate|isoselenocyanat</token>
 		<token value="[N-]=C=[Te]">isotellurocyanate|isotellurocyanat</token>
 		<token value="[N-]=C=S">isothiocyanate|isothiocyanat</token>
+		<!--peroxycyanic acid is N#C-O-OH, so its esters and salts carry two oxygens. Without this
+		token the name is read as the peroxy joiner applied to cyanate, which adds an -O-O- alongside
+		cyanate's own oxygen and yields three. The acid itself is built by functional replacement on
+		cyanic acid's functional oxygen and is unaffected.-->
+		<token value="[O-]OC#N">peroxycyanate|peroxycyanat</token>
 		<token value="[Se-]C#N">selenocyanate|selenocyanat</token>
 		<token value="[Se-][N+]#[C-]">selenofulminate|selenofulminat</token>
 		<token value="[Te-]C#N">tellurocyanate|tellurocyanat</token>
