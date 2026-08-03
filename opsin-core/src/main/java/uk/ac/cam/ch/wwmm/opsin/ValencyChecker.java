@@ -335,7 +335,56 @@ class ValencyChecker {
 		if(maxVal == null) {
 			return true;
 		}
-		return valency <= maxVal;
+		if (valency > maxVal) {
+			return false;
+		}
+		return valencyIsAttainable(a, valency);
+	}
+
+	/**
+	 * Chalcogens and halogens have a discontinuous set of stable valencies when uncharged e.g. 2, 4 and 6 for sulfur.
+	 * Only the lowest of these is reachable by adding implicit hydrogen; a hypervalent chalcogen or halogen is
+	 * always made hypervalent by bonds to other elements, never by a hydrogen, so the higher valencies must be
+	 * reached by the bonds the name actually specifies.
+	 * Hence 1-methylthiophene is not sulfur in a 4 valent state with an invented hydrogen, it is a name that
+	 * would have had to say 1-methylthiophen-1-ium (or use the lambda convention) to mean anything; the oxygen
+	 * analogue, 1-methylfuran, is already rejected only because oxygen happens to have a single stable valency.
+	 * The valency that implicit hydrogen may bring the atom up to is the standard bonding number of the element
+	 * (adjusted by explicitly added/removed protons), matching how {@link Atom#determineValency(boolean)} decides
+	 * the number of hydrogens to add.
+	 * Group 15 is deliberately not included: R2P(=O)H and its relatives are conventional, so phosphorus does
+	 * reach a hypervalent state with an implicit hydrogen e.g. 2-oxo-1,3-dihydroisophosphindole.
+	 * Charged atoms, lambda convention atoms and atoms whose valency was set explicitly (e.g. by a SMILES in
+	 * the dictionary) state their valency rather than having it inferred, so are not subject to this check.
+	 * @param a
+	 * @param valency
+	 * @return
+	 */
+	private static boolean valencyIsAttainable(Atom a, int valency) {
+		if (a.getCharge() != 0 || a.getLambdaConventionValency() != null || a.getMinimumValency() != null) {
+			return true;
+		}
+		ChemEl chemEl = a.getElement();
+		if (!chemEl.isChalcogen() && !chemEl.isHalogen()) {
+			return true;
+		}
+		Integer defaultValency = getDefaultValency(chemEl);
+		if (defaultValency == null) {
+			return true;
+		}
+		if (valency <= defaultValency + a.getProtonsExplicitlyAddedOrRemoved()) {
+			return true;
+		}
+		Integer[] possibleValencies = getPossibleValencies(chemEl, 0);
+		if (possibleValencies == null) {
+			return true;
+		}
+		for (Integer possibleValency : possibleValencies) {
+			if (possibleValency == valency) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/** Check whether valency is available on the atom to form a bond of the given order.
