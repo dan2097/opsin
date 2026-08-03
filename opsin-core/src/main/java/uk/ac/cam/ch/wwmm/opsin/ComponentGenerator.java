@@ -341,13 +341,7 @@ class ComponentGenerator {
 				locantText = m.group(2) + m.group(1) + m.group(3);
 			}
 		}
-		if (locantText.contains("'")) {
-			//2''a is correct but 2a'' is either to handle internally, so normalize to this form 
-			Matcher m = matchNumericLocantWithLetterAndPrime.matcher(locantText);
-			if (m.matches()){
-				locantText = m.group(1) + m.group(3) + m.group(2);
-			}
-		}
+		locantText = standardizeLocantPrimePosition(locantText);
 
 		if (Character.isLetter(locantText.charAt(0))) {
 			//remove indications of superscript as the fact a locant is superscripted can be determined from context e.g. N~1~ ->N1
@@ -365,6 +359,24 @@ class ComponentGenerator {
 			}
 		}
 		locantText = fixLocantCapitalisation(locantText);
+		return locantText;
+	}
+
+	/**
+	 * Moves primes that were written between the number and the letter of a locant to after the letter
+	 * e.g. 2''a --> 2a''
+	 * Both spellings are in use; OPSIN labels its atoms using the latter form
+	 * @param locantText
+	 * @return
+	 */
+	private static String standardizeLocantPrimePosition(String locantText) {
+		if (locantText.indexOf('\'') >= 0) {//avoids this regex being invoked typically
+			//2''a is correct but 2a'' is easier to handle internally, so normalize to this form
+			Matcher m = matchNumericLocantWithLetterAndPrime.matcher(locantText);
+			if (m.matches()){
+				locantText = m.group(1) + m.group(3) + m.group(2);
+			}
+		}
 		return locantText;
 	}
 
@@ -946,7 +958,7 @@ class ComponentGenerator {
 							Element stereoChemEl = new TokenEl(STEREOCHEMISTRY_EL, stereoChemistryDescriptor);
 							String locantVal = m.group(1);
 							if (locantVal.length() > 0) {
-								stereoChemEl.addAttribute(new Attribute(LOCANT_ATR, fixLocantCapitalisation(StringTools.removeDashIfPresent(locantVal))));
+								stereoChemEl.addAttribute(new Attribute(LOCANT_ATR, fixLocantCapitalisation(standardizeLocantPrimePosition(StringTools.removeDashIfPresent(locantVal)))));
 							}
 							OpsinTools.insertBefore(stereoChemistryElement, stereoChemEl);
 							if (matchRS.matcher(m.group(2)).matches()) {

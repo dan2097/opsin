@@ -10,3 +10,5 @@ oxychloride
 phenaleno[1,9b-c]thiophene
 1,1,1-triazole
 1,1,2-thiadiazole
+(9'aS)-spiro[1,3-dithiane-2,4'-2,3,3a,5-tetrahydropentalene]-1'-one
+(9a'S)-spiro[1,3-dithiane-2,4'-2,3,3a,5-tetrahydropentalene]-1'-one
