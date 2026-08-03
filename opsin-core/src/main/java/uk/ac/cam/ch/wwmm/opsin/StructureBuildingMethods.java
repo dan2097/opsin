@@ -617,7 +617,25 @@ class StructureBuildingMethods {
 				if (a.hasSpareValency()){
 					a.setSpareValency(false);
 				}
-				else{
+				else if (a.isPartOfRingBridge() && !isInvolvedInAMultipleBond(a)) {
+					//An atom contributed by a bridge prefix is sp3 because the bridge made it so,
+					//not because a hydro prefix saturated it, so citing it in the hydro prefix is
+					//redundant rather than contradictory. Ignoring it lets names such as
+					//2,4,4a,7,7a,13-hexahydro-1H-4,12-methanobenzofuro[3,2-e]isoquinoline (morphine)
+					//be interpreted. The citation is only harmless if the spare valency that is
+					//left can still pair off by itself, so flag the fragment and let
+					//convertSpareValenciesToDoubleBonds reject the name if it cannot.
+					//Only a saturated bridge qualifies. Bridges such as etheno, propeno, buta-1,3-dieno
+					//and diazeno are built with an explicit double bond rather than spare valency, so a
+					//hydro prefix citing one of their atoms is doing real work and must not be discarded:
+					//9,10,11,12-tetrahydro-9,10-ethenoanthracene asks for the saturated bridge, C16H14,
+					//and dropping the 11,12 hydro prefixes would silently return C16H12 with the bridge
+					//double bond still in place.
+					thisFrag.setHydroPrefixOnBridgeIgnored(true);
+				}
+				else {
+					//A hydro prefix landing on an atom that an earlier hydro prefix saturated
+					//usually signals a numbering mismatch, and that must keep throwing.
 					if (!acdNameSpiroIndicatedHydrogenBug(group, locant)){
 						throw new StructureBuildingException("hydrogen addition at locant: " + locant +" was requested, but this atom is not unsaturated");
 					}
@@ -685,6 +703,22 @@ class StructureBuildingMethods {
 	 * @param indicatedHydrogenLocant
 	 * @return
 	 */
+	/**
+	 * Whether this atom is party to a double or triple bond.
+	 *
+	 * Used to tell a saturated ring bridge from an unsaturated one. Unlike a mancude ring
+	 * atom an unsaturated bridge carries a real multiple bond rather than spare valency, so
+	 * hasSpareValency is false for both kinds and cannot distinguish them on its own.
+	 */
+	private static boolean isInvolvedInAMultipleBond(Atom atom) {
+		for (Bond bond : atom.getBonds()) {
+			if (bond.getOrder() > 1) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	private static boolean acdNameSpiroIndicatedHydrogenBug(Element group, String indicatedHydrogenLocant) {
 		if (group.getValue().startsWith("spiro")) {
 			for (Element suffix : group.getParent().getChildElements(SUFFIX_EL)) {

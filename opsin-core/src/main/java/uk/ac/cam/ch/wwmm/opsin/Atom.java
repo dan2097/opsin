@@ -106,6 +106,10 @@ class Atom {
 	 */
 	private boolean atomIsInACycle = false;
 
+	/** True if this atom came from a von Baeyer style bridge prefix, e.g. the CH2 of
+	 * 4,12-methano..., so it is saturated by construction rather than by a hydro prefix. */
+	private boolean partOfRingBridge = false;
+
 	/**
 	 * Builds an Atom from scratch.
 	 * GENERALLY EXCEPT FOR TESTING SHOULD NOT BE CALLED EXCEPT FROM THE FRAGMANAGER
@@ -516,6 +520,14 @@ class Atom {
 	 * Sets whether atom is in a cycle, true if it is
 	 * @param atomIsInACycle
 	 */
+	boolean isPartOfRingBridge() {
+		return partOfRingBridge;
+	}
+
+	void setPartOfRingBridge(boolean partOfRingBridge) {
+		this.partOfRingBridge = partOfRingBridge;
+	}
+
 	void setAtomIsInACycle(boolean atomIsInACycle) {
 		this.atomIsInACycle = atomIsInACycle;
 	}

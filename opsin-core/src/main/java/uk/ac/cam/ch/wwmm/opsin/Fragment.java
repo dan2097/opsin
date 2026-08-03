@@ -57,6 +57,12 @@ class Fragment implements Iterable<Atom> {
 	/**Pseudo atoms indicating start and end of polymer structure repeat unit*/
 	private List<Atom> polymerAttachmentPoints =  null;
 
+	/**True if a hydro prefix cited an atom that a ring bridge had already saturated, and
+	 * that citation was treated as redundant rather than as an error. Such a name has
+	 * given one fewer usable hydro locant than it appears to, so the spare valency left
+	 * over afterwards can no longer be assumed to pair up on its own.*/
+	private boolean hydroPrefixOnBridgeIgnored = false;
+
 	/**
 	 * DO NOT CALL DIRECTLY EXCEPT FOR TESTING
 	 * Makes an empty Fragment associated with the given tokenEl
@@ -585,6 +591,14 @@ class Fragment implements Iterable<Atom> {
 	
 	void addIndicatedHydrogen(Atom atom) {
 		indicatedHydrogen.add(atom);
+	}
+
+	boolean isHydroPrefixOnBridgeIgnored() {
+		return hydroPrefixOnBridgeIgnored;
+	}
+
+	void setHydroPrefixOnBridgeIgnored(boolean hydroPrefixOnBridgeIgnored) {
+		this.hydroPrefixOnBridgeIgnored = hydroPrefixOnBridgeIgnored;
 	}
 
 	/**

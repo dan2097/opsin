@@ -3888,6 +3888,9 @@ class ComponentProcessor {
 		Collections.sort(bridgeFragments, new SortBridgesByHighestLocantedBridgehead(bridgeToRingAtoms));
 		for (Fragment bridgeFragment: bridgeFragments) {
 			List<Atom> bridgeFragmentAtoms = bridgeFragment.getAtomList();
+			for (Atom bridgeAtom : bridgeFragmentAtoms) {
+				bridgeAtom.setPartOfRingBridge(true);
+			}
 			Atom[] ringAtoms = bridgeToRingAtoms.get(bridgeFragment);
 			if (getLocantNumber(ringAtoms[0]) <= getLocantNumber(ringAtoms[1])){
 				for (int i = bridgeFragmentAtoms.size() - 1; i >=0; i--) {
