@@ -173,6 +173,15 @@ For these groups the charge on the first atom will be increased by 1 if they are
 		cyanate's own oxygen and yields three. The acid itself is built by functional replacement on
 		cyanic acid's functional oxygen and is unaffected.-->
 		<token value="[O-]OC#N">peroxycyanate|peroxycyanat</token>
+		<!--Same treatment for the chalcogen and iso siblings. The ester of each is already built
+		correctly by the peroxy joiner, e.g. phenyl peroxythiocyanate is C6H5-O-O-S-C#N, so the anion
+		is the terminal oxygen of that chain carrying the charge. Without these tokens the joiner has
+		nothing to attach its second bond to but another copy of the group, giving a neutral bis
+		compound rather than a monovalent anion, and a salt of it then leaves the metal uncharged.-->
+		<token value="[O-]ON=C=O">peroxyisocyanate|peroxyisocyanat</token>
+		<token value="[O-]O[Se]C#N">peroxyselenocyanate|peroxyselenocyanat</token>
+		<token value="[O-]O[Te]C#N">peroxytellurocyanate|peroxytellurocyanat</token>
+		<token value="[O-]OSC#N">peroxythiocyanate|peroxythiocyanat</token>
 		<token value="[Se-]C#N">selenocyanate|selenocyanat</token>
 		<token value="[Se-][N+]#[C-]">selenofulminate|selenofulminat</token>
 		<token value="[Te-]C#N">tellurocyanate|tellurocyanat</token>
