@@ -10,3 +10,6 @@ oxychloride
 phenaleno[1,9b-c]thiophene
 1,1,1-triazole
 1,1,2-thiadiazole
+diphenylfluoranuide
+tetrachloroiodanuide
+chlorine(2+) trihydride
