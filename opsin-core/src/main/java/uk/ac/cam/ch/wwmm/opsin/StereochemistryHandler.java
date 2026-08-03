@@ -439,6 +439,19 @@ class StereochemistryHandler {
 			}
 		}
 		if (isCisTrans){
+			if (notExplicitlyDefinedStereoCentreMap.isEmpty() && notExplicitlyDefinedStereoBondMap.isEmpty()) {
+				//A cis/trans prefix in front of a CIP block, e.g. cis-(1S,2R)-1,2-dimethylcyclohexane,
+				//describes the relative configuration of ring substituents rather than a double bond.
+				//No bond was found for it, but every stereocentre and stereo bond has already been
+				//assigned by the descriptors that were processed first, so the term is redundant: the
+				//structure it could constrain is fully determined without it. Dropping it is therefore
+				//not a loss of information, whereas rejecting the name loses a structure OPSIN can
+				//otherwise build correctly. If anything were still undefined the term might be the only
+				//thing defining it, and that must keep throwing.
+				state.addWarning(OpsinWarningType.STEREOCHEMISTRY_IGNORED, "Ignored redundant " +
+						stereoChemistryEl.getAttributeValue(VALUE_ATR) + " as the stereochemistry was already fully defined");
+				return;
+			}
 			throw new StereochemistryException("Could not find bond that: " + stereoChemistryEl.toXML() + " could refer unambiguously to");
 		}
 		else{
