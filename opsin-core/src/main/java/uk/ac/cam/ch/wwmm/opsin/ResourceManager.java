@@ -231,10 +231,7 @@ class ResourceManager {
 
 	private void addToken(String text, TokenEl el, Character symbol, int index, boolean reversed) {
 		if (!reversed) {
-			//tokenDict is read by makeTokenElement, which only runs while writing the parse tree of a
-			//left to right parse. Repopulating it during the reverse pass, which detailedFailureAnalysis
-			//triggers lazily on the first uninterpretable name, would mutate a map that other threads are
-			//reading without synchronisation.
+			//tokenDict will be populated when the constructor is called for left-to-right parsing, hence skip for reversed parsing
 			Map<Character, TokenEl> symbolToToken = tokenDict.get(text);
 			if(symbolToToken == null) {
 				symbolToToken = new HashMap<>();
@@ -242,8 +239,8 @@ class ResourceManager {
 			}
 			symbolToToken.put(symbol, el);
 		}
-
-		if (!reversed){
+			
+		if (!reversed) {
 			OpsinRadixTrie trie = symbolTokenNamesDict[index];
 			if(trie == null) {
 				trie = new OpsinRadixTrie();
@@ -251,7 +248,7 @@ class ResourceManager {
 			}
 			trie.addToken(text);
 		}
-		else{
+		else {
 			OpsinRadixTrie trie = symbolTokenNamesDictReversed[index];
 			if(trie == null) {
 				trie = new OpsinRadixTrie();
@@ -352,7 +349,7 @@ class ResourceManager {
 		}
 		
 		if (!reversed) {
-			//reSymbolTokenDict will be populated when the constructor is called for left-right parsing, hence skip for right-left 
+			//reSymbolTokenDict will be populated when the constructor is called for left-to-right parsing, hence skip for reversed parsing 
 			if (reSymbolTokenDict.get(symbol) != null) {
 				throw new RuntimeException(symbol +" is associated with multiple regular expressions. The following expression clashes: " + regex +" This should be resolved by combining regular expressions that map the same symbol" );
 			}
