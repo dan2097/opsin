@@ -85,9 +85,8 @@ public class NomenclatureIntegrationTest {
 	public void testFlavonoids(String name, String expectedInchi) {
 		checkName(name, expectedInchi);
 	}
-
-
-@ParameterizedTest
+	
+	@ParameterizedTest
 	@CsvFileSource(resources = "fragranceNames.txt", delimiter='\t')
 	public void testFragranceNames(String name, String expectedInchi) {
 		checkName(name, expectedInchi);
