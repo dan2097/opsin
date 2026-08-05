@@ -85,6 +85,12 @@ Natural products are treated as cyclic biochemicals. Many natural products suppo
 		<token value="CC1=C(C(CCC1)(C)C)/C=C/C(C)=O" labels="none">beta-ionon</token>
 		<token value="CC=1C(C(CCC1)(C)C)/C=C/C(C)=O" labels="none">alpha-ionon</token>
 		<token value="CC1=C(C(CC=C1)(C)C)C(/C=C/C)=O" labels="none">beta-damascenon|damascenon</token>
+		<token value="CC=CC(=O)C1C(C)=CCCC1(C)C" labels="none">alpha-damascon</token>
+		<token value="C/C=C/C(=O)C1=C(C)CCCC1(C)C" labels="none">beta-damascon</token>
+		<token value="C=C1CCCC(C)(C)C1C(=O)C=CC" labels="none">gamma-damascon</token>
+		<token value="CC=CC(=O)C1C(C)C=CCC1(C)C" labels="none">delta-damascon</token>
+		<token value="CC=CC(=O)C1C(C)CC=CC1(C)C" labels="none">epsilon-damascon</token>
+		<token value="C=C1CCCC(C)(C)C1C=CC(C)=O" labels="none">gamma-ionon</token>
 		<token value="CC1CC(CCCCCCCCCCCC1)=O" labels="none">muscon</token>
 		<token value="C1(CCCCCCC/C=C\CCCCCCC1)=O" labels="none">civeton</token>
 		<token value="CC1=CCC(=C(C)C)CC1" labels="none">delta-terpinen|terpinolen</token>
