@@ -29,15 +29,15 @@ public class CliThreadingTest {
 		PrintStream originalErr = System.err;
 		PrintStream originalOut = System.out;
 		try {
-			System.setErr(new PrintStream(new ByteArrayOutputStream(), true, "UTF-8"));
-			System.setOut(new PrintStream(out, true, "UTF-8"));
+			System.setErr(new PrintStream(new ByteArrayOutputStream(), true, StandardCharsets.UTF_8.name()));
+			System.setOut(new PrintStream(out, true, StandardCharsets.UTF_8.name()));
 			System.setIn(new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8)));
 			Cli.main(args);
 		} finally {
 			System.setErr(originalErr);
 			System.setOut(originalOut);
 		}
-		return out.toString("UTF-8");
+		return out.toString(StandardCharsets.UTF_8.name());
 	}
 
 	private String input() {
