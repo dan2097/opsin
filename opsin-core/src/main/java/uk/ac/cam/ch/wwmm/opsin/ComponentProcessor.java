@@ -34,6 +34,7 @@ class ComponentProcessor {
 	
 	private final FunctionalReplacement functionalReplacement;
 	private final SuffixApplier suffixApplier;
+	private final Map<String, Boolean> suffixAcidGroupIsOnAttachedAtomCache = new HashMap<>();
 	private final BuildState state;
 	
 	//rings that look like HW rings but have other meanings. For the HW like inorganics the true meaning is given
@@ -267,7 +268,7 @@ class ComponentProcessor {
 	 * @throws StructureBuildingException If the group can't be built.
 	 * @throws ComponentGenerationException
 	 */
-	static Fragment resolveGroup(BuildState state, Element group) throws StructureBuildingException, ComponentGenerationException {
+	Fragment resolveGroup(BuildState state, Element group) throws StructureBuildingException, ComponentGenerationException {
 		String groupValue = group.getAttributeValue(VALUE_ATR);
 		String labelsValue = group.getAttributeValue(LABELS_ATR);
 		Fragment thisFrag = state.fragManager.buildSMILES(groupValue, group, labelsValue != null ? labelsValue : NONE_LABELS_VAL);
@@ -278,7 +279,7 @@ class ComponentProcessor {
 
 		setFragmentDefaultInAtomIfSpecified(thisFrag, group);
 		setFragmentFunctionalAtomsIfSpecified(group, thisFrag);
-		applyTraditionalAlkaneNumberingIfAppropriate(group, thisFrag); 
+		applyTraditionalAlkaneNumberingIfAppropriate(state, group, thisFrag); 
 		applyHomologyGroupLabelsIfSpecified(group, thisFrag);
 		if (ELEMENTARYATOM_TYPE_VAL.equals(group.getAttributeValue(TYPE_ATR))) {
 			//these do not have implicit hydrogen e.g. phosphorus is literally just a phosphorus atom
@@ -627,7 +628,7 @@ class ComponentProcessor {
 	}
 
 
-	private static void applyTraditionalAlkaneNumberingIfAppropriate(Element group, Fragment thisFrag)  {
+	private void applyTraditionalAlkaneNumberingIfAppropriate(BuildState state, Element group, Fragment thisFrag)  {
 		String groupType  = group.getAttributeValue(TYPE_ATR);
 		if (groupType.equals(ACIDSTEM_TYPE_VAL)){
 			List<Atom> atomList = thisFrag.getAtomList();
@@ -680,12 +681,16 @@ class ComponentProcessor {
 			Boolean terminalSuffixWithNoSuffixPrefixPresent = false;
 			if (possibleSuffix!=null && possibleSuffix.getAttribute(SUFFIXPREFIX_ATR) == null){
 				String suffixSubType = possibleSuffix.getAttributeValue(SUBTYPE_ATR);
-				//A cycleformer such as lactone, lactam or sultone closes onto the acid carbon,
-				//so that carbon is position 1 and the greek letters start at 2 exactly as they
-				//do for a terminal suffix. Treating them as neither shifted every greek locant
-				//by one, which silently built gamma-decanolactone as a four membered ring.
+				//Greek letters count from the atom next to the acid centre, so whether they start
+				//at locant 2 depends on whether the suffix makes locant 1 the acid centre.
+				//A terminal suffix always does. A cycleformer only does when it hangs the acid
+				//group off locant 1 itself, as lactone/lactam/lactim do; sultone and its
+				//relatives, and the carbo- forms, insert their own acid atom instead, which
+				//leaves locant 1 alpha to it. Treating every cycleformer as terminal turned
+				//gamma-decanosultone into a six membered ring.
 				if (TERMINAL_SUBTYPE_VAL.equals(suffixSubType)
-						|| CYCLEFORMER_SUBTYPE_VAL.equals(suffixSubType)){
+						|| (CYCLEFORMER_SUBTYPE_VAL.equals(suffixSubType)
+								&& suffixPlacesAcidGroupOnAttachedAtom(state, possibleSuffix, thisFrag))){
 					terminalSuffixWithNoSuffixPrefixPresent = true;
 				}
 			}
@@ -707,7 +712,55 @@ class ComponentProcessor {
 			}
 		}
 	}
-	
+
+	/**
+	 * Does this suffix attach its acid group to the atom it bonds to, rather than inserting an
+	 * acid atom of its own?
+	 * The suffix's addgroup SMILES answers this directly: its first atom is the one the parent
+	 * bonds to, so the parent atom is the acid centre exactly when that first atom carries the
+	 * multiply bonded heteroatom. lactone "[*](=O)O[*]" and lactim "[*](O)=N[*]" do; sultone
+	 * "[*]S(=O)(=O)O[*]" and carbolactone "[*]C(=O)O[*]" put a sulfur or carbon of their own
+	 * there instead. Reading it from the rule keeps the two files from drifting apart.
+	 * @param suffix
+	 * @param frag the fragment the suffix will be applied to
+	 * @return
+	 */
+	private boolean suffixPlacesAcidGroupOnAttachedAtom(BuildState state, Element suffix, Fragment frag) {
+		String suffixValue = suffix.getValue();
+		Boolean cached = suffixAcidGroupIsOnAttachedAtomCache.get(suffixValue);
+		if (cached != null) {
+			return cached;
+		}
+		boolean acidGroupIsOnAttachedAtom = false;
+		try {
+			String groupType = frag.getType();
+			String suffixTypeToUse = suffixApplier.isGroupTypeWithSpecificSuffixRules(groupType) ? groupType : STANDARDGROUP_TYPE_VAL;
+			for (SuffixRule suffixRule : suffixApplier.getSuffixRuleTags(suffixTypeToUse, suffixValue, frag.getSubType())) {
+				if (suffixRule.getType() == SuffixRuleType.addgroup) {
+					Fragment suffixFrag = state.fragManager.buildSMILES(suffixRule.getAttributeValue(SUFFIXRULES_SMILES_ATR), SUFFIX_TYPE_VAL, NONE_LABELS_VAL);
+					try {
+						Atom attachedAtom = suffixFrag.getFirstAtom();
+						for (Bond bond : attachedAtom.getBonds()) {
+							if (bond.getOrder() > 1 && bond.getOtherAtom(attachedAtom).getElement() != ChemEl.C) {
+								acidGroupIsOnAttachedAtom = true;
+								break;
+							}
+						}
+					}
+					finally {
+						state.fragManager.removeFragment(suffixFrag);
+					}
+					break;
+				}
+			}
+		}
+		catch (ComponentGenerationException | StructureBuildingException e) {
+			//the suffix will fail to resolve later with a more useful message; leave the locants unshifted
+		}
+		suffixAcidGroupIsOnAttachedAtomCache.put(suffixValue, acidGroupIsOnAttachedAtom);
+		return acidGroupIsOnAttachedAtom;
+	}
+
 	private static void applyHomologyGroupLabelsIfSpecified(Element group, Fragment frag) {
 		String homologyValsStr = group.getAttributeValue(HOMOLOGY_ATR);
 		if (homologyValsStr != null) {
