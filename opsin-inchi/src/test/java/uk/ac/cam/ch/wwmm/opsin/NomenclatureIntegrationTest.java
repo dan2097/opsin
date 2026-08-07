@@ -85,6 +85,13 @@ public class NomenclatureIntegrationTest {
 	public void testFlavonoids(String name, String expectedInchi) {
 		checkName(name, expectedInchi);
 	}
+
+
+@ParameterizedTest
+	@CsvFileSource(resources = "greekLactones.txt", delimiter='\t')
+	public void testGreekLactones(String name, String expectedInchi) {
+		checkName(name, expectedInchi);
+	}
 	
 	@ParameterizedTest
 	@CsvFileSource(resources = "functionalReplacement.txt", delimiter='\t')
