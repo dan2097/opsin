@@ -95,6 +95,35 @@ Natural products are treated as cyclic biochemicals. Many natural products suppo
 		<token value="CC=CC(=O)C1C(C)CC=CC1(C)C" labels="none">epsilon-damascon</token>
 		<token value="CC1CC(CCCCCCCCCCCC1)=O" labels="none">muscon</token>
 		<token value="C1(CCCCCCC/C=C\CCCCCCC1)=O" labels="none">civeton</token>
+<!--Flavour and fragrance usage elides the alkane stem's terminal -n- before -lactone:
+		gamma-decalactone for gamma-decanolactone. OPSIN reads the elided form as the multiplier
+		'deca' rather than a C10 chain, so it does not parse at all. Registering the elided
+		spellings as retained names, rather than teaching 'deca' to be a chain stem, leaves the
+		multiplier meaning intact everywhere else (decahydro, decamethyl). Every structure below is
+		OPSIN's own output for the canonical -anolactone spelling, so the greek ring size is
+		whatever ComponentProcessor already decides and cannot drift from it.-->
+		<token value="C1(CCC(CC)O1)=O" labels="none">gamma-hexalacton</token>
+		<token value="C1(CCC(CCC)O1)=O" labels="none">gamma-heptalacton</token>
+		<token value="C1(CCC(CCCC)O1)=O" labels="none">gamma-octalacton</token>
+		<token value="C1(CCC(CCCCC)O1)=O" labels="none">gamma-nonalacton</token>
+		<token value="C1(CCC(CCCCCC)O1)=O" labels="none">gamma-decalacton</token>
+		<token value="C1(CCC(CCCCCCC)O1)=O" labels="none">gamma-undecalacton</token>
+		<token value="C1(CCC(CCCCCCCC)O1)=O" labels="none">gamma-dodecalacton</token>
+		<token value="C1(CCC(CCCCCCCCC)O1)=O" labels="none">gamma-tridecalacton</token>
+		<token value="C1(CCC(CCCCCCCCCC)O1)=O" labels="none">gamma-tetradecalacton</token>
+		<token value="C1(CCC(CCCCCCCCCCC)O1)=O" labels="none">gamma-pentadecalacton</token>
+		<token value="C1(CCC(CCCCCCCCCCCC)O1)=O" labels="none">gamma-hexadecalacton</token>
+		<token value="C1(CCCC(C)O1)=O" labels="none">delta-hexalacton</token>
+		<token value="C1(CCCC(CC)O1)=O" labels="none">delta-heptalacton</token>
+		<token value="C1(CCCC(CCC)O1)=O" labels="none">delta-octalacton</token>
+		<token value="C1(CCCC(CCCC)O1)=O" labels="none">delta-nonalacton</token>
+		<token value="C1(CCCC(CCCCC)O1)=O" labels="none">delta-decalacton</token>
+		<token value="C1(CCCC(CCCCCC)O1)=O" labels="none">delta-undecalacton</token>
+		<token value="C1(CCCC(CCCCCCC)O1)=O" labels="none">delta-dodecalacton</token>
+		<token value="C1(CCCC(CCCCCCCC)O1)=O" labels="none">delta-tridecalacton</token>
+		<token value="C1(CCCC(CCCCCCCCC)O1)=O" labels="none">delta-tetradecalacton</token>
+		<token value="C1(CCCC(CCCCCCCCCC)O1)=O" labels="none">delta-pentadecalacton</token>
+		<token value="C1(CCCC(CCCCCCCCCCC)O1)=O" labels="none">delta-hexadecalacton</token>
 
 <!--systematic carotenes, some also have trivial names-->
 		<token value="C[C@@]1(C)CCCC(C)=C1/C=C/C(C)=C/C=C/C(C)=C/C=C/C=C(C)/C=C/C=C(C)/C=C/C2=C(C)CCC[C@]2(C)C" labels="16/1/17/2/3/4/5/18/6/7/8/9/19/10/11/12/13/20/14/15/15'/14'/13'/20'/12'/11'/10'/9'/19'/8'/7'/6'/5'/18'/4'/3'/2/1'/17'/16'">beta,beta-caroten|beta-caroten|all-trans-beta-caroten</token>
