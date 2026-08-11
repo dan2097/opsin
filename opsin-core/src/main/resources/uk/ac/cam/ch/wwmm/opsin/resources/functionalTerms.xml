@@ -50,6 +50,10 @@
 	</tokenList>
 
 	<tokenList tagname="functionalGroup" type="acidReplacingFunctionalGroup" subType="none" symbol="±">
+<!--"benzoic aldehyde" / "cinnamic aldehyde": the classical functional-class form still used on
+		fragrance and flavour specifications. The acid's hydroxy is replaced by hydrogen, which is the
+		same acid-replacing mechanism as amide and hydrazide, differing only in the replacing fragment.-->
+		<token value="[H]">aldehyde|aldehyd</token>
 		<token value="[NH2-]">amide|amid</token>
 		<token value="Nc1ccccc1" labels="/1/2,ortho/3,meta/4,para/5/6">anilide|anilid</token>
 		<token value="N1CCC1" labels="1/2/3/4">azetidide|azetidid</token>
