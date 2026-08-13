@@ -280,7 +280,7 @@
 		<token value="c1(O)c(O)c(O)ccc1" labels="1//2,ortho//3,meta//4,para/5/6">pyrogallol</token>
 		<token value="[nH]1cccc1" labels="1/2/3/4/5">pyrrol</token>
 		<token value="C1CCN2CCCC12" labels="1/2/3/4/5/6/7/7a">pyrrolizidin</token>
-		<token value="[cH2]1ccn2cccc12" labels="1/2/3/4/5/6/7/7a">pyrrolizin</token>
+		<token value="[cH2]1ccn2cccc12" labels="1/2/3/4/5/6/7/7a,8">pyrrolizin</token>
 		<token value="N1CCCC1" labels="1/2/3/4/5">pyrrolidin</token>
 		<token value="N1CCCC1" labels="1/2/3/4/5" addGroup="=O locant 2" frontLocantsExpected="2,3,4,5">pyrrolidon</token>
 		<token value="N1CCCC1" labels="1/2/3/4/5" addBond="2 defaultLocant 2" frontLocantsExpected="1,2,3,4,5">pyrrolin</token>

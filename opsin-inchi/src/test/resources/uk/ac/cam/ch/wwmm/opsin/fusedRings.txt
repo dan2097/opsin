@@ -20,3 +20,5 @@ cyclopenta[1,2-b:5,1-b']bis[1,4]oxathiine	InChI=1S/C9H6O2S2/c1-2-8-9(11-4-5-12-8
 1,4-(ethanediylidene)cyclohexane	InChI=1S/C8H10/c1-2-8-5-3-7(1)4-6-8/h1-2H,3-6H2
 1,4-azenocyclohexane	InChI=1S/C6H9N/c1-2-6-4-3-5(1)7-6/h5H,1-4H2
 2H-1,4-azenobenzene	InChI=1S/C6H5N/c1-2-6-4-3-5(1)7-6/h1-3H,4H2
+2-(1,2,3,5,6,7-hexahydropyrrolizin-8-ylmethoxy)pyrido[4,3-d]pyrimidine	InChI=1S/C15H18N4O/c1-4-15(5-2-8-19(15)7-1)11-20-14-17-10-12-9-16-6-3-13(12)18-14/h3,6,9-10H,1-2,4-5,7-8,11H2
+2-(1,2,3,5,6,7-hexahydropyrrolizin-7a-ylmethoxy)pyrido[4,3-d]pyrimidine	InChI=1S/C15H18N4O/c1-4-15(5-2-8-19(15)7-1)11-20-14-17-10-12-9-16-6-3-13(12)18-14/h3,6,9-10H,1-2,4-5,7-8,11H2

@@ -125,7 +125,7 @@
 		<token value="n1ccccc1" labels="1/2/3/4/5/6">pyridino|pyrido</token>
 		<token value="n1cnccc1" labels="1/2/3/4/5/6">pyrimidino|pyrimido</token>
 		<token value="C1CCN2CCCC12" labels="1/2/3/4/5/6/7/7a">pyrrolizidino</token>
-		<token value="[cH2]1ccn2cccc12" labels="1/2/3/4/5/6/7/7a">pyrrolizino</token>
+		<token value="[cH2]1ccn2cccc12" labels="1/2/3/4/5/6/7/7a,8">pyrrolizino</token>
 		<token value="[nH]1cccc1" labels="1/2/3/4/5">pyrrolo</token>
 		<token value="n1cncc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a">quinazolino</token>
 		<token value="c1cccc2nc3c4ccccc4nc3cc12" labels="1/2/3/4/4a/5/5a/5b/6/7/8/9/9a/10/10a/11/11a">quindolino</token>
