@@ -215,10 +215,10 @@ class ComponentProcessor {
 				assignElementSymbolLocants(subOrRoot);
 				processRingAssemblies(subOrRoot);
 				processPolyCyclicSpiroNomenclature(subOrRoot);
+				checkRingComponentsWereCombined(subOrRoot);
 			}
 
 			for (Element subOrRoot : substituentsAndRoot) {
-				checkRingComponentsWereCombined(subOrRoot);
 				applyLambdaConvention(subOrRoot);
 				handleMultiRadicals(subOrRoot);
 			}
