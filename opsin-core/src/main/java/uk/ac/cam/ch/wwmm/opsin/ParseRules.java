@@ -105,7 +105,6 @@ public class ParseRules {
 		int posInNameOfLastSuccessfulAnnotations = 0;
 		List<AnnotatorState> successfulAnnotations = new ArrayList<>();
 		AnnotatorState longestAnnotation = initialState;//this is the longest annotation. It does not necessarily end in an accept state
-		int stateSymbolsSize = stateSymbols.length;
 		while (!asStack.isEmpty()) {
 			AnnotatorState as = asStack.removeLast();//depth-first avoids pathological memory consumption if parsing ambiguity is encountered
 			int posInName = as.getPosInName();
