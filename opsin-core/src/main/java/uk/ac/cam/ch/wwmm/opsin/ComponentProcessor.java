@@ -2728,7 +2728,7 @@ class ComponentProcessor {
 		for (Element group : groups) {
 			String groupValue =group.getValue();
 			if (groupValue.equals("porphyrin")|| groupValue.equals("porphin")){
-				//the indicated hydrogen is usually written as a hydro prefix e.g. 21,23-dihydroporphyrin
+				//Look for cases where porphyrin nitrogens have hydrogen indicated e.g. 21H,23H-porphyrin; 21,23-dihydroporphyrin
 				List<Element> hydrogenAddingEls = OpsinTools.getChildElementsWithTagNames(group.getParent(), new String[]{INDICATEDHYDROGEN_EL, HYDRO_EL});
 				boolean implicitHydrogenExplicitlySet =false;
 				for (Element hydrogenAddingEl : hydrogenAddingEls) {
