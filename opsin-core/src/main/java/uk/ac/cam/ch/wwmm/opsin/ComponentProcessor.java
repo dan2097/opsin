@@ -2728,7 +2728,8 @@ class ComponentProcessor {
 		for (Element group : groups) {
 			String groupValue =group.getValue();
 			if (groupValue.equals("porphyrin")|| groupValue.equals("porphin")){
-				List<Element> hydrogenAddingEls = group.getParent().getChildElements(INDICATEDHYDROGEN_EL);
+				//the indicated hydrogen is usually written as a hydro prefix e.g. 21,23-dihydroporphyrin
+				List<Element> hydrogenAddingEls = OpsinTools.getChildElementsWithTagNames(group.getParent(), new String[]{INDICATEDHYDROGEN_EL, HYDRO_EL});
 				boolean implicitHydrogenExplicitlySet =false;
 				for (Element hydrogenAddingEl : hydrogenAddingEls) {
 					String locant = hydrogenAddingEl.getAttributeValue(LOCANT_ATR);
