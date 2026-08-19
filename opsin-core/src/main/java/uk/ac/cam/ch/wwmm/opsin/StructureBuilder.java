@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
@@ -61,8 +62,9 @@ class StructureBuilder {
 		processOxidationNumbers(groupElements);
 		state.fragManager.convertSpareValenciesToDoubleBonds();
 		state.fragManager.checkValencies();
-		
+
 		manipulateStoichiometry(molecule, wordRules);
+		rebondCounterions();
 		
 		state.fragManager.makeHydrogensExplicit();
 
@@ -87,6 +89,64 @@ class StructureBuilder {
 		return uniFrag;
 	}
 
+	/* JWM - ideally to be removed */
+	private void rebondCounterions() {
+		int numPos = 0;
+		int numNeg = 0;
+		List<Atom> posAtoms = new ArrayList<>();
+		List<Atom> negAtoms = new ArrayList<>();
+		for (Fragment f : state.fragManager.getFragments()) {
+			for (Atom atom : f.getAtomList()) {
+				if (atom.getCharge() > 0) {
+					numPos++;
+					for (int i=0; i<atom.getCharge(); i++)
+						posAtoms.add(atom);
+				}
+				else if (atom.getCharge() < 0) {
+					numNeg++;
+					for (int i=0; i>atom.getCharge(); i--)
+						negAtoms.add(atom);
+				}
+			}
+		}
+
+
+		boolean isOkay = posAtoms.size() == negAtoms.size() &&
+						 (numPos == posAtoms.size() || numPos == 1) &&
+						 (numNeg == negAtoms.size() || numNeg == 1);
+
+		if (!isOkay)
+			return;
+
+		Set<Fragment> uniqueFrags = new HashSet<>();
+		for (Atom a : posAtoms) {
+			if (a.getImplicitHydrogenAllowed())
+				return;
+			uniqueFrags.add(a.getFrag());
+		}
+		for (Atom a : negAtoms) {
+			if (uniqueFrags.contains(a.getFrag()))
+				return;
+		}
+
+		for (int i=0; i<posAtoms.size(); i++) {
+			Atom posAtom = posAtoms.get(i);
+			Atom negAtom = negAtoms.get(i);
+
+			// leave as ionic
+			if (!state.n2sConfig.isForceCovalent() &&
+				!FragmentTools.isCovalent(posAtom.getElement(), negAtom.getElement()))
+				continue;
+
+			Bond bond = state.fragManager.getInterFragmentBond(posAtom, negAtom);
+			if (bond != null)
+				bond.setOrder(bond.getOrder()+1);
+			else
+				state.fragManager.createBond(posAtom, negAtom, 1);
+			posAtom.setCharge(posAtom.getCharge()-1);
+			negAtom.setCharge(negAtom.getCharge()+1);
+		}
+	}
 
 	private void processWordRuleChildrenThenRule(Element wordRule) throws StructureBuildingException {
 		List<Element> wordRuleChildren = wordRule.getChildElements(WORDRULE_EL);
@@ -192,7 +252,7 @@ class StructureBuilder {
 		BuildResults substituentsBr = new BuildResults();
 		List<BuildResults> ateGroups = new ArrayList<>();
 		Map<BuildResults, String> buildResultsToLocant = new HashMap<>();//typically locant will be null
-		
+
 		for (Element word : words) {
 			resolveWordOrBracket(state, word);
 			BuildResults br = new BuildResults(word);
@@ -271,10 +331,17 @@ class StructureBuilder {
 				ateBr.removeFunctionalAtom(0);
 			}
 			String locant = buildResultsToLocant.get(ateBr);
-			if (locant ==null){//typical case
+			if (locant ==null ){ //typical case
 				Atom atomOnSubstituentToUse = getOutAtomTakingIntoAccountWhetherSetExplicitly(substituentsBr, 0);
-				state.fragManager.createBond(ateAtom, atomOnSubstituentToUse, 1);
-				substituentsBr.removeOutAtom(0);
+				if (state.n2sConfig.isForceCovalent() ||
+					FragmentTools.isCovalent(atomOnSubstituentToUse.getElement(), ateAtom.getElement())) {
+					state.fragManager.createBond(ateAtom, atomOnSubstituentToUse, 1);
+					substituentsBr.removeOutAtom(0);
+					ateAtom.neutraliseCharge();
+				} else {
+					atomOnSubstituentToUse.setCharge(atomOnSubstituentToUse.getCharge()+1);
+					substituentsBr.removeOutAtom(0);
+				}
 			}
 			else{
 				Integer outAtomPosition =null;
@@ -288,10 +355,16 @@ class StructureBuilder {
 					throw new StructureBuildingException("Unable to find substituent with locant: " + locant + " to form ester!");
 				}
 				Atom atomOnSubstituentToUse = substituentsBr.getOutAtom(outAtomPosition).getAtom();
-				state.fragManager.createBond(ateAtom, atomOnSubstituentToUse, 1);
-				substituentsBr.removeOutAtom(outAtomPosition);
+				if (state.n2sConfig.isForceCovalent() ||
+					FragmentTools.isCovalent(atomOnSubstituentToUse.getElement(), ateAtom.getElement())) {
+					state.fragManager.createBond(ateAtom, atomOnSubstituentToUse, 1);
+					substituentsBr.removeOutAtom(outAtomPosition);
+					ateAtom.neutraliseCharge();
+				} else {
+					atomOnSubstituentToUse.setCharge(atomOnSubstituentToUse.getCharge()+1);
+					substituentsBr.removeOutAtom(0);
+				}
 			}
-			ateAtom.neutraliseCharge();
 		}
 	}
 

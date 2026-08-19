@@ -235,8 +235,9 @@ class WordRules {
 	 * @param componentRatios 
 	 * @throws ParsingException
 	 */
-	void groupWordsIntoWordRules(Element moleculeEl, NameToStructureConfig n2sConfig, boolean allowSpaceRemoval, Integer[] componentRatios) throws ParsingException {
-		WordRulesInstance instance = new WordRulesInstance(moleculeEl, n2sConfig, allowSpaceRemoval, componentRatios);
+	void groupWordsIntoWordRules(Element moleculeEl, NameToStructureConfig n2sConfig, boolean allowSpaceRemoval,
+															 boolean forceCovalent, Integer[] componentRatios) throws ParsingException {
+		WordRulesInstance instance = new WordRulesInstance(moleculeEl, n2sConfig, allowSpaceRemoval, forceCovalent, componentRatios);
 		List<Element> wordEls = moleculeEl.getChildElements(WORD_EL);
 		//note that multiple words in wordEls may be later replaced by a wordRule element
 		for (int i = 0; i <wordEls.size(); i++) {
@@ -257,11 +258,13 @@ class WordRules {
 		private final boolean allowRadicals;
 		private final boolean allowSpaceRemoval;
 		private final Integer expectedNumOfComponents;
+		private final boolean forceCovalent;
 		
-		WordRulesInstance(Element moleculeEl, NameToStructureConfig n2sConfig, boolean allowSpaceRemoval, Integer[] componentRatios) {
+		WordRulesInstance(Element moleculeEl, NameToStructureConfig n2sConfig, boolean allowSpaceRemoval, boolean forceCovalent, Integer[] componentRatios) {
 			this.moleculeEl = moleculeEl;
 			this.allowRadicals = n2sConfig.isAllowRadicals();
 			this.allowSpaceRemoval = allowSpaceRemoval;
+			this.forceCovalent = forceCovalent;
 			this.expectedNumOfComponents = componentRatios != null ? componentRatios.length : null;
 		}
 		
@@ -394,7 +397,8 @@ class WordRules {
 								}
 								Element oxideWord = wordEls.get(i + 1);
 								ChemEl chemEl2 = getChemElFromWordWithFunctionalGroup(oxideWord);
-								if (!FragmentTools.isCovalent(chemEl1, chemEl2) || chemEl1 == ChemEl.Ag){
+
+								if (!forceCovalent && !FragmentTools.isCovalent(chemEl1, chemEl2) || chemEl1 == ChemEl.Ag){
 									Element oxideGroup = convertFunctionalGroupIntoGroup(oxideWord);
 									setOxideStructureAppropriately(oxideGroup, elementaryAtom);
 									applySimpleWordRule(wordEls, indexOfFirstWord, possibleElementaryAtomContainingWord);
@@ -405,7 +409,8 @@ class WordRules {
 								for (int j = 1; j < wordsInWordRule; j++) {
 									Element functionalGroup = wordEls.get(i + j);
 									ChemEl chemEl2 = getChemElFromWordWithFunctionalGroup(functionalGroup);
-									if (!FragmentTools.isCovalent(chemEl1, chemEl2)) {//use separate word rules for ionic components
+									// use separate word rules for ionic components (unless forceCovalent)
+									if (!forceCovalent && !FragmentTools.isCovalent(chemEl1, chemEl2)) {
 										boolean specialCaseCovalency = false;
 										if (chemEl2.isHalogen() && wordsInWordRule == 2) {
 											switch (chemEl1) {
