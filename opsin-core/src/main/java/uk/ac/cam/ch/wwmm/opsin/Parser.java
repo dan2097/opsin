@@ -147,7 +147,8 @@ class Parser {
 			 * <wr><wr>Carbonyl cyanide</wr> m-chlorophenyl hydrazone </wr>
 			 */
 			try {
-				wordRules.groupWordsIntoWordRules(moleculeEl, n2sConfig, allowSpaceRemoval, componentRatios);
+				wordRules.groupWordsIntoWordRules(moleculeEl, n2sConfig, allowSpaceRemoval, n2sConfig.isForceCovalent(),
+																					componentRatios);
 			} catch (ParsingException e) {
 				if(LOG.isDebugEnabled()) {
 					LOG.debug(e.getMessage(), e);
