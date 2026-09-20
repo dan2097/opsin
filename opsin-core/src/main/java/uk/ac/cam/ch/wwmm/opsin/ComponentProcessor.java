@@ -215,6 +215,7 @@ class ComponentProcessor {
 				assignElementSymbolLocants(subOrRoot);
 				processRingAssemblies(subOrRoot);
 				processPolyCyclicSpiroNomenclature(subOrRoot);
+				checkRingComponentsWereCombined(subOrRoot);
 			}
 
 			for (Element subOrRoot : substituentsAndRoot) {
@@ -267,7 +268,7 @@ class ComponentProcessor {
 	 * @throws StructureBuildingException If the group can't be built.
 	 * @throws ComponentGenerationException
 	 */
-	static Fragment resolveGroup(BuildState state, Element group) throws StructureBuildingException, ComponentGenerationException {
+	Fragment resolveGroup(BuildState state, Element group) throws StructureBuildingException, ComponentGenerationException {
 		String groupValue = group.getAttributeValue(VALUE_ATR);
 		String labelsValue = group.getAttributeValue(LABELS_ATR);
 		Fragment thisFrag = state.fragManager.buildSMILES(groupValue, group, labelsValue != null ? labelsValue : NONE_LABELS_VAL);
@@ -278,7 +279,7 @@ class ComponentProcessor {
 
 		setFragmentDefaultInAtomIfSpecified(thisFrag, group);
 		setFragmentFunctionalAtomsIfSpecified(group, thisFrag);
-		applyTraditionalAlkaneNumberingIfAppropriate(group, thisFrag); 
+		applyTraditionalAlkaneNumberingIfAppropriate(state, group, thisFrag); 
 		applyHomologyGroupLabelsIfSpecified(group, thisFrag);
 		if (ELEMENTARYATOM_TYPE_VAL.equals(group.getAttributeValue(TYPE_ATR))) {
 			//these do not have implicit hydrogen e.g. phosphorus is literally just a phosphorus atom
@@ -627,7 +628,7 @@ class ComponentProcessor {
 	}
 
 
-	private static void applyTraditionalAlkaneNumberingIfAppropriate(Element group, Fragment thisFrag)  {
+	private void applyTraditionalAlkaneNumberingIfAppropriate(BuildState state, Element group, Fragment thisFrag)  {
 		String groupType  = group.getAttributeValue(TYPE_ATR);
 		if (groupType.equals(ACIDSTEM_TYPE_VAL)){
 			List<Atom> atomList = thisFrag.getAtomList();
@@ -678,8 +679,20 @@ class ComponentProcessor {
 			}
 			Element possibleSuffix = OpsinTools.getNextSibling(group, SUFFIX_EL);
 			Boolean terminalSuffixWithNoSuffixPrefixPresent = false;
-			if (possibleSuffix!=null && TERMINAL_SUBTYPE_VAL.equals(possibleSuffix.getAttributeValue(SUBTYPE_ATR)) && possibleSuffix.getAttribute(SUFFIXPREFIX_ATR) == null){
-				terminalSuffixWithNoSuffixPrefixPresent = true;
+			if (possibleSuffix!=null && possibleSuffix.getAttribute(SUFFIXPREFIX_ATR) == null){
+				String suffixSubType = possibleSuffix.getAttributeValue(SUBTYPE_ATR);
+				//Greek letters count from the atom next to the acid centre, so whether they start
+				//at locant 2 depends on whether the suffix makes locant 1 the acid centre.
+				//A terminal suffix always does. A cycleformer only does when it hangs the acid
+				//group off locant 1 itself, as lactone/lactam/lactim do; sultone and its
+				//relatives, and the carbo- forms, insert their own acid atom instead, which
+				//leaves locant 1 alpha to it. Treating every cycleformer as terminal turned
+				//gamma-decanosultone into a six membered ring.
+				if (TERMINAL_SUBTYPE_VAL.equals(suffixSubType)
+						|| (CYCLEFORMER_SUBTYPE_VAL.equals(suffixSubType)
+								&& suffixPlacesAcidGroupOnAttachedAtom(state, possibleSuffix, thisFrag))){
+					terminalSuffixWithNoSuffixPrefixPresent = true;
+				}
 			}
 			for (Atom atom : atomList) {
 				String firstLocant = atom.getFirstLocant();
@@ -699,7 +712,47 @@ class ComponentProcessor {
 			}
 		}
 	}
-	
+
+	/**
+	 * Does this suffix attach its acid group to the atom it bonds to, rather than inserting an
+	 * acid atom of its own?
+	 * The suffix's addgroup SMILES answers this directly: its first atom is the one the parent
+	 * bonds to, so the parent atom is the acid centre exactly when that first atom carries the
+	 * multiply bonded heteroatom. lactone "[*](=O)O[*]" and lactim "[*](O)=N[*]" do; sultone
+	 * "[*]S(=O)(=O)O[*]" and carbolactone "[*]C(=O)O[*]" put a sulfur or carbon of their own
+	 * there instead. Reading it from the rule keeps the two files from drifting apart.
+	 * @param suffix
+	 * @param frag the fragment the suffix will be applied to
+	 * @return
+	 */
+	private boolean suffixPlacesAcidGroupOnAttachedAtom(BuildState state, Element suffix, Fragment frag) {
+		try {
+			String groupType = frag.getType();
+			String suffixTypeToUse = suffixApplier.isGroupTypeWithSpecificSuffixRules(groupType) ? groupType : STANDARDGROUP_TYPE_VAL;
+			for (SuffixRule suffixRule : suffixApplier.getSuffixRuleTags(suffixTypeToUse, suffix.getValue(), frag.getSubType())) {
+				if (suffixRule.getType() == SuffixRuleType.addgroup) {
+					Fragment suffixFrag = state.fragManager.buildSMILES(suffixRule.getAttributeValue(SUFFIXRULES_SMILES_ATR), SUFFIX_TYPE_VAL, NONE_LABELS_VAL);
+					try {
+						Atom attachedAtom = suffixFrag.getFirstAtom();
+						for (Bond bond : attachedAtom.getBonds()) {
+							if (bond.getOrder() > 1 && bond.getOtherAtom(attachedAtom).getElement() != ChemEl.C) {
+								return true;
+							}
+						}
+					}
+					finally {
+						state.fragManager.removeFragment(suffixFrag);
+					}
+					break;
+				}
+			}
+		}
+		catch (ComponentGenerationException | StructureBuildingException e) {
+			//the suffix will fail to resolve later with a more useful message; leave the locants unshifted
+		}
+		return false;
+	}
+
 	private static void applyHomologyGroupLabelsIfSpecified(Element group, Fragment frag) {
 		String homologyValsStr = group.getAttributeValue(HOMOLOGY_ATR);
 		if (homologyValsStr != null) {
@@ -2727,7 +2780,8 @@ class ComponentProcessor {
 		for (Element group : groups) {
 			String groupValue =group.getValue();
 			if (groupValue.equals("porphyrin")|| groupValue.equals("porphin")){
-				List<Element> hydrogenAddingEls = group.getParent().getChildElements(INDICATEDHYDROGEN_EL);
+				//Look for cases where porphyrin nitrogens have hydrogen indicated e.g. 21H,23H-porphyrin; 21,23-dihydroporphyrin
+				List<Element> hydrogenAddingEls = OpsinTools.getChildElementsWithTagNames(group.getParent(), new String[]{INDICATEDHYDROGEN_EL, HYDRO_EL});
 				boolean implicitHydrogenExplicitlySet =false;
 				for (Element hydrogenAddingEl : hydrogenAddingEls) {
 					String locant = hydrogenAddingEl.getAttributeValue(LOCANT_ATR);
@@ -3944,6 +3998,38 @@ class ComponentProcessor {
 		}
 	}
 
+
+	/**
+	 * Checks that the ring components of a substituent/root have all been combined into a single group
+	 * e.g. by fusion nomenclature.
+	 * Something like pyrido[2,3-b](513C)pyrazine leaves the components uncombined as the bracketed
+	 * isotope specification/locant between them stops them being recognised as one fused ring system.
+	 * Subsequent processing assumes that a substituent/root contains a single group, so such a name must be
+	 * rejected here rather than being allowed to cause an internal error later on.
+	 * @param subOrRoot
+	 * @throws ComponentGenerationException
+	 */
+	private void checkRingComponentsWereCombined(Element subOrRoot) throws ComponentGenerationException {
+		List<Element> groups = subOrRoot.getChildElements(GROUP_EL);
+		if (groups.size() > 1) {
+			Element firstGroup = groups.get(0);
+			Element lastGroup = groups.get(groups.size() - 1);
+			StringBuilder message = new StringBuilder();
+			message.append("Unable to combine ring components: ");
+			message.append(firstGroup.getValue());
+			message.append(" and ");
+			message.append(lastGroup.getValue());
+			Element unexpectedEl = OpsinTools.getNextSiblingIgnoringCertainElements(firstGroup, new String[]{MULTIPLIER_EL, FUSION_EL});
+			if (unexpectedEl != null && !unexpectedEl.getName().equals(GROUP_EL)) {
+				message.append(", unexpected ");
+				message.append(unexpectedEl.getName());
+				message.append(": ");
+				message.append(unexpectedEl.getValue());
+				message.append(" was found between them");
+			}
+			throw new ComponentGenerationException(message.toString());
+		}
+	}
 
 	/**
 	 * Uses the number of outAtoms that are present to assign the number of outAtoms on substituents that can have a variable number of outAtoms

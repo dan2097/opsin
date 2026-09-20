@@ -168,6 +168,7 @@ For these groups the charge on the first atom will be increased by 1 if they are
 		<token value="[N-]=C=[Se]">isoselenocyanate|isoselenocyanat</token>
 		<token value="[N-]=C=[Te]">isotellurocyanate|isotellurocyanat</token>
 		<token value="[N-]=C=S">isothiocyanate|isothiocyanat</token>
+		<token value="[O-]OC#N">peroxycyanate|peroxycyanat</token>
 		<token value="[Se-]C#N">selenocyanate|selenocyanat</token>
 		<token value="[Se-][N+]#[C-]">selenofulminate|selenofulminat</token>
 		<token value="[Te-]C#N">tellurocyanate|tellurocyanat</token>
