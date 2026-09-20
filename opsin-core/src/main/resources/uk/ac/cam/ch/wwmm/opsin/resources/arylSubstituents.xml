@@ -106,7 +106,7 @@ Hence for cases that are unambiguous they are included here e.g. NOT indyl (coul
 		<token value="n1ncccc1" labels="1/2/3/4/5/6">pyridaz</token>
 		<token value="n1ccccc1" labels="1/2,ortho/3,meta/4,para/5/6" frontLocantsExpected="2,3,4">pyrid</token>
 		<token value="n1cnccc1" labels="1/2/3/4/5/6">pyrimid</token>
-		<token value="[cH2]1ccn2cccc12" labels="1/2/3/4/5/6/7/7a">pyrroliz</token>
+		<token value="[cH2]1ccn2cccc12" labels="1/2/3/4/5/6/7/7a,8">pyrroliz</token>
 		<token value="N1CCCC1" labels="1/2/3/4/5">pyrrolid</token>
 		<token value="n1cncc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a">quinazol</token>
 		<token value="n1cccc2ccccc12" labels="1/2/3/4/4a/5/6/7/8/8a" frontLocantsExpected="2,3,4,5,6,7,8">quinol</token>
