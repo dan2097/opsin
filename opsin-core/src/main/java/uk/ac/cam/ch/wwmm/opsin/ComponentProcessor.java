@@ -215,6 +215,7 @@ class ComponentProcessor {
 				assignElementSymbolLocants(subOrRoot);
 				processRingAssemblies(subOrRoot);
 				processPolyCyclicSpiroNomenclature(subOrRoot);
+				checkRingComponentsWereCombined(subOrRoot);
 			}
 
 			for (Element subOrRoot : substituentsAndRoot) {
@@ -2779,7 +2780,8 @@ class ComponentProcessor {
 		for (Element group : groups) {
 			String groupValue =group.getValue();
 			if (groupValue.equals("porphyrin")|| groupValue.equals("porphin")){
-				List<Element> hydrogenAddingEls = group.getParent().getChildElements(INDICATEDHYDROGEN_EL);
+				//Look for cases where porphyrin nitrogens have hydrogen indicated e.g. 21H,23H-porphyrin; 21,23-dihydroporphyrin
+				List<Element> hydrogenAddingEls = OpsinTools.getChildElementsWithTagNames(group.getParent(), new String[]{INDICATEDHYDROGEN_EL, HYDRO_EL});
 				boolean implicitHydrogenExplicitlySet =false;
 				for (Element hydrogenAddingEl : hydrogenAddingEls) {
 					String locant = hydrogenAddingEl.getAttributeValue(LOCANT_ATR);
@@ -3996,6 +3998,38 @@ class ComponentProcessor {
 		}
 	}
 
+
+	/**
+	 * Checks that the ring components of a substituent/root have all been combined into a single group
+	 * e.g. by fusion nomenclature.
+	 * Something like pyrido[2,3-b](513C)pyrazine leaves the components uncombined as the bracketed
+	 * isotope specification/locant between them stops them being recognised as one fused ring system.
+	 * Subsequent processing assumes that a substituent/root contains a single group, so such a name must be
+	 * rejected here rather than being allowed to cause an internal error later on.
+	 * @param subOrRoot
+	 * @throws ComponentGenerationException
+	 */
+	private void checkRingComponentsWereCombined(Element subOrRoot) throws ComponentGenerationException {
+		List<Element> groups = subOrRoot.getChildElements(GROUP_EL);
+		if (groups.size() > 1) {
+			Element firstGroup = groups.get(0);
+			Element lastGroup = groups.get(groups.size() - 1);
+			StringBuilder message = new StringBuilder();
+			message.append("Unable to combine ring components: ");
+			message.append(firstGroup.getValue());
+			message.append(" and ");
+			message.append(lastGroup.getValue());
+			Element unexpectedEl = OpsinTools.getNextSiblingIgnoringCertainElements(firstGroup, new String[]{MULTIPLIER_EL, FUSION_EL});
+			if (unexpectedEl != null && !unexpectedEl.getName().equals(GROUP_EL)) {
+				message.append(", unexpected ");
+				message.append(unexpectedEl.getName());
+				message.append(": ");
+				message.append(unexpectedEl.getValue());
+				message.append(" was found between them");
+			}
+			throw new ComponentGenerationException(message.toString());
+		}
+	}
 
 	/**
 	 * Uses the number of outAtoms that are present to assign the number of outAtoms on substituents that can have a variable number of outAtoms

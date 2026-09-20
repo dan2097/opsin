@@ -11,6 +11,13 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayDeque;
+import java.util.Deque;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
@@ -77,19 +84,20 @@ public class Cli {
 		try {
 			String outputType = cmd.getOptionValue("o", "smi");
 			boolean outputName = cmd.hasOption("n");
+			int threads = parseThreadCount(cmd);
 			if (outputType.equalsIgnoreCase("cml")) {
 				interactiveCmlOutput(input, output, n2sconfig);
 			} else if (outputType.equalsIgnoreCase("smi") || outputType.equalsIgnoreCase("smiles")) {
-				interactiveSmilesOutput(input, output, n2sconfig, false, outputName);
+				interactiveSmilesOutput(input, output, n2sconfig, false, outputName, threads);
 			} else if (outputType.equalsIgnoreCase("inchi")) {
-				interactiveInchiOutput(input, output, n2sconfig, InchiType.inchiWithFixedH, outputName);
+				interactiveInchiOutput(input, output, n2sconfig, InchiType.inchiWithFixedH, outputName, threads);
 			} else if (outputType.equalsIgnoreCase("stdinchi")) {
-				interactiveInchiOutput(input, output, n2sconfig, InchiType.stdInchi, outputName);
+				interactiveInchiOutput(input, output, n2sconfig, InchiType.stdInchi, outputName, threads);
 			} else if (outputType.equalsIgnoreCase("stdinchikey")) {
-				interactiveInchiOutput(input, output, n2sconfig, InchiType.stdInchiKey, outputName);
+				interactiveInchiOutput(input, output, n2sconfig, InchiType.stdInchiKey, outputName, threads);
 			} else if (outputType.equalsIgnoreCase("extendedsmi") || outputType.equalsIgnoreCase("extendedsmiles")
 					|| outputType.equalsIgnoreCase("cxsmi") || outputType.equalsIgnoreCase("cxsmiles")) {
-				interactiveSmilesOutput(input, output, n2sconfig, true, outputName);
+				interactiveSmilesOutput(input, output, n2sconfig, true, outputName, threads);
 			} else {
 				System.err.println("Unrecognised output format: " + outputType);
 				System.err.println(
@@ -147,6 +155,13 @@ public class Cli {
 		options.addOption("s", "allowUninterpretableStereo", false,
 				"Allows stereochemistry uninterpretable by OPSIN to be ignored");
 		options.addOption("w", "wildcardRadicals", false, "Radicals are output as wildcard atoms");
+		Builder threadsBuilder = Option.builder("t");
+		threadsBuilder.longOpt("threads");
+		threadsBuilder.hasArg();
+		threadsBuilder.argName("count");
+		threadsBuilder.desc("Number of names to interpret concurrently (default 1)." + OpsinTools.NEWLINE
+				+ "Output order always matches input order. Use 0 for one thread per available processor.");
+		options.addOption(threadsBuilder.build());
 		return options;
 	}
 
@@ -196,69 +211,164 @@ public class Cli {
 		writer.close();
 	}
 
-	private static void interactiveSmilesOutput(InputStream input, OutputStream out, NameToStructureConfig n2sconfig, boolean extendedSmiles, boolean outputName) throws IOException {
-		NameToStructure nts = NameToStructure.getInstance();
-		BufferedReader inputReader = new BufferedReader(new InputStreamReader(input, StandardCharsets.UTF_8));
-		BufferedWriter outputWriter = new BufferedWriter(new OutputStreamWriter(out, StandardCharsets.UTF_8));
-		String line;
-		while ((line = inputReader.readLine()) != null) {
-			int splitPoint = line.indexOf('\t');
-			String name = splitPoint >= 0 ? line.substring(0, splitPoint) : line;
-			OpsinResult result = nts.parseChemicalName(name, n2sconfig);
-			String output = extendedSmiles ? result.getExtendedSmiles() : result.getSmiles();
-			String message = result.getMessage();
-			if (!message.isEmpty()) {
-				System.err.println(message);
-			}
-			if (output != null) {
-				outputWriter.write(output);
-			}
-			if (outputName) {
-				outputWriter.write('\t');
-				outputWriter.write(line);
-			}
-			outputWriter.newLine();
-			outputWriter.flush();
+
+	/** What OPSIN produced for one name: the rendered output, or null if it could not be
+	 * interpreted, together with any message OPSIN emitted while interpreting it. */
+	private static final class NameResult {
+		private final String output;
+		private final String message;
+
+		NameResult(String output, String message) {
+			this.output = output;
+			this.message = message;
 		}
 	}
 
-	private static void interactiveInchiOutput(InputStream input, OutputStream out, NameToStructureConfig n2sconfig, InchiType inchiType, boolean outputName) throws Exception {
-		NameToStructure nts = NameToStructure.getInstance();
+	private interface NameInterpreter {
+		NameResult interpret(String name);
+	}
+
+	private static int parseThreadCount(CommandLine cmd) {
+		String value = cmd.getOptionValue("t");
+		if (value == null) {
+			return 1;
+		}
+		int threads;
+		try {
+			threads = Integer.parseInt(value.trim());
+		} catch (NumberFormatException e) {
+			System.err.println("Number of threads must be an integer: " + value);
+			System.exit(1);
+			return 1;
+		}
+		if (threads < 0) {
+			System.err.println("Number of threads may not be negative: " + value);
+			System.exit(1);
+		}
+		return threads == 0 ? Runtime.getRuntime().availableProcessors() : threads;
+	}
+
+	private static String nameFromLine(String line) {
+		int splitPoint = line.indexOf('\t');
+		return splitPoint >= 0 ? line.substring(0, splitPoint) : line;
+	}
+
+	private static void writeResult(BufferedWriter outputWriter, String line, boolean outputName,
+			NameResult result) throws IOException {
+		if (!result.message.isEmpty()) {
+			System.err.println(result.message);
+		}
+		if (result.output != null) {
+			outputWriter.write(result.output);
+		}
+		if (outputName) {
+			outputWriter.write('\t');
+			outputWriter.write(line);
+		}
+		outputWriter.newLine();
+	}
+
+	/**
+	 * Interprets each line of input and writes the results, always in input order.
+	 *
+	 * With one thread this is the historical behaviour: interpret a name, write it, flush, so
+	 * that the jar stays usable interactively. With more than one, names are interpreted
+	 * concurrently but a bounded window of pending results is drained in order, which keeps
+	 * memory flat no matter how large the input is. NameToStructure is shared across the pool;
+	 * parseChemicalName holds no mutable state between calls and clones the config it is given.
+	 */
+	private static void streamNames(BufferedReader inputReader, BufferedWriter outputWriter,
+			boolean outputName, int threads, NameInterpreter interpreter) throws IOException {
+		if (threads <= 1) {
+			String line;
+			while ((line = inputReader.readLine()) != null) {
+				writeResult(outputWriter, line, outputName, interpreter.interpret(nameFromLine(line)));
+				outputWriter.flush();
+			}
+			return;
+		}
+		ExecutorService pool = Executors.newFixedThreadPool(threads);
+		int window = threads * 4;
+		Deque<String> pendingLines = new ArrayDeque<>(window);
+		Deque<Future<NameResult>> pendingResults = new ArrayDeque<>(window);
+		try {
+			String line;
+			while ((line = inputReader.readLine()) != null) {
+				final String name = nameFromLine(line);
+				pendingLines.addLast(line);
+				pendingResults.addLast(pool.submit(new Callable<NameResult>() {
+					public NameResult call() {
+						return interpreter.interpret(name);
+					}
+				}));
+				if (pendingResults.size() >= window) {
+					drainOne(outputWriter, pendingLines, pendingResults, outputName);
+				}
+			}
+			while (!pendingResults.isEmpty()) {
+				drainOne(outputWriter, pendingLines, pendingResults, outputName);
+			}
+			outputWriter.flush();
+		} finally {
+			pool.shutdownNow();
+		}
+	}
+
+	private static void drainOne(BufferedWriter outputWriter, Deque<String> pendingLines,
+			Deque<Future<NameResult>> pendingResults, boolean outputName) throws IOException {
+		String line = pendingLines.removeFirst();
+		Future<NameResult> future = pendingResults.removeFirst();
+		NameResult result;
+		try {
+			result = future.get();
+		} catch (InterruptedException e) {
+			Thread.currentThread().interrupt();
+			throw new IOException("Interrupted while interpreting: " + line, e);
+		} catch (ExecutionException e) {
+			throw new IOException("Failed to interpret: " + line, e.getCause());
+		}
+		writeResult(outputWriter, line, outputName, result);
+	}
+
+	private static void interactiveSmilesOutput(InputStream input, OutputStream out, NameToStructureConfig n2sconfig, boolean extendedSmiles, boolean outputName, int threads) throws IOException {
+		final NameToStructure nts = NameToStructure.getInstance();
+		final NameToStructureConfig config = n2sconfig;
+		final boolean extended = extendedSmiles;
 		BufferedReader inputReader = new BufferedReader(new InputStreamReader(input, StandardCharsets.UTF_8));
 		BufferedWriter outputWriter = new BufferedWriter(new OutputStreamWriter(out, StandardCharsets.UTF_8));
-		String line;
-		while ((line = inputReader.readLine()) != null) {
-			int splitPoint = line.indexOf('\t');
-			String name = splitPoint >= 0 ? line.substring(0, splitPoint) : line;
-			OpsinResult result = nts.parseChemicalName(name, n2sconfig);
-			String output;
-			switch (inchiType) {
-			case inchiWithFixedH:
-				output = NameToInchi.convertResultToInChI(result);
-				break;
-			case stdInchi:
-				output = NameToInchi.convertResultToStdInChI(result);
-				break;
-			case stdInchiKey:
-				output = NameToInchi.convertResultToStdInChIKey(result);
-				break;
-			default:
-				throw new IllegalArgumentException("Unexepected enum value: " + inchiType);
+		streamNames(inputReader, outputWriter, outputName, threads, new NameInterpreter() {
+			public NameResult interpret(String name) {
+				OpsinResult result = nts.parseChemicalName(name, config);
+				return new NameResult(extended ? result.getExtendedSmiles() : result.getSmiles(), result.getMessage());
 			}
-			
-			String message = result.getMessage();
-			if (!message.isEmpty()) {
-				System.err.println(message);
+		});
+	}
+
+	private static void interactiveInchiOutput(InputStream input, OutputStream out, NameToStructureConfig n2sconfig, InchiType inchiType, boolean outputName, int threads) throws Exception {
+		final NameToStructure nts = NameToStructure.getInstance();
+		final NameToStructureConfig config = n2sconfig;
+		final InchiType type = inchiType;
+		BufferedReader inputReader = new BufferedReader(new InputStreamReader(input, StandardCharsets.UTF_8));
+		BufferedWriter outputWriter = new BufferedWriter(new OutputStreamWriter(out, StandardCharsets.UTF_8));
+		streamNames(inputReader, outputWriter, outputName, threads, new NameInterpreter() {
+			public NameResult interpret(String name) {
+				OpsinResult result = nts.parseChemicalName(name, config);
+				String output;
+				switch (type) {
+				case inchiWithFixedH:
+					output = NameToInchi.convertResultToInChI(result);
+					break;
+				case stdInchi:
+					output = NameToInchi.convertResultToStdInChI(result);
+					break;
+				case stdInchiKey:
+					output = NameToInchi.convertResultToStdInChIKey(result);
+					break;
+				default:
+					throw new IllegalArgumentException("Unexepected enum value: " + type);
+				}
+				return new NameResult(output, result.getMessage());
 			}
-			if (output != null) {
-				outputWriter.write(output);
-			}
-			if (outputName) {
-				outputWriter.write('\t');
-				outputWriter.write(line);
-			}
-			outputWriter.newLine();
-			outputWriter.flush();
-		}
+		});
 	}
 }
