@@ -215,7 +215,7 @@ class ValencyChecker {
 		possibleStableValencies.get(ChemEl.S).put(-2, new Integer[]{0});
 		possibleStableValencies.get(ChemEl.Cl).put(2, new Integer[]{3,5});
 		possibleStableValencies.get(ChemEl.Cl).put(1, new Integer[]{2,4,6});
-		possibleStableValencies.get(ChemEl.Cl).put(-1, new Integer[]{0});
+		possibleStableValencies.get(ChemEl.Cl).put(-1, new Integer[]{0,2});
 		possibleStableValencies.get(ChemEl.K).put(1, new Integer[]{0});
 		possibleStableValencies.get(ChemEl.K).put(-1, new Integer[]{0});
 		possibleStableValencies.get(ChemEl.Ca).put(2, new Integer[]{0});
@@ -240,7 +240,7 @@ class ValencyChecker {
 		possibleStableValencies.get(ChemEl.Se).put(-2, new Integer[]{0});
 		possibleStableValencies.get(ChemEl.Br).put(2, new Integer[]{3,5});
 		possibleStableValencies.get(ChemEl.Br).put(1, new Integer[]{2,4,6});
-		possibleStableValencies.get(ChemEl.Br).put(-1, new Integer[]{0});
+		possibleStableValencies.get(ChemEl.Br).put(-1, new Integer[]{0,2});
 		possibleStableValencies.get(ChemEl.Rb).put(1, new Integer[]{0});
 		possibleStableValencies.get(ChemEl.Rb).put(-1, new Integer[]{0});
 		possibleStableValencies.get(ChemEl.Sr).put(2, new Integer[]{0});
@@ -266,7 +266,7 @@ class ValencyChecker {
 		possibleStableValencies.get(ChemEl.Te).put(-2, new Integer[]{0});
 		possibleStableValencies.get(ChemEl.I).put(2, new Integer[]{3,5});
 		possibleStableValencies.get(ChemEl.I).put(1, new Integer[]{2,4,6});
-		possibleStableValencies.get(ChemEl.I).put(-1, new Integer[]{0});
+		possibleStableValencies.get(ChemEl.I).put(-1, new Integer[]{0,2});
 		possibleStableValencies.get(ChemEl.Cs).put(1, new Integer[]{0});
 		possibleStableValencies.get(ChemEl.Cs).put(-1, new Integer[]{0});
 		possibleStableValencies.get(ChemEl.Ba).put(2, new Integer[]{0});
@@ -282,7 +282,7 @@ class ValencyChecker {
 		possibleStableValencies.get(ChemEl.Bi).put(-2, new Integer[]{1,3,5,7});
 		possibleStableValencies.get(ChemEl.At).put(2, new Integer[]{3,5});
 		possibleStableValencies.get(ChemEl.At).put(1, new Integer[]{2,4,6});
-		possibleStableValencies.get(ChemEl.At).put(-1, new Integer[]{0});
+		possibleStableValencies.get(ChemEl.At).put(-1, new Integer[]{0,2});
 		possibleStableValencies.get(ChemEl.Fr).put(1, new Integer[]{0});
 		possibleStableValencies.get(ChemEl.Ra).put(2, new Integer[]{0});
 		possibleStableValencies.get(ChemEl.Ra).put(1, new Integer[]{1});
