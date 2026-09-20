@@ -34,7 +34,6 @@ class ComponentProcessor {
 	
 	private final FunctionalReplacement functionalReplacement;
 	private final SuffixApplier suffixApplier;
-	private final Map<String, Boolean> suffixAcidGroupIsOnAttachedAtomCache = new HashMap<>();
 	private final BuildState state;
 	
 	//rings that look like HW rings but have other meanings. For the HW like inorganics the true meaning is given
@@ -726,24 +725,17 @@ class ComponentProcessor {
 	 * @return
 	 */
 	private boolean suffixPlacesAcidGroupOnAttachedAtom(BuildState state, Element suffix, Fragment frag) {
-		String suffixValue = suffix.getValue();
-		Boolean cached = suffixAcidGroupIsOnAttachedAtomCache.get(suffixValue);
-		if (cached != null) {
-			return cached;
-		}
-		boolean acidGroupIsOnAttachedAtom = false;
 		try {
 			String groupType = frag.getType();
 			String suffixTypeToUse = suffixApplier.isGroupTypeWithSpecificSuffixRules(groupType) ? groupType : STANDARDGROUP_TYPE_VAL;
-			for (SuffixRule suffixRule : suffixApplier.getSuffixRuleTags(suffixTypeToUse, suffixValue, frag.getSubType())) {
+			for (SuffixRule suffixRule : suffixApplier.getSuffixRuleTags(suffixTypeToUse, suffix.getValue(), frag.getSubType())) {
 				if (suffixRule.getType() == SuffixRuleType.addgroup) {
 					Fragment suffixFrag = state.fragManager.buildSMILES(suffixRule.getAttributeValue(SUFFIXRULES_SMILES_ATR), SUFFIX_TYPE_VAL, NONE_LABELS_VAL);
 					try {
 						Atom attachedAtom = suffixFrag.getFirstAtom();
 						for (Bond bond : attachedAtom.getBonds()) {
 							if (bond.getOrder() > 1 && bond.getOtherAtom(attachedAtom).getElement() != ChemEl.C) {
-								acidGroupIsOnAttachedAtom = true;
-								break;
+								return true;
 							}
 						}
 					}
@@ -757,8 +749,7 @@ class ComponentProcessor {
 		catch (ComponentGenerationException | StructureBuildingException e) {
 			//the suffix will fail to resolve later with a more useful message; leave the locants unshifted
 		}
-		suffixAcidGroupIsOnAttachedAtomCache.put(suffixValue, acidGroupIsOnAttachedAtom);
-		return acidGroupIsOnAttachedAtom;
+		return false;
 	}
 
 	private static void applyHomologyGroupLabelsIfSpecified(Element group, Fragment frag) {

@@ -87,7 +87,7 @@ public class NomenclatureIntegrationTest {
 	}
 
 
-@ParameterizedTest
+	@ParameterizedTest
 	@CsvFileSource(resources = "greekLactones.txt", delimiter='\t')
 	public void testGreekLactones(String name, String expectedInchi) {
 		checkName(name, expectedInchi);
