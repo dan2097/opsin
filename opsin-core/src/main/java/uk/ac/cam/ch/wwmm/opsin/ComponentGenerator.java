@@ -2933,15 +2933,25 @@ class ComponentGenerator {
 					OpsinTools.insertAfter(subGroup, new TokenEl(HYPHEN_EL));//discourage the use of the chalcogen term as functional replacement 
 				}
 			}
-		}
-		else if (ENDINIC_SUBTYPE_VAL.equals(groupSubType) && AMINOACID_TYPE_VAL.equals(groupType)) {
-			//aspartyl and glutamyl typically mean alpha-aspartyl/alpha-glutamyl
-			String[] suffixAppliesTo = group.getAttributeValue(SUFFIXAPPLIESTO_ATR).split(",");
-			if (suffixAppliesTo.length == 2) {
-				Element yl = OpsinTools.getNextSibling(group);
-				if (yl.getAttributeValue(VALUE_ATR).equals("yl")) {
-					if (yl.getAttribute(ADDITIONALVALUE_ATR) == null){
-						yl.addAttribute(new Attribute(ADDITIONALVALUE_ATR, "ic"));
+		} else if (AMINOACID_TYPE_VAL.equals(groupType)){
+			if (ENDINIC_SUBTYPE_VAL.equals(groupSubType)) {
+				//aspartyl and glutamyl typically mean alpha-aspartyl/alpha-glutamyl
+				String[] suffixAppliesTo = group.getAttributeValue(SUFFIXAPPLIESTO_ATR).split(",");
+				if (suffixAppliesTo.length == 2) {
+					Element yl = OpsinTools.getNextSibling(group);
+					if (yl.getAttributeValue(VALUE_ATR).equals("yl")) {
+						if (yl.getAttribute(ADDITIONALVALUE_ATR) == null) {
+							yl.addAttribute(new Attribute(ADDITIONALVALUE_ATR, "ic"));
+						}
+					}
+				}
+			} else if (groupValue.equals("asparag")) {
+				Element nextEl = OpsinTools.getNextSibling(group);
+				if (nextEl != null && nextEl.getName().equals(INE_EL)) {
+					nextEl = OpsinTools.getNextSibling(nextEl);
+					if (nextEl != null && nextEl.getName().equals(SUFFIX_EL) && nextEl.getValue().equals("ic acid")) {
+						//asparaginic acid = aspartic acid
+						group.getAttribute(VALUE_ATR).setValue("N[C@@H](CC(O)=O)C");
 					}
 				}
 			}
