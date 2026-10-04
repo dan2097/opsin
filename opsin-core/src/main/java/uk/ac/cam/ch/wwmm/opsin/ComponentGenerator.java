@@ -1361,7 +1361,7 @@ class ComponentGenerator {
 			else{
 				currentInfixInformation = StringTools.arrayToList(suffix.getAttributeValue(INFIX_ATR).split(";"));
 			}
-			String infixValue =infix.getAttributeValue(VALUE_ATR);
+			String infixValue = infix.getAttributeValue(VALUE_ATR);
 			currentInfixInformation.add(infixValue);
 			Element possibleMultiplier = OpsinTools.getPreviousSibling(infix);
 			Element possibleBracket;
@@ -1411,6 +1411,15 @@ class ComponentGenerator {
 			}
 			else if (possibleMultiplier!=null && GROUP_TYPE_VAL.equals(possibleMultiplier.getAttributeValue(TYPE_ATR))){//e.g. ethanbisthioic acid == ethanbis(thioic acid)
 				infix.detach();
+			}
+			String infixName = infix.getValue();
+			if ((infixName.equals("amid") || infixName.equals("hydrazid")) && 
+					"o".equals(infix.getAttributeValue(SUBSEQUENTUNSEMANTICTOKEN_ATR)) &&
+					"oxy".equals(suffix.getValue())) {
+				//e.g. in acetamidooxy amido is not performing functional replacement of the oxy
+				//Strictly speaking this should be even more restrictive cf. 2013 recommendations Rule P-15.5.3.2
+				//The suffix needs to also be valid as a substituent for there to be ambiguity, hence why only oxy is special cased
+				throw new ComponentGenerationException(infixName + "o in this context is a suffix, not an infix");
 			}
 			suffix.getAttribute(INFIX_ATR).setValue(StringTools.stringListToString(currentInfixInformation, ";"));
 		}
