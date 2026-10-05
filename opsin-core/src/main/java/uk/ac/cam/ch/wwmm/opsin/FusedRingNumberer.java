@@ -94,15 +94,29 @@ class FusedRingNumberer {
 	}
 
 	/**
+	 * A particular longest straight chain in a ring connectivity table, together with
+	 * the direction in which the rings in {@code rings} are traversed.
+	 */
+	private static class HorizontalChain {
+		private final int direction;
+		private final List<Ring> rings;
+
+		HorizontalChain(int direction, List<Ring> rings) {
+			this.direction = direction;
+			this.rings = rings;
+		}
+	}
+
+	/**
 	 * Result of identifying the longest straight chain(s) in the ring connectivity tables.
 	 * The chain length is the number of rings.
 	 */
 	private static class LongestChainDirections {
-		private final Map<RingConnectivityTable, List<Integer>> horizonalRowDirections;
+		private final Map<RingConnectivityTable, List<HorizontalChain>> horizonalRowChains;
 		private final int longestChainLength;
 
-		LongestChainDirections(Map<RingConnectivityTable, List<Integer>> horizonalRowDirections, int longestChainLength) {
-			this.horizonalRowDirections = horizonalRowDirections;
+		LongestChainDirections(Map<RingConnectivityTable, List<HorizontalChain>> horizonalRowChains, int longestChainLength) {
+			this.horizonalRowChains = horizonalRowChains;
 			this.longestChainLength = longestChainLength;
 		}
 	}
@@ -374,7 +388,7 @@ class FusedRingNumberer {
 
 		/* FR-5.2a. Maximum number of rings in a horizontal row */
 		LongestChainDirections longestChainDirections = findLongestChainDirections(cts);
-		List<Ring[][]> ringMaps = createRingMapsAlignedAlongGivenHorizonalRowDirections(longestChainDirections.horizonalRowDirections);
+		List<Ring[][]> ringMaps = createRingMapsAlignedAlongGivenHorizonalRowDirections(longestChainDirections.horizonalRowChains);
 		/* FR-5.2b-d */
 		return findPossiblePaths(ringMaps, atomCountOfFusedRingSystem, longestChainDirections.longestChainLength);
 	}
@@ -931,20 +945,24 @@ class FusedRingNumberer {
 	 * @return
 	 */
 	private static LongestChainDirections findLongestChainDirections(List<RingConnectivityTable> cts){
-		Map<RingConnectivityTable, List<Integer>> horizonalRowDirections = new LinkedHashMap<>();
+		Map<RingConnectivityTable, List<HorizontalChain>> horizonalRowChains = new LinkedHashMap<>();
 		int maxChain = 0;
 		for (RingConnectivityTable ct : cts) {
 			if (ct.ringShapes.size() != ct.neighbouringRings.size() || ct.neighbouringRings.size() != ct.directionFromRingToNeighbouringRing.size()) {
 				throw new RuntimeException("OPSIN Bug: Sizes of arrays in fused ring numbering connection table are not equal");
 			}
 			int ctEntriesSize = ct.ringShapes.size();
-			List<Integer> directions = new ArrayList<>();
-			horizonalRowDirections.put(ct, directions);
+			List<HorizontalChain> chainsForCt = new ArrayList<>();
+			horizonalRowChains.put(ct, chainsForCt);
 
 			for (int i = 0; i < ctEntriesSize; i++) {
+				Ring startingRing = ct.ringShapes.get(i).getRing();
 				Ring neighbour = ct.neighbouringRings.get(i);
 				int curChain = 2;
 				int curDir = ct.directionFromRingToNeighbouringRing.get(i);
+				List<Ring> chainRings = new ArrayList<>();
+				chainRings.add(startingRing);
+				chainRings.add(neighbour);
 
 				nextRingInChainLoop: for (int k = 0; k <= ct.usedRings.size(); k++) {//<= rather than < so buggy behaviour can be caught
 					int indexOfNeighbour = indexOfCorrespondingRingshape(ct.ringShapes, neighbour);
@@ -954,6 +972,7 @@ class FusedRingNumberer {
 							if (ct.ringShapes.get(j).getRing() == neighbour && ct.directionFromRingToNeighbouringRing.get(j) == curDir) {
 								curChain++;
 								neighbour = ct.neighbouringRings.get(j);
+								chainRings.add(neighbour);
 								continue nextRingInChainLoop;
 							}
 						}
@@ -962,15 +981,13 @@ class FusedRingNumberer {
 						throw new RuntimeException("OPSIN bug: fused ring numbering: Ring missing from connection table");
 					}
 					if (curChain >= maxChain ) {
-						int oDir = getOppositeDirection(curDir);
 						if(curChain > maxChain){//new longest chain found
-							for (List<Integer> previousDirections: horizonalRowDirections.values()) {
-								previousDirections.clear();
+							for (List<HorizontalChain> previousChains: horizonalRowChains.values()) {
+								previousChains.clear();
 							}
 						}
-						// if we has this direction before or its opposite, it is the same orientation
-						if(curChain > maxChain || (!directions.contains(curDir) && !directions.contains(oDir))) {
-							directions.add(curDir);
+						if (curChain > maxChain || !containsEquivalentHorizontalChain(chainsForCt, curDir, chainRings)) {
+							chainsForCt.add(new HorizontalChain(curDir, new ArrayList<>(chainRings)));
 						}
 						maxChain = curChain;
 					}
@@ -981,7 +998,36 @@ class FusedRingNumberer {
 				}
 			}
 		}
-		return new LongestChainDirections(horizonalRowDirections, maxChain);
+		return new LongestChainDirections(horizonalRowChains, maxChain);
+	}
+
+	/**
+	 * Returns true if the same chain, or the same chain traversed in the opposite
+	 * direction, has already been retained for this connectivity table.
+	 */
+	private static boolean containsEquivalentHorizontalChain(List<HorizontalChain> chains, int direction, List<Ring> rings) {
+		for (HorizontalChain chain : chains) {
+			if (chain.direction == direction && sameRingSequence(chain.rings, rings, false)) {
+				return true;
+			}
+			if (chain.direction == getOppositeDirection(direction) && sameRingSequence(chain.rings, rings, true)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private static boolean sameRingSequence(List<Ring> rings1, List<Ring> rings2, boolean reverseSecond) {
+		if (rings1.size() != rings2.size()) {
+			return false;
+		}
+		for (int i = 0; i < rings1.size(); i++) {
+			int j = reverseSecond ? rings2.size() - 1 - i : i;
+			if (rings1.get(i) != rings2.get(j)) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	/**
@@ -1007,22 +1053,23 @@ class FusedRingNumberer {
 	 * @return
 	 * @throws StructureBuildingException
 	 */
-	private static List<Ring[][]> createRingMapsAlignedAlongGivenHorizonalRowDirections(Map<RingConnectivityTable, List<Integer>> horizonalRowDirectionsMap) throws StructureBuildingException {
+	private static List<Ring[][]> createRingMapsAlignedAlongGivenHorizonalRowDirections(Map<RingConnectivityTable, List<HorizontalChain>> horizonalRowChainsMap) throws StructureBuildingException {
 		List<Ring[][]> ringMaps = new ArrayList<>();
-		for (Entry<RingConnectivityTable, List<Integer>> entry : horizonalRowDirectionsMap.entrySet()) {
+		for (Entry<RingConnectivityTable, List<HorizontalChain>> entry : horizonalRowChainsMap.entrySet()) {
 			RingConnectivityTable ct = entry.getKey();
 			if ( ct.ringShapes.size() != ct.neighbouringRings.size() || ct.neighbouringRings.size() != ct.directionFromRingToNeighbouringRing.size() || ct.ringShapes.size() <= 0) {
 				throw new RuntimeException("OPSIN Bug: Sizes of arrays in fused ring numbering connection table are not equal");
 			}
 			int ctEntriesSize = ct.ringShapes.size();
-			for (Integer horizonalRowDirection : entry.getValue()) {
+			for (HorizontalChain horizontalChain : entry.getValue()) {
+				int horizonalRowDirection = horizontalChain.direction;
 				int[] directionFromRingToNeighbouringRing = new int[ctEntriesSize];
 				// turn the ring system such as to be aligned along the horizonalRowDirection
 				for(int i=0; i<ctEntriesSize; i++){
 					RingShape ringShape = ct.ringShapes.get(i);
 					directionFromRingToNeighbouringRing[i] = determineAbsoluteDirectionUsingPreviousDirection(ringShape.getShape(), ringShape.getRing().size(), ct.directionFromRingToNeighbouringRing.get(i), -horizonalRowDirection);
 				}
-				Ring[][] ringMap = generateRingMap(ct, directionFromRingToNeighbouringRing);
+				Ring[][] ringMap = generateRingMap(ct, directionFromRingToNeighbouringRing, horizontalChain.rings);
 				if (ringMap !=null){//null if overlapping bonds rings present
 					ringMaps.add(ringMap);
 				}
@@ -1041,7 +1088,7 @@ class FusedRingNumberer {
 	 * @param expectedLongestChainLength expected maximum number of rings in a horizontal row from FR-5.2a
 	 * @return
 	 */
-	private static List<List<Atom>> findPossiblePaths(List<Ring[][]> ringMaps, int atomCountOfFusedRingSystem, int expectedLongestChainLength) {
+	private static List<List<Atom>> findPossiblePaths(List<Ring[][]> ringMaps, int atomCountOfFusedRingSystem, int expectedLongestChainLength){
 		List<Double[]> chainQs = new ArrayList<>();
 		List<Ring[][]> correspondingRingMap = new ArrayList<>();
 		for (Ring[][] ringMap : ringMaps) {
@@ -1095,25 +1142,38 @@ class FusedRingNumberer {
 		return paths;
 	}
 
-	private static Ring[][] generateRingMap(RingConnectivityTable ct, int[] directionFromRingToNeighbouringRing) {
+	private static Ring[][] generateRingMap(RingConnectivityTable ct, int[] directionFromRingToNeighbouringRing, List<Ring> horizontalChain) {
 		int ctEntriesSize = ct.ringShapes.size();
-		// Find max and min coordinates for ringMap
-		// we put the first ring into takenRings to start with it in the connection table
 		int nRings = ct.usedRings.size();
-		int[][] coordinates = new int[nRings][]; // correspondent to usedRings
+		if (horizontalChain == null || horizontalChain.size() < 2 || horizontalChain.size() > nRings) {
+			throw new RuntimeException("OPSIN Bug: Invalid horizontal chain supplied for fused ring map generation");
+		}
+
+		int[][] coordinates = new int[nRings][]; // correspondent to takenRings
 		Ring[] takenRings = new Ring[nRings];
 		int takenRingsCnt = 0;
-		int maxX = 0;
+		int maxX = 2 * (horizontalChain.size() - 1);
 		int minX = 0;
 		int maxY = 0;
 		int minY = 0;
 
-		takenRings[takenRingsCnt++] = ct.ringShapes.get(0).getRing();
-		coordinates[0] = new int[]{0,0};
+		/*
+		 * The horizontal chain was the reason this orientation survived FR-5.2a.
+		 * Make it authoritative by placing it first, rather than allowing a reverse
+		 * direction for an odd/distorted ring to potentially place one of its members elsewhere.
+		 */
+		for (int i = 0; i < horizontalChain.size(); i++) {
+			Ring ring = horizontalChain.get(i);
+			if (arrayContains(takenRings, ring)) {
+				throw new RuntimeException("OPSIN bug: Longest horizontal chain contained the same ring more than once");
+			}
+			takenRings[takenRingsCnt] = ring;
+			coordinates[takenRingsCnt] = new int[]{2 * i, 0};
+			takenRingsCnt++;
+		}
 
-		// Go through the rings in a system
-		// Find the rings connected to them and assign coordinates according to the direction
-		// Each time we go to the ring, whose coordinates were already identified.
+		// Go through the rings in a system. Rings in the selected horizontal chain
+		// are already positioned; other rings are added using the transformed CT directions.
 		for(int tr=0; tr<nRings-1; tr++) {
 			Ring currentRing = takenRings[tr];
 			if (currentRing == null){
@@ -1121,8 +1181,7 @@ class FusedRingNumberer {
 			}
 
 			int indexOfCurrentRing = indexOfCorrespondingRingshape(ct.ringShapes, currentRing);
-
-			int xy[] = coordinates[tr]; // find the correspondent coordinates for the ring
+			int xy[] = coordinates[tr];
 
 			if (indexOfCurrentRing >= 0) {
 				for (int j=indexOfCurrentRing; j< ctEntriesSize; j++) {
@@ -1136,7 +1195,7 @@ class FusedRingNumberer {
 						newXY[0] = xy[0] + Math.round(2 * countDX(directionFromRingToNeighbouringRing[j]));
 						newXY[1] = xy[1] + countDY(directionFromRingToNeighbouringRing[j]);
 
-						if(takenRingsCnt > takenRings.length) {
+						if(takenRingsCnt >= takenRings.length) {
 							throw new RuntimeException("OPSIN Bug: Fused ring numbering bug");
 						}
 						takenRings[takenRingsCnt] = neighbour;
@@ -1163,6 +1222,11 @@ class FusedRingNumberer {
 				throw new RuntimeException("OPSIN bug: fused ring numbering: Ring missing from connection table");
 			}
 		}
+
+		if (takenRingsCnt != nRings) {
+			throw new RuntimeException("OPSIN bug: Not all rings were positioned while generating fused ring map");
+		}
+
 		// the height and the width of the map
 		int h = maxY - minY + 1;
 		int w = maxX - minX + 1;
@@ -1170,20 +1234,17 @@ class FusedRingNumberer {
 		Ring[][] ringMap = new Ring[w][h];
 
 		// Map rings using coordinates calculated in the previous step, and transform them according to found minX and minY
-
 		int ix = -minX;
 		int iy = -minY;
 		if (ix >= w || iy >= h) {
 			throw new RuntimeException("OPSIN Bug: Fused ring numbering bug, Coordinates have been calculated wrongly");
 		}
 
-		int curX = 0;
-		int curY = 0;
 		for (int ti = 0; ti < takenRings.length; ti++){
 			int[] xy = coordinates[ti];
-			curX = xy[0] - minX;
-			curY = xy[1] - minY;
-			if(curX <0 || curX > w || curY < 0 || curY > h) {
+			int curX = xy[0] - minX;
+			int curY = xy[1] - minY;
+			if(curX <0 || curX >= w || curY < 0 || curY >= h) {
 				throw new RuntimeException("OPSIN Bug: Fused ring numbering bug, Coordinates have been calculated wrongly");
 			}
 			if (ringMap[curX][curY] != null){
