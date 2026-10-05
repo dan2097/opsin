@@ -1200,7 +1200,6 @@ class FusedRingNumberer {
 					if(chain >= maxChain) {
 						chains.add(new Chain(chain, i, j));
 					}
-					i += 2*chain;
 				}
 			}
 		}
