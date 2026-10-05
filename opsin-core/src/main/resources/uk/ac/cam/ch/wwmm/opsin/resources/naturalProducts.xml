@@ -82,6 +82,19 @@ Natural products are treated as cyclic biochemicals. Many natural products suppo
 		<token value="C=C1CC=C(C(C)C)CC1" labels="none">beta-terpinen</token>
 		<token value="CC=1CC=C(C(C)C)CC1" labels="none">gamma-terpinen</token>
 		<token value="CC1=CCC(=C(C)C)CC1" labels="none">delta-terpinen|terpinolen</token>
+		<token value="CC1=CCC(C(=C)C)CC1" labels="none">limonen|dipenten</token>
+		<token value="CC=1C(C(CCC1)(C)C)/C=C/C(C)=O" labels="none">alpha-ionon</token>
+		<token value="CC1=C(C(CCC1)(C)C)/C=C/C(C)=O" labels="none">beta-ionon</token>
+		<token value="C=C1CCCC(C)(C)C1/C=C/C(C)=O" labels="none">gamma-ionon</token>
+		<token value="CC=1C(C(C=CC1)(C)C)C(/C=C/C)=O" labels="none">alpha-damascenon</token>
+		<token value="CC1=C(C(CC=C1)(C)C)C(/C=C/C)=O" labels="none">beta-damascenon|damascenon</token>
+		<token value="CC=CC(=O)C1C(C)=CCCC1(C)C" labels="none">alpha-damascon</token>
+		<token value="C/C=C/C(=O)C1=C(C)CCCC1(C)C" labels="none">beta-damascon</token>
+		<token value="C=C1CCCC(C)(C)C1C(=O)C=CC" labels="none">gamma-damascon</token>
+		<token value="CC=CC(=O)C1C(C)C=CCC1(C)C" labels="none">delta-damascon</token>
+		<token value="CC=CC(=O)C1C(C)CC=CC1(C)C" labels="none">epsilon-damascon</token>
+		<token value="CC1CC(CCCCCCCCCCCC1)=O" labels="none">muscon</token>
+		<token value="C1(CCCCCCC/C=C\CCCCCCC1)=O" labels="none">civeton</token>
 
 <!--systematic carotenes, some also have trivial names-->
 		<token value="C[C@@]1(C)CCCC(C)=C1/C=C/C(C)=C/C=C/C(C)=C/C=C/C=C(C)/C=C/C=C(C)/C=C/C2=C(C)CCC[C@]2(C)C" labels="16/1/17/2/3/4/5/18/6/7/8/9/19/10/11/12/13/20/14/15/15'/14'/13'/20'/12'/11'/10'/9'/19'/8'/7'/6'/5'/18'/4'/3'/2/1'/17'/16'">beta,beta-caroten|beta-caroten|all-trans-beta-caroten</token>
