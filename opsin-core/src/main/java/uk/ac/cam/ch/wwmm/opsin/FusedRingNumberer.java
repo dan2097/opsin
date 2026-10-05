@@ -94,6 +94,20 @@ class FusedRingNumberer {
 	}
 
 	/**
+	 * Result of identifying the longest straight chain(s) in the ring connectivity tables.
+	 * The chain length is the number of rings.
+	 */
+	private static class LongestChainDirections {
+		private final Map<RingConnectivityTable, List<Integer>> horizonalRowDirections;
+		private final int longestChainLength;
+
+		LongestChainDirections(Map<RingConnectivityTable, List<Integer>> horizonalRowDirections, int longestChainLength) {
+			this.horizonalRowDirections = horizonalRowDirections;
+			this.longestChainLength = longestChainLength;
+		}
+	}
+
+	/**
 	 * Sorts by atomSequences by the IUPAC rules for determining the preferred labelling
 	 * The most preferred will be sorted to the back (0th position)
 	 * @author dl387
@@ -359,10 +373,10 @@ class FusedRingNumberer {
 		//TODO better implement the corner cases of FR 5.1.3-5.1.5
 
 		/* FR-5.2a. Maximum number of rings in a horizontal row */
-		Map<RingConnectivityTable, List<Integer>> horizonalRowDirections = findLongestChainDirections(cts);
-		List<Ring[][]> ringMaps = createRingMapsAlignedAlongGivenHorizonalRowDirections(horizonalRowDirections);
+		LongestChainDirections longestChainDirections = findLongestChainDirections(cts);
+		List<Ring[][]> ringMaps = createRingMapsAlignedAlongGivenHorizonalRowDirections(longestChainDirections.horizonalRowDirections);
 		/* FR-5.2b-d */
-		return findPossiblePaths(ringMaps, atomCountOfFusedRingSystem);
+		return findPossiblePaths(ringMaps, atomCountOfFusedRingSystem, longestChainDirections.longestChainLength);
 	}
 
 	/**
@@ -910,13 +924,13 @@ class FusedRingNumberer {
 
 	/**
 	 * Given a list of cts find the longest chain of rings in a line. This can be used to find a possible horizontal row
-	 * The output is a map between the connection tables and the directions which give the longest chains
-	 * Some cts may have no directions that give a chain of rings of this length
+	 * The output contains a map between the connection tables and the directions which give the longest chains,
+	 * together with the maximum chain length (as a number of rings). Some cts may have no directions that give a chain of rings of this length
 	 *
 	 * @param cts
 	 * @return
 	 */
-	private static Map<RingConnectivityTable, List<Integer>> findLongestChainDirections(List<RingConnectivityTable> cts){
+	private static LongestChainDirections findLongestChainDirections(List<RingConnectivityTable> cts){
 		Map<RingConnectivityTable, List<Integer>> horizonalRowDirections = new LinkedHashMap<>();
 		int maxChain = 0;
 		for (RingConnectivityTable ct : cts) {
@@ -929,7 +943,7 @@ class FusedRingNumberer {
 
 			for (int i = 0; i < ctEntriesSize; i++) {
 				Ring neighbour = ct.neighbouringRings.get(i);
-				int curChain = 1;
+				int curChain = 2;
 				int curDir = ct.directionFromRingToNeighbouringRing.get(i);
 
 				nextRingInChainLoop: for (int k = 0; k <= ct.usedRings.size(); k++) {//<= rather than < so buggy behaviour can be caught
@@ -967,7 +981,7 @@ class FusedRingNumberer {
 				}
 			}
 		}
-		return horizonalRowDirections;
+		return new LongestChainDirections(horizonalRowDirections, maxChain);
 	}
 
 	/**
@@ -1023,14 +1037,23 @@ class FusedRingNumberer {
 	/**
 	 * Applies FR5.2 B, C and D to determine the preferred orientation and returns lists of potential peripheral atom orderings
 	 * @param ringMaps
-	 * @param atomCountOfFusedRingSystem 
+	 * @param atomCountOfFusedRingSystem
+	 * @param expectedLongestChainLength expected maximum number of rings in a horizontal row from FR-5.2a
 	 * @return
 	 */
-	private static List<List<Atom>> findPossiblePaths(List<Ring[][]> ringMaps, int atomCountOfFusedRingSystem){
+	private static List<List<Atom>> findPossiblePaths(List<Ring[][]> ringMaps, int atomCountOfFusedRingSystem, int expectedLongestChainLength) {
 		List<Double[]> chainQs = new ArrayList<>();
 		List<Ring[][]> correspondingRingMap = new ArrayList<>();
 		for (Ring[][] ringMap : ringMaps) {
 			List<Chain> chains = findChainsOfMaximumLengthInHorizontalDir(ringMap);
+			if (chains.isEmpty()) {
+				throw new RuntimeException("OPSIN bug: Unable to find a horizontal ring chain in generated ring map");
+			}
+			int actualLongestChainLength = chains.get(0).getLength();
+			if (actualLongestChainLength != expectedLongestChainLength) {
+				throw new RuntimeException("OPSIN bug: Expected longest horizontal ring chain of " + expectedLongestChainLength
+						+ " rings but generated ring map had " + actualLongestChainLength);
+			}
 			// For each chain count the number of rings in each quadrant
 			for (Chain chain : chains) {
 				int midChainXcoord = chain.getLength() + chain.getStartingX() - 1;//Remember the X axis is measured in 1/2s so don't need to 1/2 length
