@@ -360,7 +360,7 @@ class FusedRingNumberer {
 
 		/* FR-5.2a. Maximum number of rings in a horizontal row */
 		Map<RingConnectivityTable, List<Integer>> horizonalRowDirections = findLongestChainDirections(cts);
-		List<Ring[][]> ringMaps = createRingMapsAlignedAlongGivenhorizonalRowDirections(horizonalRowDirections);
+		List<Ring[][]> ringMaps = createRingMapsAlignedAlongGivenHorizonalRowDirections(horizonalRowDirections);
 		/* FR-5.2b-d */
 		return findPossiblePaths(ringMaps, atomCountOfFusedRingSystem);
 	}
@@ -993,7 +993,7 @@ class FusedRingNumberer {
 	 * @return
 	 * @throws StructureBuildingException
 	 */
-	private static List<Ring[][]> createRingMapsAlignedAlongGivenhorizonalRowDirections(Map<RingConnectivityTable, List<Integer>> horizonalRowDirectionsMap) throws StructureBuildingException {
+	private static List<Ring[][]> createRingMapsAlignedAlongGivenHorizonalRowDirections(Map<RingConnectivityTable, List<Integer>> horizonalRowDirectionsMap) throws StructureBuildingException {
 		List<Ring[][]> ringMaps = new ArrayList<>();
 		for (Entry<RingConnectivityTable, List<Integer>> entry : horizonalRowDirectionsMap.entrySet()) {
 			RingConnectivityTable ct = entry.getKey();
@@ -1176,30 +1176,40 @@ class FusedRingNumberer {
 	 * @param ringMap
 	 * @return
 	 */
-	private static List<Chain> findChainsOfMaximumLengthInHorizontalDir(Ring[][] ringMap){
+	private static List<Chain> findChainsOfMaximumLengthInHorizontalDir(Ring[][] ringMap) {
 		int w = ringMap.length;
 		int h = ringMap[0].length;
-
+		
 		List<Chain> chains = new ArrayList<>();
-
 		int maxChain = 0;
-		int chain = 0;
-
-		// Find the longest chain
-		for (int j=0; j<h; j++)	{
-			for (int i=0; i<w; i++)	 {
-				if(ringMap[i][j] != null) {
-					chain = 1;
-					while(i + 2*chain < w && ringMap[i + 2*chain][j] != null ) {
-						chain++; // *2 because along the x axis the step is 2
+		
+		for (int j = 0; j < h; j++) {
+			for (int i = 0; i < w; i++) {
+				Ring currentRing = ringMap[i][j];
+				if (currentRing == null) {
+					continue;
+				}
+		
+				int chain = 1;
+		
+				while (i + 2 * chain < w) {
+					Ring nextRing = ringMap[i + 2 * chain][j];
+		
+					if (nextRing == null || !currentRing.isNeighbour(nextRing)) {
+						break;
 					}
-					if (chain > maxChain){
-						chains.clear();
-						maxChain = chain;
-					}
-					if(chain >= maxChain) {
-						chains.add(new Chain(chain, i, j));
-					}
+		
+					currentRing = nextRing;
+					chain++;
+				}
+		
+				if (chain > maxChain) {
+					chains.clear();
+					maxChain = chain;
+				}
+		
+				if (chain == maxChain) {
+					chains.add(new Chain(chain, i, j));
 				}
 			}
 		}
