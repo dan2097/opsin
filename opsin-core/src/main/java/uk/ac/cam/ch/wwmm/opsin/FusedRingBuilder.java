@@ -59,7 +59,7 @@ class FusedRingBuilder {
 					}
 				}
 				Element possibleGroup = OpsinTools.getPreviousSiblingIgnoringCertainElements(startingEl, new String[]{MULTIPLIER_EL, FUSION_EL});
-				if (!groups.get(i-1).equals(possibleGroup)){//end of fused ring system
+				if (!groups.get(i-1).equals(possibleGroup) || PHANE_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR))){//end of fused ring system
 					if (groupsInFusedRing.size()>=2){
 						//This will be invoked in cases where there are multiple fused ring systems in the same subOrRoot such as some spiro systems
 						new FusedRingBuilder(state, groupsInFusedRing).buildFusedRing();

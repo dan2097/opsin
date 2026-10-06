@@ -9,6 +9,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
+import java.util.regex.Matcher;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -467,10 +468,22 @@ class StereochemistryHandler {
 			}
 		}
 		else{
+			Atom secondAtomInBond = null;
+			Matcher compoundLocantMatcher = OpsinTools.MATCH_COMPOUND_LOCANT.matcher(locant);
+			if (compoundLocantMatcher.find()) {
+				secondAtomInBond = fragment.getAtomByLocant(compoundLocantMatcher.group(1));
+				locant = compoundLocantMatcher.replaceAll("");
+				if (secondAtomInBond == null) {
+					return false;
+				}
+			}
 			Atom firstAtomInBond = fragment.getAtomByLocant(locant);
 			if (firstAtomInBond !=null){
 				List<Bond> bonds = firstAtomInBond.getBonds();
 				for (Bond potentialBond : bonds) {
+					if (secondAtomInBond != null && potentialBond.getOtherAtom(firstAtomInBond) != secondAtomInBond) {
+						continue;
+					}
 					if (notExplicitlyDefinedStereoBondMap.containsKey(potentialBond) && (!isCisTrans || cisTransUnambiguousOnBond(potentialBond))){
 						applyStereoChemistryToStereoBond(potentialBond, notExplicitlyDefinedStereoBondMap.get(potentialBond), eOrZ);
 						notExplicitlyDefinedStereoBondMap.remove(potentialBond);

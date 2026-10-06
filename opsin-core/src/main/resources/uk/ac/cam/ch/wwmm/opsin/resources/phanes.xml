@@ -1,0 +1,6 @@
+<!DOCTYPE tokenLists SYSTEM "tokenLists.dtd">
+<tokenLists>
+	<tokenList tagname="group" type="ring" subType="phane" symbol="Ĉ"><!--the simplified skeleton is built from the preceding cyclo and multiplier-->
+		<token value="C" labels="numeric">phan</token>
+	</tokenList>
+</tokenLists>

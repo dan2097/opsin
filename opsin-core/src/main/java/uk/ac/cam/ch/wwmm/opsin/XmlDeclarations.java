@@ -50,6 +50,8 @@ class XmlDeclarations {
 
 	/**An annulene/annulyne. Converted to a group by the ComponentGenerator*/
 	static final String ANNULEN_EL ="annulen";
+	/**The superatom locants of phane amplificants and their attachment locants e.g. 1,4(1,4)- */
+	static final String PHANELOCANTS_EL ="phaneLocants";
 
 	/**A bridge described in SMILES for used on rings*/
 	static final String FUSEDRINGBRIDGE_EL ="fusedRingBridge";
@@ -527,6 +529,8 @@ class XmlDeclarations {
 	static final String OUSICATOM_SUBTYPE_VAL ="ousIcAtom";
 	/**A term indicating replacement of all substitutable hydrogens by a halogen e.g. "perchloro" */
 	static final String PERHALOGENO_SUBTYPE_VAL ="perhalogeno";
+	/**The simplified skeleton of a phane e.g. "phan" in "cyclohexaphane" */
+	static final String PHANE_SUBTYPE_VAL = "phane";
 	/** phospho and other very related substituents. Strongly prefer forming bonds to hydroxy groups */
 	static final String PHOSPHO_SUBTYPE_VAL ="phospho";
 	/**A ring group e.g. "pyridin" */
