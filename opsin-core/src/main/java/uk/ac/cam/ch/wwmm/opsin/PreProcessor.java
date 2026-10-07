@@ -105,6 +105,38 @@ class PreProcessor {
 				sb.append(ch);
 				break;
 				}
+			case '\u2070':
+			case '\u00B9':
+			case '\u00B2':
+			case '\u00B3':
+			case '\u2074':
+			case '\u2075':
+			case '\u2076':
+			case '\u2077':
+			case '\u2078':
+			case '\u2079'://unicode superscript digits after a digit e.g. 1\u2074 --> 1^4 (otherwise isotope notation e.g. \u00B2H)
+				if (i > 0 && isSuperscriptDigit(chemicalName.charAt(i - 1))) {
+					sb.append(superscriptDigitToDigit(ch));
+				}
+				else if (i > 0 && Character.isDigit(chemicalName.charAt(i - 1))) {
+					sb.append('^').append(superscriptDigitToDigit(ch));
+				}
+				else {
+					sb.append(ch);
+				}
+				break;
+			case '<':
+				if (chemicalName.regionMatches(true, i, "<sup>", 0, 5)) {//e.g. 1<sup>4</sup> --> 1^4
+					sb.append('^');
+					i = i + 4;
+					break;
+				}
+				if (chemicalName.regionMatches(true, i, "</sup>", 0, 6)) {
+					i = i + 5;
+					break;
+				}
+				sb.append(ch);
+				break;
 			case 's':
 			case 'S'://correct British spelling to the IUPAC spelling
 				if (chemicalName.regionMatches(true, i + 1, "ulph", 0, 4)){
@@ -119,6 +151,20 @@ class PreProcessor {
 			}
 		}
 		return sb.toString();
+	}
+
+	private static boolean isSuperscriptDigit(char ch) {
+		return ch == '\u2070' || ch == '\u00B9' || ch == '\u00B2' || ch == '\u00B3' || (ch >= '\u2074' && ch <= '\u2079');
+	}
+
+	private static char superscriptDigitToDigit(char ch) {
+		switch (ch) {
+		case '\u2070': return '0';
+		case '\u00B9': return '1';
+		case '\u00B2': return '2';
+		case '\u00B3': return '3';
+		default: return (char) ('4' + (ch - '\u2074'));
+		}
 	}
 
 	private static String getLowerCasedDotEnclosedString(String chemicalName, int indexOfFirstDot) {

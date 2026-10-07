@@ -69,4 +69,17 @@ public class PreProcessorTest {
 		assertEquals("alpha-methyl-toluene", PreProcessor.preProcess("&alpha;-methyl-toluene"));
 		assertEquals("beta-methyl-styrene", PreProcessor.preProcess("&BETA;-methyl-styrene"));
 	}
+
+	@Test
+	public void testSuperscriptDigits() throws PreProcessingException {
+		assertEquals("1^4-ol", PreProcessor.preProcess("1\u2074-ol"));
+		assertEquals("4^10,5^2-diol", PreProcessor.preProcess("4\u00B9\u2070,5\u00B2-diol"));
+		assertEquals("3^1-yl", PreProcessor.preProcess("3\u00B9-yl"));
+	}
+
+	@Test
+	public void testHtmlSuperscripts() throws PreProcessingException {
+		assertEquals("1^4-ol", PreProcessor.preProcess("1<sup>4</sup>-ol"));
+		assertEquals("1^4-ol", PreProcessor.preProcess("1<SUP>4</SUP>-ol"));
+	}
 }

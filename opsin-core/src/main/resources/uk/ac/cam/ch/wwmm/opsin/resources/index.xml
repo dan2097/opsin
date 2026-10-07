@@ -9,6 +9,7 @@
 	<tokenFile>arylGroups.xml</tokenFile>
 	<tokenFile>simpleGroups.xml</tokenFile>
 	<tokenFile>simpleCyclicGroups.xml</tokenFile>
+	<tokenFile>phanes.xml</tokenFile>
 	<tokenFile>groupStemsAllowingAllSuffixes.xml</tokenFile>
 	<tokenFile>groupStemsAllowingInlineSuffixes.xml</tokenFile>
 	<tokenFile>cyclicUnsaturableHydrocarbon.xml</tokenFile>
