@@ -617,6 +617,16 @@ class FragmentManager {
 		return Collections.unmodifiableSet(interFragmentBonds);
 	}
 
+	Bond getInterFragmentBond(Atom from, Atom to) {
+		for (Bond bond : getInterFragmentBonds(from.getFrag())) {
+			if (bond.getFromAtom().equals(from) && bond.getToAtom().equals(to) ||
+				bond.getToAtom().equals(from) && bond.getFromAtom().equals(to)) {
+				return bond;
+			}
+		}
+		return null;
+	}
+
 	/**
 	 * Create a new Atom of the given element belonging to the given fragment
 	 * @param chemEl
