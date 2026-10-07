@@ -52,7 +52,7 @@
 	<regexToken regex="[cC][yY][cC][lL][oO]-?%openBracket%[0-9]+[\.,][0-9]+[\.,][0-9]+%superScriptedVonBaeyerDescriptor%*%closeBracket%-?" symbol="B" tagname="vonBaeyer" determinise="yes"/>
 	<regex name="%phaneAttachmentLocant%" regex="[1-9][0-9]*[a-g]?'*"/>
 	<regex name="%phaneAmplification%" regex="[1-9][0-9]*(,[1-9][0-9]*)*\(%phaneAttachmentLocant%(,%phaneAttachmentLocant%)*\)"/>
-	<regexToken regex="%phaneAmplification%(,%phaneAmplification%)*-?" symbol="ĉ" tagname="phaneLocants" determinise="yes"/>
+	<regexToken regex="%phaneAmplification%(,%phaneAmplification%)*-?" symbol="ć" tagname="phaneLocants" determinise="yes"/>
 	<regexToken regex="%openBracket%[1-9][0-9]*%closeBracket%[aA][nN][nN][uU][lL][eEyY][nN]" symbol="N" tagname="annulen" determinise="yes"/>
 
 	<regex name="%firstOrderFusion%" regex="(%locant%(,%locant%)+-([a-zA-Z]'*)+)"/><!--Numerical locants may be primed if component is multiplied. Primes on letters may occur if parent is multiplied-->

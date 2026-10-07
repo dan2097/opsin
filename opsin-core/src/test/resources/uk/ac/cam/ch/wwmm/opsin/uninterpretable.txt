@@ -32,3 +32,6 @@ pyrido[2,3-b](513C)pyrazine
 1,4(1,4)-benzenacyclohexaphane
 1(1,4)-benzenacyclohexaphane-1^7-ol
 1,4(1,4)-dibenzenacyclohexaphane-2,5-diol-1
+1,4(1,4)-dibenzenacyclohexaphaneacetic acid
+1,4(1,4)-dibenzenacyclohexaphane-1^2-acetyl chloride
+1,4(1,4)-dibenzenacyclohexaphaneacetyl chloride

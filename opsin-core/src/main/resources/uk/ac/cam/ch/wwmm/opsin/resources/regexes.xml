@@ -109,7 +109,7 @@ does not define a CFG.
 	<regex name="%a%" value="È"/>
 	<regex name="%spiroLocant%" value="É"/>
 	<regex name="%phane%" value="Ĉ"/>
-	<regex name="%phaneLocants%" value="ĉ"/>
+	<regex name="%phaneLocants%" value="ć"/>
 	<regex name="%relativeCisTrans%" value="Ê"/>
 	<regex name="%fusionRingAcceptsFrontLocants%" value="Ë"/>
 	<regex name="%trivialRingSubstituentAnySuffix%" value="Ì"/>
@@ -337,7 +337,7 @@ does not define a CFG.
 	<regex name="%phaneAmplificant%" value = "(%phaneLocants%(%multiplierNotGroup%?%ringBridge%*%ringGroupOrFusedRingSystem%%a%|%multiplier%%structuralOpenBracket%%ringBridge%*%ringGroupOrFusedRingSystem%%a%%structuralCloseBracket%)%hyphen%?)"/>
 	<regex name="%phaneSystem%" value = "(%phaneAmplificant%*%phaneSkeleton%)"/>
 	<regex name="%irregularRingSubstituentStem%" value="(%vonBaeyerSystemSubstituent%|%cycloChainSubstituent%|%spiroSystemSubstituent%|%cyclicUnsaturableHydrocarbon%%a%?)"/>
-	<regex name="%ringSubstituent%" value = "((%ringGroupOrFusedRingSystem%|%phaneSystem%|%irregularRingSubstituentStem%)(%inlineEndings%|%conjunctiveSideChainInline%)|%trivialRingSubstituentSub%|%fusedRingSystemFromTrivialRingSubstituent%|%cyclicCarbohydrateSubstituent%|%nucelosylSubstituent%)"/>
+	<regex name="%ringSubstituent%" value = "((%ringGroupOrFusedRingSystem%|%irregularRingSubstituentStem%)(%inlineEndings%|%conjunctiveSideChainInline%)|%phaneSystem%%inlineEndings%|%trivialRingSubstituentSub%|%fusedRingSystemFromTrivialRingSubstituent%|%cyclicCarbohydrateSubstituent%|%nucelosylSubstituent%)"/>
 
 	<regex name="%polycyclicSpiroOldMethod%" value="(%ringNonDetachableFeatures%%ringGroupOrFusedRingSystem%%inlineChargeGroup%?(%hyphen%?%locant%?%spiroOldMethod%%locant%?(%ring_CanStartWithHydro_NonDetachableFeatures%%ringGroupOrFusedRingSystem%%inlineChargeGroup%?|%optionalOpenBracket%%locant%?%ring_CanStartWithHydro_NonDetachableFeatures%%ringGroupOrFusedRingSystem%%inlineChargeGroup%?%optionalCloseBracket%))+)"/>
 	<regex name="%vonBaeyerForSpiroUnsaturationAfterBracket%" value="(%structuralOpenBracket%%vonBaeyerMultiplier%%vonBaeyer%(%alkaneStem%|%multiplierNotGroup%%heteroStem%)%ane%%structuralCloseBracket%%unsaturation%+)" />
