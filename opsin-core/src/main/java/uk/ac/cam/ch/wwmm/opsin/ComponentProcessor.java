@@ -28,7 +28,9 @@ import static uk.ac.cam.ch.wwmm.opsin.OpsinTools.*;
 
 class ComponentProcessor {
 	private static final Pattern matchAddedHydrogenBracket =Pattern.compile("[\\[\\(\\{]([^\\[\\(\\{]*)H[\\]\\)\\}]");
-	private static final Pattern matchElementSymbolOrAminoAcidLocant = Pattern.compile("[A-Z][a-z]?'*(\\d+[a-z]?'*)?");
+	private static final Pattern MATCH_SUPERSCRIPT_RING_LOCANT = Pattern.compile("([1-9][0-9]*)\\^([1-9][0-9]*[a-z]?)");
+	private static final Pattern MATCH_PRIMED_LOCANT = Pattern.compile("([1-9][0-9]*[a-z]?)('*)");
+	private static final Pattern matchElementSymbolOrAminoAcidLocant = Pattern.compile("[A-Z][a-z]?'*(\\d+(?:\\^\\d+)?[a-z]?'*)?");
 	private static final Pattern matchChalcogenReplacement= Pattern.compile("thio|seleno|telluro");
 	private static final String[] traditionalAlkanePositionNames =new String[]{"alpha", "beta", "gamma", "delta", "epsilon", "zeta"};
 	
@@ -212,6 +214,7 @@ class ComponentProcessor {
 				processHW(subOrRoot);//hantzch-widman rings
 				FusedRingBuilder.processFusedRings(state, subOrRoot);
 				processFusedRingBridges(subOrRoot);
+				PhaneAmplifier.processPhaneAmplification(state, subOrRoot);
 				assignElementSymbolLocants(subOrRoot);
 				processRingAssemblies(subOrRoot);
 				processPolyCyclicSpiroNomenclature(subOrRoot);
@@ -3144,7 +3147,7 @@ class ComponentProcessor {
 					potentialLocant.detach();
 				}
 				else{
-					String locantText = StringTools.removeDashIfPresent(potentialLocant.getValue());
+					String locantText = convertSuperscriptRingAssemblyLocants(StringTools.removeDashIfPresent(potentialLocant.getValue()));
 					//locantText might be something like 1,1':3',1''
 					String[] perRingLocantArray = MATCH_COLONORSEMICOLON.split(locantText);
 					if (perRingLocantArray.length != (mvalue - 1)){
@@ -3270,6 +3273,7 @@ class ComponentProcessor {
 				}
 			}
 
+			addSuperscriptLocantsToRingAssembly(fragmentToResolveAndDuplicate);
 			group.setValue(multiplier.getValue() + group.getValue());
 			Element possibleOpenStructuralBracket = OpsinTools.getPreviousSibling(multiplier);
 			if (possibleOpenStructuralBracket!=null && possibleOpenStructuralBracket.getName().equals(STRUCTURALOPENBRACKET_EL)){//e.g. [2,2'-bipyridin].
@@ -3278,6 +3282,37 @@ class ComponentProcessor {
 				possibleOpenStructuralBracket.detach();
 			}
 			multiplier.detach();
+		}
+	}
+
+	/**
+	 * Converts ring assembly locants written with superscripts into the primed form e.g. 1^1,2^1:2^4,3^1 --> 1,1':4',1''
+	 */
+	private static String convertSuperscriptRingAssemblyLocants(String locantText) {
+		if (locantText.indexOf('^') < 0) {
+			return locantText;
+		}
+		Matcher m = MATCH_SUPERSCRIPT_RING_LOCANT.matcher(locantText);
+		StringBuffer sb = new StringBuffer();
+		while (m.find()) {
+			int ring = Integer.parseInt(m.group(1));
+			m.appendReplacement(sb, Matcher.quoteReplacement(m.group(2) + StringTools.multiplyString("'", ring - 1)));
+		}
+		m.appendTail(sb);
+		return sb.toString();
+	}
+
+	/**
+	 * Gives the atoms of each ring of a ring assembly a locant of the form ring^locant e.g. 3^4 for 4'' in a terphenyl
+	 */
+	private static void addSuperscriptLocantsToRingAssembly(Fragment ringAssembly) {
+		for (Atom atom : ringAssembly) {
+			for (String locant : new ArrayList<>(atom.getLocants())) {
+				Matcher m = MATCH_PRIMED_LOCANT.matcher(locant);
+				if (m.matches()) {
+					atom.addLocant((m.group(2).length() + 1) + "^" + m.group(1));
+				}
+			}
 		}
 	}
 
@@ -3865,12 +3900,22 @@ class ComponentProcessor {
 	 * @throws StructureBuildingException 
 	 */
 	private void processFusedRingBridges(Element subOrRoot) throws StructureBuildingException {
-		List<Element> bridges = subOrRoot.getChildElements(FUSEDRINGBRIDGE_EL);
-		int bridgeCount = bridges.size();
-		if (bridgeCount == 0) {
-			return;
+		Map<Element, List<Element>> bridgesOfGroup = new LinkedHashMap<>();
+		for (Element bridge : subOrRoot.getChildElements(FUSEDRINGBRIDGE_EL)) {
+			Element groupEl = OpsinTools.getNextSibling(bridge, GROUP_EL);
+			List<Element> bridges = bridgesOfGroup.get(groupEl);
+			if (bridges == null) {
+				bridges = new ArrayList<>();
+				bridgesOfGroup.put(groupEl, bridges);
+			}
+			bridges.add(bridge);
 		}
-		Element groupEl = OpsinTools.getNextSibling(bridges.get(bridgeCount - 1), GROUP_EL);
+		for (Map.Entry<Element, List<Element>> entry : bridgesOfGroup.entrySet()) {
+			processFusedRingBridges(entry.getKey(), entry.getValue());
+		}
+	}
+
+	private void processFusedRingBridges(Element groupEl, List<Element> bridges) throws StructureBuildingException {
 		Fragment ringFrag = groupEl.getFrag();
 		Map<Fragment, Atom[]> bridgeToRingAtoms = new LinkedHashMap<>();
 		for (Element bridge : bridges) {

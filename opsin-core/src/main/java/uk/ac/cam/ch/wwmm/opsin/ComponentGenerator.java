@@ -82,9 +82,9 @@ class ComponentGenerator {
 	private static final Pattern matchLambdaConvention = Pattern.compile("(\\S+)?lambda\\D*(\\d+)\\D*", Pattern.CASE_INSENSITIVE);
 	private static final Pattern matchHdigit =Pattern.compile("H\\d");
 	private static final Pattern matchNonDigit =Pattern.compile("\\D+");
-	private static final Pattern matchAddedHydrogenLocantBracket = Pattern.compile("[1-9][0-9]*[a-g]?'*H(,[1-9][0-9]*[a-g]?'*H)*", Pattern.CASE_INSENSITIVE);
+	private static final Pattern matchAddedHydrogenLocantBracket = Pattern.compile("[1-9][0-9]*(\\^[1-9][0-9]*)?[a-g]?'*H(,[1-9][0-9]*(\\^[1-9][0-9]*)?[a-g]?'*H)*", Pattern.CASE_INSENSITIVE);
 	private static final Pattern matchRSLocantBracket = Pattern.compile("[RS]|R[,/]?S", Pattern.CASE_INSENSITIVE);
-	private static final Pattern matchSuperscriptedLocant = Pattern.compile("(" + elementSymbols +"'*)[\\^\\[\\(\\{~\\*\\<]*(?:[sS][uU][pP][ ]?)?([^\\^\\[\\(\\{~\\*\\<\\]\\)\\}\\>]+)[^\\[\\(\\{]*");
+	private static final Pattern matchSuperscriptedLocant = Pattern.compile("(" + elementSymbols +"'*)[\\^\\[\\(\\{~\\*\\<]*(?:[sS][uU][pP][ ]?)?([^\\^\\[\\(\\{~\\*\\<\\]\\)\\}\\>]+(?:\\^[^\\^\\[\\(\\{~\\*\\<\\]\\)\\}\\>]+)?)[^\\[\\(\\{]*");
 	private static final Pattern matchIUPAC2004ElementLocant = Pattern.compile("(\\d+'*)-(" + elementSymbols +"'*)(.*)");
 	private static final Pattern matchNumericLocantWithLetterAndPrime = Pattern.compile("(\\d+)('+)([a-z])");
 	private static final Pattern matchGreek = Pattern.compile("alpha|beta|gamma|delta|epsilon|zeta|eta|omega", Pattern.CASE_INSENSITIVE);
@@ -133,6 +133,7 @@ class ComponentGenerator {
 		}
 		for (Element group : groups) {
 			detectAlkaneFusedRingBridges(group);
+			processPhaneSkeleton(group);
 			processRings(group);//processes cyclo, von baeyer and spiro tokens
 			handleGroupIrregularities(group);//handles benzyl, diethylene glycol, phenanthrone and other awkward bits of nomenclature
 		}
@@ -1938,6 +1939,24 @@ class ComponentGenerator {
 				}
 			}
 		}
+	}
+
+	private void processPhaneSkeleton(Element group) throws ComponentGenerationException {
+		if (!PHANE_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR))) {
+			return;
+		}
+		Element nodeCount = OpsinTools.getPreviousSibling(group);
+		if (nodeCount == null || !nodeCount.getName().equals(MULTIPLIER_EL)) {
+			throw new ComponentGenerationException("Expected a multiplier indicating the number of nodes before phane");
+		}
+		int nodes = Integer.parseInt(nodeCount.getAttributeValue(VALUE_ATR));
+		Element previous = OpsinTools.getPreviousSibling(nodeCount);
+		String skeletonType = previous != null ? previous.getName() : "";
+		if (nodes < 2 || (nodes < 3 && skeletonType.equals(CYCLO_EL))) {
+			throw new ComponentGenerationException("Phane skeleton has too few nodes: " + nodes);
+		}
+		group.getAttribute(VALUE_ATR).setValue(StringTools.multiplyString("C", nodes));
+		nodeCount.detach();
 	}
 
 	/**Looks (multiplier)cyclo/spiro/cyclo tags before chain
