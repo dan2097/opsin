@@ -392,7 +392,6 @@
 		<token value="OCCC(C)CCCC(C)C">tetrahydrogeraniol</token>
 		<!--fragrance trade names: name->CAS from curated synonym tables, CAS->structure from the CAS registry; constitution only unless sources agree on E/Z-->
 		<token value="Cc1ccc2c(c1)OCC(=O)CO2">calone</token>
-		<token value="CC(C)(O)CCCC1=CCC(C=O)CC1">lyral</token>
 		<token value="CC(C=O)Cc1ccc(C(C)(C)C)cc1">lilial</token>
 		<token value="CC(C=O)Cc1ccc2c(c1)OCO2">helional</token>
 		<token value="CC1CC(C)(c2ccccc2)OC(C)O1">floropal</token>
