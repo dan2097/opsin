@@ -10,3 +10,8 @@ oxychloride
 phenaleno[1,9b-c]thiophene
 1,1,1-triazole
 1,1,2-thiadiazole
+benzaldehyde glyceryl acetal
+benzaldehyde glycerol acetal
+phenylacetaldehyde butylene glycol acetal
+citral hexylene glycol acetal
+benzaldehyde propylene glycol hemiacetal

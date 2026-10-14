@@ -16,6 +16,7 @@ enum WordRule{
 	potentialAlcoholEster,
 	carbonylDerivative,
 	cyclicPeptide,
+	diolAcetal,
 	divalentFunctionalGroup,
 	ester,
 	functionalClassEster,

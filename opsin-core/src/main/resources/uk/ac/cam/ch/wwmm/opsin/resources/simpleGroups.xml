@@ -370,6 +370,26 @@
 		<token value="F[Ga-](F)(F)F">tetrafluorogallate|tetrafluorogallat</token><!--gallate has multiple meanings-->
 		<token value="I[Ga-](I)(I)I">tetraiodogallate|tetraiodogallat</token><!--gallate has multiple meanings-->
 		<token value="Cc1c(N=C=O)cc(N=C=O)cc1">toluene-diisocyanate|toluene diisocyanate|toluene-diisocyanat|toluene diisocyanat</token><!--trivial name-->
+		<!--fragrance and flavour trivial names: constitution only unless the name itself defines the configuration (cf. menthol)-->
+		<token value="OC1CC(C(C)=C)CC=C1C">carveol</token>
+		<token value="OC1(C)CCC23CC1C(C)(C)C2CCC3C">cedrol</token>
+		<token value="OC(C)(C)Cc1ccccc1">dimethyl benzyl carbinol</token>
+		<token value="OC1CC(C(C)=C)CCC1C">dihydrocarveol</token>
+		<token value="OC(C)(CC)CCC=C(C)C">dihydrolinalool</token>
+		<token value="OC1C2(C)CCC(C2)C1(C)C">fenchol</token>
+		<token value="O=C1C2(C)CCC(C2)C1(C)C">fenchone</token>
+		<token value="OC1CC2CCC1(C)C2(C)C">isoborneol</token>
+		<token value="OC1CC(C)CCC1C(C)=C">isopulegol</token>
+		<token value="O=C1CCC(C)=C1C/C=C\CC">jasmone|cis-jasmone</token>
+		<token value="O=C1CC(C)CCC1C(C)C">menthone</token>
+		<token value="OCC1=CCC2CC1C2(C)C">myrtenol</token>
+		<token value="OCCC1=CCC2CC1C2(C)C">nopol</token>
+		<token value="OC1CC2CC(C1=C)C2(C)C">pinocarveol</token>
+		<token value="O=C1C=C(C)CCC1C(C)C">piperitone</token>
+		<token value="O=C1CC(C)CCC1=C(C)C">pulegone</token>
+		<token value="O=CCC(C)CCCC(C)C">tetrahydrogeranial</token>
+		<token value="O=C1CC(C)CCC1C(C)(C)S">thiomenthone</token>
+		<token value="OCCC(C)CCCC(C)C">tetrahydrogeraniol</token>
 	</tokenList>
 
 	<tokenList tagname="group" type="simpleGroup" subType="biochemical" symbol="G">

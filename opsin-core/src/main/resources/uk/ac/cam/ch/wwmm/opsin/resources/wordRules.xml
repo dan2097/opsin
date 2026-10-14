@@ -315,6 +315,12 @@ Parsing will fail if the end result is not one or more full terms or a polymer.
 		<word type="functionalTerm" functionalGroupType="functionalClass" functionalGroupSubType="acetalLike"/>
 	</wordRule>
 
+	<wordRule name="diolAcetal" type="full">
+		<word type="full" />
+		<word type="full" />
+		<word type="functionalTerm" functionalGroupType="functionalClass" functionalGroupSubType="acetalLike"/>
+	</wordRule>
+
 	<wordRule name="amineDiConjunctiveSuffix" type="full">
 		<word type="full" endsWithGroupType="aminoAcid"/>
 		<word type="full" endsWithRegex="^(N,N-)?diacet(ic[ ]?acid|at[e]?)"/>

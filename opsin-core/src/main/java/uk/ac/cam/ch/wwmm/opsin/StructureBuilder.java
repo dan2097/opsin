@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
@@ -161,6 +162,9 @@ class StructureBuilder {
 			break;
 		case acetal:
 			buildAcetal(words);//e.g. propanal diethyl acetal
+			break;
+		case diolAcetal:
+			buildDiolAcetal(words);//e.g. benzaldehyde propylene glycol acetal
 			break;
 		case potentialAlcoholEster:
 			//e.g. uridine 5'-(tetrahydrogen triphosphate)
@@ -1371,6 +1375,70 @@ class StructureBuilder {
 			throw new StructureBuildingException("incorrect number of susbtituents when forming " + functionalClass);
 		}
 		connectSubstituentsToAcetal(acetalFrags, substituentsBr, hemiacetal);
+	}
+
+	private static final Pattern UNLOCANTED_TRADE_GLYCOL = Pattern.compile("[a-z]+ylene ?glycol", Pattern.CASE_INSENSITIVE);
+	private static final Pattern UNAMBIGUOUS_GLYCOL = Pattern.compile("(ethylene|propylene|trimethylene) ?glycol", Pattern.CASE_INSENSITIVE);
+
+	/**
+	 * Builds the cyclic acetal/ketal of a carbonyl compound and a named diol
+	 * e.g. benzaldehyde propylene glycol acetal, acetaldehyde butane-2,3-diol acetal
+	 * The diol must have exactly two hydroxy groups, as otherwise which pair forms the ring is unspecified
+	 * (e.g. glycerol gives both 1,3-dioxolane and 1,3-dioxane acetals)
+	 * @param words
+	 * @throws StructureBuildingException
+	 */
+	private void buildDiolAcetal(List<Element> words) throws StructureBuildingException {
+		if (words.size() != 3) {
+			throw new StructureBuildingException("OPSIN bug: diol acetal word rule expects three words");
+		}
+		resolveWordOrBracket(state, words.get(0));
+		resolveWordOrBracket(state, words.get(1));
+		List<Element> functionalClasses = OpsinTools.getDescendantElementsWithTagName(words.get(2), FUNCTIONALCLASS_EL);
+		if (functionalClasses.size() != 1) {
+			throw new StructureBuildingException("OPSIN bug: unable to find acetal functionalClass");
+		}
+		Element functionalClassEl = functionalClasses.get(0);
+		String functionalClass = functionalClassEl.getValue();
+		if (OpsinTools.getPreviousSibling(functionalClassEl) != null || functionalClass.contains("hemi") ||
+				!functionalClassEl.getAttributeValue(VALUE_ATR).equals("O,O")) {
+			throw new StructureBuildingException("Only an unmodified acetal/ketal can be formed from a diol: " + functionalClass);
+		}
+		Fragment carbonylFrag = findRightMostGroupInWordOrWordRule(words.get(0)).getFrag();
+		List<Atom> carbonylOxygens = new ArrayList<>();
+		for (Atom oxygen : findCarbonylOxygens(carbonylFrag, new ArrayList<>())) {
+			//only an aldehyde or ketone carbonyl, not that of an ester/acid/amide e.g. ethyl acetoacetate ethylene glycol ketal
+			boolean aldehydeOrKetone = true;
+			for (Atom neighbour : oxygen.getAtomNeighbours().get(0).getAtomNeighbours()) {
+				if (neighbour != oxygen && neighbour.getElement() != ChemEl.C && neighbour.getElement() != ChemEl.H) {
+					aldehydeOrKetone = false;
+				}
+			}
+			if (aldehydeOrKetone) {
+				carbonylOxygens.add(oxygen);
+			}
+		}
+		if (carbonylOxygens.size() != 1) {
+			throw new StructureBuildingException("A diol acetal requires exactly one aldehyde or ketone carbonyl. Found: " + carbonylOxygens.size());
+		}
+		Element diolGroup = findRightMostGroupInWordOrWordRule(words.get(1));
+		String diolWord = words.get(1).getAttributeValue(VALUE_ATR);
+		if (diolWord != null && UNLOCANTED_TRADE_GLYCOL.matcher(diolWord).matches() && !UNAMBIGUOUS_GLYCOL.matcher(diolWord).matches()) {
+			//OPSIN reads e.g. butylene/hexylene as alpha,omega-diyl but in trade names butylene glycol is usually butane-1,3- or 2,3-diol
+			//and hexylene glycol is 2-methylpentane-2,4-diol, so without locants only ethylene, propylene and trimethylene are trusted
+			throw new StructureBuildingException("Unlocanted " + diolWord + " is ambiguous in an acetal");
+		}
+		Fragment diolFrag = diolGroup.getFrag();
+		List<Atom> hydroxyAtoms = FragmentTools.findHydroxyGroups(diolFrag);
+		if (hydroxyAtoms.size() != 2) {
+			throw new StructureBuildingException("A diol acetal requires exactly two hydroxy groups. Found: " + hydroxyAtoms.size());
+		}
+		Atom carbonylOxygen = carbonylOxygens.get(0);
+		Atom carbonylCarbon = carbonylOxygen.getAtomNeighbours().get(0);
+		state.fragManager.removeAtomAndAssociatedBonds(carbonylOxygen);
+		for (Atom hydroxy : hydroxyAtoms) {
+			state.fragManager.createBond(carbonylCarbon, hydroxy, 1);
+		}
 	}
 
 	private void replaceChalcogensInAcetal(Element functionalClassEl, String[] elements) throws StructureBuildingException {

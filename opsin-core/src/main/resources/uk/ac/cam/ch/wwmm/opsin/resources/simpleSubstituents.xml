@@ -430,6 +430,21 @@
 		<token value="-[Y]">yttrio</token>
 		<token value="-[Zn]" usableAsAJoiner="yes">zincio</token>
 		<token value="-[Zr]">zirconio</token>
+		<!--fragrance and flavour trivial names: constitution only unless the name itself defines the configuration (cf. menthol)-->
+		<token value="-C1CC(C(C)=C)CC=C1C">carvyl</token>
+		<token value="-C1(C)CCC23CC1C(C)(C)C2CCC3C">cedryl</token>
+		<token value="-C1CC(C(C)=C)CCC1C">dihydrocarvyl</token>
+		<token value="-C(C)(CC)CCC=C(C)C">dihydrolinalyl</token>
+		<token value="-C(C)(C)Cc1ccccc1">dimethyl benzyl carbinyl</token>
+		<token value="-C1C2(C)CCC(C2)C1(C)C">fenchyl</token>
+		<token value="-C1CC2CCC1(C)C2(C)C">isobornyl</token>
+		<token value="-C1CC(C)CCC1C(C)=C">isopulegyl</token>
+		<token value="-CC1=CCC2CC1C2(C)C">myrtenyl</token>
+		<token value="-CCC1=CCC2CC1C2(C)C">nopyl</token>
+		<token value="-C1CC2CC(C1=C)C2(C)C">pinocarvyl</token>
+		<token value="-CC[C@@H](C)CCCC(C)=C">rhodinyl</token>
+		<token value="-C(C)c1ccccc1">styrallyl</token>
+		<token value="-CCC(C)CCCC(C)C">tetrahydrogeranyl</token>
 	</tokenList>
 
 	<tokenList tagname="group" type="substituent" subType="phospho" symbol="x">
