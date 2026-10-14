@@ -303,6 +303,10 @@ class StringTools {
             case '\u200d'://zero width joiner
             case '\uFEFF': return "";//BOM-found at the start of some UTF files
 
+            case '\u00AE'://registered trade mark sign e.g. in fragrance trade names
+            case '\u2122'://trade mark sign
+            case '\u2120': return "";//service mark sign
+
             default: throw new PreProcessingException("Unrecognised unicode character: " + c);
         }
     }

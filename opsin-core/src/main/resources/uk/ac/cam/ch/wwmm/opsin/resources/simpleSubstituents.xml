@@ -445,6 +445,8 @@
 		<token value="-CC[C@@H](C)CCCC(C)=C">rhodinyl</token>
 		<token value="-C(C)c1ccccc1">styrallyl</token>
 		<token value="-CCC(C)CCCC(C)C">tetrahydrogeranyl</token>
+		<!--fragrance trade names: name->CAS from curated synonym tables, CAS->structure from the CAS registry; constitution only unless sources agree on E/Z-->
+		<token value="-C(C)(C)CCCC(C)C=C">dihydromyrcenyl</token>
 	</tokenList>
 
 	<tokenList tagname="group" type="substituent" subType="phospho" symbol="x">

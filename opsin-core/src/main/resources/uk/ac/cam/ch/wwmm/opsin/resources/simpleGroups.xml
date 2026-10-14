@@ -390,6 +390,33 @@
 		<token value="O=CCC(C)CCCC(C)C">tetrahydrogeranial</token>
 		<token value="O=C1CC(C)CCC1C(C)(C)S">thiomenthone</token>
 		<token value="OCCC(C)CCCC(C)C">tetrahydrogeraniol</token>
+		<!--fragrance trade names: name->CAS from curated synonym tables, CAS->structure from the CAS registry; constitution only unless sources agree on E/Z-->
+		<token value="Cc1ccc2c(c1)OCC(=O)CO2">calone</token>
+		<token value="CC(C)(O)CCCC1=CCC(C=O)CC1">lyral</token>
+		<token value="CC(C=O)Cc1ccc(C(C)(C)C)cc1">lilial</token>
+		<token value="CC(C=O)Cc1ccc2c(c1)OCO2">helional</token>
+		<token value="CC1CC(C)(c2ccccc2)OC(C)O1">floropal</token>
+		<token value="CC1CC(C)(c2ccccc2)CO1">rhubafuran</token>
+		<token value="CC1=CCC(C=CC(C)C(C)O)C1(C)C">ebanol</token>
+		<token value="CC(C)=CCCC(C)CCCC(C)C=O">adoxal</token>
+		<token value="CCOC(=O)CC1(C)OCC(C)O1">fraistone</token>
+		<token value="CC(C)=CCCC(C)=CCCC(C)C=O">profarnesal</token>
+		<token value="CC(=O)OC1CCCCC1C(C)(C)C">verdox</token>
+		<token value="CCCCCC1COCCC1OC(C)=O">jasmopyrane</token>
+		<token value="C/C=C/C(=O)C1CCC(C)(C)C=C1C">isodamascone</token>
+		<token value="CCCC1CC(=O)C=C(C)C1">celery ketone</token>
+		<token value="CCC1OC(=O)C(O)=C1C">maple furanone</token>
+		<token value="CC1=C(O)C(=O)C(C)O1">strawberry furanone</token>
+		<token value="CC1=C(O)C(=O)OC1C">sotolon|sotolone</token>
+		<token value="CCCCC1OC(=O)CC1C">whiskey lactone|whisky lactone</token>
+		<token value="CCCCCC1CC=CC(=O)O1">massoia lactone</token>
+		<token value="C=CC1(C)CCC(=O)O1">lavender lactone</token>
+		<token value="CC1=C2CCC(C)CC2OC1=O">mintlactone|menthalactone</token>
+		<token value="C=CC(C)CCCC(C)(C)O">dihydromyrcenol</token>
+		<token value="CCC(C)CCCC(C)(C)O">tetrahydromyrcenol</token>
+		<token value="CCC(C)(O)CCCC(C)C">tetrahydrolinalool</token>
+		<token value="CC1CC(OC(=O)c2ccccc2O)CC(C)(C)C1">homosalate</token>
+		<token value="CCCCCC1C(=O)CCC1CC(=O)OC">methyl dihydrojasmonate|hedione</token>
 	</tokenList>
 
 	<tokenList tagname="group" type="simpleGroup" subType="biochemical" symbol="G">
