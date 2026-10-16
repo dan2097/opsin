@@ -117,7 +117,7 @@ public class Cli {
 	private static void displayUsage(Options options) {
 		HelpFormatter formatter = new HelpFormatter();
 		String version = NameToStructure.getVersion();
-		formatter.printHelp("java -jar opsin-" + (version != null ? version : "[version]")
+		formatter.printHelp("java -jar opsin-cli-" + (version != null ? version : "[version]")
 				+ "-jar-with-dependencies.jar [options] [inputfile] [outputfile]" + OpsinTools.NEWLINE
 				+ "OPSIN converts systematic chemical names to CML, SMILES or InChI/StdInChI/StdInChIKey"
 				+ OpsinTools.NEWLINE
