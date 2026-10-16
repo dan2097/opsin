@@ -29,6 +29,35 @@ public class ParserTest {
 		config = null;
 	}
 
+	@Test
+	public void testCompoundWithSeparatesWordRules() throws ParsingException {
+		for (String delimiter : new String[] {"compound with", "compd. with", "and", "COMPOUND WITH"}) {
+			List<Element> parses = parser.parse(config, "methanol " + delimiter + " acetate");
+			for (Element parse : parses) {
+				assertEquals(2, parse.getChildElements(XmlDeclarations.WORDRULE_EL).size());
+			}
+		}
+	}
+
+	@Test
+	public void testCompoundWithAllowsMultiwordComponents() throws ParsingException {
+		List<Element> parses = parser.parse(config, "ethyl acetate compound with methyl acetate compound with methanol");
+		for (Element parse : parses) {
+			assertEquals(3, parse.getChildElements(XmlDeclarations.WORDRULE_EL).size());
+		}
+		assertEquals(1, parser.parse(config, "methanol acetate").get(0).getChildElements(XmlDeclarations.WORDRULE_EL).size());
+	}
+
+	@Test
+	public void testSemicolonSeparatesWordRules() throws ParsingException {
+		for (String name : new String[] {"methanol; acetate", "ethyl acetate; methyl acetate; methanol"}) {
+			int expectedComponents = name.split("; ").length;
+			for (Element parse : parser.parse(config, name)) {
+				assertEquals(expectedComponents, parse.getChildElements(XmlDeclarations.WORDRULE_EL).size());
+			}
+		}
+	}
+
 	@Test()
 	public void testParseThrowsWhenNameIsUninterpretable() throws ParsingException {
 		assertThrows(ParsingException.class, () -> {

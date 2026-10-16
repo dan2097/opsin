@@ -169,6 +169,55 @@ public class TokenizerTest {
 	}
 	
 	@Test
+	public void semicolonAfterSubstituentIsInvalid() throws ParsingException {
+		for (boolean allowSpaceRemoval : new boolean[] {false, true}) {
+			assertFalse(tokenizer.tokenize("ethyl; benzene", allowSpaceRemoval).isSuccessfullyTokenized());
+		}
+	}
+
+	@Test
+	public void spacedHyphenAfterSubstituentWithoutSpaceRemovalIsInvalid() throws ParsingException {
+		TokenizationResult result = tokenizer.tokenize("ethyl - benzene", false);
+		assertFalse(result.isSuccessfullyTokenized());
+		assertEquals("- benzene", result.getUnparsedName());
+		assertFalse(result.getParse().getWords().get(0).endsComponent());
+	}
+
+	@Test
+	public void spacedHyphenAfterSubstituentWithSpaceRemovalIsNotComponentBoundary() throws ParsingException {
+		TokenizationResult result = tokenizer.tokenize("ethyl - benzene", true);
+		assertTrue(result.isSuccessfullyTokenized());
+		List<ParseWord> words = result.getParse().getWords();
+		assertEquals(2, words.size());
+		assertEquals("ethyl-", words.get(0).getWord());
+		assertEquals("benzene", words.get(1).getWord());
+		assertFalse(words.get(0).endsComponent());
+	}
+
+	@Test
+	public void semicolonAfterFullWordIsComponentBoundary() throws ParsingException {
+		assertMethanolBenzeneComponentBoundary("methanol; benzene");
+	}
+
+	@Test
+	public void spacedHyphenAfterFullWordIsComponentBoundary() throws ParsingException {
+		assertMethanolBenzeneComponentBoundary("methanol - benzene");
+	}
+
+	private void assertMethanolBenzeneComponentBoundary(String name) throws ParsingException {
+		for (boolean allowSpaceRemoval : new boolean[] {false, true}) {
+			TokenizationResult result = tokenizer.tokenize(name, allowSpaceRemoval);
+			assertTrue(result.isSuccessfullyTokenized());
+			List<ParseWord> words = result.getParse().getWords();
+			assertEquals(2, words.size());
+			assertEquals("methanol", words.get(0).getWord());
+			assertEquals("benzene", words.get(1).getWord());
+			assertTrue(words.get(0).endsComponent());
+			assertFalse(words.get(1).endsComponent());
+		}
+	}
+
+	@Test
 	public void compoundWithValidUse() throws ParsingException{
 		TokenizationResult result =tokenizer.tokenize("benzene compound with toluene", true);
 		assertTrue(result.isSuccessfullyTokenized());

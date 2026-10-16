@@ -106,11 +106,19 @@ class Tokeniser {
 		return parseTokens.size()>0 && (result.isFullyInterpretable() || result.getWorkingName().charAt(result.getWorkingName().length()-1)==' ' || result.getWorkingName().charAt(result.getWorkingName().length()-1) =='-');
 	}
 
-	private boolean isWordParsable(List<ParseTokens> parseTokens, TokenizationResult result) {
-		return parseTokens.size()>0 && (result.isFullyInterpretable() || result.getWorkingName().charAt(0) ==' ' || result.getWorkingName().charAt(0) =='-');
+	private boolean isWordParsable(List<ParseTokens> parseTokens, TokenizationResult result) throws ParsingException {
+		if (parseTokens.isEmpty()) {
+			return false;
+		}
+		if (result.isFullyInterpretable()) {
+			return true;
+		}
+		String remainingName = result.getWorkingName();
+		return remainingName.charAt(0) == ' ' || remainingName.charAt(0) == '-'
+				|| (remainingName.startsWith("; ") && hasFullOrFunctionalTermParse(parseTokens));
 	}
-	
-	private void parseWord(TokenizationResult result, List<ParseTokens> parseTokens, String parsedName, boolean reverse) {
+
+	private void parseWord(TokenizationResult result, List<ParseTokens> parseTokens, String parsedName, boolean reverse) throws ParsingException {
 		//If something like ethylchloride is encountered this should be split back to ethyl chloride and there will be 2 ParseWords returned
 		//In cases of properly formed names there will be only one ParseWord
 		//If there are two parses one of which assumes a missing space and one of which does not the former is discarded
@@ -129,11 +137,15 @@ class Tokeniser {
 				}
 			}
 			else{
-				if (remainingName.length() > 3 && remainingName.startsWith(" - ")){//this is a way of of indicating a mixture
-					remainingName = remainingName.substring(3);
-				}
-				else{
-					remainingName = remainingName.substring(1);
+				if (remainingName.startsWith("; ")
+						|| (remainingName.length() > 3 && remainingName.startsWith(" - ")
+								&& lastParsedWordWasFullOrFunctionalTerm(result))) {
+					//these are assumed to be indicating a mixture and hence set the end of component flag
+				    List<ParseWord> words = result.getParse().getWords();
+				    words.get(words.size() - 1).setEndsComponent(true);
+				    remainingName = remainingName.substring(remainingName.startsWith("; ") ? 2 : 3);
+				} else {
+				    remainingName = remainingName.substring(1);
 				}
 			}
 			result.setUnparsedName(remainingName);
@@ -155,6 +167,8 @@ class Tokeniser {
 	private boolean fixWord(TokenizationResult result, String parsedName, boolean allowRemovalOfWhiteSpace) throws ParsingException {
 		Matcher m = matchCompoundWithPhrase.matcher(result.getWorkingName());
 		if (m.lookingAt() && lastParsedWordWasFullOrFunctionalTerm(result)) {
+			List<ParseWord> words = result.getParse().getWords();
+			words.get(words.size() - 1).setEndsComponent(true);
 			result.setUnparsedName(parsedName + result.getWorkingName().substring(m.group().length()));
 		} else if (matchCasCollectiveIndex.matcher(result.getWorkingName()).matches()) {
 			result.setUnparsedName(parsedName);
@@ -179,14 +193,16 @@ class Tokeniser {
 	}
 
 	private boolean lastParsedWordWasFullOrFunctionalTerm(TokenizationResult result) throws ParsingException {
-		List<ParseWord> parseWords = result.getParse().getWords();
-		if (parseWords.size()>0){
-			List<ParseTokens> parseTokensList = parseWords.get(parseWords.size()-1).getParseTokens();
-			for (ParseTokens parseTokens : parseTokensList) {
-				WordType type = OpsinTools.determineWordType(parseTokens.getAnnotations());
-				if (type.equals(WordType.full) || type.equals(WordType.functionalTerm)){
-					return true;
-				}
+		List<ParseWord> words = result.getParse().getWords();
+		return !words.isEmpty()
+				&& hasFullOrFunctionalTermParse(words.get(words.size() - 1).getParseTokens());
+	}
+
+	private boolean hasFullOrFunctionalTermParse(List<ParseTokens> parses) throws ParsingException {
+		for (ParseTokens parseTokens : parses) {
+			WordType type = OpsinTools.determineWordType(parseTokens.getAnnotations());
+			if (type == WordType.full || type == WordType.functionalTerm) {
+				return true;
 			}
 		}
 		return false;
@@ -220,6 +236,9 @@ class Tokeniser {
 	
 		if (!parsedWords.isEmpty()) {//first see whether the space before the unparseable word is erroneous
 			ParseWord pw = parsedWords.get(parsedWords.size() - 1);
+			if (pw.endsComponent()) {
+				return false;
+			}
 			String lastWordAndUnparsed = pw.getWord() + result.getUnparsedName();
 			ParseRulesResults backResults = parseRules.getParses(lastWordAndUnparsed);
 			List<ParseTokens> backParseTokens = backResults.getParseTokensList();
