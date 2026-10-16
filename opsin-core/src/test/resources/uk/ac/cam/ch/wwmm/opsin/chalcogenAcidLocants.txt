@@ -21,3 +21,6 @@ phosphorothious S-acid	OH OH SH
 phosphonodithious S,S-acid	SH SH
 sulfurothious O-acid	=S OH OH
 carbamotelluroic Te-acid	=O TeH
+cyclohexanecarboselenothioic Se-acid	=S SeH
+hexaneselenothioic S-acid	=Se SH
+Se-methyl ethaneselenothioate	=S
