@@ -41,3 +41,8 @@ cycloheptaphane
 bicyclo[6.6.0]tetradecaphane
 spiro[5.7]tridecaphane
 2,4,6-trioxacycloheptaphane
+carbonothioic Se-acid
+carbonothioic O,O,O-acid
+carbonothioic S,S-acid
+phosphorothioic O,O,O,O-acid
+borothioic S,S-acid

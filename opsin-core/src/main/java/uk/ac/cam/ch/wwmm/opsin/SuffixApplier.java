@@ -225,8 +225,10 @@ class SuffixApplier {
 						}
 						break;
 					case setAcidicElement:
-						ChemEl chemEl = ChemEl.valueOf(suffixRule.getAttributeValue(SUFFIXRULES_ELEMENT_ATR));
-						swapElementsSuchThatThisElementIsAcidic(suffixFrag, chemEl);
+						Set<Atom> acidicAtoms = new HashSet<>();
+						for (ChemEl chemEl : getAcidicElements(suffixRule, suffix)) {
+							swapElementsSuchThatThisElementIsAcidic(suffixFrag != null ? suffixFrag : frag, chemEl, acidicAtoms);
+						}
 						break;
 					case addSuffixPrefixIfNonePresentAndCyclic:
 					case addFunctionalAtomsToHydroxyGroups:
@@ -565,16 +567,46 @@ class SuffixApplier {
 	
 	
 	/**
+	 * The element attribute of the rule or, if absent, the symbols before "acid" in the suffix e.g. S,Se for "ic s,se-acid"
+	 * @param suffixRule
+	 * @param suffix
+	 * @return
+	 */
+	private List<ChemEl> getAcidicElements(SuffixRule suffixRule, Element suffix) {
+		String element = suffixRule.getAttributeValue(SUFFIXRULES_ELEMENT_ATR);
+		if (element != null) {
+			return Arrays.asList(ChemEl.valueOf(element));
+		}
+		String suffixText = suffix.getValue();
+		List<ChemEl> acidicElements = new ArrayList<>();
+		for (String symbol : suffixText.substring(suffixText.indexOf(' ') + 1, suffixText.lastIndexOf('-')).split(",")) {
+			acidicElements.add(ChemEl.valueOf(Character.toUpperCase(symbol.charAt(0)) + symbol.substring(1)));
+		}
+		return acidicElements;
+	}
+
+	/**
 	 * e.g. if element is "S" changes C(=S)O -->C(=O)S
 	 * @param frag
 	 * @param chemEl
+	 * @param acidicAtoms functional atoms already made acidic for this suffix e.g. the two S of "s,s-acid"
 	 * @throws StructureBuildingException 
 	 */
-	private void swapElementsSuchThatThisElementIsAcidic(Fragment frag, ChemEl chemEl) throws StructureBuildingException {
+	private void swapElementsSuchThatThisElementIsAcidic(Fragment frag, ChemEl chemEl, Set<Atom> acidicAtoms) throws StructureBuildingException {
+		for (int i = 0, l =frag.getFunctionalAtomCount(); i < l; i++) {
+			Atom atom = frag.getFunctionalAtom(i).getAtom();
+			if (atom.getElement() == chemEl && acidicAtoms.add(atom)) {
+				Set<Atom> ambiguouslyElementedAtoms = atom.getProperty(Atom.AMBIGUOUS_ELEMENT_ASSIGNMENT);
+				if (ambiguouslyElementedAtoms != null) {
+					ambiguouslyElementedAtoms.remove(atom);
+				}
+				return;
+			}
+		}
 		for (int i = 0, l =frag.getFunctionalAtomCount(); i < l; i++) {
 			Atom atom = frag.getFunctionalAtom(i).getAtom();
 			Set<Atom> ambiguouslyElementedAtoms = atom.getProperty(Atom.AMBIGUOUS_ELEMENT_ASSIGNMENT);
-			if (ambiguouslyElementedAtoms != null) {
+			if (ambiguouslyElementedAtoms != null && !acidicAtoms.contains(atom)) {
 				Atom atomToSwapWith = null;
 				for (Atom ambiguouslyElementedAtom : ambiguouslyElementedAtoms) {
 					if (ambiguouslyElementedAtom.getElement() == chemEl){
@@ -601,6 +633,7 @@ class SuffixApplier {
 						ambiguouslyElementedAtoms.remove(atomToSwapWith);
 					}
 					ambiguouslyElementedAtoms.remove(atom);
+					acidicAtoms.add(atom);
 					return;
 				}
 			}
