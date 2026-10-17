@@ -11,6 +11,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.concurrent.Callable;
@@ -73,13 +74,23 @@ public class Cli {
 		String[] unparsedArgs = cmd.getArgs();
 		if (unparsedArgs.length == 0) {
 			System.err.println("Run the jar using the -h flag for help. Enter a chemical name to begin:");
-		} else if (unparsedArgs.length == 1) {
-			input = new FileInputStream(new File(unparsedArgs[0]));
-		} else if (unparsedArgs.length == 2) {
-			input = new FileInputStream(new File(unparsedArgs[0]));
-			output = new FileOutputStream(new File(unparsedArgs[1]));
-		} else {
-			displayUsage(options);
+		} else if (unparsedArgs.length >= 1) {
+			File inputFile = new File(unparsedArgs[0]);
+			if (!inputFile.isFile()) {
+				System.err.println(unparsedArgs[0] + " must be a file of input names");
+				System.exit(1);
+			}
+			input = new FileInputStream(inputFile);
+			if (unparsedArgs.length == 2) {
+				File outputFile = new File(unparsedArgs[1]);
+				if (outputFile.isFile() && Files.isSameFile(inputFile.toPath(), outputFile.toPath())) {
+					System.err.println(unparsedArgs[0] + " and " + unparsedArgs[1] + " cannot be the same file");
+					System.exit(1);
+				}
+				output = new FileOutputStream(outputFile);
+			} else if (unparsedArgs.length > 2) {
+				displayUsage(options);
+			}
 		}
 		try {
 			String outputType = cmd.getOptionValue("o", "smi");
