@@ -107,6 +107,27 @@ public class ParserTest {
 			}
 		}
 	}
+
+	@Test
+	public void testRejectNonPositiveComponentRatios() {
+		for (String ratio : new String[] {"(0:1)", "(1:0)", "[1/0]", "(-1:1)", "(1:-2)"}) {
+			assertThrows(ParsingException.class, () -> Parser.processStoichiometryIndication(ratio), ratio);
+		}
+	}
+
+	@Test
+	public void testRejectInvalidIntegerComponentRatios() {
+		for (String ratio : new String[] {"(1:2147483648)", "(1:99999999999999999999)", "(1:1.5)", "(1:abc)"}) {
+			assertThrows(ParsingException.class, () -> Parser.processStoichiometryIndication(ratio), ratio);
+		}
+	}
+
+	@Test
+	public void testParseRejectsInvalidStoichiometry() {
+		for (String ratio : new String[] {"(1:0)", "(1:2147483648)"}) {
+			assertThrows(ParsingException.class, () -> parser.parse(config, "methanol compound with ethanol " + ratio), ratio);
+		}
+	}
 	
 	@Test
 	public void testConvertStringToComponentRatios2() throws ParsingException {

@@ -200,7 +200,17 @@ class Parser {
 				componentRatios[i] = 1;
 			}
 			else{
-				componentRatios[i] = Integer.parseInt(currentRatio);
+				int ratio;
+				try {
+					ratio = Integer.parseInt(currentRatio);
+				} catch (NumberFormatException e) {
+					throw new ParsingException("Invalid stoichiometry ratio: " + currentRatio, e);
+				}
+				if (ratio < 1) {
+					throw new ParsingException("Invalid stoichiometry ratio: " + currentRatio
+							+ ". Component ratios must be at least 1");
+				}
+				componentRatios[i] = ratio;
 			}
 		}
 		return componentRatios;
