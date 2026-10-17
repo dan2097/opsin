@@ -46,3 +46,5 @@ carbonothioic O,O,O-acid
 carbonothioic S,S-acid
 phosphorothioic O,O,O,O-acid
 borothioic S,S-acid
+D-2-aminobutane
+D-2-amino-3-methoxypropan-1-ol
