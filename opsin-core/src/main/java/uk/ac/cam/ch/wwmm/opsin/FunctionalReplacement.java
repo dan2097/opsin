@@ -393,6 +393,12 @@ class FunctionalReplacement {
 					}
 					state.fragManager.incorporateFragment(replacementFrag, atomToUse.getFrag());
 					state.fragManager.replaceAtomWithAnotherAtomPreservingConnectivity(atomToUse, atomThatWillReplaceOxygen);
+					Set<Atom> replacedAtomAmbiguity = atomToUse.getProperty(Atom.AMBIGUOUS_ELEMENT_ASSIGNMENT);
+					if (replacedAtomAmbiguity != null){//the atom was a candidate for an earlier infix e.g. the second infix of selenothioic
+						replacedAtomAmbiguity.remove(atomToUse);
+						replacedAtomAmbiguity.add(atomThatWillReplaceOxygen);
+						atomThatWillReplaceOxygen.setProperty(Atom.AMBIGUOUS_ELEMENT_ASSIGNMENT, replacedAtomAmbiguity);
+					}
 					if (infixAssignmentAmbiguous){
 						ambiguousElementAtoms.add(atomThatWillReplaceOxygen);
 						if (atomThatWillReplaceOxygen.getProperty(Atom.AMBIGUOUS_ELEMENT_ASSIGNMENT)!=null){

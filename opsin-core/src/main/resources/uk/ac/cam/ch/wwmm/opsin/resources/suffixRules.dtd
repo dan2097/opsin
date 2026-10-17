@@ -23,4 +23,4 @@
 <!ELEMENT convertHydroxyGroupsToOutAtoms EMPTY>
 <!ELEMENT convertHydroxyGroupsToPositiveCharge EMPTY>
 <!ELEMENT setAcidicElement EMPTY>
-<!ATTLIST setAcidicElement element CDATA #REQUIRED>
+<!ATTLIST setAcidicElement element CDATA #IMPLIED>

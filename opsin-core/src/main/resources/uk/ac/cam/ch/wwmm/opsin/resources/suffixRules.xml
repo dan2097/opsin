@@ -233,6 +233,10 @@ sense of this -->
 	<rule value="ic_nonCarboxylic">
 		<addFunctionalAtomsToHydroxyGroups/>
 	</rule>
+	<rule value="ic_acid_locants_nonCarboxylic">
+		<addFunctionalAtomsToHydroxyGroups/>
+		<setAcidicElement/>
+	</rule>
 	<rule value="ide">
 		<changecharge charge="-1" protons="-1" />
 	</rule>
@@ -318,6 +322,11 @@ sense of this -->
 	<rule value="ous_nonCarboxylic">
 		<removeTerminalOxygen order="2" />
 		<addFunctionalAtomsToHydroxyGroups/>
+	</rule>
+	<rule value="ous_acid_locants_nonCarboxylic">
+		<removeTerminalOxygen order="2" />
+		<addFunctionalAtomsToHydroxyGroups/>
+		<setAcidicElement/>
 	</rule>
 	<rule value="oximino">
 		<addgroup SMILES="[*]ON" outIDs="3,3" />
