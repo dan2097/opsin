@@ -27,11 +27,11 @@ import javax.xml.stream.XMLStreamWriter;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
-import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Option.Builder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.UnrecognizedOptionException;
+import org.apache.commons.cli.help.HelpFormatter;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.core.config.Configurator;
 
@@ -125,15 +125,15 @@ public class Cli {
 		}
 	}
 
-	private static void displayUsage(Options options) {
-		HelpFormatter formatter = new HelpFormatter();
+	private static void displayUsage(Options options) throws IOException {
+		HelpFormatter formatter = HelpFormatter.builder().get();
 		String version = NameToStructure.getVersion();
 		formatter.printHelp("java -jar opsin-cli-" + (version != null ? version : "[version]")
 				+ "-jar-with-dependencies.jar [options] [inputfile] [outputfile]" + OpsinTools.NEWLINE
 				+ "OPSIN converts systematic chemical names to CML, SMILES or InChI/StdInChI/StdInChIKey"
 				+ OpsinTools.NEWLINE
 				+ "Names should be new line delimited and may be read from stdin (default) or a file and output to stdout (default) or a file",
-				options);
+				null, options, null, false);
 		System.exit(0);
 	}
 
@@ -153,7 +153,7 @@ public class Cli {
 		outputOptionsDesc.append("stdinchi for StdInChI").append(OpsinTools.NEWLINE);
 		outputOptionsDesc.append("stdinchikey for StdInChIKey");
 		outputBuilder.desc(outputOptionsDesc.toString());
-		options.addOption(outputBuilder.build());
+		options.addOption(outputBuilder.get());
 		options.addOption("h", "help", false, "Displays the allowed command line flags");
 		options.addOption("v", "verbose", false, "Enables debugging");
 
@@ -172,7 +172,7 @@ public class Cli {
 		threadsBuilder.argName("count");
 		threadsBuilder.desc("Number of names to interpret concurrently (default 1)." + OpsinTools.NEWLINE
 				+ "Output order always matches input order. Use 0 for one thread per available processor.");
-		options.addOption(threadsBuilder.build());
+		options.addOption(threadsBuilder.get());
 		return options;
 	}
 
