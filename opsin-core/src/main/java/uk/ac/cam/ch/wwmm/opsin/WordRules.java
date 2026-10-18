@@ -609,7 +609,7 @@ class WordRules {
 				else {
 					while (lastEl != null && elName.equals(SUFFIX_EL)) {
 						String suffixValAtr = lastEl.getAttributeValue(VALUE_ATR);
-						if (ateOrIteOrAmide.matcher(suffixValAtr).find() || suffixValAtr.equals("glycoside")) {
+						if ((ateOrIteOrAmide.matcher(suffixValAtr).find() && !suffixValAtr.equals("olate")) || suffixValAtr.equals("glycoside")) {
 							return true;
 						}
 						//glycoside is not always the last suffix
