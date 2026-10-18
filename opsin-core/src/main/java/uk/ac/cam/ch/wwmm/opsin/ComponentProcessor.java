@@ -5425,7 +5425,7 @@ class ComponentProcessor {
 		}
 		if(locants.size() > 0) {
 			if (multiplier==1 && oneBelowWordLevel && OpsinTools.getPreviousSibling(subOrBracket)==null){//locant might be word Level locant
-				if (wordLevelLocantsAllowed(subOrBracket, locants.size())){//something like S-ethyl or S-(2-ethylphenyl) or S-4-tert-butylphenyl
+				if (wordLevelLocantsAllowed(subOrBracket, locants)){//something like S-ethyl or S-(2-ethylphenyl) or S-4-tert-butylphenyl
 					Element locant = locants.remove(0);
 					if (locant.getValue().split(",").length!=1){
 						throw new ComponentGenerationException("Multiplier and locant count failed to agree; All locants could not be assigned!");
@@ -5486,7 +5486,8 @@ class ComponentProcessor {
 
 
 
-	private boolean wordLevelLocantsAllowed(Element subBracketOrRoot, int numberOflocants) {
+	private boolean wordLevelLocantsAllowed(Element subBracketOrRoot, List<Element> locants) throws StructureBuildingException {
+		int numberOflocants = locants.size();
 		Element parentElem = subBracketOrRoot.getParent();
 		if (WordType.valueOf(parentElem.getAttributeValue(TYPE_ATR))==WordType.substituent
 				&& (OpsinTools.getNextSibling(subBracketOrRoot)==null || numberOflocants>=2)){
@@ -5494,8 +5495,11 @@ class ComponentProcessor {
 				return true;
 			}
 		}
-		if ((state.currentWordRule == WordRule.potentialAlcoholEster || state.currentWordRule == WordRule.amineDiConjunctiveSuffix || 
-				(state.currentWordRule == WordRule.ester  &&  (OpsinTools.getNextSibling(subBracketOrRoot)==null || numberOflocants>=2)))
+		if ((state.currentWordRule == WordRule.ester || state.currentWordRule == WordRule.potentialAlcoholEster || state.currentWordRule == WordRule.amineDiConjunctiveSuffix)
+				&& (OpsinTools.getNextSibling(subBracketOrRoot)==null || numberOflocants >= 2 || 
+						(state.currentWordRule == WordRule.potentialAlcoholEster && numberOflocants == 1 && !checkLocantPresentOnPotentialRoot(state, subBracketOrRoot, locants.get(0).getValue())) ||
+						//The subsequent BIOCHEMICALLINKAGE_EL already acts as a locant so no locant is expected
+						(state.currentWordRule == WordRule.potentialAlcoholEster && hasBiochemicalLinkageDescriptor(subBracketOrRoot)))
 				&& parentElem.getName().equals(WORD_EL)){
 			Element wordRule = parentElem.getParent();
 			List<Element> words = wordRule.getChildElements(WORD_EL);
@@ -5512,6 +5516,20 @@ class ComponentProcessor {
 			}
 		}
 
+		return false;
+	}
+
+	private boolean hasBiochemicalLinkageDescriptor(Element subBracketOrRoot) {
+		if (subBracketOrRoot.getFirstChildElement(BIOCHEMICALLINKAGE_EL) != null) {
+			return true;
+		}
+		if (subBracketOrRoot.getName().equals(BRACKET_EL)) {
+			//The final component determines how the bracket attaches outside its scope.
+			List<Element> children = OpsinTools.getChildElementsWithTagNames(subBracketOrRoot, new String[]{SUBSTITUENT_EL, BRACKET_EL, ROOT_EL});
+			if (!children.isEmpty()) {
+				return hasBiochemicalLinkageDescriptor(children.get(children.size() - 1));
+			}
+		}
 		return false;
 	}
 
@@ -5532,7 +5550,7 @@ class ComponentProcessor {
 				int multiVal = Integer.parseInt(multiplier.getAttributeValue(VALUE_ATR));
 				List<Element> locants = firstSubBrackOrRoot.getChildElements(LOCANT_EL);
 				boolean assignLocants = false;
-				boolean wordLevelLocants = wordLevelLocantsAllowed(firstSubBrackOrRoot, locants.size());//something like O,S-dimethyl phosphorothioate
+				boolean wordLevelLocants = wordLevelLocantsAllowed(firstSubBrackOrRoot, locants);//something like O,S-dimethyl phosphorothioate
 				if (locants.size() > 1) {
 					throw new ComponentGenerationException("Unable to assign all locants");
 				}
