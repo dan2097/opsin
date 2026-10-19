@@ -204,4 +204,21 @@ public class CASToolsTest {
 		CASTools.uninvertCASName("benzoic acid, ester", parseRules);
 		});
 	}
+
+	@Test
+	public void casLoneSubstituentLocantBelongsToSubstituent() throws ParsingException{
+		//no ring locant is cited for a monosubstituted benzene, so the locant is the substituent's own (prop-2-enyl)
+		assertEquals("(2-propenyl)Benzene", CASTools.uninvertCASName("Benzene, 2-propenyl-", parseRules));
+		assertEquals("(3-butenyl)Cyclohexane", CASTools.uninvertCASName("Cyclohexane, 3-butenyl-", parseRules));
+	}
+
+	@Test
+	public void casLocantOfRingParentUnchanged() throws ParsingException{
+		//pyridine positions are not equivalent: the CAS locant is a ring locant
+		assertEquals("2-propenyl-Pyridine", CASTools.uninvertCASName("Pyridine, 2-propenyl-", parseRules));
+		//two substituents: the locants are ring locants
+		assertEquals("1,2-dimethyl-Benzene", CASTools.uninvertCASName("Benzene, 1,2-dimethyl-", parseRules));
+		//unlocanted lone substituent
+		assertEquals("ethenyl-Benzene", CASTools.uninvertCASName("Benzene, ethenyl-", parseRules));
+	}
 }

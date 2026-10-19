@@ -15,6 +15,8 @@ class CASTools {
 	private static final Pattern matchCasCollectiveIndex = Pattern.compile("([\\[\\(\\{]([1-9][0-9]?[cC][iI][, ]?)+[\\]\\)\\}])+|[1-9][0-9]?[cC][iI]", Pattern.CASE_INSENSITIVE);
 	private static final Pattern matchAcid = Pattern.compile("acid[\\]\\)\\}]*", Pattern.CASE_INSENSITIVE);
 	private static final Pattern matchCommaSpace = Pattern.compile(", ");
+	private static final Pattern matchParentWithEquivalentPositions = Pattern.compile("benzene|cyclo(prop|but|pent|hex|hept|oct)ane", Pattern.CASE_INSENSITIVE);
+	private static final Pattern matchLocantedSimpleSubstituent = Pattern.compile("([1-9][0-9]?-[a-z]+)-", Pattern.CASE_INSENSITIVE);
 	private static final Pattern matchCompoundWithPhrase = Pattern.compile("(compd\\. with|compound with|and) ", Pattern.CASE_INSENSITIVE);
 	private static final Pattern matchFunctionalTermAllowingSubstituentPrefix = Pattern.compile("(amide|hydrazide|(thi|selen|tellur)?oxime|hydrazone|(iso)?(semicarbazone|thiosemicarbazone|selenosemicarbazone|tellurosemicarbazone)|imide|imine|semioxamazone)[\\]\\)\\}]*", Pattern.CASE_INSENSITIVE);
 	
@@ -156,6 +158,15 @@ class CASTools {
 						}
 					}
 				}
+			}
+		}
+		//A CAS index name gives no ring locant for the lone substituent of a parent whose positions are all equivalent
+		//e.g. Benzene, ethenyl-; and a compound substituent is bracketed e.g. Benzene, (1-methylethyl)-.
+		//Hence the locant of such a lone substituent belongs to the substituent: Benzene, 2-propenyl- is (prop-2-enyl)benzene
+		if (substituents.size() == 1 && seperateWordSubstituents.isEmpty() && matchParentWithEquivalentPositions.matcher(parent).matches()) {
+			Matcher lone = matchLocantedSimpleSubstituent.matcher(substituents.get(0));
+			if (lone.matches()) {
+				substituents.set(0, "(" + lone.group(1) + ")");
 			}
 		}
 		StringBuilder casName = new StringBuilder();
