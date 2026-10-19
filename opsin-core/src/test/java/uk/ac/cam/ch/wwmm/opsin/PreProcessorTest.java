@@ -82,4 +82,32 @@ public class PreProcessorTest {
 		assertEquals("1^4-ol", PreProcessor.preProcess("1<sup>4</sup>-ol"));
 		assertEquals("1^4-ol", PreProcessor.preProcess("1<SUP>4</SUP>-ol"));
 	}
+
+	@Test
+	public void testPeroxoAcidWordMovedIntoBracket() throws PreProcessingException {
+		assertEquals("ethane(peroxoic acid)", PreProcessor.preProcess("ethane(peroxoic) acid"));
+		assertEquals("ethane(OS-thioperoxoic acid)", PreProcessor.preProcess("ethane(thioperoxoic) OS-acid"));
+		assertEquals("butanebis(OS-thioperoxoic acid)", PreProcessor.preProcess("butanebis((thioperoxoic) OS,OS-acid)"));
+		assertEquals("ethaneperoxothioic acid", PreProcessor.preProcess("ethaneperoxothioic OO-acid"));
+	}
+
+	@Test
+	public void testPeroxoAcidSymbolsThatCannotBeExpressedAreLeftAlone() throws PreProcessingException {
+		assertEquals("ethane(thioperoxoic) SS-acid", PreProcessor.preProcess("ethane(thioperoxoic) SS-acid"));
+		assertEquals("ethane(dithioperoxoic) SS-acid", PreProcessor.preProcess("ethane(dithioperoxoic) SS-acid"));
+		assertEquals("carbonobis(thioperoxoic) OS,SO-acid", PreProcessor.preProcess("carbonobis(thioperoxoic) OS,SO-acid"));
+	}
+
+	@Test
+	public void testPeroxoInfixSymbolsAfterBracket() throws PreProcessingException {
+		assertEquals("benzenecarbo(STe-tellurothioperoxo)thioic acid", PreProcessor.preProcess("benzenecarbo(tellurothioperoxo)thioic STe-acid"));
+	}
+
+	@Test
+	public void testEsterPairCopiedIntoUnorientedPeroxoInfix() throws PreProcessingException {
+		assertEquals("OS-methyl ethane(OS-thioperoxoate)", PreProcessor.preProcess("OS-methyl ethane(thioperoxoate)"));
+		assertEquals("SS-methyl ethane(dithioperoxoate)", PreProcessor.preProcess("SS-methyl ethane(dithioperoxoate)"));
+		assertEquals("OS-methyl SO-ethyl carbono(thioperoxoate)", PreProcessor.preProcess("OS-methyl SO-ethyl carbono(thioperoxoate)"));
+		assertEquals("ethane-1-OS-thioperoxol", PreProcessor.preProcess("ethane-1-OS-thioperoxol"));
+	}
 }

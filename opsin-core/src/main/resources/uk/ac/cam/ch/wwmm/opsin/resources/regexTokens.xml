@@ -30,7 +30,8 @@
 <!--Assembles the rather large regex for detecting all locant variants-->
 	<regex name="%phaneAmplifiedAtomLocantDoesNotEndInLetter%" regex="[1-9][0-9]*\^%locantDoesNotEndInLetter%"/>
 	<regex name="%phaneAmplifiedAtomLocant%" regex="[1-9][0-9]*\^%locant%"/><!--atom of an amplificant: skeleton locant ^ amplificant locant e.g. 1^4-->
-	<regex name="%locantTypes%" regex="(%phaneAmplifiedAtomLocant%|%locant%(-%elementSymbol%'*)?|%elementSymbol%'*(%locant%|%superScriptedLocant%|\^?%phaneAmplifiedAtomLocant%|%greek%'*)?|%greek%'*)"/><!-- e.g. 2, 3c, 2', 1a', N, N', N4, 1-N, 2-N' etc.-->
+	<regex name="%chalcogenPairLocant%" regex="((O|S|Se|Te)(O|S|Se|Te))"/><!--atoms of an O-O, O-S etc. group read from the carbon end e.g. OS-methyl; the last atom carries the substituent-->
+	<regex name="%locantTypes%" regex="(%phaneAmplifiedAtomLocant%|%locant%(-%elementSymbol%'*)?|%chalcogenPairLocant%|%elementSymbol%'*(%locant%|%superScriptedLocant%|\^?%phaneAmplifiedAtomLocant%|%greek%'*)?|%greek%'*)"/><!-- e.g. 2, 3c, 2', 1a', N, N', N4, 1-N, 2-N', OS etc.-->
 	<regex name="%locantTypesOptionalHyphen%" regex="(%phaneAmplifiedAtomLocantDoesNotEndInLetter%|%locantDoesNotEndInLetter%|%locant%-%elementSymbol%'+|%elementSymbol%'+|%elementSymbol%'*(%locantDoesNotEndInLetter%|%superScriptedLocant%|\^?%phaneAmplifiedAtomLocantDoesNotEndInLetter%|%greek%'*)|%greek%'*)"/><!--subset that do not end with a letter-->
 	<regex name="%indicatedHydrogen%" regex="((%locant%|%phaneAmplifiedAtomLocant%)[hH])"/>
 	<regex name="%compoundLocantOrAddedHydrogen%" regex="(%openBracket%(%locant%|%phaneAmplifiedAtomLocant%|%indicatedHydrogen%(,%indicatedHydrogen%)*)%closeBracket%)"/><!--e.g.1(6) or 1(5H) or 1(2H,3H)-->

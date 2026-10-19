@@ -1349,8 +1349,11 @@ class ComponentGenerator {
 	 */
 	private void processInfixes(Element subOrRoot) throws ComponentGenerationException {
 		List<Element> infixes = subOrRoot.getChildElements(INFIX_EL);
+		for (Element openBracket : subOrRoot.getChildElements(STRUCTURALOPENBRACKET_EL)) {
+			checkPeroxoBracket(openBracket);
+		}
 		for (Element infix : infixes) {
-			Element suffix = OpsinTools.getNextSiblingIgnoringCertainElements(infix, new String[]{INFIX_EL, SUFFIXPREFIX_EL, MULTIPLIER_EL});
+			Element suffix = OpsinTools.getNextSiblingIgnoringCertainElements(infix, new String[]{INFIX_EL, SUFFIXPREFIX_EL, MULTIPLIER_EL, STRUCTURALOPENBRACKET_EL, STRUCTURALCLOSEBRACKET_EL});
 			if (suffix ==null || !suffix.getName().equals(SUFFIX_EL)){
 				throw new ComponentGenerationException("No suffix found next next to infix: "+ infix.getValue());
 			}
@@ -1387,7 +1390,10 @@ class ComponentGenerator {
 				infix.detach();
 			}
 			if (possibleBracket.getName().equals(STRUCTURALOPENBRACKET_EL)){
-				Element bracket = OpsinTools.getNextSibling(suffix);
+				Element bracket = findCloseBracketBeforeSuffix(possibleBracket, suffix);//e.g. carbo(dithioperoxo)thioic acid
+				if (bracket == null) {
+					bracket = OpsinTools.getNextSibling(suffix);
+				}
 				if (!bracket.getName().equals(STRUCTURALCLOSEBRACKET_EL)){
 					throw new ComponentGenerationException("Matching closing bracket not found around infix/suffix block");
 				}
@@ -1423,6 +1429,63 @@ class ComponentGenerator {
 				throw new ComponentGenerationException(infixName + "o in this context is a suffix, not an infix");
 			}
 			suffix.getAttribute(INFIX_ATR).setValue(StringTools.stringListToString(currentInfixInformation, ";"));
+		}
+	}
+
+	private Element findCloseBracketBeforeSuffix(Element openBracket, Element suffix) {
+		for (Element el = OpsinTools.getNextSibling(openBracket); el != null && el != suffix; el = OpsinTools.getNextSibling(el)) {
+			if (el.getName().equals(STRUCTURALCLOSEBRACKET_EL)) {
+				return el;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Brackets that are not just around an infix/suffix block (e.g. phosphoro(peroxoic acid), carbo(dithioperoxo)thioic acid) are only used for peroxo infixes
+	 * Within the brackets of e.g. ethane(thioperoxoic) it is not known which of the oxygens of the peroxy group is replaced unless the infix states it e.g. OS-thioperoxo
+	 * @param openBracket
+	 * @throws ComponentGenerationException
+	 */
+	private void checkPeroxoBracket(Element openBracket) throws ComponentGenerationException {
+		Element first = OpsinTools.getNextSiblingIgnoringCertainElements(openBracket, new String[]{MULTIPLIER_EL});
+		if (first == null || !first.getName().equals(INFIX_EL)) {
+			return;//a structural bracket of another kind e.g. spiro or ring assembly
+		}
+		boolean peroxoPresent = false;
+		boolean closeBracketBeforeSuffix = false;
+		int replacementsOfCarbonylOrHydroxyOxygen = 0;
+		String replacementValue = null;
+		boolean replacementsDiffer = false;
+		int multiplierValue = 1;
+		for (Element el = OpsinTools.getNextSibling(openBracket); el != null && !el.getName().equals(SUFFIX_EL); el = OpsinTools.getNextSibling(el)) {
+			if (el.getName().equals(STRUCTURALCLOSEBRACKET_EL)) {
+				closeBracketBeforeSuffix = true;
+				break;
+			}
+			if (el.getName().equals(MULTIPLIER_EL)) {
+				multiplierValue = Integer.parseInt(el.getAttributeValue(VALUE_ATR));
+			}
+			else if (el.getName().equals(INFIX_EL)) {
+				String value = el.getAttributeValue(VALUE_ATR);
+				if (value.startsWith("-O-:")) {
+					peroxoPresent = true;
+				}
+				else if (value.startsWith("=O,-O:")) {
+					replacementsOfCarbonylOrHydroxyOxygen += multiplierValue;
+					replacementsDiffer = replacementsDiffer || (replacementValue != null && !replacementValue.equals(value));
+					replacementValue = value;
+				}
+				multiplierValue = 1;
+			}
+		}
+		Element previous = OpsinTools.getPreviousSibling(openBracket);
+		boolean followsInfixOrPrefix = previous != null && (previous.getName().equals(INFIX_EL) || previous.getName().equals(SUFFIXPREFIX_EL) || "o".equals(previous.getAttributeValue(SUBSEQUENTUNSEMANTICTOKEN_ATR)));
+		if (!peroxoPresent && (closeBracketBeforeSuffix || followsInfixOrPrefix)) {
+			throw new ComponentGenerationException("Only brackets around peroxo infixes may be used in this way");
+		}
+		if (peroxoPresent && replacementsOfCarbonylOrHydroxyOxygen > 0 && (replacementsOfCarbonylOrHydroxyOxygen != 2 || replacementsDiffer)) {
+			throw new ComponentGenerationException("It is not stated which oxygen of the peroxy group is replaced (cf. OS-thioperoxoic)");
 		}
 	}
 
