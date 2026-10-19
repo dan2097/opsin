@@ -382,6 +382,7 @@ class StructureBuilder {
 		BuildResults substituentBR = new BuildResults(words.get(0));
 
 		List<Fragment> functionalGroupFragments = new ArrayList<>();
+		boolean idesNeutralised = false;//the ide is neutralised as it is about to become a substituent; a peroxy functional replacement leaves it an anion
 		for (int i=1; i<words.size(); i++ ) {
 			Element functionalGroupWord =words.get(i);
 			List<Element> functionalGroups = OpsinTools.getDescendantElementsWithTagName(functionalGroupWord, FUNCTIONALGROUP_EL);
@@ -393,6 +394,7 @@ class StructureBuilder {
 			if (functionalGroups.get(0).getAttributeValue(TYPE_ATR).equals(MONOVALENTSTANDALONEGROUP_TYPE_VAL)){
 				Atom ideAtom = monoValentFunctionGroup.getDefaultInAtomOrFirstAtom();
 				ideAtom.addChargeAndProtons(1, 1);//e.g. make cyanide charge netural
+				idesNeutralised = true;
 			}
 			Element possibleMultiplier = OpsinTools.getPreviousSibling(functionalGroups.get(0));
 			functionalGroupFragments.add(monoValentFunctionGroup);
@@ -406,6 +408,10 @@ class StructureBuilder {
 		}
 		
 		int outAtomCount =substituentBR.getOutAtomCount();
+		if (outAtomCount == 2 && functionalGroupFragments.size() == 1 && isPeroxyGroup(words.get(0))
+				&& expandFunctionalGroupOxygenToPeroxide(substituentBR, functionalGroupFragments.get(0), idesNeutralised)){
+			return;//e.g. peroxycyanate
+		}
 		if (outAtomCount > functionalGroupFragments.size()){//something like isophthaloyl chloride (more precisely written isophthaloyl dichloride)
 			if (functionalGroupFragments.size()!=1){
 				throw new StructureBuildingException("Incorrect number of functional groups found to balance outAtoms");
@@ -426,6 +432,62 @@ class StructureBuilder {
 			substituentBR.removeOutAtom(0);
 			state.fragManager.incorporateFragment(ideFrag, subAtom.getFrag());
 		}
+	}
+
+	/**
+	 * Is this word nothing but a peroxy substituent i.e. is peroxy being used on its own
+	 * @param word
+	 * @return
+	 */
+	private boolean isPeroxyGroup(Element word) {
+		List<Element> groups = OpsinTools.getDescendantElementsWithTagName(word, GROUP_EL);
+		return groups.size() == 1 && groups.get(0).getValue().equals("peroxy");
+	}
+
+	/**
+	 * peroxy has two meanings: a bivalent joiner e.g. peroxydibenzene, and functional replacement of
+	 * an -O- by an -O-O- e.g. peroxybenzoic acid. Applied to a functional group on its own, only the
+	 * latter gives a monovalent anion, and it is only available if the group has an oxygen to expand:
+	 * cyanate does, so peroxycyanate is [O-]OC#N, whereas thiocyanate/selenocyanate/tellurocyanate and
+	 * the isocyanates do not, and hence keep the joiner interpretation.
+	 * The peroxy fragment provides the -O-O-; the group's own oxygen is what it replaces.
+	 * @param substituentBR the peroxy substituent, which is consumed if the replacement happens
+	 * @param ideFrag
+	 * @param ideWasNeutralised whether the ide's charge was removed in anticipation of it becoming a substituent
+	 * @return whether the functional replacement interpretation was applicable
+	 * @throws StructureBuildingException
+	 */
+	private boolean expandFunctionalGroupOxygenToPeroxide(BuildResults substituentBR, Fragment ideFrag, boolean ideWasNeutralised) throws StructureBuildingException {
+		Atom oxygenToReplace = ideFrag.getDefaultInAtomOrFirstAtom();
+		if (oxygenToReplace.getElement() != ChemEl.O){
+			return false;//e.g. thiocyanate, the thio has already replaced the oxygen
+		}
+		List<Atom> neighbours = oxygenToReplace.getAtomNeighbours();
+		if (neighbours.size() > 1){
+			return false;//not a terminal oxygen
+		}
+		if (neighbours.size() == 1 && oxygenToReplace.getBondToAtomOrThrow(neighbours.get(0)).getOrder() != 1){
+			return false;//e.g. an oxygen that is doubly bonded is not an -O- to expand
+		}
+		Atom attachmentAtom = getOutAtomTakingIntoAccountWhetherSetExplicitly(substituentBR, 0);
+		substituentBR.removeOutAtom(0);
+		Atom terminalAtom = getOutAtomTakingIntoAccountWhetherSetExplicitly(substituentBR, 0);
+		substituentBR.removeOutAtom(0);
+		terminalAtom.setCharge(oxygenToReplace.getCharge());
+		terminalAtom.setProtonsExplicitlyAddedOrRemoved(oxygenToReplace.getProtonsExplicitlyAddedOrRemoved());
+		if (ideWasNeutralised){
+			terminalAtom.addChargeAndProtons(-1, -1);//the group remains an anion e.g. peroxyfulminate
+		}
+		if (neighbours.size() == 1){
+			Atom neighbour = neighbours.get(0);
+			state.fragManager.removeAtomAndAssociatedBonds(oxygenToReplace);
+			state.fragManager.createBond(attachmentAtom, neighbour, 1);
+			state.fragManager.incorporateFragment(ideFrag, attachmentAtom.getFrag());
+		}
+		else{
+			state.fragManager.removeFragment(ideFrag);//e.g. hydroxide, nothing of the group is left
+		}
+		return true;
 	}
 
 	private void buildFunctionalClassEster(List<Element> words) throws StructureBuildingException {
