@@ -3,6 +3,8 @@ package uk.ac.cam.ch.wwmm.opsin;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Takes a name:
@@ -14,6 +16,14 @@ import java.util.Map;
 class PreProcessor {
 	private static final Map<String, String> DOTENCLOSED_TO_DESIRED = new HashMap<>();
 	private static final Map<String, String> XMLENTITY_TO_DESIRED = new HashMap<>();
+	private static final Pattern ESTER_CHALCOGEN_PAIR_LOCANT = Pattern.compile("(?<![A-Za-z0-9-])(O|S|Se|Te)(O|S|Se|Te)(?=[,-])(?!-[a-z]*perox)");
+	//not preceded by a symbol pair, a multiplier (dithioperoxo has identical atoms) or a first prefix of selenothioperoxo
+	private static final Pattern UNORIENTED_PEROXO_INFIX = Pattern.compile("(?<!di)(?<!tri)(?<!-)(?<!seleno)(?<!telluro)(?<!thio)((?:seleno|telluro|thio)(?:thio|seleno|telluro)?perox)", Pattern.CASE_INSENSITIVE);
+	private static final String ACID_SYMBOLS = "(?-i:(?<pair>(?<first>O|S|Se|Te)(?<last>O|S|Se|Te))(?:,\\k<pair>)*)-";
+	private static final Pattern PEROXO_ACID_IN_BRACKET = Pattern.compile("([(\\[{])([a-z]*perox[a-z]*(?:ic|ous)) ?([)\\]}]) ?(?:" + ACID_SYMBOLS + ")?acid", Pattern.CASE_INSENSITIVE);
+	private static final Pattern PEROXO_INFIX_IN_BRACKET = Pattern.compile("([(\\[{])([a-z]*perox[a-z]*o)([)\\]}])([a-z]+(?:ic|ous)) " + ACID_SYMBOLS + "acid", Pattern.CASE_INSENSITIVE);
+	private static final Pattern PEROXO_ACID_OO = Pattern.compile("(perox[a-z]*(?:ic|ous)) (?-i:OO)-acid", Pattern.CASE_INSENSITIVE);
+	private static final Pattern DOUBLE_BRACKETED_PEROXO = Pattern.compile("\\(\\(([^()]*perox[^()]*)\\)\\)", Pattern.CASE_INSENSITIVE);
 
 	static {
 		DOTENCLOSED_TO_DESIRED.put("a", "alpha");
@@ -60,6 +70,10 @@ class PreProcessor {
 		}
 		
 		chemicalName = performMultiCharacterReplacements(chemicalName);
+		if (containsIgnoreCase(chemicalName, "perox")) {
+			chemicalName = movePeroxoAcidSymbolsIntoInfix(chemicalName);
+			chemicalName = copyEsterChalcogenPairIntoPeroxoInfix(chemicalName);
+		}
 		chemicalName = StringTools.convertNonAsciiAndNormaliseRepresentation(chemicalName);
 		return chemicalName;
 	}
@@ -151,6 +165,73 @@ class PreProcessor {
 			}
 		}
 		return sb.toString();
+	}
+
+	/**
+	 * e.g. ethane(thioperoxoic) OS-acid --> ethane(OS-thioperoxoic acid)
+	 * The pair of symbols names the chain of the peroxo group from the acyl atom to the acidic atom
+	 */
+	private static String movePeroxoAcidSymbolsIntoInfix(String chemicalName) {
+		Matcher m = PEROXO_ACID_IN_BRACKET.matcher(chemicalName);
+		StringBuffer sb = new StringBuffer();
+		while (m.find()) {
+			String symbolPrefix = getPeroxoSymbolPrefix(m.group("first"), m.group("last"));
+			if (symbolPrefix != null) {
+				m.appendReplacement(sb, Matcher.quoteReplacement(m.group(1) + symbolPrefix + m.group(2) + " acid" + m.group(3)));
+			}
+		}
+		m.appendTail(sb);
+		chemicalName = sb.toString();
+		m = PEROXO_INFIX_IN_BRACKET.matcher(chemicalName);
+		sb = new StringBuffer();
+		while (m.find()) {
+			String symbolPrefix = getPeroxoSymbolPrefix(m.group("first"), m.group("last"));
+			if (symbolPrefix != null) {
+				m.appendReplacement(sb, Matcher.quoteReplacement(m.group(1) + symbolPrefix + m.group(2) + m.group(3) + m.group(4) + " acid"));
+			}
+		}
+		m.appendTail(sb);
+		chemicalName = DOUBLE_BRACKETED_PEROXO.matcher(sb.toString()).replaceAll("($1)");
+		return PEROXO_ACID_OO.matcher(chemicalName).replaceAll("$1 acid");
+	}
+
+	private static String getPeroxoSymbolPrefix(String firstSymbol, String lastSymbol) {
+		if (firstSymbol == null) {
+			return "";
+		}
+		return firstSymbol.equals(lastSymbol) ? null : firstSymbol + lastSymbol + "-";
+	}
+
+	/**
+	 * e.g. OS-methyl ethane(thioperoxoate) --> OS-methyl ethane(OS-thioperoxoate)
+	 * The pair of symbols of an ester locant states which atom of the peroxy group is replaced and which carries the organyl
+	 */
+	private static String copyEsterChalcogenPairIntoPeroxoInfix(String chemicalName) {
+		Matcher m = ESTER_CHALCOGEN_PAIR_LOCANT.matcher(chemicalName);
+		String pair = null;
+		while (m.find()) {
+			if (m.group(1).equals(m.group(2))) {
+				continue;
+			}
+			String foundPair = m.group(1) + m.group(2);
+			if (pair != null && !pair.equals(foundPair)) {
+				return chemicalName;
+			}
+			pair = foundPair;
+		}
+		if (pair == null) {
+			return chemicalName;
+		}
+		return UNORIENTED_PEROXO_INFIX.matcher(chemicalName).replaceAll(Matcher.quoteReplacement(pair) + "-$1");
+	}
+
+	private static boolean containsIgnoreCase(String chemicalName, String text) {
+		for (int i = 0, last = chemicalName.length() - text.length(); i <= last; i++) {
+			if (chemicalName.regionMatches(true, i, text, 0, text.length())) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	private static boolean isSuperscriptDigit(char ch) {

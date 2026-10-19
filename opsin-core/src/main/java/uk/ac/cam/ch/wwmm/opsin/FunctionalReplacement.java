@@ -302,7 +302,9 @@ class FunctionalReplacement {
 				/*
 				 * Modifies suffixes, suffixFragments, suffix and infixTransformations as appropriate
 				 */
-				disambiguateMultipliedInfixMeaning(suffixes, suffixFragments, suffix, infixTransformations, oxygenAvailable);
+				//e.g. in diperoxoic the multiplier cannot multiply an infix that can only replace the one single bonded oxygen
+				int oxygenAvailableToFirstInfix = infixTransformations.get(0).startsWith("-O-:") ? singleBondedOxygen.size() : oxygenAvailable;
+				disambiguateMultipliedInfixMeaning(suffixes, suffixFragments, suffix, infixTransformations, oxygenAvailableToFirstInfix);
 
 				/*
 				 * Sort infixTransformations so more specific transformations are performed first
@@ -966,6 +968,13 @@ class FunctionalReplacement {
 				}
 				atomToBeReplaced.neutraliseCharge();
 			}
+		}
+		Atom terminalAtomOfReplacementFrag = replacementAtomList.get(replacementAtomList.size()-1);
+		if (atomToBeReplaced.getCharge() < 0 && replacementAtomList.size() > 1 && terminalAtomOfReplacementFrag.getIncomingValency() == 1 && terminalAtomOfReplacementFrag.getElement().isChalcogen()) {
+			//e.g. the negatively charged oxygen of peroxolate, which is not a functional atom
+			terminalAtomOfReplacementFrag.setCharge(atomToBeReplaced.getCharge());
+			terminalAtomOfReplacementFrag.setProtonsExplicitlyAddedOrRemoved(atomToBeReplaced.getProtonsExplicitlyAddedOrRemoved());
+			atomToBeReplaced.neutraliseCharge();
 		}
 	}
 	
