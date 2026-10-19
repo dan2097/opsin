@@ -375,6 +375,20 @@ class ValencyChecker {
 		if (valency <= defaultValency + a.getProtonsExplicitlyAddedOrRemoved()) {
 			return true;
 		}
+		//Hypervalence carried by bonds to heteroatoms (oxo, imino, as in sulfinyl and sulfonyl) is conventional, the
+		//implicit hydrogen only completes it e.g. 1-oxo-1-thiaethane is CH3-S(=O)H, 1,1-dioxo-1-thiaethane CH3-S(=O)(=O)H.
+		//What is not attainable is a higher valency reached through bonds to carbon plus an invented hydrogen
+		//e.g. 1-methylthiophene (three bonds to carbon on a divalent sulfur)
+		int bondOrderToCarbonOrHydrogen = 0;
+		for (Bond b : a.getBonds()) {
+			ChemEl other = b.getOtherAtom(a).getElement();
+			if (other == ChemEl.C || other == ChemEl.H) {
+				bondOrderToCarbonOrHydrogen += b.getOrder();
+			}
+		}
+		if (bondOrderToCarbonOrHydrogen <= defaultValency + a.getProtonsExplicitlyAddedOrRemoved()) {
+			return true;
+		}
 		Integer[] possibleValencies = getPossibleValencies(chemEl, 0);
 		if (possibleValencies == null) {
 			return true;

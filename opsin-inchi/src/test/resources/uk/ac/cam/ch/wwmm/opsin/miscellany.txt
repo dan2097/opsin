@@ -80,3 +80,7 @@ thiophene	InChI=1/C4H4S/c1-2-4-5-3-1/h1-4H
 tetrahydrothiophene	InChI=1/C4H8S/c1-2-4-5-3-1/h1-4H2
 methylsulfanylbenzene	InChI=1/C7H8S/c1-8-7-5-3-2-4-6-7/h2-6H,1H3
 methanesulfonic acid	InChI=1/CH4O3S/c1-5(2,3)4/h1H3,(H,2,3,4)/f/h2H
+1-oxo-1-thiaethane	InChI=1S/CH4OS/c1-3-2/h3H,1H3
+1,1-dioxo-1-thiaethane	InChI=1S/CH4O2S/c1-4(2)3/h4H,1H3
+1,1-dioxo-2-oxa-1-thiapropane	InChI=1S/CH4O3S/c1-4-5(2)3/h5H,1H3
+1-oxo-1-selenaethane	InChI=1S/CH4OSe/c1-3-2/h3H,1H3
