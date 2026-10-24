@@ -4816,15 +4816,17 @@ class ComponentProcessor {
 			}
 
 			if (allowIndirectLocants){
+				List<Element> locantAble = findElementsMissingIndirectLocants(subOrRoot, lastLocant);
 				/* The first locant is most likely a locant indicating where this subsituent should be attached.
 				 * If the locant cannot be found on a potential root this cannot be the case though (assuming the name is valid of course)
+				 * The symmetric-parent exception must not override a retained substituent's default attachment position e.g. 1-mesitylhydrazine.
 				 */
 				if (!ADDEDHYDROGENLOCANT_TYPE_VAL.equals(lastLocant.getAttributeValue(TYPE_ATR)) && locantEls.size() ==1 && group.getAttribute(ISAMULTIRADICAL_ATR)==null &&
-						locantValues.length == 1 && checkLocantPresentOnPotentialRoot(state, subOrRoot, locantValues[0]) && OpsinTools.getPreviousSibling(lastLocant, LOCANT_EL)==null){
+						locantValues.length == 1 && checkLocantPresentOnPotentialRoot(state, subOrRoot, locantValues[0]) && OpsinTools.getPreviousSibling(lastLocant, LOCANT_EL)==null &&
+						(locantAble.isEmpty() || locantAble.get(0).getAttribute(DEFAULTLOCANTID_ATR) != null || !isLoneSubstituentOnUnsuffixedSymmetricParent(subOrRoot))){
 					return;
 				}
 				boolean assignableToIndirectFeatures =true;
-				List<Element> locantAble  =findElementsMissingIndirectLocants(subOrRoot, lastLocant);
 				if (locantAble.size() < locantValues.length){
 					assignableToIndirectFeatures =false;
 				}
@@ -4877,6 +4879,32 @@ class ComponentProcessor {
 		}
 	}
 
+
+	/**
+	 * A lone substituent needs no parent locant when all parent atoms are equivalent.
+	 * Prefer an indirect locant in this case e.g. 2-propenylbenzene is (prop-2-enyl)benzene.
+	 */
+	private boolean isLoneSubstituentOnUnsuffixedSymmetricParent(Element substituent) {
+		Element word = substituent.getParent();
+		if (!SUBSTITUENT_EL.equals(substituent.getName()) || !WORD_EL.equals(word.getName()) ||
+				word.getChildCount() != 2 || word.getChild(0) != substituent || substituent.getFirstChildElement(MULTIPLIER_EL) != null) {
+			return false;
+		}
+		Element root = word.getChild(1);
+		if (!ROOT_EL.equals(root.getName())) {
+			return false;
+		}
+		//Suffixes and pending modifications can distinguish otherwise equivalent parent atoms.
+		//Only a bare group (optionally followed by the saturated "ane" unsaturator) is safe to check here.
+		for (Element child : root.getChildElements()) {
+			String name = child.getName();
+			if (!GROUP_EL.equals(name) && !HYPHEN_EL.equals(name) &&
+					!(UNSATURATOR_EL.equals(name) && "1".equals(child.getAttributeValue(VALUE_ATR)))) {
+				return false;
+			}
+		}
+		return AmbiguityChecker.allAtomsEquivalent(root.getFirstChildElement(GROUP_EL).getFrag().getAtomList());
+	}
 
 	/**
 	 * Finds locants that are before a group element and not immediately followed by a multiplier

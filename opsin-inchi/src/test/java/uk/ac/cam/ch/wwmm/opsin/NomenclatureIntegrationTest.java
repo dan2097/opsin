@@ -200,6 +200,12 @@ public class NomenclatureIntegrationTest {
 	public void testMiscellany(String name, String expectedInchi) {
 		checkName(name, expectedInchi);
 	}
+
+	@ParameterizedTest
+	@CsvFileSource(resources = "indirectLocants.txt", delimiter='\t')
+	public void testIndirectLocants(String name, String expectedInchi) {
+		checkName(name, expectedInchi);
+	}
 	
 	private void checkName(String name, String expectedInchI) {
 		String inchi = NameToInchi.convertResultToInChI(n2s.parseChemicalName(name, n2sConfig));
