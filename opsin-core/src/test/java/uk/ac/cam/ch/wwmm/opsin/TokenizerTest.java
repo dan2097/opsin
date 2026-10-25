@@ -179,8 +179,8 @@ public class TokenizerTest {
 	public void spacedHyphenAfterSubstituentWithoutSpaceRemovalIsInvalid() throws ParsingException {
 		TokenizationResult result = tokenizer.tokenize("ethyl - benzene", false);
 		assertFalse(result.isSuccessfullyTokenized());
-		assertEquals("- benzene", result.getUnparsedName());
-		assertFalse(result.getParse().getWords().get(0).endsComponent());
+		assertEquals("ethyl - benzene", result.getUnparsedName());
+		assertTrue(result.getParse().getWords().isEmpty());
 	}
 
 	@Test
@@ -188,9 +188,8 @@ public class TokenizerTest {
 		TokenizationResult result = tokenizer.tokenize("ethyl - benzene", true);
 		assertTrue(result.isSuccessfullyTokenized());
 		List<ParseWord> words = result.getParse().getWords();
-		assertEquals(2, words.size());
-		assertEquals("ethyl-", words.get(0).getWord());
-		assertEquals("benzene", words.get(1).getWord());
+		assertEquals(1, words.size());
+		assertEquals("ethyl-benzene", words.get(0).getWord());
 		assertFalse(words.get(0).endsComponent());
 	}
 

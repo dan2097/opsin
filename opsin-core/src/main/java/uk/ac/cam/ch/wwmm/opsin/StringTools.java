@@ -76,7 +76,7 @@ class StringTools {
 	 */
 	static String convertNonAsciiAndNormaliseRepresentation(String s) throws PreProcessingException {
 		StringBuilder sb = new StringBuilder(s.length());
-		for (int i = 0, l = s.length(); i < l; i++) {
+		for (int i = 0, len = s.length(); i < len; i++) {
 			char c = s.charAt(i);
 			switch (c) {
 			case '\t':
@@ -86,7 +86,7 @@ class StringTools {
 			case '\r':
 			case ' ':
 				//normalise white space
-				if (sb.length() == 0 || sb.charAt(sb.length() - 1) != ' ') {
+				if (!endsWith(sb, ' ')) {
 					sb.append(' ');
 				}
 				break;
@@ -96,10 +96,21 @@ class StringTools {
 			case '"':
 				sb.append("''");//replace quotation mark with two primes
 				break;
+			case '\u2014':
+				//em dash separates components of an adduct
+				if (i + 1 < len) {
+					if (!endsWith(sb, ' ')) {
+						sb.append(' ');
+					}
+					sb.append("- ");
+				} else {
+					sb.append('-');
+				}
+				break;
 			default:
 				if(c >= 128) {
 					String replacement = getReplacementForNonAsciiChar(c);//replace non ascii characters with hard coded ascii strings
-					int start = replacement.startsWith(" ") && sb.length() > 0 && sb.charAt(sb.length() - 1) == ' ' ? 1 : 0;
+					int start = replacement.startsWith(" ") && endsWith(sb, ' ') ? 1 : 0;
 					sb.append(replacement, start, replacement.length());
 				}
 				else if (c > 31){//ignore control characters
@@ -108,6 +119,11 @@ class StringTools {
 			}
 		}
 		return sb.toString();
+	}
+
+	private static boolean endsWith(CharSequence sb, char ch) {
+		int len = sb.length();
+		return len > 0 && sb.charAt(len - 1) == ch;
 	}
 
     private static String getReplacementForNonAsciiChar(char c) throws PreProcessingException {

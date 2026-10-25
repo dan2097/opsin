@@ -41,9 +41,8 @@ class Tokeniser {
 
 			String parsedName = result.getUnparsedName().substring(0, result.getUnparsedName().length() - result.getWorkingName().length());
 
-			if (isWordParsable(parseTokens, result)) {
-				parseWord(result, parseTokens, parsedName, false);
-				resultFromBeforeWhitespaceRemoval =null;
+			if (parseWord(result, parseTokens, parsedName, false)) {
+				resultFromBeforeWhitespaceRemoval = null;
 			} else {
 				if (resultFromBeforeWhitespaceRemoval == null) {
 					resultFromBeforeWhitespaceRemoval = new TokenizationResult(name);
@@ -81,9 +80,8 @@ class Tokeniser {
 
 			String parsedName = result.getUnparsedName().substring(result.getWorkingName().length());
 
-			if (isWordParsableInReverse(parseTokens, result)) {
-				parseWord(result, parseTokens, parsedName, true);
-				resultFromBeforeWhitespaceRemoval =null;
+			if (parseWord(result, parseTokens, parsedName, true)) {
+				resultFromBeforeWhitespaceRemoval = null;
 			}
 			else{
 				if (resultFromBeforeWhitespaceRemoval == null) {
@@ -102,23 +100,24 @@ class Tokeniser {
 	}
 
 
-	private boolean isWordParsableInReverse(List<ParseTokens> parseTokens, TokenizationResult result) {
-		return parseTokens.size()>0 && (result.isFullyInterpretable() || result.getWorkingName().charAt(result.getWorkingName().length()-1)==' ' || result.getWorkingName().charAt(result.getWorkingName().length()-1) =='-');
-	}
-
-	private boolean isWordParsable(List<ParseTokens> parseTokens, TokenizationResult result) throws ParsingException {
+	private boolean parseWord(TokenizationResult result, List<ParseTokens> parseTokens, String parsedName, boolean reverse) throws ParsingException {
 		if (parseTokens.isEmpty()) {
 			return false;
 		}
-		if (result.isFullyInterpretable()) {
-			return true;
-		}
 		String remainingName = result.getWorkingName();
-		return remainingName.charAt(0) == ' ' || remainingName.charAt(0) == '-'
-				|| (remainingName.startsWith("; ") && hasFullOrFunctionalTermParse(parseTokens));
-	}
+		boolean spacedHyphen = remainingName.length() > 3 && remainingName.startsWith(" - ");
+		if (!result.isFullyInterpretable()) {
+			//Does the remaining name start with an expected delimiter between name components
+			char delimiter = remainingName.charAt(reverse ? remainingName.length() - 1 : 0);
+			if (!(delimiter == ' ' || delimiter == '-'
+					|| (!reverse && remainingName.startsWith("; ") && hasFullOrFunctionalTermParse(parseTokens)))) {
+				return false;
+			}
+			if (!reverse && spacedHyphen && !hasFullOrFunctionalTermParse(parseTokens)) {
+				return false;
+			}
+		}
 
-	private void parseWord(TokenizationResult result, List<ParseTokens> parseTokens, String parsedName, boolean reverse) throws ParsingException {
 		//If something like ethylchloride is encountered this should be split back to ethyl chloride and there will be 2 ParseWords returned
 		//In cases of properly formed names there will be only one ParseWord
 		//If there are two parses one of which assumes a missing space and one of which does not the former is discarded
@@ -127,7 +126,6 @@ class Tokeniser {
 		if (result.isFullyInterpretable()) {
 			result.setUnparsedName(result.getWorkingName());
 		} else {
-			String remainingName =result.getWorkingName();
 			if (reverse){
 				if (remainingName.length() > 3 && remainingName.endsWith(" - ")){
 					remainingName = remainingName.substring(0, remainingName.length() - 3);
@@ -137,9 +135,7 @@ class Tokeniser {
 				}
 			}
 			else{
-				if (remainingName.startsWith("; ")
-						|| (remainingName.length() > 3 && remainingName.startsWith(" - ")
-								&& lastParsedWordWasFullOrFunctionalTerm(result))) {
+				if (remainingName.startsWith("; ") || spacedHyphen) {
 					//these are assumed to be indicating a mixture and hence set the end of component flag
 				    List<ParseWord> words = result.getParse().getWords();
 				    words.get(words.size() - 1).setEndsComponent(true);
@@ -150,6 +146,7 @@ class Tokeniser {
 			}
 			result.setUnparsedName(remainingName);
 		}
+		return true;
 	}
 
 	private void addParseWords(List<ParseTokens> parseTokens, String parsedName, Parse parse, boolean reverse) {
@@ -172,9 +169,12 @@ class Tokeniser {
 			result.setUnparsedName(parsedName + result.getWorkingName().substring(m.group().length()));
 		} else if (matchCasCollectiveIndex.matcher(result.getWorkingName()).matches()) {
 			result.setUnparsedName(parsedName);
-		} else {
-			if (allowRemovalOfWhiteSpace) {
-				//TODO add a warning message if this code is invoked. A name invoking this is unambiguously BAD
+		} else if (allowRemovalOfWhiteSpace) {
+			//TODO add a warning message if this code is invoked. A name invoking this is unambiguously BAD
+			if (result.getWorkingName().startsWith(" - ")) {
+				//A spaced hyphen after a substituent is an ordinary hyphen, not a component separator.
+				result.setUnparsedName(parsedName + "-" + result.getWorkingName().substring(3));
+			} else {
 				List<ParseWord> parsedWords = result.getParse().getWords();
 				if (!reverseSpaceRemoval(parsedWords, result)) {
 					//Try and remove a space from the right and try again
@@ -185,9 +185,9 @@ class Tokeniser {
 						return false;
 					}
 				}
-			} else {
-				return false;
 			}
+		} else {
+			return false;
 		}
 		return true;
 	}

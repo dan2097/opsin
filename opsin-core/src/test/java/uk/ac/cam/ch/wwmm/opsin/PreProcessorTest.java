@@ -82,10 +82,31 @@ public class PreProcessorTest {
 		assertEquals("1^4-ol", PreProcessor.preProcess("1<sup>4</sup>-ol"));
 		assertEquals("1^4-ol", PreProcessor.preProcess("1<SUP>4</SUP>-ol"));
 	}
+
+	@Test
+	public void testEmDashSeparatesComponents() throws PreProcessingException {
+		for (String separator : new String[] {"\u2014", " \u2014", "\u2014 ", " \u2014 ", " \t\u2014\u00A0 "}) {
+			assertEquals("benzene - 2-aminopyridine", PreProcessor.preProcess("benzene" + separator + "2-aminopyridine"));
+		}
+	}
+
 	@Test
 	public void testWhitespaceNormalization() throws PreProcessingException {
 		assertEquals("sodium chloride", PreProcessor.preProcess("sodium  \t\n\u000B\f\r \u00A0\u3000chloride"));
 		assertEquals("sodium chloride", PreProcessor.preProcess("sodium \u00AD chloride"));
 		assertEquals(" ", StringTools.convertNonAsciiAndNormaliseRepresentation("\t \u00A0"));
+	}
+
+	@Test
+	public void testTerminalEmDashRemainsHyphen() throws PreProcessingException {
+		assertEquals("ethyl-", PreProcessor.preProcess("ethyl\u2014"));
+		assertEquals("ethyl-", PreProcessor.preProcess("ethyl\u2014 \t"));
+	}
+
+	@Test
+	public void testOtherDashesRemainHyphens() throws PreProcessingException {
+		for (char dash : new char[] {'\u2010', '\u2011', '\u2012', '\u2013', '\u2015', '\u2212'}) {
+			assertEquals("2-methylpyridine", PreProcessor.preProcess("2" + dash + "methylpyridine"));
+		}
 	}
 }

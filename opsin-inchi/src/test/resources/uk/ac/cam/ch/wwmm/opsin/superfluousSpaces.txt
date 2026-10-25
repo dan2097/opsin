@@ -1,0 +1,4 @@
+ethyl benzene	InChI=1/C8H10/c1-2-8-6-4-3-5-7-8/h3-7H,2H2,1H3
+ethyl  acetate	InChI=1/C4H8O2/c1-3-6-4(2)5/h3H2,1-2H3
+ethyl - acetate	InChI=1/C4H8O2/c1-3-6-4(2)5/h3H2,1-2H3
+2-chloro —N-hydroxyacetamide	InChI=1/C2H4ClNO2/c3-1-2(5)4-6/h6H,1H2,(H,4,5)/f/h4H
