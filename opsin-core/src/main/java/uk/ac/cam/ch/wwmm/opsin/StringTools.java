@@ -68,6 +68,7 @@ class StringTools {
 	/**Converts a unicode string into ASCII
 	 * e.g. converting Greek letters to their names (e.g. alpha)
 	 * Unrecognised non-ASCII characters trigger an exception
+	 * Normalises whitespace to single spaces 
 	 *
 	 * @param s The string to convert
 	 * @return The converted string
@@ -83,8 +84,11 @@ class StringTools {
 			case '\u000B'://vertical tab
 			case '\f':
 			case '\r':
+			case ' ':
 				//normalise white space
-				sb.append(" ");
+				if (sb.length() == 0 || sb.charAt(sb.length() - 1) != ' ') {
+					sb.append(' ');
+				}
 				break;
 			case '`':
 				sb.append("'");//replace back ticks with apostrophe
@@ -94,7 +98,9 @@ class StringTools {
 				break;
 			default:
 				if(c >= 128) {
-					sb.append(getReplacementForNonASCIIChar(c));//replace non ascii characters with hard coded ascii strings
+					String replacement = getReplacementForNonAsciiChar(c);//replace non ascii characters with hard coded ascii strings
+					int start = replacement.startsWith(" ") && sb.length() > 0 && sb.charAt(sb.length() - 1) == ' ' ? 1 : 0;
+					sb.append(replacement, start, replacement.length());
 				}
 				else if (c > 31){//ignore control characters
 					sb.append(c);
@@ -104,7 +110,7 @@ class StringTools {
 		return sb.toString();
 	}
 
-    private static String getReplacementForNonASCIIChar(char c) throws PreProcessingException {
+    private static String getReplacementForNonAsciiChar(char c) throws PreProcessingException {
         switch (c) {
             case '\u03b1': return "alpha";//greeks
             case '\u03b2': return "beta";

@@ -82,4 +82,10 @@ public class PreProcessorTest {
 		assertEquals("1^4-ol", PreProcessor.preProcess("1<sup>4</sup>-ol"));
 		assertEquals("1^4-ol", PreProcessor.preProcess("1<SUP>4</SUP>-ol"));
 	}
+	@Test
+	public void testWhitespaceNormalization() throws PreProcessingException {
+		assertEquals("sodium chloride", PreProcessor.preProcess("sodium  \t\n\u000B\f\r \u00A0\u3000chloride"));
+		assertEquals("sodium chloride", PreProcessor.preProcess("sodium \u00AD chloride"));
+		assertEquals(" ", StringTools.convertNonAsciiAndNormaliseRepresentation("\t \u00A0"));
+	}
 }
