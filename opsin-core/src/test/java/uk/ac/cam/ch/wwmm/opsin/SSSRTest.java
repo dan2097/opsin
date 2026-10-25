@@ -2,6 +2,7 @@ package uk.ac.cam.ch.wwmm.opsin;
 
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import uk.ac.cam.ch.wwmm.opsin.OpsinResult.OPSIN_RESULT_STATUS;
 
 import java.util.List;
 
@@ -20,4 +21,18 @@ public class SSSRTest {
 		rings = SSSRFinder.getSetOfSmallestRings(f);
 		assertEquals(4, rings.size());
 	}
+
+	@Test
+	public void testFusedRingNumberingDependentOnSSSR() {
+		NameToStructure n2s = NameToStructure.getInstance();
+		assertEquals(OPSIN_RESULT_STATUS.SUCCESS,n2s.parseChemicalName("benzo[a]coronen-1-ol").getStatus());
+
+		Fragment f = n2s.parseChemicalName("benzo[a]coronen-1-ol").getStructure();
+		List<Ring> rings = SSSRFinder.getSetOfSmallestRings(f);
+		assertEquals(8, rings.size());
+
+		assertEquals(OPSIN_RESULT_STATUS.SUCCESS,
+		n2s.parseChemicalName("1H-cyclopenta[bc]coronene").getStatus());
+	}
+
 }

@@ -14,6 +14,7 @@ import java.util.Set;
  * 
  * @author pm286
  * @author dl387
+ * @author mw529
  *
  */
 class SSSRFinder {
@@ -31,9 +32,12 @@ class SSSRFinder {
 		if (ringList.size() > 1) {
 			boolean change = true;
 			while (change) {
+				change = false;
 				for (int i = 0; i < ringList.size(); i++) {
 					Ring ring = ringList.get(i);
-					change = reduceRingSizes(ring, ringList);
+					if (reduceRingSizes(ring, ringList)) {
+					  change = true;
+					}
 				}
 			}
 		}		
