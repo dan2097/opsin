@@ -39,6 +39,8 @@
 	<regex name="%allLocantForms%" regex="(%locantTypes%(%compoundLocantOrAddedHydrogen%|%RSstereochemAfterLocant%)?)"/>
 	<regex name="%formsWhereHyphenIsOptional%" regex="((%locantTypes%(%compoundLocantOrAddedHydrogen%|%RSstereochemAfterLocant%)|%locantTypesOptionalHyphen%))"/><!--cases where ommitting the hyphen is unambiguous-->
 	<regexToken regex="(%allLocantForms%,)*(%allLocantForms%-|%formsWhereHyphenIsOptional%)" symbol="l" tagname="locant" determinise="yes" />
+	<regexToken regex=" ?%chalcogenPairLocant%(,%chalcogenPairLocant%)*-acid" symbol="ǂ" tagname="acidSymbols" determinise="yes" />
+	<regexToken regex=" ?acid" symbol="ǃ" tagname="acidWord" determinise="yes" />
 	<regexToken regex="(%locant%,)*%locant%-?" symbol="¯" type="bracketedLocant" tagname="locant" determinise="yes" />
 
 	<regexToken regex="(-%locantTypes%(,%locantTypes%)*)?-(d|1[34]C|15N|1[78]O)([1-9][0-9]?)?" symbol="ÿ" type="boughtonSystem" tagname="isotopeSpecification" determinise="yes" />
