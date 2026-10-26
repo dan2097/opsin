@@ -302,7 +302,9 @@ class FunctionalReplacement {
 				/*
 				 * Modifies suffixes, suffixFragments, suffix and infixTransformations as appropriate
 				 */
-				disambiguateMultipliedInfixMeaning(suffixes, suffixFragments, suffix, infixTransformations, oxygenAvailable);
+				//e.g. in diperoxoic the multiplier cannot multiply an infix that can only replace the one single bonded oxygen
+				int oxygenAvailableToFirstInfix = infixTransformations.get(0).startsWith("-O-:") ? singleBondedOxygen.size() : oxygenAvailable;
+				disambiguateMultipliedInfixMeaning(suffixes, suffixFragments, suffix, infixTransformations, oxygenAvailableToFirstInfix);
 
 				/*
 				 * Sort infixTransformations so more specific transformations are performed first
@@ -954,18 +956,26 @@ class FunctionalReplacement {
 	private void removeOrMoveObsoleteFunctionalAtoms(Atom atomToBeReplaced, Fragment replacementFrag){
 		List<Atom> replacementAtomList = replacementFrag.getAtomList();
 		Fragment origFrag = atomToBeReplaced.getFrag();
+		Atom terminalAtomOfReplacementFrag = replacementAtomList.get(replacementAtomList.size() - 1);
 		for (int i = origFrag.getFunctionalAtomCount() - 1; i >=0; i--) {
 			FunctionalAtom functionalAtom = origFrag.getFunctionalAtom(i);
 			if (atomToBeReplaced.equals(functionalAtom.getAtom())){
-				atomToBeReplaced.getFrag().removeFunctionalAtom(i);
-				Atom terminalAtomOfReplacementFrag = replacementAtomList.get(replacementAtomList.size()-1);
-				if ((terminalAtomOfReplacementFrag.getIncomingValency() ==1 || replacementAtomList.size()==1)&& terminalAtomOfReplacementFrag.getElement().isChalcogen()){
+				origFrag.removeFunctionalAtom(i);
+				if ((terminalAtomOfReplacementFrag.getIncomingValency() ==1 || replacementAtomList.size()==1) && terminalAtomOfReplacementFrag.getElement().isChalcogen()){
 					replacementFrag.addFunctionalAtom(terminalAtomOfReplacementFrag);
 					terminalAtomOfReplacementFrag.setCharge(atomToBeReplaced.getCharge());
 					terminalAtomOfReplacementFrag.setProtonsExplicitlyAddedOrRemoved(atomToBeReplaced.getProtonsExplicitlyAddedOrRemoved());
 				}
 				atomToBeReplaced.neutraliseCharge();
+				break;
 			}
+		}
+
+		if (atomToBeReplaced.getCharge() < 0 && replacementAtomList.size() > 1 && terminalAtomOfReplacementFrag.getIncomingValency() == 1 && terminalAtomOfReplacementFrag.getElement().isChalcogen()) {
+			//e.g. the negatively charged oxygen of peroxolate, which is not a functional atom
+			terminalAtomOfReplacementFrag.setCharge(atomToBeReplaced.getCharge());
+			terminalAtomOfReplacementFrag.setProtonsExplicitlyAddedOrRemoved(atomToBeReplaced.getProtonsExplicitlyAddedOrRemoved());
+			atomToBeReplaced.neutraliseCharge();
 		}
 	}
 	

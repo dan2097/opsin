@@ -78,6 +78,7 @@ class ComponentGenerator {
 	private static final Pattern matchAlphaBetaStereochem = Pattern.compile("a|b|x|[aA][lL][pP][hH][aA]|[bB][eE][tT][aA]|[xX][iI]");
 	private static final Pattern matchCisTrans = Pattern.compile("[cC][iI][sS]|[tT][rR][aA][nN][sS]");
 	private static final Pattern matchEndoExoSynAnti = Pattern.compile("[eE][xX][oO]|[eE][nN][dD][oO]|[sS][yY][nN]|[aA][nN][tT][iI]");
+	private static final Pattern MATCH_CHALCOGEN_PAIR = Pattern.compile("(O|S|Se|Te)(O|S|Se|Te)-?");
 	private static final Pattern matchAxialStereo = Pattern.compile("M|P|Ra|Sa|Sp|Rp");
 	private static final Pattern matchLambdaConvention = Pattern.compile("(\\S+)?lambda\\D*(\\d+)\\D*", Pattern.CASE_INSENSITIVE);
 	private static final Pattern matchHdigit =Pattern.compile("H\\d");
@@ -1348,9 +1349,20 @@ class ComponentGenerator {
 	 * @throws ComponentGenerationException
 	 */
 	private void processInfixes(Element subOrRoot) throws ComponentGenerationException {
+		for (Element el : subOrRoot.getChildElements()) {
+			if (el.getName().equals("acidSymbols") || el.getName().equals("acidWord")) {
+				orientPeroxoInfixUsingAcidSymbols(el);
+			}
+		}
+		for (Element infix : subOrRoot.getChildElements(INFIX_EL)) {
+			orientPeroxoInfixUsingEsterLocants(infix);
+		}
+		for (Element openBracket : subOrRoot.getChildElements(STRUCTURALOPENBRACKET_EL)) {
+			checkPeroxoBracket(openBracket);
+		}
 		List<Element> infixes = subOrRoot.getChildElements(INFIX_EL);
 		for (Element infix : infixes) {
-			Element suffix = OpsinTools.getNextSiblingIgnoringCertainElements(infix, new String[]{INFIX_EL, SUFFIXPREFIX_EL, MULTIPLIER_EL});
+			Element suffix = OpsinTools.getNextSiblingIgnoringCertainElements(infix, new String[]{INFIX_EL, SUFFIXPREFIX_EL, MULTIPLIER_EL, STRUCTURALOPENBRACKET_EL, STRUCTURALCLOSEBRACKET_EL});
 			if (suffix ==null || !suffix.getName().equals(SUFFIX_EL)){
 				throw new ComponentGenerationException("No suffix found next next to infix: "+ infix.getValue());
 			}
@@ -1387,7 +1399,10 @@ class ComponentGenerator {
 				infix.detach();
 			}
 			if (possibleBracket.getName().equals(STRUCTURALOPENBRACKET_EL)){
-				Element bracket = OpsinTools.getNextSibling(suffix);
+				Element bracket = findCloseBracketBeforeSuffix(possibleBracket, suffix);//e.g. carbo(dithioperoxo)thioic acid
+				if (bracket == null) {
+					bracket = OpsinTools.getNextSibling(suffix);
+				}
 				if (!bracket.getName().equals(STRUCTURALCLOSEBRACKET_EL)){
 					throw new ComponentGenerationException("Matching closing bracket not found around infix/suffix block");
 				}
@@ -1423,6 +1438,200 @@ class ComponentGenerator {
 				throw new ComponentGenerationException(infixName + "o in this context is a suffix, not an infix");
 			}
 			suffix.getAttribute(INFIX_ATR).setValue(StringTools.stringListToString(currentInfixInformation, ";"));
+		}
+	}
+
+	private Element findCloseBracketBeforeSuffix(Element openBracket, Element suffix) {
+		for (Element el = OpsinTools.getNextSibling(openBracket); el != null && el != suffix; el = OpsinTools.getNextSibling(el)) {
+			if (el.getName().equals(STRUCTURALCLOSEBRACKET_EL)) {
+				return el;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * e.g. ethane(thioperoxoic) OS-acid: the pair of symbols names the chain of the peroxy group from the acyl atom to the acidic atom
+	 * @param acidSymbolsOrWord
+	 * @throws ComponentGenerationException
+	 */
+	private void orientPeroxoInfixUsingAcidSymbols(Element acidSymbolsOrWord) throws ComponentGenerationException {
+		Element suffix = OpsinTools.getPreviousSibling(acidSymbolsOrWord, SUFFIX_EL);
+		Element peroxo = null;
+		List<Element> replacements = new ArrayList<Element>();
+		boolean bracketed = false;
+		for (Element el = OpsinTools.getPreviousSibling(acidSymbolsOrWord); el != null && !el.getName().equals(GROUP_EL); el = OpsinTools.getPreviousSibling(el)) {
+			if (el.getName().equals(SUFFIX_EL) && el != suffix) {
+				break;
+			}
+			if (el.getName().equals(STRUCTURALCLOSEBRACKET_EL)) {
+				bracketed = true;
+				replacements.clear();
+				peroxo = null;
+			}
+			else if (el.getName().equals(STRUCTURALOPENBRACKET_EL)) {
+				Element outerOpen = OpsinTools.getPreviousSibling(el);
+				Element outerClose = OpsinTools.getNextSibling(acidSymbolsOrWord);
+				if (outerOpen != null && outerOpen.getName().equals(STRUCTURALOPENBRACKET_EL) && outerClose != null && outerClose.getName().equals(STRUCTURALCLOSEBRACKET_EL)) {
+					outerOpen.detach();
+					outerClose.detach();
+				}
+				break;
+			}
+			else if (el.getName().equals(INFIX_EL)) {
+				String value = el.getAttributeValue(VALUE_ATR);
+				if (value.startsWith("-O-:")) {
+					peroxo = el;
+				}
+				else if (value.startsWith("=O,-O:")) {
+					replacements.add(el);
+				}
+			}
+		}
+		if (peroxo == null || suffix == null) {
+			throw new ComponentGenerationException("The word acid may only be separated from a peroxo suffix by a bracket");
+		}
+		if (acidSymbolsOrWord.getName().equals("acidSymbols")) {
+			String[] pairs = acidSymbolsOrWord.getValue().trim().replace("-acid", "").split(",");
+			for (String pair : pairs) {
+				if (!pair.equals(pairs[0])) {
+					throw new ComponentGenerationException("Differing symbols for the peroxy groups of one acid are not supported");
+				}
+			}
+			Matcher m = MATCH_CHALCOGEN_PAIR.matcher(pairs[0]);
+			m.matches();
+			if (m.group(1).equals(m.group(2))) {
+				if (bracketed || !pairs[0].equals("OO") || !peroxo.getAttributeValue(VALUE_ATR).equals("-O-:OO")) {
+					throw new ComponentGenerationException("Identical symbols are only used for peroxothioic OO-acid");
+				}
+			}
+			else {
+				orientPeroxoInfix(peroxo, replacements, m.group(1), m.group(2));
+			}
+		}
+		suffix.setValue(suffix.getValue() + " acid");
+		acidSymbolsOrWord.detach();
+	}
+
+	private void orientPeroxoInfix(Element peroxo, List<Element> replacements, String first, String last) throws ComponentGenerationException {
+		if (!peroxo.getAttributeValue(VALUE_ATR).equals("-O-:OO")) {
+			throw new ComponentGenerationException("Symbols are only used with the unmodified peroxo infix");
+		}
+		List<String> stated = new ArrayList<String>();
+		for (Element replacement : replacements) {
+			stated.add(replacement.getAttributeValue(VALUE_ATR).substring("=O,-O:".length()));
+		}
+		List<String> given = new ArrayList<String>();
+		StringBuilder oriented = new StringBuilder("-O-:");
+		for (String symbol : new String[]{first, last}) {
+			oriented.append(symbol.equals("O") ? "O" : symbol.equals("S") ? "S" : "[" + symbol + "|2]");
+			if (!symbol.equals("O")) {
+				given.add(symbol.equals("S") ? "S" : "[" + symbol + "H?]");
+			}
+		}
+		Collections.sort(stated);
+		Collections.sort(given);
+		if (!stated.equals(given)) {
+			throw new ComponentGenerationException("The symbols " + first + last + " do not match the replacement of the peroxy group");
+		}
+		peroxo.getAttribute(VALUE_ATR).setValue(oriented.toString());
+		for (Element replacement : replacements) {
+			replacement.detach();
+		}
+	}
+
+	private void orientPeroxoInfixUsingEsterLocants(Element peroxo) throws ComponentGenerationException {
+		if (!peroxo.getAttributeValue(VALUE_ATR).equals("-O-:OO")) {
+			return;
+		}
+		List<Element> replacements = new ArrayList<Element>();
+		for (Element el = OpsinTools.getPreviousSibling(peroxo); el != null && el.getName().equals(INFIX_EL) && el.getAttributeValue(VALUE_ATR).startsWith("=O,-O:"); el = OpsinTools.getPreviousSibling(el)) {
+			replacements.add(el);
+		}
+		String[] pair = replacements.isEmpty() ? null : findEsterChalcogenPair(peroxo);
+		if (pair != null) {
+			orientPeroxoInfix(peroxo, replacements, pair[0], pair[1]);
+		}
+	}
+
+	/**
+	 * e.g. OS-methyl ethane(thioperoxoate): the symbols of the ester locant state which atom of the peroxy group is replaced and which carries the organyl
+	 * @param infix
+	 * @return the symbols or null if there is not exactly one kind
+	 */
+	private String[] findEsterChalcogenPair(Element infix) {
+		Element word = infix;
+		while (word != null && !word.getName().equals(WORD_EL)) {
+			word = word.getParent();
+		}
+		if (word == null || word.getParent() == null || !word.getParent().getName().equals(WORDRULE_EL)) {
+			return null;
+		}
+		String[] pair = null;
+		for (Element otherWord : word.getParent().getChildElements(WORD_EL)) {
+			if (otherWord == word) {
+				continue;
+			}
+			for (Element locant : OpsinTools.getDescendantElementsWithTagName(otherWord, LOCANT_EL)) {
+				for (String symbols : locant.getValue().split(",")) {
+					Matcher m = MATCH_CHALCOGEN_PAIR.matcher(symbols);
+					if (m.matches() && !m.group(1).equals(m.group(2))) {
+						if (pair != null && !(pair[0].equals(m.group(1)) && pair[1].equals(m.group(2)))) {
+							return null;
+						}
+						pair = new String[]{m.group(1), m.group(2)};
+					}
+				}
+			}
+		}
+		return pair;
+	}
+
+	/**
+	 * Brackets that are not just around an infix/suffix block (e.g. phosphoro(peroxoic acid), carbo(dithioperoxo)thioic acid) are only used for peroxo infixes
+	 * Within the brackets of e.g. ethane(thioperoxoic) it is not known which of the oxygens of the peroxy group is replaced unless the infix, or the ester locants, state it e.g. OS-thioperoxo
+	 * @param openBracket
+	 * @throws ComponentGenerationException
+	 */
+	private void checkPeroxoBracket(Element openBracket) throws ComponentGenerationException {
+		Element first = OpsinTools.getNextSiblingIgnoringCertainElements(openBracket, new String[]{MULTIPLIER_EL});
+		if (first == null || !first.getName().equals(INFIX_EL)) {
+			return;//a structural bracket of another kind e.g. spiro or ring assembly
+		}
+		boolean peroxoPresent = false;
+		boolean closeBracketBeforeSuffix = false;
+		int replacementsOfCarbonylOrHydroxyOxygen = 0;
+		String replacementValue = null;
+		boolean replacementsDiffer = false;
+		int multiplierValue = 1;
+		for (Element el = OpsinTools.getNextSibling(openBracket); el != null && !el.getName().equals(SUFFIX_EL); el = OpsinTools.getNextSibling(el)) {
+			if (el.getName().equals(STRUCTURALCLOSEBRACKET_EL)) {
+				closeBracketBeforeSuffix = true;
+				break;
+			}
+			if (el.getName().equals(MULTIPLIER_EL)) {
+				multiplierValue = Integer.parseInt(el.getAttributeValue(VALUE_ATR));
+			}
+			else if (el.getName().equals(INFIX_EL)) {
+				String value = el.getAttributeValue(VALUE_ATR);
+				if (value.startsWith("-O-:")) {
+					peroxoPresent = true;
+				}
+				else if (value.startsWith("=O,-O:")) {
+					replacementsOfCarbonylOrHydroxyOxygen += multiplierValue;
+					replacementsDiffer = replacementsDiffer || (replacementValue != null && !replacementValue.equals(value));
+					replacementValue = value;
+				}
+				multiplierValue = 1;
+			}
+		}
+		Element previous = OpsinTools.getPreviousSibling(openBracket);
+		boolean followsInfixOrPrefix = previous != null && (previous.getName().equals(INFIX_EL) || previous.getName().equals(SUFFIXPREFIX_EL) || "o".equals(previous.getAttributeValue(SUBSEQUENTUNSEMANTICTOKEN_ATR)));
+		if (!peroxoPresent && (closeBracketBeforeSuffix || followsInfixOrPrefix)) {
+			throw new ComponentGenerationException("Only brackets around peroxo infixes may be used in this way");
+		}
+		if (peroxoPresent && replacementsOfCarbonylOrHydroxyOxygen > 0 && (replacementsOfCarbonylOrHydroxyOxygen != 2 || replacementsDiffer)) {
+			throw new ComponentGenerationException("It is not stated which oxygen of the peroxy group is replaced (cf. OS-thioperoxoic)");
 		}
 	}
 
