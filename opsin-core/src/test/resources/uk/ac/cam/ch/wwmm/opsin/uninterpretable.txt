@@ -10,3 +10,8 @@ oxychloride
 phenaleno[1,9b-c]thiophene
 1,1,1-triazole
 1,1,2-thiadiazole
+cis-(1S,2S)-1,2-dimethylcyclohexane
+trans-(1S,2R)-1,2-dimethylcyclohexane
+trans-(1R,2S)-cyclohexane-1,2-diol
+trans-(1R,3S)-cyclohexane-1,3-diol
+cis-(1R,2R)-2-phenylcyclopropane-1-carboxylic acid

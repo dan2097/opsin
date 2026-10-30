@@ -439,19 +439,6 @@ class StereochemistryHandler {
 			}
 		}
 		if (isCisTrans){
-			if (notExplicitlyDefinedStereoCentreMap.isEmpty() && notExplicitlyDefinedStereoBondMap.isEmpty()) {
-				//A cis/trans prefix in front of a CIP block, e.g. cis-(1S,2R)-1,2-dimethylcyclohexane,
-				//describes the relative configuration of ring substituents rather than a double bond.
-				//No bond was found for it, but every stereocentre and stereo bond has already been
-				//assigned by the descriptors that were processed first, so the term is redundant: the
-				//structure it could constrain is fully determined without it. Dropping it is therefore
-				//not a loss of information, whereas rejecting the name loses a structure OPSIN can
-				//otherwise build correctly. If anything were still undefined the term might be the only
-				//thing defining it, and that must keep throwing.
-				state.addWarning(OpsinWarningType.STEREOCHEMISTRY_IGNORED, "Ignored redundant " +
-						stereoChemistryEl.getAttributeValue(VALUE_ATR) + " as the stereochemistry was already fully defined");
-				return;
-			}
 			throw new StereochemistryException("Could not find bond that: " + stereoChemistryEl.toXML() + " could refer unambiguously to");
 		}
 		else{
@@ -646,16 +633,23 @@ class StereochemistryHandler {
 			Atom a1 = chosenStereoAtoms.get(0);
 			Atom a2 = chosenStereoAtoms.get(1);
 
-			if (a1.getAtomParity() != null && a2.getAtomParity() != null){//one can have defined stereochemistry but not both
-				return false;
-			}
-
 			Set<Bond> peripheryBonds = determinePeripheryBonds(fragment);
 			List<List<Atom>> paths = CycleDetector.getPathBetweenAtomsUsingBonds(a1, a2, peripheryBonds);
 			if (paths.size() != 2) {
 				return false;
 			}
-			applyStereoChemistryToCisTransOnRing(a1, a2, paths, atomList, stereoChemistryEl.getAttributeValue(VALUE_ATR), chooseAtomByCip);
+			String cisOrTrans = stereoChemistryEl.getAttributeValue(VALUE_ATR);
+			if (a1.getAtomParity() != null && a2.getAtomParity() != null){
+				//both stereocentres are already defined e.g. cis-(1R,2S)-cyclohexane-1,2-diol, so cis/trans can only be checked against them
+				if (!cisTransOnRingAgreesWithParities(a1, a2, paths, atomList, cisOrTrans, chooseAtomByCip)) {
+					throw new StereochemistryException(cisOrTrans + " contradicts the configuration of the stereocentres it relates");
+				}
+				if (chooseAtomByCip) {
+					state.addIsAmbiguous("Ring cis/trans checked against stereocenters where no hydrogen was present. Cahn-Ingold-Prelog rules used to determine which substituents are cis/trans, but other conventions may be in use");
+				}
+				return true;
+			}
+			applyStereoChemistryToCisTransOnRing(a1, a2, paths, atomList, cisOrTrans, chooseAtomByCip);
 			notExplicitlyDefinedStereoCentreMap.remove(chosenStereoAtoms.get(0));
 			notExplicitlyDefinedStereoCentreMap.remove(chosenStereoAtoms.get(1));
 			if (chooseAtomByCip) {
@@ -682,54 +676,8 @@ class StereochemistryHandler {
 	}
 
 	private void applyStereoChemistryToCisTransOnRing(Atom a1, Atom a2, List<List<Atom>> paths, List<Atom> fragmentAtoms, String cisOrTrans, boolean chooseAtomByCip) throws StructureBuildingException {
-		List<Atom> a1Neighbours = a1.getAtomNeighbours();
-		Atom[] atomRefs4a1 = new Atom[4];
-		Atom firstPathAtom = paths.get(0).size()>0 ? paths.get(0).get(0) : a2;
-		atomRefs4a1[2] = firstPathAtom;
-		Atom secondPathAtom = paths.get(1).size()>0 ? paths.get(1).get(0) : a2;
-		atomRefs4a1[3] = secondPathAtom;
-		a1Neighbours.remove(firstPathAtom);
-		a1Neighbours.remove(secondPathAtom);
-		if (firstPathAtom.equals(secondPathAtom)){
-			throw new StructureBuildingException("OPSIN Bug: cannot assign cis/trans on ring stereochemistry");
-		}
-		if (chooseAtomByCip) {
-			atomRefs4a1[1] = getLowestCip(a1, a1Neighbours);
-		}
-		else {
-			atomRefs4a1[1] = getHydrogenOrAcyclicOrOutsideOfFragment(a1Neighbours, fragmentAtoms);
-		}
-
-		if (atomRefs4a1[1] ==null){
-			throw new StructureBuildingException("OPSIN Bug: cannot assign cis/trans on ring stereochemistry");
-		}
-		a1Neighbours.remove(atomRefs4a1[1]);
-		atomRefs4a1[0] = a1Neighbours.get(0);
-		
-		
-		List<Atom> a2Neighbours = a2.getAtomNeighbours();
-		Atom[] atomRefs4a2 = new Atom[4];
-		firstPathAtom = paths.get(0).size()>0 ? paths.get(0).get(paths.get(0).size()-1) : a1;
-		atomRefs4a2[2] = firstPathAtom;
-		secondPathAtom = paths.get(1).size()>0 ? paths.get(1).get(paths.get(1).size()-1) : a1;
-		atomRefs4a2[3] = secondPathAtom;
-		a2Neighbours.remove(firstPathAtom);
-		a2Neighbours.remove(secondPathAtom);
-		if (firstPathAtom.equals(secondPathAtom)){
-			throw new StructureBuildingException("OPSIN Bug: cannot assign cis/trans on ring stereochemistry");
-		}
-		if (chooseAtomByCip) {
-			atomRefs4a2[1] = getLowestCip(a2, a2Neighbours);
-		}
-		else {
-			atomRefs4a2[1] = getHydrogenOrAcyclicOrOutsideOfFragment(a2Neighbours, fragmentAtoms);
-		}
-
-		if (atomRefs4a2[1] ==null){
-			throw new StructureBuildingException("OPSIN Bug: cannot assign cis/trans on ring stereochemistry");
-		}
-		a2Neighbours.remove(atomRefs4a2[1]);
-		atomRefs4a2[0] = a2Neighbours.get(0);
+		Atom[] atomRefs4a1 = cisTransOnRingAtomRefs4(a1, a2, paths, false, fragmentAtoms, chooseAtomByCip);
+		Atom[] atomRefs4a2 = cisTransOnRingAtomRefs4(a2, a1, paths, true, fragmentAtoms, chooseAtomByCip);
 		boolean enantiomer =false;
 		if (a1.getAtomParity()!=null){
 			if (!checkEquivalencyOfAtomsRefs4AndParity(atomRefs4a1, 1, a1.getAtomParity().getAtomRefs4(), a1.getAtomParity().getParity())){
@@ -768,6 +716,60 @@ class StereochemistryHandler {
 				a2.setAtomParity(atomRefs4a2, 1);
 			}
 		}
+	}
+
+	/**
+	 * Checks whether cis/trans agrees with the atom parities already assigned to both ring stereocentres
+	 * e.g. cis-(1S,2S)-1,2-dimethylcyclohexane is contradictory as (1S,2S) is the trans isomer
+	 */
+	private boolean cisTransOnRingAgreesWithParities(Atom a1, Atom a2, List<List<Atom>> paths, List<Atom> fragmentAtoms, String cisOrTrans, boolean chooseAtomByCip) throws StructureBuildingException {
+		Atom[] atomRefs4a1 = cisTransOnRingAtomRefs4(a1, a2, paths, false, fragmentAtoms, chooseAtomByCip);
+		Atom[] atomRefs4a2 = cisTransOnRingAtomRefs4(a2, a1, paths, true, fragmentAtoms, chooseAtomByCip);
+		AtomParity parity1 = a1.getAtomParity();
+		AtomParity parity2 = a2.getAtomParity();
+		boolean a1Positive = checkEquivalencyOfAtomsRefs4AndParity(atomRefs4a1, 1, parity1.getAtomRefs4(), parity1.getParity());
+		boolean a2Positive = checkEquivalencyOfAtomsRefs4AndParity(atomRefs4a2, 1, parity2.getAtomRefs4(), parity2.getParity());
+		//cis corresponds to opposite parities with this atomRefs4 ordering, trans to the same parities, as in applyStereoChemistryToCisTransOnRing
+		return cisOrTrans.equals("cis") ? a1Positive != a2Positive : a1Positive == a2Positive;
+	}
+
+	/**
+	 * Orders the neighbours of a ring stereocentre as: other substituent, cis/trans reference substituent, then the first atom on each of the two ring paths to the other stereocentre
+	 * @param stereoAtom
+	 * @param otherStereoAtom
+	 * @param paths the two ring paths from the first stereocentre to the second
+	 * @param fromPathEnd true if stereoAtom is at the end of the paths
+	 * @param fragmentAtoms
+	 * @param chooseAtomByCip
+	 * @return
+	 * @throws StructureBuildingException
+	 */
+	private Atom[] cisTransOnRingAtomRefs4(Atom stereoAtom, Atom otherStereoAtom, List<List<Atom>> paths, boolean fromPathEnd, List<Atom> fragmentAtoms, boolean chooseAtomByCip) throws StructureBuildingException {
+		List<Atom> neighbours = stereoAtom.getAtomNeighbours();
+		Atom[] atomRefs4 = new Atom[4];
+		List<Atom> path1 = paths.get(0);
+		List<Atom> path2 = paths.get(1);
+		Atom firstPathAtom = path1.size() > 0 ? path1.get(fromPathEnd ? path1.size() - 1 : 0) : otherStereoAtom;
+		atomRefs4[2] = firstPathAtom;
+		Atom secondPathAtom = path2.size() > 0 ? path2.get(fromPathEnd ? path2.size() - 1 : 0) : otherStereoAtom;
+		atomRefs4[3] = secondPathAtom;
+		neighbours.remove(firstPathAtom);
+		neighbours.remove(secondPathAtom);
+		if (firstPathAtom.equals(secondPathAtom)){
+			throw new StructureBuildingException("OPSIN Bug: cannot assign cis/trans on ring stereochemistry");
+		}
+		if (chooseAtomByCip) {
+			atomRefs4[1] = getLowestCip(stereoAtom, neighbours);
+		}
+		else {
+			atomRefs4[1] = getHydrogenOrAcyclicOrOutsideOfFragment(neighbours, fragmentAtoms);
+		}
+		if (atomRefs4[1] == null){
+			throw new StructureBuildingException("OPSIN Bug: cannot assign cis/trans on ring stereochemistry");
+		}
+		neighbours.remove(atomRefs4[1]);
+		atomRefs4[0] = neighbours.get(0);
+		return atomRefs4;
 	}
 	
 	private Atom getLowestCip(Atom a, List<Atom> atomsToConsider) {
