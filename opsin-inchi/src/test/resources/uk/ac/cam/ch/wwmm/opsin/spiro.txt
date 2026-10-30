@@ -49,4 +49,10 @@ spiro[fluorene-9,2'-[3]thiabicyclo[2.2.2]oct[5]ene]	InChI=1S/C19H16S/c1-3-7-17-1
 #primes between number and letter is recommended by IUPAC e.g. 3''a
 2'',3'',3''a,4'',5'',6'',7'',7''a-Octahydrodispiro[cyclopentane-1,1'-cyclopentane-3',1''-indene]	InChI=1/C17H28/c1-2-6-15-14(5-1)7-10-17(15)12-11-16(13-17)8-3-4-9-16/h14-15H,1-13H2
 2'',3'',3a'',4'',5'',6'',7'',7a''-Octahydrodispiro[cyclopentane-1,1'-cyclopentane-3',1''-indene]	InChI=1/C17H28/c1-2-6-15-14(5-1)7-10-17(15)12-11-16(13-17)8-3-4-9-16/h14-15H,1-13H2
+#the same variation occurs in stereochemistry locants
+(3'aS)-spiro[1,3-dithiane-2,4'-2,3,3a,5-tetrahydropentalene]-1'-one	InChI=1/C11H14OS2/c12-10-3-2-9-8(10)4-5-11(9)13-6-1-7-14-11/h4,9H,1-3,5-7H2/t9-/m0/s1
+(3a'S)-spiro[1,3-dithiane-2,4'-2,3,3a,5-tetrahydropentalene]-1'-one	InChI=1/C11H14OS2/c12-10-3-2-9-8(10)4-5-11(9)13-6-1-7-14-11/h4,9H,1-3,5-7H2/t9-/m0/s1
+(3'aR)-spiro[1,3-dithiane-2,4'-2,3,3a,5-tetrahydropentalene]-1'-one	InChI=1/C11H14OS2/c12-10-3-2-9-8(10)4-5-11(9)13-6-1-7-14-11/h4,9H,1-3,5-7H2/t9-/m1/s1
+(3''aS,7''aS)-2'',3'',3''a,4'',5'',6'',7'',7''a-octahydrodispiro[cyclopentane-1,1'-cyclopentane-3',1''-indene]	InChI=1/C17H28/c1-2-6-15-14(5-1)7-10-17(15)12-11-16(13-17)8-3-4-9-16/h14-15H,1-13H2/t14-,15-,17?/m0/s1
+(3a''S,7a''S)-2'',3'',3a'',4'',5'',6'',7'',7a''-octahydrodispiro[cyclopentane-1,1'-cyclopentane-3',1''-indene]	InChI=1/C17H28/c1-2-6-15-14(5-1)7-10-17(15)12-11-16(13-17)8-3-4-9-16/h14-15H,1-13H2/t14-,15-,17?/m0/s1
 pentaspiro[2.0.24.0.27.0.210.0.213.03]pentadecane	InChI=1S/C15H20/c1-2-11(1)12(3-4-12)14(7-8-14)15(9-10-15)13(11)5-6-13/h1-10H2

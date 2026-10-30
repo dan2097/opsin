@@ -82,9 +82,9 @@ class ComponentGenerator {
 	private static final Pattern matchLambdaConvention = Pattern.compile("(\\S+)?lambda\\D*(\\d+)\\D*", Pattern.CASE_INSENSITIVE);
 	private static final Pattern matchHdigit =Pattern.compile("H\\d");
 	private static final Pattern matchNonDigit =Pattern.compile("\\D+");
-	private static final Pattern matchAddedHydrogenLocantBracket = Pattern.compile("[1-9][0-9]*[a-g]?'*H(,[1-9][0-9]*[a-g]?'*H)*", Pattern.CASE_INSENSITIVE);
+	private static final Pattern matchAddedHydrogenLocantBracket = Pattern.compile("[1-9][0-9]*(\\^[1-9][0-9]*)?[a-g]?'*H(,[1-9][0-9]*(\\^[1-9][0-9]*)?[a-g]?'*H)*", Pattern.CASE_INSENSITIVE);
 	private static final Pattern matchRSLocantBracket = Pattern.compile("[RS]|R[,/]?S", Pattern.CASE_INSENSITIVE);
-	private static final Pattern matchSuperscriptedLocant = Pattern.compile("(" + elementSymbols +"'*)[\\^\\[\\(\\{~\\*\\<]*(?:[sS][uU][pP][ ]?)?([^\\^\\[\\(\\{~\\*\\<\\]\\)\\}\\>]+)[^\\[\\(\\{]*");
+	private static final Pattern matchSuperscriptedLocant = Pattern.compile("(" + elementSymbols +"'*)[\\^\\[\\(\\{~\\*\\<]*(?:[sS][uU][pP][ ]?)?([^\\^\\[\\(\\{~\\*\\<\\]\\)\\}\\>]+(?:\\^[^\\^\\[\\(\\{~\\*\\<\\]\\)\\}\\>]+)?)[^\\[\\(\\{]*");
 	private static final Pattern matchIUPAC2004ElementLocant = Pattern.compile("(\\d+'*)-(" + elementSymbols +"'*)(.*)");
 	private static final Pattern matchNumericLocantWithLetterAndPrime = Pattern.compile("(\\d+)('+)([a-z])");
 	private static final Pattern matchGreek = Pattern.compile("alpha|beta|gamma|delta|epsilon|zeta|eta|omega", Pattern.CASE_INSENSITIVE);
@@ -133,6 +133,7 @@ class ComponentGenerator {
 		}
 		for (Element group : groups) {
 			detectAlkaneFusedRingBridges(group);
+			processPhaneSkeleton(group);
 			processRings(group);//processes cyclo, von baeyer and spiro tokens
 			handleGroupIrregularities(group);//handles benzyl, diethylene glycol, phenanthrone and other awkward bits of nomenclature
 		}
@@ -341,13 +342,7 @@ class ComponentGenerator {
 				locantText = m.group(2) + m.group(1) + m.group(3);
 			}
 		}
-		if (locantText.contains("'")) {
-			//2''a is correct but 2a'' is either to handle internally, so normalize to this form 
-			Matcher m = matchNumericLocantWithLetterAndPrime.matcher(locantText);
-			if (m.matches()){
-				locantText = m.group(1) + m.group(3) + m.group(2);
-			}
-		}
+		locantText = standardizeLocantPrimePosition(locantText);
 
 		if (Character.isLetter(locantText.charAt(0))) {
 			//remove indications of superscript as the fact a locant is superscripted can be determined from context e.g. N~1~ ->N1
@@ -365,6 +360,24 @@ class ComponentGenerator {
 			}
 		}
 		locantText = fixLocantCapitalisation(locantText);
+		return locantText;
+	}
+
+	/**
+	 * Moves primes that were written between the number and the letter of a locant to after the letter
+	 * e.g. 2''a --> 2a''
+	 * Both spellings are in use; OPSIN labels its atoms using the latter form
+	 * @param locantText
+	 * @return
+	 */
+	private static String standardizeLocantPrimePosition(String locantText) {
+		if (locantText.indexOf('\'') >= 0) {//avoids this regex being invoked typically
+			//2''a is correct but 2a'' is easier to handle internally, so normalize to this form
+			Matcher m = matchNumericLocantWithLetterAndPrime.matcher(locantText);
+			if (m.matches()){
+				locantText = m.group(1) + m.group(3) + m.group(2);
+			}
+		}
 		return locantText;
 	}
 
@@ -946,7 +959,7 @@ class ComponentGenerator {
 							Element stereoChemEl = new TokenEl(STEREOCHEMISTRY_EL, stereoChemistryDescriptor);
 							String locantVal = m.group(1);
 							if (locantVal.length() > 0) {
-								stereoChemEl.addAttribute(new Attribute(LOCANT_ATR, fixLocantCapitalisation(StringTools.removeDashIfPresent(locantVal))));
+								stereoChemEl.addAttribute(new Attribute(LOCANT_ATR, fixLocantCapitalisation(standardizeLocantPrimePosition(StringTools.removeDashIfPresent(locantVal)))));
 							}
 							OpsinTools.insertBefore(stereoChemistryElement, stereoChemEl);
 							if (matchRS.matcher(m.group(2)).matches()) {
@@ -1349,7 +1362,7 @@ class ComponentGenerator {
 			else{
 				currentInfixInformation = StringTools.arrayToList(suffix.getAttributeValue(INFIX_ATR).split(";"));
 			}
-			String infixValue =infix.getAttributeValue(VALUE_ATR);
+			String infixValue = infix.getAttributeValue(VALUE_ATR);
 			currentInfixInformation.add(infixValue);
 			Element possibleMultiplier = OpsinTools.getPreviousSibling(infix);
 			Element possibleBracket;
@@ -1399,6 +1412,15 @@ class ComponentGenerator {
 			}
 			else if (possibleMultiplier!=null && GROUP_TYPE_VAL.equals(possibleMultiplier.getAttributeValue(TYPE_ATR))){//e.g. ethanbisthioic acid == ethanbis(thioic acid)
 				infix.detach();
+			}
+			String infixName = infix.getValue();
+			if ((infixName.equals("amid") || infixName.equals("hydrazid")) && 
+					"o".equals(infix.getAttributeValue(SUBSEQUENTUNSEMANTICTOKEN_ATR)) &&
+					"oxy".equals(suffix.getValue())) {
+				//e.g. in acetamidooxy amido is not performing functional replacement of the oxy
+				//Strictly speaking this should be even more restrictive cf. 2013 recommendations Rule P-15.5.3.2
+				//The suffix needs to also be valid as a substituent for there to be ambiguity, hence why only oxy is special cased
+				throw new ComponentGenerationException(infixName + "o in this context is a suffix, not an infix");
 			}
 			suffix.getAttribute(INFIX_ATR).setValue(StringTools.stringListToString(currentInfixInformation, ";"));
 		}
@@ -1917,6 +1939,24 @@ class ComponentGenerator {
 				}
 			}
 		}
+	}
+
+	private void processPhaneSkeleton(Element group) throws ComponentGenerationException {
+		if (!PHANE_SUBTYPE_VAL.equals(group.getAttributeValue(SUBTYPE_ATR))) {
+			return;
+		}
+		Element nodeCount = OpsinTools.getPreviousSibling(group);
+		if (nodeCount == null || !nodeCount.getName().equals(MULTIPLIER_EL)) {
+			throw new ComponentGenerationException("Expected a multiplier indicating the number of nodes before phane");
+		}
+		int nodes = Integer.parseInt(nodeCount.getAttributeValue(VALUE_ATR));
+		Element previous = OpsinTools.getPreviousSibling(nodeCount);
+		String skeletonType = previous != null ? previous.getName() : "";
+		if (nodes < 2 || (nodes < 3 && skeletonType.equals(CYCLO_EL))) {
+			throw new ComponentGenerationException("Phane skeleton has too few nodes: " + nodes);
+		}
+		group.getAttribute(VALUE_ATR).setValue(StringTools.multiplyString("C", nodes));
+		nodeCount.detach();
 	}
 
 	/**Looks (multiplier)cyclo/spiro/cyclo tags before chain
@@ -2912,15 +2952,25 @@ class ComponentGenerator {
 					OpsinTools.insertAfter(subGroup, new TokenEl(HYPHEN_EL));//discourage the use of the chalcogen term as functional replacement 
 				}
 			}
-		}
-		else if (ENDINIC_SUBTYPE_VAL.equals(groupSubType) && AMINOACID_TYPE_VAL.equals(groupType)) {
-			//aspartyl and glutamyl typically mean alpha-aspartyl/alpha-glutamyl
-			String[] suffixAppliesTo = group.getAttributeValue(SUFFIXAPPLIESTO_ATR).split(",");
-			if (suffixAppliesTo.length == 2) {
-				Element yl = OpsinTools.getNextSibling(group);
-				if (yl.getAttributeValue(VALUE_ATR).equals("yl")) {
-					if (yl.getAttribute(ADDITIONALVALUE_ATR) == null){
-						yl.addAttribute(new Attribute(ADDITIONALVALUE_ATR, "ic"));
+		} else if (AMINOACID_TYPE_VAL.equals(groupType)){
+			if (ENDINIC_SUBTYPE_VAL.equals(groupSubType)) {
+				//aspartyl and glutamyl typically mean alpha-aspartyl/alpha-glutamyl
+				String[] suffixAppliesTo = group.getAttributeValue(SUFFIXAPPLIESTO_ATR).split(",");
+				if (suffixAppliesTo.length == 2) {
+					Element yl = OpsinTools.getNextSibling(group);
+					if (yl.getAttributeValue(VALUE_ATR).equals("yl")) {
+						if (yl.getAttribute(ADDITIONALVALUE_ATR) == null) {
+							yl.addAttribute(new Attribute(ADDITIONALVALUE_ATR, "ic"));
+						}
+					}
+				}
+			} else if (groupValue.equals("asparag")) {
+				Element nextEl = OpsinTools.getNextSibling(group);
+				if (nextEl != null && nextEl.getName().equals(INE_EL)) {
+					nextEl = OpsinTools.getNextSibling(nextEl);
+					if (nextEl != null && nextEl.getName().equals(SUFFIX_EL) && nextEl.getValue().equals("ic acid")) {
+						//asparaginic acid = aspartic acid
+						group.getAttribute(VALUE_ATR).setValue("N[C@@H](CC(O)=O)C");
 					}
 				}
 			}

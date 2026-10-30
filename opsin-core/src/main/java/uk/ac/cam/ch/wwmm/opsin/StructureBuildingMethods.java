@@ -12,7 +12,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -30,7 +29,6 @@ import static uk.ac.cam.ch.wwmm.opsin.OpsinTools.*;
  */
 class StructureBuildingMethods {
 	private static final Logger LOG = LogManager.getLogger(StructureBuildingMethods.class);
-	private static final Pattern matchCompoundLocant =Pattern.compile("[\\[\\(\\{](\\d+[a-z]?'*)[\\]\\)\\}]");
 
 	private StructureBuildingMethods() {}
 
@@ -641,7 +639,7 @@ class StructureBuildingMethods {
 				 * Is the locant a compound locant e.g. 1(6) 
 				 * This would indicate unsaturation between the atoms with locants 1 and 6
 				 */
-				Matcher matcher = matchCompoundLocant.matcher(locant);
+				Matcher matcher = MATCH_COMPOUND_LOCANT.matcher(locant);
 				if (matcher.find()) {
 					String compoundLocant = matcher.group(1);
 					locant = matcher.replaceAll("");

@@ -28,7 +28,9 @@ import static uk.ac.cam.ch.wwmm.opsin.OpsinTools.*;
 
 class ComponentProcessor {
 	private static final Pattern matchAddedHydrogenBracket =Pattern.compile("[\\[\\(\\{]([^\\[\\(\\{]*)H[\\]\\)\\}]");
-	private static final Pattern matchElementSymbolOrAminoAcidLocant = Pattern.compile("[A-Z][a-z]?'*(\\d+[a-z]?'*)?");
+	private static final Pattern MATCH_SUPERSCRIPT_RING_LOCANT = Pattern.compile("([1-9][0-9]*)\\^([1-9][0-9]*[a-z]?)");
+	private static final Pattern MATCH_PRIMED_LOCANT = Pattern.compile("([1-9][0-9]*[a-z]?)('*)");
+	private static final Pattern matchElementSymbolOrAminoAcidLocant = Pattern.compile("[A-Z][a-z]?'*(\\d+(?:\\^\\d+)?[a-z]?'*)?");
 	private static final Pattern matchChalcogenReplacement= Pattern.compile("thio|seleno|telluro");
 	private static final String[] traditionalAlkanePositionNames =new String[]{"alpha", "beta", "gamma", "delta", "epsilon", "zeta"};
 	
@@ -212,9 +214,11 @@ class ComponentProcessor {
 				processHW(subOrRoot);//hantzch-widman rings
 				FusedRingBuilder.processFusedRings(state, subOrRoot);
 				processFusedRingBridges(subOrRoot);
+				PhaneAmplifier.processPhaneAmplification(state, subOrRoot);
 				assignElementSymbolLocants(subOrRoot);
 				processRingAssemblies(subOrRoot);
 				processPolyCyclicSpiroNomenclature(subOrRoot);
+				checkRingComponentsWereCombined(subOrRoot);
 			}
 
 			for (Element subOrRoot : substituentsAndRoot) {
@@ -267,7 +271,7 @@ class ComponentProcessor {
 	 * @throws StructureBuildingException If the group can't be built.
 	 * @throws ComponentGenerationException
 	 */
-	static Fragment resolveGroup(BuildState state, Element group) throws StructureBuildingException, ComponentGenerationException {
+	Fragment resolveGroup(BuildState state, Element group) throws StructureBuildingException, ComponentGenerationException {
 		String groupValue = group.getAttributeValue(VALUE_ATR);
 		String labelsValue = group.getAttributeValue(LABELS_ATR);
 		Fragment thisFrag = state.fragManager.buildSMILES(groupValue, group, labelsValue != null ? labelsValue : NONE_LABELS_VAL);
@@ -278,7 +282,7 @@ class ComponentProcessor {
 
 		setFragmentDefaultInAtomIfSpecified(thisFrag, group);
 		setFragmentFunctionalAtomsIfSpecified(group, thisFrag);
-		applyTraditionalAlkaneNumberingIfAppropriate(group, thisFrag); 
+		applyTraditionalAlkaneNumberingIfAppropriate(state, group, thisFrag); 
 		applyHomologyGroupLabelsIfSpecified(group, thisFrag);
 		if (ELEMENTARYATOM_TYPE_VAL.equals(group.getAttributeValue(TYPE_ATR))) {
 			//these do not have implicit hydrogen e.g. phosphorus is literally just a phosphorus atom
@@ -627,7 +631,7 @@ class ComponentProcessor {
 	}
 
 
-	private static void applyTraditionalAlkaneNumberingIfAppropriate(Element group, Fragment thisFrag)  {
+	private void applyTraditionalAlkaneNumberingIfAppropriate(BuildState state, Element group, Fragment thisFrag)  {
 		String groupType  = group.getAttributeValue(TYPE_ATR);
 		if (groupType.equals(ACIDSTEM_TYPE_VAL)){
 			List<Atom> atomList = thisFrag.getAtomList();
@@ -678,8 +682,20 @@ class ComponentProcessor {
 			}
 			Element possibleSuffix = OpsinTools.getNextSibling(group, SUFFIX_EL);
 			Boolean terminalSuffixWithNoSuffixPrefixPresent = false;
-			if (possibleSuffix!=null && TERMINAL_SUBTYPE_VAL.equals(possibleSuffix.getAttributeValue(SUBTYPE_ATR)) && possibleSuffix.getAttribute(SUFFIXPREFIX_ATR) == null){
-				terminalSuffixWithNoSuffixPrefixPresent = true;
+			if (possibleSuffix!=null && possibleSuffix.getAttribute(SUFFIXPREFIX_ATR) == null){
+				String suffixSubType = possibleSuffix.getAttributeValue(SUBTYPE_ATR);
+				//Greek letters count from the atom next to the acid centre, so whether they start
+				//at locant 2 depends on whether the suffix makes locant 1 the acid centre.
+				//A terminal suffix always does. A cycleformer only does when it hangs the acid
+				//group off locant 1 itself, as lactone/lactam/lactim do; sultone and its
+				//relatives, and the carbo- forms, insert their own acid atom instead, which
+				//leaves locant 1 alpha to it. Treating every cycleformer as terminal turned
+				//gamma-decanosultone into a six membered ring.
+				if (TERMINAL_SUBTYPE_VAL.equals(suffixSubType)
+						|| (CYCLEFORMER_SUBTYPE_VAL.equals(suffixSubType)
+								&& suffixPlacesAcidGroupOnAttachedAtom(state, possibleSuffix, thisFrag))){
+					terminalSuffixWithNoSuffixPrefixPresent = true;
+				}
 			}
 			for (Atom atom : atomList) {
 				String firstLocant = atom.getFirstLocant();
@@ -699,7 +715,47 @@ class ComponentProcessor {
 			}
 		}
 	}
-	
+
+	/**
+	 * Does this suffix attach its acid group to the atom it bonds to, rather than inserting an
+	 * acid atom of its own?
+	 * The suffix's addgroup SMILES answers this directly: its first atom is the one the parent
+	 * bonds to, so the parent atom is the acid centre exactly when that first atom carries the
+	 * multiply bonded heteroatom. lactone "[*](=O)O[*]" and lactim "[*](O)=N[*]" do; sultone
+	 * "[*]S(=O)(=O)O[*]" and carbolactone "[*]C(=O)O[*]" put a sulfur or carbon of their own
+	 * there instead. Reading it from the rule keeps the two files from drifting apart.
+	 * @param suffix
+	 * @param frag the fragment the suffix will be applied to
+	 * @return
+	 */
+	private boolean suffixPlacesAcidGroupOnAttachedAtom(BuildState state, Element suffix, Fragment frag) {
+		try {
+			String groupType = frag.getType();
+			String suffixTypeToUse = suffixApplier.isGroupTypeWithSpecificSuffixRules(groupType) ? groupType : STANDARDGROUP_TYPE_VAL;
+			for (SuffixRule suffixRule : suffixApplier.getSuffixRuleTags(suffixTypeToUse, suffix.getValue(), frag.getSubType())) {
+				if (suffixRule.getType() == SuffixRuleType.addgroup) {
+					Fragment suffixFrag = state.fragManager.buildSMILES(suffixRule.getAttributeValue(SUFFIXRULES_SMILES_ATR), SUFFIX_TYPE_VAL, NONE_LABELS_VAL);
+					try {
+						Atom attachedAtom = suffixFrag.getFirstAtom();
+						for (Bond bond : attachedAtom.getBonds()) {
+							if (bond.getOrder() > 1 && bond.getOtherAtom(attachedAtom).getElement() != ChemEl.C) {
+								return true;
+							}
+						}
+					}
+					finally {
+						state.fragManager.removeFragment(suffixFrag);
+					}
+					break;
+				}
+			}
+		}
+		catch (ComponentGenerationException | StructureBuildingException e) {
+			//the suffix will fail to resolve later with a more useful message; leave the locants unshifted
+		}
+		return false;
+	}
+
 	private static void applyHomologyGroupLabelsIfSpecified(Element group, Fragment frag) {
 		String homologyValsStr = group.getAttributeValue(HOMOLOGY_ATR);
 		if (homologyValsStr != null) {
@@ -2727,7 +2783,8 @@ class ComponentProcessor {
 		for (Element group : groups) {
 			String groupValue =group.getValue();
 			if (groupValue.equals("porphyrin")|| groupValue.equals("porphin")){
-				List<Element> hydrogenAddingEls = group.getParent().getChildElements(INDICATEDHYDROGEN_EL);
+				//Look for cases where porphyrin nitrogens have hydrogen indicated e.g. 21H,23H-porphyrin; 21,23-dihydroporphyrin
+				List<Element> hydrogenAddingEls = OpsinTools.getChildElementsWithTagNames(group.getParent(), new String[]{INDICATEDHYDROGEN_EL, HYDRO_EL});
 				boolean implicitHydrogenExplicitlySet =false;
 				for (Element hydrogenAddingEl : hydrogenAddingEls) {
 					String locant = hydrogenAddingEl.getAttributeValue(LOCANT_ATR);
@@ -3090,7 +3147,7 @@ class ComponentProcessor {
 					potentialLocant.detach();
 				}
 				else{
-					String locantText = StringTools.removeDashIfPresent(potentialLocant.getValue());
+					String locantText = convertSuperscriptRingAssemblyLocants(StringTools.removeDashIfPresent(potentialLocant.getValue()));
 					//locantText might be something like 1,1':3',1''
 					String[] perRingLocantArray = MATCH_COLONORSEMICOLON.split(locantText);
 					if (perRingLocantArray.length != (mvalue - 1)){
@@ -3216,6 +3273,7 @@ class ComponentProcessor {
 				}
 			}
 
+			addSuperscriptLocantsToRingAssembly(fragmentToResolveAndDuplicate);
 			group.setValue(multiplier.getValue() + group.getValue());
 			Element possibleOpenStructuralBracket = OpsinTools.getPreviousSibling(multiplier);
 			if (possibleOpenStructuralBracket!=null && possibleOpenStructuralBracket.getName().equals(STRUCTURALOPENBRACKET_EL)){//e.g. [2,2'-bipyridin].
@@ -3224,6 +3282,37 @@ class ComponentProcessor {
 				possibleOpenStructuralBracket.detach();
 			}
 			multiplier.detach();
+		}
+	}
+
+	/**
+	 * Converts ring assembly locants written with superscripts into the primed form e.g. 1^1,2^1:2^4,3^1 --> 1,1':4',1''
+	 */
+	private static String convertSuperscriptRingAssemblyLocants(String locantText) {
+		if (locantText.indexOf('^') < 0) {
+			return locantText;
+		}
+		Matcher m = MATCH_SUPERSCRIPT_RING_LOCANT.matcher(locantText);
+		StringBuffer sb = new StringBuffer();
+		while (m.find()) {
+			int ring = Integer.parseInt(m.group(1));
+			m.appendReplacement(sb, Matcher.quoteReplacement(m.group(2) + StringTools.multiplyString("'", ring - 1)));
+		}
+		m.appendTail(sb);
+		return sb.toString();
+	}
+
+	/**
+	 * Gives the atoms of each ring of a ring assembly a locant of the form ring^locant e.g. 3^4 for 4'' in a terphenyl
+	 */
+	private static void addSuperscriptLocantsToRingAssembly(Fragment ringAssembly) {
+		for (Atom atom : ringAssembly) {
+			for (String locant : new ArrayList<>(atom.getLocants())) {
+				Matcher m = MATCH_PRIMED_LOCANT.matcher(locant);
+				if (m.matches()) {
+					atom.addLocant((m.group(2).length() + 1) + "^" + m.group(1));
+				}
+			}
 		}
 	}
 
@@ -3811,12 +3900,22 @@ class ComponentProcessor {
 	 * @throws StructureBuildingException 
 	 */
 	private void processFusedRingBridges(Element subOrRoot) throws StructureBuildingException {
-		List<Element> bridges = subOrRoot.getChildElements(FUSEDRINGBRIDGE_EL);
-		int bridgeCount = bridges.size();
-		if (bridgeCount == 0) {
-			return;
+		Map<Element, List<Element>> bridgesOfGroup = new LinkedHashMap<>();
+		for (Element bridge : subOrRoot.getChildElements(FUSEDRINGBRIDGE_EL)) {
+			Element groupEl = OpsinTools.getNextSibling(bridge, GROUP_EL);
+			List<Element> bridges = bridgesOfGroup.get(groupEl);
+			if (bridges == null) {
+				bridges = new ArrayList<>();
+				bridgesOfGroup.put(groupEl, bridges);
+			}
+			bridges.add(bridge);
 		}
-		Element groupEl = OpsinTools.getNextSibling(bridges.get(bridgeCount - 1), GROUP_EL);
+		for (Map.Entry<Element, List<Element>> entry : bridgesOfGroup.entrySet()) {
+			processFusedRingBridges(entry.getKey(), entry.getValue());
+		}
+	}
+
+	private void processFusedRingBridges(Element groupEl, List<Element> bridges) throws StructureBuildingException {
 		Fragment ringFrag = groupEl.getFrag();
 		Map<Fragment, Atom[]> bridgeToRingAtoms = new LinkedHashMap<>();
 		for (Element bridge : bridges) {
@@ -3944,6 +4043,38 @@ class ComponentProcessor {
 		}
 	}
 
+
+	/**
+	 * Checks that the ring components of a substituent/root have all been combined into a single group
+	 * e.g. by fusion nomenclature.
+	 * Something like pyrido[2,3-b](513C)pyrazine leaves the components uncombined as the bracketed
+	 * isotope specification/locant between them stops them being recognised as one fused ring system.
+	 * Subsequent processing assumes that a substituent/root contains a single group, so such a name must be
+	 * rejected here rather than being allowed to cause an internal error later on.
+	 * @param subOrRoot
+	 * @throws ComponentGenerationException
+	 */
+	private void checkRingComponentsWereCombined(Element subOrRoot) throws ComponentGenerationException {
+		List<Element> groups = subOrRoot.getChildElements(GROUP_EL);
+		if (groups.size() > 1) {
+			Element firstGroup = groups.get(0);
+			Element lastGroup = groups.get(groups.size() - 1);
+			StringBuilder message = new StringBuilder();
+			message.append("Unable to combine ring components: ");
+			message.append(firstGroup.getValue());
+			message.append(" and ");
+			message.append(lastGroup.getValue());
+			Element unexpectedEl = OpsinTools.getNextSiblingIgnoringCertainElements(firstGroup, new String[]{MULTIPLIER_EL, FUSION_EL});
+			if (unexpectedEl != null && !unexpectedEl.getName().equals(GROUP_EL)) {
+				message.append(", unexpected ");
+				message.append(unexpectedEl.getName());
+				message.append(": ");
+				message.append(unexpectedEl.getValue());
+				message.append(" was found between them");
+			}
+			throw new ComponentGenerationException(message.toString());
+		}
+	}
 
 	/**
 	 * Uses the number of outAtoms that are present to assign the number of outAtoms on substituents that can have a variable number of outAtoms
@@ -4685,15 +4816,17 @@ class ComponentProcessor {
 			}
 
 			if (allowIndirectLocants){
+				List<Element> locantAble = findElementsMissingIndirectLocants(subOrRoot, lastLocant);
 				/* The first locant is most likely a locant indicating where this subsituent should be attached.
 				 * If the locant cannot be found on a potential root this cannot be the case though (assuming the name is valid of course)
+				 * The symmetric-parent exception must not override a retained substituent's default attachment position e.g. 1-mesitylhydrazine.
 				 */
 				if (!ADDEDHYDROGENLOCANT_TYPE_VAL.equals(lastLocant.getAttributeValue(TYPE_ATR)) && locantEls.size() ==1 && group.getAttribute(ISAMULTIRADICAL_ATR)==null &&
-						locantValues.length == 1 && checkLocantPresentOnPotentialRoot(state, subOrRoot, locantValues[0]) && OpsinTools.getPreviousSibling(lastLocant, LOCANT_EL)==null){
+						locantValues.length == 1 && checkLocantPresentOnPotentialRoot(state, subOrRoot, locantValues[0]) && OpsinTools.getPreviousSibling(lastLocant, LOCANT_EL)==null &&
+						(locantAble.isEmpty() || locantAble.get(0).getAttribute(DEFAULTLOCANTID_ATR) != null || !isLoneSubstituentOnUnsuffixedSymmetricParent(subOrRoot))){
 					return;
 				}
 				boolean assignableToIndirectFeatures =true;
-				List<Element> locantAble  =findElementsMissingIndirectLocants(subOrRoot, lastLocant);
 				if (locantAble.size() < locantValues.length){
 					assignableToIndirectFeatures =false;
 				}
@@ -4746,6 +4879,32 @@ class ComponentProcessor {
 		}
 	}
 
+
+	/**
+	 * A lone substituent needs no parent locant when all parent atoms are equivalent.
+	 * Prefer an indirect locant in this case e.g. 2-propenylbenzene is (prop-2-enyl)benzene.
+	 */
+	private boolean isLoneSubstituentOnUnsuffixedSymmetricParent(Element substituent) {
+		Element word = substituent.getParent();
+		if (!SUBSTITUENT_EL.equals(substituent.getName()) || !WORD_EL.equals(word.getName()) ||
+				word.getChildCount() != 2 || word.getChild(0) != substituent || substituent.getFirstChildElement(MULTIPLIER_EL) != null) {
+			return false;
+		}
+		Element root = word.getChild(1);
+		if (!ROOT_EL.equals(root.getName())) {
+			return false;
+		}
+		//Suffixes and pending modifications can distinguish otherwise equivalent parent atoms.
+		//Only a bare group (optionally followed by the saturated "ane" unsaturator) is safe to check here.
+		for (Element child : root.getChildElements()) {
+			String name = child.getName();
+			if (!GROUP_EL.equals(name) && !HYPHEN_EL.equals(name) &&
+					!(UNSATURATOR_EL.equals(name) && "1".equals(child.getAttributeValue(VALUE_ATR)))) {
+				return false;
+			}
+		}
+		return AmbiguityChecker.allAtomsEquivalent(root.getFirstChildElement(GROUP_EL).getFrag().getAtomList());
+	}
 
 	/**
 	 * Finds locants that are before a group element and not immediately followed by a multiplier
@@ -5294,7 +5453,7 @@ class ComponentProcessor {
 		}
 		if(locants.size() > 0) {
 			if (multiplier==1 && oneBelowWordLevel && OpsinTools.getPreviousSibling(subOrBracket)==null){//locant might be word Level locant
-				if (wordLevelLocantsAllowed(subOrBracket, locants.size())){//something like S-ethyl or S-(2-ethylphenyl) or S-4-tert-butylphenyl
+				if (wordLevelLocantsAllowed(subOrBracket, locants)){//something like S-ethyl or S-(2-ethylphenyl) or S-4-tert-butylphenyl
 					Element locant = locants.remove(0);
 					if (locant.getValue().split(",").length!=1){
 						throw new ComponentGenerationException("Multiplier and locant count failed to agree; All locants could not be assigned!");
@@ -5355,7 +5514,8 @@ class ComponentProcessor {
 
 
 
-	private boolean wordLevelLocantsAllowed(Element subBracketOrRoot, int numberOflocants) {
+	private boolean wordLevelLocantsAllowed(Element subBracketOrRoot, List<Element> locants) throws StructureBuildingException {
+		int numberOflocants = locants.size();
 		Element parentElem = subBracketOrRoot.getParent();
 		if (WordType.valueOf(parentElem.getAttributeValue(TYPE_ATR))==WordType.substituent
 				&& (OpsinTools.getNextSibling(subBracketOrRoot)==null || numberOflocants>=2)){
@@ -5363,8 +5523,11 @@ class ComponentProcessor {
 				return true;
 			}
 		}
-		if ((state.currentWordRule == WordRule.potentialAlcoholEster || state.currentWordRule == WordRule.amineDiConjunctiveSuffix || 
-				(state.currentWordRule == WordRule.ester  &&  (OpsinTools.getNextSibling(subBracketOrRoot)==null || numberOflocants>=2)))
+		if ((state.currentWordRule == WordRule.ester || state.currentWordRule == WordRule.potentialAlcoholEster || state.currentWordRule == WordRule.amineDiConjunctiveSuffix)
+				&& (OpsinTools.getNextSibling(subBracketOrRoot)==null || numberOflocants >= 2 || 
+						(state.currentWordRule == WordRule.potentialAlcoholEster && numberOflocants == 1 && !checkLocantPresentOnPotentialRoot(state, subBracketOrRoot, locants.get(0).getValue())) ||
+						//The subsequent BIOCHEMICALLINKAGE_EL already acts as a locant so no locant is expected
+						(state.currentWordRule == WordRule.potentialAlcoholEster && hasBiochemicalLinkageDescriptor(subBracketOrRoot)))
 				&& parentElem.getName().equals(WORD_EL)){
 			Element wordRule = parentElem.getParent();
 			List<Element> words = wordRule.getChildElements(WORD_EL);
@@ -5381,6 +5544,20 @@ class ComponentProcessor {
 			}
 		}
 
+		return false;
+	}
+
+	private boolean hasBiochemicalLinkageDescriptor(Element subBracketOrRoot) {
+		if (subBracketOrRoot.getFirstChildElement(BIOCHEMICALLINKAGE_EL) != null) {
+			return true;
+		}
+		if (subBracketOrRoot.getName().equals(BRACKET_EL)) {
+			//The final component determines how the bracket attaches outside its scope.
+			List<Element> children = OpsinTools.getChildElementsWithTagNames(subBracketOrRoot, new String[]{SUBSTITUENT_EL, BRACKET_EL, ROOT_EL});
+			if (!children.isEmpty()) {
+				return hasBiochemicalLinkageDescriptor(children.get(children.size() - 1));
+			}
+		}
 		return false;
 	}
 
@@ -5401,7 +5578,7 @@ class ComponentProcessor {
 				int multiVal = Integer.parseInt(multiplier.getAttributeValue(VALUE_ATR));
 				List<Element> locants = firstSubBrackOrRoot.getChildElements(LOCANT_EL);
 				boolean assignLocants = false;
-				boolean wordLevelLocants = wordLevelLocantsAllowed(firstSubBrackOrRoot, locants.size());//something like O,S-dimethyl phosphorothioate
+				boolean wordLevelLocants = wordLevelLocantsAllowed(firstSubBrackOrRoot, locants);//something like O,S-dimethyl phosphorothioate
 				if (locants.size() > 1) {
 					throw new ComponentGenerationException("Unable to assign all locants");
 				}

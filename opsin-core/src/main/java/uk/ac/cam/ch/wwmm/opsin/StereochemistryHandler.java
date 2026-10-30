@@ -9,6 +9,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
+import java.util.regex.Matcher;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -467,10 +468,22 @@ class StereochemistryHandler {
 			}
 		}
 		else{
+			Atom secondAtomInBond = null;
+			Matcher compoundLocantMatcher = OpsinTools.MATCH_COMPOUND_LOCANT.matcher(locant);
+			if (compoundLocantMatcher.find()) {
+				secondAtomInBond = fragment.getAtomByLocant(compoundLocantMatcher.group(1));
+				locant = compoundLocantMatcher.replaceAll("");
+				if (secondAtomInBond == null) {
+					return false;
+				}
+			}
 			Atom firstAtomInBond = fragment.getAtomByLocant(locant);
 			if (firstAtomInBond !=null){
 				List<Bond> bonds = firstAtomInBond.getBonds();
 				for (Bond potentialBond : bonds) {
+					if (secondAtomInBond != null && potentialBond.getOtherAtom(firstAtomInBond) != secondAtomInBond) {
+						continue;
+					}
 					if (notExplicitlyDefinedStereoBondMap.containsKey(potentialBond) && (!isCisTrans || cisTransUnambiguousOnBond(potentialBond))){
 						applyStereoChemistryToStereoBond(potentialBond, notExplicitlyDefinedStereoBondMap.get(potentialBond), eOrZ);
 						notExplicitlyDefinedStereoBondMap.remove(potentialBond);
@@ -1022,38 +1035,43 @@ class StereochemistryHandler {
 		List<Atom> atomList = fragment.getAtomList();
 		for (Atom potentialStereoAtom : atomList) {
 			if (notExplicitlyDefinedStereoCentreMap.containsKey(potentialStereoAtom) && potentialStereoAtom.getBondCount() == 4) {
-				List<Atom> neighbours = potentialStereoAtom.getAtomNeighbours();
-				Atom acidGroup = null;//A carbon connected to non-carbons e.g. COOH
+				Atom acidGroup = null;//The carbon with the highest positive bond order sum to chalcogens
 				Atom amineOrAlcohol = null;//N or O e.g. NH2 (as this may be substituted don't check H count)
 				Atom sideChain = null;//A carbon
 				Atom hydrogen = null;//A hydrogen
-				for (Atom atom : neighbours) {
+				int acidGroupScore = 0;
+				int sideChainScore = 0;
+				for (Atom atom : potentialStereoAtom.getAtomNeighbours()) {
 					ChemEl el = atom.getElement();
 					if (el == ChemEl.H) {
 						hydrogen = atom;
 					}
 					else if (el == ChemEl.C) {
-						int chalcogenNeighbours = 0;
-						for (Atom neighbour2 : atom.getAtomNeighbours()) {
-							if (atom == neighbour2) {
-								continue;
-							}
-							if (neighbour2.getElement().isChalcogen()) {
-								chalcogenNeighbours++;
+						int chalcogenBondOrderSum = 0;
+						for (Bond bond : atom.getBonds()) {
+							Atom neighbour2 = bond.getOtherAtom(atom);
+							if (neighbour2 != potentialStereoAtom && neighbour2.getElement().isChalcogen()) {
+								chalcogenBondOrderSum += bond.getOrder();
 							}
 						}
-						if (chalcogenNeighbours > 0) {
+						if (chalcogenBondOrderSum > acidGroupScore) {
+							if (acidGroup != null) {
+								sideChain = acidGroup;
+								sideChainScore = acidGroupScore;
+							}
 							acidGroup = atom;
-						}
-						else {
+							acidGroupScore = chalcogenBondOrderSum;
+						} else {
 							sideChain = atom;
+							sideChainScore = chalcogenBondOrderSum;
 						}
 					}
 					else if (el == ChemEl.O || el ==ChemEl.N) {
 						amineOrAlcohol = atom;
 					}
 				}
-				if (acidGroup != null && amineOrAlcohol != null && sideChain != null && hydrogen != null) {
+				if (acidGroup != null && acidGroupScore > sideChainScore
+						&& amineOrAlcohol != null && sideChain != null && hydrogen != null) {
 					Atom[] atomRefs4 = new Atom[]{acidGroup, sideChain, amineOrAlcohol, hydrogen};
 					if (dOrL.equals("l") || dOrL.equals("ls")) {
 						potentialStereoAtom.setAtomParity(atomRefs4, -1);

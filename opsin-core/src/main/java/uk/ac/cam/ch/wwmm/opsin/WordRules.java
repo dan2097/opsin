@@ -236,12 +236,19 @@ class WordRules {
 	 * @throws ParsingException
 	 */
 	void groupWordsIntoWordRules(Element moleculeEl, NameToStructureConfig n2sConfig, boolean allowSpaceRemoval, Integer[] componentRatios) throws ParsingException {
+		groupWordsIntoWordRules(moleculeEl, n2sConfig, allowSpaceRemoval, componentRatios, Collections.singletonList(moleculeEl.getChildElements(WORD_EL)));
+	}
+
+	/**Applies word rules independently to groups separated by explicit mixture delimiters.*/
+	void groupWordsIntoWordRules(Element moleculeEl, NameToStructureConfig n2sConfig, boolean allowSpaceRemoval,
+			Integer[] componentRatios, List<List<Element>> wordGroups) throws ParsingException {
 		WordRulesInstance instance = new WordRulesInstance(moleculeEl, n2sConfig, allowSpaceRemoval, componentRatios);
-		List<Element> wordEls = moleculeEl.getChildElements(WORD_EL);
-		//note that multiple words in wordEls may be later replaced by a wordRule element
-		for (int i = 0; i <wordEls.size(); i++) {
-			if (instance.matchWordRule(wordEls, i)) {
-				i=-1;//if function did something
+		for (List<Element> wordEls : wordGroups) {
+			//note that multiple words in wordEls may be later replaced by a wordRule element
+			for (int i = 0; i <wordEls.size(); i++) {
+				if (instance.matchWordRule(wordEls, i)) {
+					i=-1;//if function did something
+				}
 			}
 		}
 		List<Element> wordRuleEls = moleculeEl.getChildElements();
@@ -602,7 +609,7 @@ class WordRules {
 				else {
 					while (lastEl != null && elName.equals(SUFFIX_EL)) {
 						String suffixValAtr = lastEl.getAttributeValue(VALUE_ATR);
-						if (ateOrIteOrAmide.matcher(suffixValAtr).find() || suffixValAtr.equals("glycoside")) {
+						if ((ateOrIteOrAmide.matcher(suffixValAtr).find() && !suffixValAtr.equals("olate")) || suffixValAtr.equals("glycoside")) {
 							return true;
 						}
 						//glycoside is not always the last suffix

@@ -1,0 +1,27 @@
+# A lone substituent on an unsuffixed parent with equivalent atoms takes the locant internally.
+Benzene, 2-propenyl-	InChI=1S/C9H10/c1-2-6-9-7-4-3-5-8-9/h2-5,7-8H,1,6H2
+2-propenyl-Benzene	InChI=1S/C9H10/c1-2-6-9-7-4-3-5-8-9/h2-5,7-8H,1,6H2
+2-propenylbenzene	InChI=1S/C9H10/c1-2-6-9-7-4-3-5-8-9/h2-5,7-8H,1,6H2
+(2-propenyl)Benzene	InChI=1S/C9H10/c1-2-6-9-7-4-3-5-8-9/h2-5,7-8H,1,6H2
+Cyclohexane, 3-butenyl-	InChI=1S/C10H18/c1-2-3-7-10-8-5-4-6-9-10/h2,10H,1,3-9H2
+3-butenyl-Cyclohexane	InChI=1S/C10H18/c1-2-3-7-10-8-5-4-6-9-10/h2,10H,1,3-9H2
+(3-butenyl)Cyclohexane	InChI=1S/C10H18/c1-2-3-7-10-8-5-4-6-9-10/h2,10H,1,3-9H2
+# The rule is structural, rather than a list of selected ring parents.
+2-propenylcyclononane	InChI=1S/C12H22/c1-2-9-12-10-7-5-3-4-6-8-11-12/h2,12H,1,3-11H2
+# Non-equivalent parent atoms retain the parent locant interpretation.
+Pyridine, 2-propenyl-	InChI=1S/C8H9N/c1-2-5-8-6-3-4-7-9-8/h2-7H,1H3
+2-propenyl-Pyridine	InChI=1S/C8H9N/c1-2-5-8-6-3-4-7-9-8/h2-7H,1H3
+# Multiple substituents, including multiplied prefixes, retain parent locants.
+Benzene, 1,2-dimethyl-	InChI=1S/C8H10/c1-7-5-3-4-6-8(7)2/h3-6H,1-2H3
+1,2-dimethyl-Benzene	InChI=1S/C8H10/c1-7-5-3-4-6-8(7)2/h3-6H,1-2H3
+1-methyl-2-propenylbenzene	InChI=1S/C10H12/c1-3-6-10-8-5-4-7-9(10)2/h3-8H,1-2H3
+1,2-dipropenylbenzene	InChI=1S/C12H14/c1-3-7-11-9-5-6-10-12(11)8-4-2/h3-10H,1-2H3
+# A parent suffix or pending unsaturation can distinguish the parent positions.
+2-propenylcyclohexan-1-ol	InChI=1S/C9H16O/c1-2-5-8-6-3-4-7-9(8)10/h2,5,8-10H,3-4,6-7H2,1H3
+2-propenylcyclohex-1-ene	InChI=1S/C9H14/c1-2-6-9-7-4-3-5-8-9/h2,6-7H,3-5,8H2,1H3
+# Unlocanted substituents and prefixes without an applicable internal locant are unchanged.
+Benzene, ethenyl-	InChI=1S/C8H8/c1-2-8-6-4-3-5-7-8/h2-7H,1H2
+ethenyl-Benzene	InChI=1S/C8H8/c1-2-8-6-4-3-5-7-8/h2-7H,1H2
+3-ethylbenzene	InChI=1S/C8H10/c1-2-8-6-4-3-5-7-8/h3-7H,2H2,1H3
+# A retained substituent's default attachment position is preserved when the locant can apply to the parent.
+1-mesitylhydrazine	InChI=1S/C9H14N2/c1-6-4-7(2)9(11-10)8(3)5-6/h4-5,11H,10H2,1-3H3

@@ -1,0 +1,26 @@
+carbonothioic S-acid	=O OH SH
+carbonothioic O,O-acid	=S OH OH
+carbonodithioic S,S-acid	=O SH SH
+carbonodithioic O,S-acid	=S OH SH
+carbonodiselenoic Se,Se-acid	=O SeH SeH
+carbamothioic O-acid	=S OH
+carbamothioic S-acid	=O SH
+carbamoselenoic Se-acid	=O SeH
+sulfurothioic S-acid	=O =O OH SH
+sulfurothioic O,O-acid	=O =S OH OH
+borothioic S-acid	OH OH SH
+borotrithioic S,S,S-acid	SH SH SH
+phosphorothioic S-acid	=O OH OH SH
+phosphorothioic O,O,O-acid	=S OH OH OH
+phosphorodithioic S,S-acid	=O OH SH SH
+phosphorotrithioic S,S,S-acid	=O SH SH SH
+phosphonothioic O,O-acid	=S OH OH
+phosphinothioic S-acid	=O SH
+arsorothioic O,O,O-acid	=S OH OH OH
+phosphorothious S-acid	OH OH SH
+phosphonodithious S,S-acid	SH SH
+sulfurothious O-acid	=S OH OH
+carbamotelluroic Te-acid	=O TeH
+cyclohexanecarboselenothioic Se-acid	=S SeH
+hexaneselenothioic S-acid	=Se SH
+Se-methyl ethaneselenothioate	=S

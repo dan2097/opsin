@@ -30,7 +30,6 @@ class Parser {
 	private final ResourceManager resourceManager;
 	private final ParseRules parseRules;
 	
-	private static final Pattern matchSemiColonSpace = Pattern.compile("; ");
 	private static final Pattern matchStoichiometryIndication = Pattern.compile("[ ]?[\\{\\[\\(](\\d+|\\?)([:/](\\d+|\\?))+[\\}\\]\\)]$");
 	private static final Logger LOG = LogManager.getLogger(Parser.class);
 
@@ -86,12 +85,7 @@ class Parser {
 			catch (ParsingException ignored) {
 			}
 		}
-		else if (name.contains("; ")){//a mixture, spaces are sufficient for OPSIN to treat as a mixture. These spaces for obvious reasons must not be removed
-			TokenizationResult tokenizationResult = tokeniser.tokenize(matchSemiColonSpace.matcher(name).replaceAll(" "), false);
-			if (tokenizationResult.isSuccessfullyTokenized()){
-				parse = tokenizationResult.getParse();
-			}
-		}
+
 		boolean allowSpaceRemoval;
 		if (parse == null) {
 			allowSpaceRemoval = true;
@@ -123,9 +117,16 @@ class Parser {
 		for(Parse pp : parses) {
 			Element moleculeEl = new GroupingEl(MOLECULE_EL);
 			moleculeEl.addAttribute(new Attribute(NAME_ATR, name));
+			List<List<Element>> wordGroups = new ArrayList<>();
+			List<Element> wordGroup = new ArrayList<>();
 			for(ParseWord pw : pp.getWords()) {
 				Element word = new GroupingEl(WORD_EL);
 				moleculeEl.addChild(word);
+				wordGroup.add(word);
+				if (pw.endsComponent()) {
+					wordGroups.add(wordGroup);
+					wordGroup = new ArrayList<>();
+				}
 				List<ParseTokens> parseTokens = pw.getParseTokens();
 				if (parseTokens.size() != 1){
 					throw new ParsingException("OPSIN bug: parseWord should have exactly 1 annotations after creating additional parses step");
@@ -141,13 +142,17 @@ class Parser {
 				word.addAttribute(new Attribute(VALUE_ATR, value));
 				writeWordXML(word, tokensForWord.getTokens(), WordTools.chunkAnnotations(tokensForWord.getAnnotations()));
 			}
+			if (!wordGroup.isEmpty()) {
+				wordGroups.add(wordGroup);
+			}
+			
 			/* All words are placed into a wordRule.
 			 * Often multiple words in the same wordRule.
 			 * WordRules can be nested within each other e.g. in Carbonyl cyanide m-chlorophenyl hydrazone ->
 			 * <wr><wr>Carbonyl cyanide</wr> m-chlorophenyl hydrazone </wr>
 			 */
 			try {
-				wordRules.groupWordsIntoWordRules(moleculeEl, n2sConfig, allowSpaceRemoval, componentRatios);
+				wordRules.groupWordsIntoWordRules(moleculeEl, n2sConfig, allowSpaceRemoval, componentRatios, wordGroups);
 			} catch (ParsingException e) {
 				if(LOG.isDebugEnabled()) {
 					LOG.debug(e.getMessage(), e);
@@ -195,7 +200,17 @@ class Parser {
 				componentRatios[i] = 1;
 			}
 			else{
-				componentRatios[i] = Integer.parseInt(currentRatio);
+				int ratio;
+				try {
+					ratio = Integer.parseInt(currentRatio);
+				} catch (NumberFormatException e) {
+					throw new ParsingException("Invalid stoichiometry ratio: " + currentRatio, e);
+				}
+				if (ratio < 1) {
+					throw new ParsingException("Invalid stoichiometry ratio: " + currentRatio
+							+ ". Component ratios must be at least 1");
+				}
+				componentRatios[i] = ratio;
 			}
 		}
 		return componentRatios;
@@ -275,6 +290,7 @@ class Parser {
 					ParseTokens parseTokens = referenceWordParseTokens.get(i);
 					Parse parseWithNextWord = i > 0 ? currentParse.deepCopy() : currentParse;
 					ParseWord newParseWord = new ParseWord(referenceWord.getWord(), Arrays.asList(parseTokens));
+					newParseWord.setEndsComponent(referenceWord.endsComponent());
 					parseWithNextWord.addWord(newParseWord);
 					parseQueue.add(parseWithNextWord);
 				}

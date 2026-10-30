@@ -13,19 +13,21 @@ class ParseWord {
 	private final String word;
 	/**All of the possible tokenisations of the word.*/
 	private final List<ParseTokens> parseTokens;
+	/**Whether an explicit mixture delimiter follows this word.*/
+	private boolean endsComponent;
 
 	ParseWord deepCopy() {
-		return new ParseWord(word, parseTokens);
+		return new ParseWord(word, parseTokens, endsComponent);
+	}
+
+	ParseWord(String word, List<ParseTokens> parseTokens) {
+		this(word, parseTokens, false);
 	}
 	
-	ParseWord(String word, List<ParseTokens> parseTokens) {
-		this.word =word;
-		if (parseTokens ==null){
-			this.parseTokens = null;
-		}
-		else{
-			this.parseTokens = new ArrayList<>(parseTokens);
-		}
+	ParseWord(String word, List<ParseTokens> parseTokens, boolean endsComponent) {
+		this.word = word;
+		this.parseTokens = new ArrayList<>(parseTokens);
+		this.endsComponent = endsComponent;
 	}
 
 	String getWord() {
@@ -34,6 +36,14 @@ class ParseWord {
 
 	List<ParseTokens> getParseTokens() {
 		return parseTokens;
+	}
+	
+	boolean endsComponent() {
+		return endsComponent;
+	}
+
+	void setEndsComponent(boolean endsComponent) {
+		this.endsComponent = endsComponent;
 	}
 
 	public String toString() {

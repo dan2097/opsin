@@ -377,6 +377,7 @@
 		<token value="OC(=O)CCCC[C@@H]1S(=O)(=O)C[C@@H]2NC(=O)N[C@H]12" functionalIDs="1">biotin sulfone|biotine sulfone|d-biotin sulfone|d-biotine sulfone|biotin sulfon|d-biotin sulfon</token>
 		<token value="OC(=O)CCCC[C@@H]1S(=O)C[C@@H]2NC(=O)N[C@H]12" functionalIDs="1">biotin sulfoxide|biotine sulfoxide|d-biotin sulfoxide|d-biotine sulfoxide|biotin sulfoxid|d-biotin sulfoxid</token>
 		<token value="OCC[N+](C)(C)C" defaultInID="1">choline|cholin</token>
+		<token value="OCC[N+](C)(C)C.C(C=1C(O)=CC=CC1)(=O)[O-]">choline salicylate</token><!--drug name-->
 		<token value="ClCC[N+](C)(C)C">chlorocholine|chlorocholin</token>
 		<token value="OC[C@H](N)[C@H](O)CCCCCCCCCCCCCCCCC" labels="/1/2//3//4/5/6/7/8/9/10/11/12/13/14/15/16/17/18/19/20">eicosasphinganine|eicosasphinganin</token>
 		<token value="C(O)CN">ethanolamine|ethanolamin</token>

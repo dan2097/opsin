@@ -68,6 +68,7 @@ class StringTools {
 	/**Converts a unicode string into ASCII
 	 * e.g. converting Greek letters to their names (e.g. alpha)
 	 * Unrecognised non-ASCII characters trigger an exception
+	 * Normalises whitespace to single spaces 
 	 *
 	 * @param s The string to convert
 	 * @return The converted string
@@ -75,7 +76,7 @@ class StringTools {
 	 */
 	static String convertNonAsciiAndNormaliseRepresentation(String s) throws PreProcessingException {
 		StringBuilder sb = new StringBuilder(s.length());
-		for (int i = 0, l = s.length(); i < l; i++) {
+		for (int i = 0, len = s.length(); i < len; i++) {
 			char c = s.charAt(i);
 			switch (c) {
 			case '\t':
@@ -83,8 +84,11 @@ class StringTools {
 			case '\u000B'://vertical tab
 			case '\f':
 			case '\r':
+			case ' ':
 				//normalise white space
-				sb.append(" ");
+				if (!endsWith(sb, ' ')) {
+					sb.append(' ');
+				}
 				break;
 			case '`':
 				sb.append("'");//replace back ticks with apostrophe
@@ -92,9 +96,22 @@ class StringTools {
 			case '"':
 				sb.append("''");//replace quotation mark with two primes
 				break;
+			case '\u2014':
+				//em dash separates components of an adduct
+				if (i + 1 < len) {
+					if (!endsWith(sb, ' ')) {
+						sb.append(' ');
+					}
+					sb.append("- ");
+				} else {
+					sb.append('-');
+				}
+				break;
 			default:
 				if(c >= 128) {
-					sb.append(getReplacementForNonASCIIChar(c));//replace non ascii characters with hard coded ascii strings
+					String replacement = getReplacementForNonAsciiChar(c);//replace non ascii characters with hard coded ascii strings
+					int start = replacement.startsWith(" ") && endsWith(sb, ' ') ? 1 : 0;
+					sb.append(replacement, start, replacement.length());
 				}
 				else if (c > 31){//ignore control characters
 					sb.append(c);
@@ -104,7 +121,12 @@ class StringTools {
 		return sb.toString();
 	}
 
-    private static String getReplacementForNonASCIIChar(char c) throws PreProcessingException {
+	private static boolean endsWith(CharSequence sb, char ch) {
+		int len = sb.length();
+		return len > 0 && sb.charAt(len - 1) == ch;
+	}
+
+    private static String getReplacementForNonAsciiChar(char c) throws PreProcessingException {
         switch (c) {
             case '\u03b1': return "alpha";//greeks
             case '\u03b2': return "beta";

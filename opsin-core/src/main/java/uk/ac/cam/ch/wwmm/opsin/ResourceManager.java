@@ -230,14 +230,17 @@ class ResourceManager {
 	}
 
 	private void addToken(String text, TokenEl el, Character symbol, int index, boolean reversed) {
-		Map<Character, TokenEl> symbolToToken = tokenDict.get(text);
-		if(symbolToToken == null) {
-			symbolToToken = new HashMap<>();
-			tokenDict.put(text, symbolToToken);
+		if (!reversed) {
+			//tokenDict will be populated when the constructor is called for left-to-right parsing, hence skip for reversed parsing
+			Map<Character, TokenEl> symbolToToken = tokenDict.get(text);
+			if(symbolToToken == null) {
+				symbolToToken = new HashMap<>();
+				tokenDict.put(text, symbolToToken);
+			}
+			symbolToToken.put(symbol, el);
 		}
-		symbolToToken.put(symbol, el);
-
-		if (!reversed){
+			
+		if (!reversed) {
 			OpsinRadixTrie trie = symbolTokenNamesDict[index];
 			if(trie == null) {
 				trie = new OpsinRadixTrie();
@@ -245,7 +248,7 @@ class ResourceManager {
 			}
 			trie.addToken(text);
 		}
-		else{
+		else {
 			OpsinRadixTrie trie = symbolTokenNamesDictReversed[index];
 			if(trie == null) {
 				trie = new OpsinRadixTrie();
@@ -346,7 +349,7 @@ class ResourceManager {
 		}
 		
 		if (!reversed) {
-			//reSymbolTokenDict will be populated when the constructor is called for left-right parsing, hence skip for right-left 
+			//reSymbolTokenDict will be populated when the constructor is called for left-to-right parsing, hence skip for reversed parsing 
 			if (reSymbolTokenDict.get(symbol) != null) {
 				throw new RuntimeException(symbol +" is associated with multiple regular expressions. The following expression clashes: " + regex +" This should be resolved by combining regular expressions that map the same symbol" );
 			}

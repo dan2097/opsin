@@ -58,6 +58,10 @@ class Ring {
 		return atomList.size();
 	}
 
+	boolean isNeighbour(Ring ring) {
+		return bondToNeighbourRings.containsValue(ring);
+	}
+
 	int getNumberOfFusedBonds() {
 		return bondToNeighbourRings.size();
 	}

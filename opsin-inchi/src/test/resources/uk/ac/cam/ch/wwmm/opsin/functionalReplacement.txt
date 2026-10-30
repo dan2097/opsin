@@ -22,3 +22,12 @@ phosphoric methyl amide ethyl amide propyl amide	InChI=1S/C6H18N3OP/c1-4-6-9-11(
 diethyl-thionophosphoric acid	InChI=1S/C4H11O3PS/c1-3-6-8(5,9)7-4-2/h3-4H2,1-2H3,(H,5,9)
 #Counter example
 benzothiazol-2-ylthio-succinic anhydride	InChI=1S/C11H7NO3S2/c13-9-5-8(10(14)15-9)17-11-12-6-3-1-2-4-7(6)16-11/h1-4,8H,5H2
+acetamidooxybenzene	InChI=1S/C8H9NO2/c1-7(10)9-11-8-5-3-2-4-6-8/h2-6H,1H3,(H,9,10)
+2-acetamidooxyacetic acid	InChI=1S/C4H7NO4/c1-3(6)5-9-2-4(7)8/h2H2,1H3,(H,5,6)(H,7,8)
+2-benzamidooxyacetic acid	InChI=1S/C9H9NO4/c11-8(12)6-14-10-9(13)7-4-2-1-3-5-7/h1-5H,6H2,(H,10,13)(H,11,12)
+acetothiooxybenzene	InChI=1S/C8H8OS/c1-7(10)9-8-5-3-2-4-6-8/h2-6H,1H3
+acetoperoxooxybenzene	InChI=1S/C8H8O3/c1-7(9)10-11-8-5-3-2-4-6-8/h2-6H,1H3
+acetodithiooxybenzene	InChI=1S/C8H8S2/c1-7(9)10-8-5-3-2-4-6-8/h2-6H,1H3
+benzenethioxybenzene	InChI=1S/C12H10S/c1-3-7-11(8-4-1)13-12-9-5-2-6-10-12/h1-10H
+chloromethanothiooxybenzene	InChI=1S/C7H7ClS/c8-6-9-7-4-2-1-3-5-7/h1-5H,6H2
+acetamidobenzene	InChI=1S/C8H9NO/c1-7(10)9-8-5-3-2-4-6-8/h2-6H,1H3,(H,9,10)

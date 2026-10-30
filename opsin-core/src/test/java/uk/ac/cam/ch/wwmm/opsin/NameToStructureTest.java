@@ -3,8 +3,11 @@ package uk.ac.cam.ch.wwmm.opsin;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
+
+import uk.ac.cam.ch.wwmm.opsin.OpsinResult.OPSIN_RESULT_STATUS;
 
 public class NameToStructureTest {
 
@@ -54,5 +57,16 @@ public class NameToStructureTest {
 		NameToStructure nts = NameToStructure.getInstance();
 		String smiles = nts.parseToSmiles("ethane");
 		assertEquals("CC", smiles);
+	}
+
+	@Test
+	public void testIsotopeSpecificationBetweenFusionComponentsFailsCleanly() {
+		//a bracketed isotope specification/locant between the components of a fused ring system
+		//used to escape as a NullPointerException rather than as a diagnosable parse failure
+		NameToStructure nts = NameToStructure.getInstance();
+		OpsinResult result = nts.parseChemicalName("pyrido[2,3-b](513C)pyrazine");
+		assertEquals(OPSIN_RESULT_STATUS.FAILURE, result.getStatus());
+		assertTrue(result.getMessage().startsWith("Unable to combine ring components"),
+				"Expected a diagnosable failure but was: " + result.getMessage());
 	}
 }

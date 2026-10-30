@@ -1579,7 +1579,7 @@ class StructureBuilder {
 		return false;
 	}
 
-	private void splitAlcoholEsterRuleIntoTwoSimpleWordRules(List<Element> words) {
+	private void splitAlcoholEsterRuleIntoTwoSimpleWordRules(List<Element> words) throws StructureBuildingException {
 		Element firstGroup = words.get(0);
 		Element wordRule = firstGroup.getParent();
 		wordRule.getAttribute(WORDRULE_ATR).setValue(WordRule.simple.toString());
@@ -1592,6 +1592,11 @@ class StructureBuilder {
 		OpsinTools.insertAfter(wordRule, newWordRule);
 		for (int i = 1; i < words.size(); i++) {
 			Element word = words.get(i);
+			//Word-level locants refer to ester formation and cannot be used by independent components.
+			String locant = word.getAttributeValue(LOCANT_ATR);
+			if (locant != null) {
+				throw new StructureBuildingException("Unable to assign locant " + locant + ": alcohol ester formation was not possible");
+			}
 			word.detach();
 			newWordRule.addChild(word);
 		}

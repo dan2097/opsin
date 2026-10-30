@@ -136,6 +136,7 @@ The following list broadly summarises what OPSIN can currently do and what will 
 * Conjunctive nomenclature e.g. cyclohexaneethanol
 * Fused ring systems e.g. imidazo[4,5-d]pyridine
 * Ring assemblies e.g. biphenyl
+* Phane nomenclature e.g. 1,4(1,4)-dibenzenacyclohexaphane
 * Most prefix and infix functional replacement nomenclature
 * The following functional classes: acetals, acids, alcohols, amides, anhydrides, anilides, azetidides, azides, bromides, chlorides,
 cyanates, cyanides, esters, di/tri/tetra esters, ethers, fluorides, fulminates, glycol ethers, glycols, hemiacetals, hemiketal,
