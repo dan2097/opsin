@@ -38,6 +38,12 @@ class XmlDeclarations {
 	 * The token XML elements. These are generally produced by the parser from the tokenised chemical name
 	 * Some are produced by OPSIN in the ComponentGenerator/ComponentProcessor
 	 */
+	
+	/**Indicates which chalcogen atoms bear the acidic hydrogen, e.g. S,S-acid*/
+	static final String ACIDSYMBOLS_EL = "acidSymbols";
+	
+	/**The word "acid" */
+	static final String ACIDWORD_EL = "acidWord";
 
 	/**Adds a hydrogen to an unsaturated system, this is hydrogen that is added due to a suffix and is expressed in a locant e.g. 1(2H) */
 	static final String ADDEDHYDROGEN_EL ="addedHydrogen";

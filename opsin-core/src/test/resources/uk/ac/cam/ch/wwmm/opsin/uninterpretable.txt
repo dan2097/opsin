@@ -48,3 +48,19 @@ phosphorothioic O,O,O,O-acid
 borothioic S,S-acid
 D-2-aminobutane
 D-2-amino-3-methoxypropan-1-ol
+ethane(thioperoxoic) acid
+ethane(thioperoxoic acid)
+phosphoro(thioperoxoate)
+ethane(selenothioperoxoic) acid
+SO-methyl ethane(OS-thioperoxoate)
+OS-methyl ethane(SO-thioperoxoate)
+OS-methyl ethane(selenoperoxoate)
+ethane(thioperoxoic) SeO-acid
+ethane(dithioperoxoic) SS-acid
+ethane-1-SS-dithioperoxol
+ethane(thio)ic acid
+phosphoro(thio)ic acid
+ethane(chlorido)ic acid
+benzenecarbo(chlorido)thioic acid
+ethanediamidic acid
+ethanedichloridic acid

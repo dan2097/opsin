@@ -29,6 +29,18 @@ then the SMILES replacement
 	<token value="-O:N=C=[Te]">isotellurocyanatid</token>
 	<token value="#O:#N">nitrid</token>
 	<token value="-O-:OO">perox</token>
+	<token value="-O-:OS">os-thioperox</token>
+	<token value="-O-:SO">so-thioperox</token>
+	<token value="-O-:O[Se|2]">ose-selenoperox</token>
+	<token value="-O-:[Se|2]O">seo-selenoperox</token>
+	<token value="-O-:O[Te|2]">ote-telluroperox</token>
+	<token value="-O-:[Te|2]O">teo-telluroperox</token>
+	<token value="-O-:[Se|2]S">ses-selenothioperox</token>
+	<token value="-O-:S[Se|2]">sse-selenothioperox</token>
+	<token value="-O-:[Te|2]S">tes-tellurothioperox</token>
+	<token value="-O-:S[Te|2]">ste-tellurothioperox</token>
+	<token value="-O-:[Te|2][Se|2]">tese-selenotelluroperox</token>
+	<token value="-O-:[Se|2][Te|2]">sete-selenotelluroperox</token>
 	<token value="=O,-O:[SeH?]">selen</token>
 	<token value="=O,-O:[TeH?]">tellur</token>
 	<token value="=O,-O:S">thi</token>
