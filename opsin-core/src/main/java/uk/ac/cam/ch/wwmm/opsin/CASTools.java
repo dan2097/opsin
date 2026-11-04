@@ -15,6 +15,8 @@ class CASTools {
 	private static final Pattern matchCasCollectiveIndex = Pattern.compile("([\\[\\(\\{]([1-9][0-9]?[cC][iI][, ]?)+[\\]\\)\\}])+|[1-9][0-9]?[cC][iI]", Pattern.CASE_INSENSITIVE);
 	private static final Pattern matchAcid = Pattern.compile("acid[\\]\\)\\}]*", Pattern.CASE_INSENSITIVE);
 	private static final Pattern matchCommaSpace = Pattern.compile(", ");
+	private static final Pattern matchMononuclearHydrideParent = Pattern.compile("silane|germane|stannane|plumbane|borane", Pattern.CASE_INSENSITIVE);
+	private static final Pattern matchMultipliedHaloMethyl = Pattern.compile("((?:di|tri)(?:fluoro|chloro|bromo|iodo))(methyl)-", Pattern.CASE_INSENSITIVE);
 	private static final Pattern matchCompoundWithPhrase = Pattern.compile("(compd\\. with|compound with|and) ", Pattern.CASE_INSENSITIVE);
 	private static final Pattern matchFunctionalTermAllowingSubstituentPrefix = Pattern.compile("((((1-)?(anilin|azetidin|piperazin|piperidin|pyrrolidin)|(4-)?morpholin)e?[ \\-]?)?amid|anilid|azetidid|hydrazid|(thi|selen|tellur)?oxim|hydrazon|(iso)?(semicarbazon|thiosemicarbazon|selenosemicarbazon|tellurosemicarbazon)|imid|imin|morpholid|piperazid|piperidid|pyrrolidid|semioxamazon)e?[\\]\\)\\}]*", Pattern.CASE_INSENSITIVE);
 	
@@ -169,6 +171,16 @@ class CASTools {
 							throw new ParsingException("Unable to interpret: " + component + " (as part of a CAS index name)");
 						}
 					}
+				}
+			}
+		}
+		//CAS brackets a substituent of a substituent, so Silane, trichloromethyl- is trichloro(methyl)silane
+		//(CAS 75-79-6) whereas Cl3C-SiH3 would be Silane, (trichloromethyl)-
+		if (matchMononuclearHydrideParent.matcher(parent).matches()) {
+			for (int i = 0; i < substituents.size(); i++) {
+				Matcher halo = matchMultipliedHaloMethyl.matcher(substituents.get(i));
+				if (halo.matches()) {
+					substituents.set(i, halo.group(1) + "(" + halo.group(2) + ")");
 				}
 			}
 		}

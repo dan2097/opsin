@@ -4373,6 +4373,12 @@ class ComponentProcessor {
 		}
 
 
+		//a multiplied, unlocanted prefix in front of a mononuclear parent hydride such as silane belongs to that parent
+		//e.g. triethoxyoctylsilane (CAS: Silane, triethoxyoctyl-) is triethoxy(octyl)silane, not (1,1,1-triethoxyoctyl)silane
+		if (multipliedPrefixBelongsToMononuclearParent(elementBeforeSubstituent, substituentGroup, elementAftersubstituent)) {
+			return;
+		}
+
 		List<Element> groupElements = OpsinTools.getDescendantElementsWithTagName(elementBeforeSubstituent, GROUP_EL);//one for a substituent, possibly more for a bracket
 		Element lastGroupOfElementBeforeSub = groupElements.get(groupElements.size() - 1);
 		if (lastGroupOfElementBeforeSub == null) {
@@ -4678,6 +4684,80 @@ class ComponentProcessor {
 		Element suffix = root.getChild(1);
 		return group.getName().equals(GROUP_EL) && group.getAttributeValue(TYPE_ATR).equals(CHAIN_TYPE_VAL) && 
 				group.getAttributeValue(SUBTYPE_ATR).equals(ALKANESTEM_SUBTYPE_VAL) && suffix.getName().equals(UNSATURATOR_EL) && "1".equals(suffix.getAttributeValue(VALUE_ATR));
+	}
+
+	/**
+	 * CAS index names, and common usage, cite every prefix of a mononuclear parent hydride such as silane without
+	 * enclosing marks: Silane, triethoxyoctyl- is triethoxy(octyl)silane and diethoxymethylsilyl is diethoxy(methyl)silyl.
+	 * A substituent of a substituent is bracketed instead e.g. Silane, (trichloromethyl)-. So a multiplied, unlocanted
+	 * prefix is not implicitly bracketed onto the next prefix when that prefix is directly followed by a single Si, Ge,
+	 * Sn, Pb or B atom parent (or silyl-like substituent): the multiplier points to the polyvalent centre.
+	 * A locanted prefix (1,1,1-trichloroethylsilane) or any other parent (trichloromethylbenzene) is unaffected.
+	 * Only carbon-only prefixes (octyl, methyl, ethenyl) are concerned: dialkylamino stays a compound substituent.
+	 * @param elementBeforeSubstituent
+	 * @param substituentGroup the group the preceding prefix would be bracketed onto
+	 * @param elementAftersubstituent
+	 * @return true if implicit bracketing should not be applied
+	 */
+	private boolean multipliedPrefixBelongsToMononuclearParent(Element elementBeforeSubstituent, Element substituentGroup, Element elementAftersubstituent) {
+		if (elementAftersubstituent == null) {
+			return false;
+		}
+		String afterName = elementAftersubstituent.getName();
+		if (!afterName.equals(ROOT_EL) && !afterName.equals(SUBSTITUENT_EL)) {
+			return false;
+		}
+		Element firstChild = elementBeforeSubstituent.getChild(0);
+		if (firstChild == null || !firstChild.getName().equals(MULTIPLIER_EL)) {
+			return false;//unmultiplied, or locanted (the locant comes first)
+		}
+		//only a carbon-only prefix is redistributed: dialkylamino (diethylaminosilyl) stays a compound substituent
+		for (Atom atom : substituentGroup.getFrag()) {
+			if (atom.getElement() != ChemEl.C) {
+				return false;
+			}
+		}
+		String multiplierValue = firstChild.getAttributeValue(VALUE_ATR);
+		if (multiplierValue == null || Integer.parseInt(multiplierValue) < 2) {
+			return false;
+		}
+		Element groupAfter = elementAftersubstituent.getFirstChildElement(GROUP_EL);
+		if (groupAfter == null) {
+			return false;
+		}
+		Fragment fragAfter = groupAfter.getFrag();
+		if (fragAfter == null || fragAfter.getAtomCount() != 1) {
+			return false;
+		}
+		//a hydride parent (silane, silyl, germane, stannane, plumbane, borane), not an element name such as tin(3+)
+		String parentValue = groupAfter.getValue().toLowerCase(Locale.ROOT);
+		if (!(parentValue.startsWith("sil") || parentValue.startsWith("germ") || parentValue.startsWith("stann")
+				|| parentValue.startsWith("plumb") || parentValue.startsWith("bor"))) {
+			return false;
+		}
+		ChemEl el = fragAfter.getFirstAtom().getElement();
+		if (!(el == ChemEl.Si || el == ChemEl.Ge || el == ChemEl.Sn || el == ChemEl.Pb || el == ChemEl.B)) {
+			return false;
+		}
+		//halomethyl groups (trifluoromethyl, trichloromethyl, difluoromethyl) are conventional compound substituents
+		//e.g. trimethyl(trifluoromethyl)silane; the CAS form Silane, trichloromethyl- is resolved by CASTools instead
+		Element groupBefore = elementBeforeSubstituent.getName().equals(SUBSTITUENT_EL) ? elementBeforeSubstituent.getFirstChildElement(GROUP_EL) : null;
+		if (groupBefore != null && groupBefore.getFrag() != null && groupBefore.getFrag().getAtomCount() == 1) {
+			ChemEl before = groupBefore.getFrag().getFirstAtom().getElement();
+			if ((before == ChemEl.F || before == ChemEl.Cl || before == ChemEl.Br || before == ChemEl.I) && substituentGroup.getFrag().getAtomCount() == 1) {
+				return false;
+			}
+		}
+		//the prefixes must fit on the parent: trimethyltrifluoromethylsilane would need seven bonds to silicon
+		int prefixes = 0;
+		for (Element sibling = OpsinTools.getPreviousSibling(elementAftersubstituent); sibling != null; sibling = OpsinTools.getPreviousSibling(sibling)) {
+			if (!sibling.getName().equals(SUBSTITUENT_EL) && !sibling.getName().equals(BRACKET_EL)) {
+				continue;
+			}
+			Element first = sibling.getChild(0);
+			prefixes += (first != null && first.getName().equals(MULTIPLIER_EL)) ? Integer.parseInt(first.getAttributeValue(VALUE_ATR)) : 1;
+		}
+		return prefixes <= StructureBuildingMethods.calculateSubstitutableHydrogenAtoms(fragAfter.getFirstAtom());
 	}
 
 	private boolean implicitBracketWouldPreventAdditiveBonding(Element elementBeforeSubstituent, Element elementAftersubstituent) {
