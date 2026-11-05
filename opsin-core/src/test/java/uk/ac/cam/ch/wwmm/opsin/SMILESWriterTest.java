@@ -473,4 +473,36 @@ public class SMILESWriterTest {
 		}
 		assertEquals("[CH3:1][CH2:2][OH:3]", SMILESWriter.generateSmiles(f));
 	}
+
+	@Test
+	public void test_M_BiNOL() throws StructureBuildingException {
+		Fragment f = fm.buildSMILES("C1=CC=C2C(=C1)C=CC(=C2C3=C(C=CC4=CC=CC=C43)O)O");
+		fm.makeHydrogensExplicit();
+		Bond b = f.getAtomByID(10).getBondToAtom(f.getAtomByID(11));
+		b.setBondStereo(new BondStereo(
+				new Atom[]{f.getAtomByID(9),
+						   f.getAtomByID(4),
+						   f.getAtomByID(12),
+						   f.getAtomByID(20)},
+				BondStereoValue.RIGHT));
+		assertEquals("C1=CC=C2C(=C1)C=CC(=C2C2=C(C=CC1=CC=CC=C12)O)O |wD:9.10|",
+					 SMILESWriter.generateSmiles(f,
+												 SmilesOptions.CXSMILES_ATROPISOMERS_HACK));
+	}
+
+	@Test
+	public void test_P_BiNOL() throws StructureBuildingException {
+		Fragment f = fm.buildSMILES("C1=CC=C2C(=C1)C=CC(=C2C3=C(C=CC4=CC=CC=C43)O)O");
+		fm.makeHydrogensExplicit();
+		Bond b = f.getAtomByID(10).getBondToAtom(f.getAtomByID(11));
+		b.setBondStereo(new BondStereo(
+				new Atom[]{f.getAtomByID(9),
+						   f.getAtomByID(4),
+						   f.getAtomByID(12),
+						   f.getAtomByID(20)},
+				BondStereoValue.LEFT));
+		assertEquals("C1=CC=C2C(=C1)C=CC(=C2C2=C(C=CC1=CC=CC=C12)O)O |wU:9.10|",
+					 SMILESWriter.generateSmiles(f,
+												 SmilesOptions.CXSMILES_ATROPISOMERS_HACK));
+	}
 }
