@@ -14,6 +14,7 @@ import java.util.Map;
 
 import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
@@ -971,6 +972,42 @@ public class StereochemistryTest {
 		assertEquals(OPSIN_RESULT_STATUS.WARNING, result.getStatus());
 		assertEquals(1, result.getWarnings().size());
 		assertEquals(OpsinWarningType.APPEARS_AMBIGUOUS, result.getWarnings().get(0).getType());
+	}
+
+	@Test
+	public void test_M_BiNOL() {
+		NameToStructureConfig config = NameToStructureConfig.getDefaultConfigInstance();
+		config.setWarnRatherThanFailOnUninterpretableStereochemistry(true);
+		OpsinResult result = n2s.parseChemicalName("(M)-1,1'-binaphth-2,2'-diol", config);
+		Assertions.assertEquals("C=1(C(=CC=C2C=CC=CC12)O)C=1C(=CC=C2C=CC=CC12)O |wU:0.0|",
+								result.getSmiles(SmilesOptions.CXSMILES_ATROPISOMERS_HACK));
+	}
+
+	@Test
+	public void test_P_BiNOL() {
+		NameToStructureConfig config = NameToStructureConfig.getDefaultConfigInstance();
+		config.setWarnRatherThanFailOnUninterpretableStereochemistry(true);
+		OpsinResult result = n2s.parseChemicalName("(P)-1,1'-binaphth-2,2'-diol", config);
+		Assertions.assertEquals("C=1(C(=CC=C2C=CC=CC12)O)C=1C(=CC=C2C=CC=CC12)O |wD:0.0|",
+								result.getSmiles(SmilesOptions.CXSMILES_ATROPISOMERS_HACK));
+	}
+
+	@Test
+	public void test_Ra_BiNOL() {
+		NameToStructureConfig config = NameToStructureConfig.getDefaultConfigInstance();
+		config.setWarnRatherThanFailOnUninterpretableStereochemistry(true);
+		OpsinResult result = n2s.parseChemicalName("(Ra)-1,1'-binaphth-2,2'-diol", config);
+		Assertions.assertEquals("C=1(C(=CC=C2C=CC=CC12)O)C=1C(=CC=C2C=CC=CC12)O |wU:0.0|",
+								result.getSmiles(SmilesOptions.CXSMILES_ATROPISOMERS_HACK));
+	}
+
+	@Test
+	public void test_Sa_BiNOL() {
+		NameToStructureConfig config = NameToStructureConfig.getDefaultConfigInstance();
+		config.setWarnRatherThanFailOnUninterpretableStereochemistry(true);
+		OpsinResult result = n2s.parseChemicalName("(Sa)-1,1'-binaphth-2,2'-diol", config);
+		Assertions.assertEquals("C=1(C(=CC=C2C=CC=CC12)O)C=1C(=CC=C2C=CC=CC12)O |wD:0.0|",
+								result.getSmiles(SmilesOptions.CXSMILES_ATROPISOMERS_HACK));
 	}
 
 	private String atomRefsToIdStr(Atom[] atomRefs4) {

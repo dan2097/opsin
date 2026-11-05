@@ -11,6 +11,7 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import uk.ac.cam.ch.wwmm.opsin.StereoAnalyser.AxialBond;
 import uk.ac.cam.ch.wwmm.opsin.StereoAnalyser.StereoBond;
 import uk.ac.cam.ch.wwmm.opsin.StereoAnalyser.StereoCentre;
 import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
@@ -2444,7 +2445,19 @@ class StructureBuilder {
 					bondStereoBondMap.put(b, stereoBond);
 				}
 			}
-			StereochemistryHandler stereoChemistryHandler = new StereochemistryHandler(state, atomStereoCentreMap, bondStereoBondMap);
+
+			Map<Bond, AxialBond> axialStereoMap = new HashMap<>();
+			List<AxialBond> axialBonds = stereoAnalyser.findAxialBonds();
+			for (AxialBond axialBond : axialBonds) {
+				Bond b = axialBond.getBond();
+				if (FragmentTools.notIn6MemberOrSmallerRing(b)) {
+					axialStereoMap.put(b, axialBond);
+				}
+			}
+			StereochemistryHandler stereoChemistryHandler = new StereochemistryHandler(state,
+																					   atomStereoCentreMap,
+																					   bondStereoBondMap,
+																					   axialStereoMap);
 			stereoChemistryHandler.applyStereochemicalElements(stereoChemistryEls);
 			stereoChemistryHandler.removeRedundantStereoCentres(atomsWithPreDefinedAtomParity, bondsWithPreDefinedBondStereo);
 		}

@@ -30,7 +30,7 @@ class StereoAnalyser {
 
 	private final AtomNeighbouringColoursComparator atomNeighbouringColoursComparator = new AtomNeighbouringColoursComparator();
 	private static final AtomicNumberThenAtomicMassComparator atomicNumberThenAtomicMassComparator = new AtomicNumberThenAtomicMassComparator();
-	
+
 	/**
 	 * Holds information about a tetrahedral stereocentre
 	 * @author dl387
@@ -105,6 +105,43 @@ class StereoAnalyser {
 			stereoAtoms.add(a2);
 			stereoAtoms.add(cipOrdered2.get(cipOrdered2.size()-1));//highest CIP adjacent to a2
 			return stereoAtoms;
+		}
+	}
+
+	/**
+	 * AxialBond is for atropisomer - currently restricted to ArylAryl.
+	 */
+	static final class AxialBond {
+		private final Bond bond;
+
+		AxialBond(Bond bond) {
+			this.bond = bond;
+		}
+
+		Bond getBond() {
+			return bond;
+		}
+
+		/**
+		 * Returns the neighbours of an Aryl-Aryl bond in CIP to assigned
+		 * axial/atropisomer stereochemistry.
+		 *
+		 * @return the atoms in priority order
+		 * @throws CipOrderingException could not be ordered / too complex
+		 */
+		Atom[] getOrderedStereoAtoms() throws CipOrderingException {
+			List<Atom> nbors = new ArrayList<>();
+			Atom from = bond.getFromAtom();
+			Atom to = bond.getToAtom();
+			nbors.addAll(new CipSequenceRules(from).getNeighbouringAtomsInCipOrder());
+			nbors.addAll(new CipSequenceRules(to).getNeighbouringAtomsInCipOrder());
+			nbors.remove(from);
+			nbors.remove(to);
+			// ...of course the CIP comparator gives them in the wrong order :-),
+			// it doesn't actually matter due to the axial nature
+			Collections.reverse(nbors);
+			assert nbors.size() == 4;
+			return nbors.toArray(new Atom[0]);
 		}
 	}
 	
@@ -636,6 +673,67 @@ class StereoAnalyser {
 			}
 		}
 		return stereoBonds;
+	}
+
+	/**
+	 * Determine if the atom is likely one end of an ArylAryl bond which can
+	 * support atropisomerism and return the number of adjacent Aryl D3 atoms.
+	 *
+	 * @param a the atom to check
+	 * @param skip the bond connecting to the other end of the ArylAryl linker
+	 * @return the number of adjacent Aryl D3 atoms
+	 */
+	private int checkArylD3(Atom a, Bond skip) {
+		if (!FragmentTools.isArylD3(a))
+			return 0;
+		int count = 0;
+		List<Atom> nbors = new ArrayList<>();
+		for (Bond b : a.getBonds()) {
+			if (b == skip)
+				continue;
+			Atom nbor = b.getOtherAtom(a);
+			if (!nbor.getAtomIsInACycle())
+				return 0;
+			nbors.add(nbor);
+			if (FragmentTools.isArylD3(b.getOtherAtom(a)))
+				count++;
+		}
+
+		// check neighbours are symmetric!
+		assert nbors.size() == 2; // due to isArylD3
+		if (mappingToColour.get(nbors.get(0)).equals(
+				mappingToColour.get(nbors.get(1))))
+			return 0;
+
+		// this bit is more expensive, if any of the bonds we consider are
+		// not in a small ring (size ≤ 6) we are not allowed,
+		// perhaps 7 membered rings should be allowed
+		for (Bond b : a.getBonds()) {
+			if (b == skip)
+				continue;
+			if (FragmentTools.notIn6MemberOrSmallerRing(b))
+				return 0;
+		}
+
+		return count;
+	}
+
+	/**
+	 * Finds axial (currently ArylAryl atropisomer) bonds.
+	 */
+	public List<AxialBond> findAxialBonds() {
+		List<AxialBond> axialBonds = new ArrayList<>();
+		for (Bond bond : bonds) {
+			if (bond.getOrder() != 1)
+				continue;
+			// both must have a D3 neighbours, one (or both) must have 2
+			int count1 = checkArylD3(bond.getFromAtom(), bond);
+			int count2 = checkArylD3(bond.getToAtom(), bond);
+			if (count1 >= 1 && count2 >= 1 && count1 + count2 >= 3) {
+				axialBonds.add(new AxialBond(bond));
+			}
+		}
+		return axialBonds;
 	}
 	
 	/**

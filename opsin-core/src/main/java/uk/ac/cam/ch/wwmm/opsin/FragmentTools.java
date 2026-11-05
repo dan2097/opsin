@@ -881,6 +881,43 @@ class FragmentTools {
 		return false;
 	}
 
+	/**
+	 * Check if an atom is Aryl/conjugated and degree 3. Currently, we
+	 * are looking for:
+	 * <ul>
+	 *     <li>{@code >[C,Si]=}</li>
+	 *     <li>{@code >[N,P]-}</li>
+	 *     <li>{@code >[N,P;+]-}</li>
+	 * </ul>
+	 * @param a the atom
+	 * @return the atom is D3 conjugated
+	 */
+	static boolean isArylD3(Atom a) {
+		if (a.getBondCount() != 3)
+			return false;
+		int d = 0;
+		int v = 0;
+		int q = a.getCharge();
+		if (q < 0 || q > 1) return false;
+		for (Bond b : a.getBonds()) {
+			d++;
+			v += b.getOrder();
+			if (b.getOtherAtom(a).getElement() == ChemEl.H)
+				return false;
+		}
+		switch (a.getElement()) {
+			case C:
+			case Si:
+				return d == 3 && v == 4 && q == 0;
+			case N:
+			case P:
+				if (q == 1)
+					return d == 3 && v == 4;
+				assert q == 0;
+				return d == 3 && v == 3;
+		}
+		return false;
+	}
 
 	/**
 	 * Checks that all atoms in a ring appear to be equivalent
