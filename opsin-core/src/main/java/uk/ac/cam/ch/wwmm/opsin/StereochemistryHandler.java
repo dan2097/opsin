@@ -16,6 +16,7 @@ import org.apache.logging.log4j.Logger;
 
 import uk.ac.cam.ch.wwmm.opsin.BondStereo.BondStereoValue;
 import uk.ac.cam.ch.wwmm.opsin.OpsinWarning.OpsinWarningType;
+import uk.ac.cam.ch.wwmm.opsin.StereoAnalyser.AxialBond;
 import uk.ac.cam.ch.wwmm.opsin.StereoAnalyser.StereoBond;
 import uk.ac.cam.ch.wwmm.opsin.StereoAnalyser.StereoCentre;
 import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
@@ -32,15 +33,22 @@ class StereochemistryHandler {
 	private final BuildState state;
 	private final Map<Atom, StereoCentre> atomStereoCentreMap;
 	private final Map<Bond, StereoBond> bondStereoBondMap;
+	private final Map<Bond, AxialBond> bondAxialMap;
 	private final Map<Atom, StereoCentre> notExplicitlyDefinedStereoCentreMap;
 	private final Map<Bond, StereoBond> notExplicitlyDefinedStereoBondMap;
-	
-	StereochemistryHandler(BuildState state, Map<Atom, StereoCentre> atomStereoCentreMap, Map<Bond, StereoBond> bondStereoBondMap) {
+	private final Map<Bond, AxialBond> notExplicitlyDefinedAxialBondMap;
+
+	StereochemistryHandler(BuildState state,
+						   Map<Atom, StereoCentre> atomStereoCentreMap,
+						   Map<Bond, StereoBond> bondStereoBondMap,
+						   Map<Bond, AxialBond> bondAxialMap) {
 		this.state = state;
 		this.atomStereoCentreMap = atomStereoCentreMap;
 		notExplicitlyDefinedStereoCentreMap = new HashMap<>(atomStereoCentreMap);
 		this.bondStereoBondMap = bondStereoBondMap;
 		notExplicitlyDefinedStereoBondMap = new HashMap<>(bondStereoBondMap);
+		this.bondAxialMap = bondAxialMap;
+		notExplicitlyDefinedAxialBondMap = new HashMap<>(bondAxialMap);
 	}
 
 	/**
@@ -178,7 +186,8 @@ class StereochemistryHandler {
 			throw new StereochemistryException(stereoChemistryType + " stereochemistry is not currently interpretable by OPSIN");
 		}
 		else if (stereoChemistryType.equals(AXIAL_TYPE_VAL)){
-			throw new StereochemistryException(stereoChemistryType + " stereochemistry is not currently interpretable by OPSIN");
+			if (!assignAxialStereochem(stereoChemistryEl))
+				throw new StereochemistryException("Could not find bond that: " + stereoChemistryEl.toXML() + " appeared to be referring to");
 		}
 		else if (stereoChemistryType.equals(OPTICALROTATION_TYPE_VAL)){
 			state.addWarning(OpsinWarningType.STEREOCHEMISTRY_IGNORED, "Optical rotation cannot be algorithmically used to assign stereochemistry. This term was ignored: " + stereoChemistryEl.getValue());
@@ -331,6 +340,10 @@ class StereochemistryHandler {
 				}
 			}
 		}
+
+		if (assignAxialStereochem(stereoChemistryEl))
+			return;
+
 		throw new StereochemistryException("Could not find atom that: " + stereoChemistryEl.toXML() + " appeared to be referring to");
 	}
 
@@ -354,6 +367,65 @@ class StereochemistryHandler {
 				potentialStereoAtom.setStereoGroup(new StereoGroup(stereoType));
 				notExplicitlyDefinedStereoCentreMap.remove(potentialStereoAtom);
 				return true;
+			}
+		}
+		return false;
+	}
+
+	private boolean attemptAssignmentOfAxialStereoFragment(Fragment fragment,
+														   String desc,
+														   String locant) throws CipOrderingException {
+		if (locant == null) {//undefined locant
+			for (Bond bond : fragment.getBondSet()) {
+				if (!notExplicitlyDefinedAxialBondMap.containsKey(bond))
+					continue;
+				Atom[] carriers = notExplicitlyDefinedAxialBondMap.get(bond)
+																  .getOrderedStereoAtoms();
+				BondStereoValue value = BondStereoValue.ofAxial(desc);
+				bond.setBondStereoElement(carriers, value);
+				notExplicitlyDefinedAxialBondMap.remove(bond);
+				return true;
+			}
+
+			// interfragment bonds
+			List<Bond> interFragmentBonds = sortInterFragmentBonds(state.fragManager.getInterFragmentBonds(fragment), fragment);
+			for (Bond bond : interFragmentBonds) {
+				if (!notExplicitlyDefinedAxialBondMap.containsKey(bond))
+					continue;
+				Atom[] carriers = notExplicitlyDefinedAxialBondMap.get(bond)
+																  .getOrderedStereoAtoms();
+				BondStereoValue value = BondStereoValue.ofAxial(desc);
+				bond.setBondStereoElement(carriers, value);
+				notExplicitlyDefinedAxialBondMap.remove(bond);
+				return true;
+			}
+		}
+		else {
+			// TODO JWM the locant never seems to be set?
+			Atom secondAtomInBond = null;
+			Matcher compoundLocantMatcher = OpsinTools.MATCH_COMPOUND_LOCANT.matcher(locant);
+			if (compoundLocantMatcher.find()) {
+				secondAtomInBond = fragment.getAtomByLocant(compoundLocantMatcher.group(1));
+				locant = compoundLocantMatcher.replaceAll("");
+				if (secondAtomInBond == null) {
+					return false;
+				}
+			}
+			Atom firstAtomInBond = fragment.getAtomByLocant(locant);
+			if (firstAtomInBond !=null){
+				List<Bond> bonds = firstAtomInBond.getBonds();
+				for (Bond bond : bonds) {
+					if (secondAtomInBond != null && bond.getOtherAtom(firstAtomInBond) != secondAtomInBond)
+						continue;
+					if (!notExplicitlyDefinedAxialBondMap.containsKey(bond))
+						continue;
+					Atom[] carriers = notExplicitlyDefinedAxialBondMap.get(bond)
+																	  .getOrderedStereoAtoms();;
+					BondStereoValue value = BondStereoValue.ofAxial(desc);
+					bond.setBondStereoElement(carriers, value);
+					notExplicitlyDefinedAxialBondMap.remove(bond);
+					return true;
+				}
 			}
 		}
 		return false;
@@ -445,6 +517,27 @@ class StereochemistryHandler {
 		else{
 			throw new StereochemistryException("Could not find bond that: " + stereoChemistryEl.toXML() + " was referring to");
 		}
+	}
+
+
+	private boolean assignAxialStereochem(Element stereoChemistryEl) throws CipOrderingException {
+		String locant = stereoChemistryEl.getAttributeValue(LOCANT_ATR);
+		String desc   = stereoChemistryEl.getAttributeValue(VALUE_ATR);
+
+		Element parentSubBracketOrRoot = stereoChemistryEl.getParent();
+		List<Fragment> possibleFragments = StructureBuildingMethods.findAlternativeFragments(parentSubBracketOrRoot);
+		List<Element> adjacentGroupEls = OpsinTools.getDescendantElementsWithTagName(parentSubBracketOrRoot, GROUP_EL);
+		for (int i = adjacentGroupEls.size()-1; i >=0; i--) {
+			possibleFragments.add(adjacentGroupEls.get(i).getFrag());
+		}
+
+		for (Fragment fragment : possibleFragments) {
+            if (attemptAssignmentOfAxialStereoFragment(fragment, desc, locant)) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 

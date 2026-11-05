@@ -52,6 +52,7 @@ class SMILESWriter {
 
 	/**The order atoms were traversed when creating the SMILES*/
 	private List<Atom> smilesOutputOrder;
+	private List<Bond> smilesBondOrder;
 
 	static {
 		organicAtomsToStandardValencies.put(ChemEl.B, new Integer[]{3});
@@ -128,6 +129,7 @@ class SMILESWriter {
 		assignDoubleBondStereochemistrySlashes();
 
 		smilesOutputOrder = new ArrayList<>(structure.getAtomCount());
+		smilesBondOrder = new ArrayList<>(structure.getBondSet().size());
 
 		for (Atom currentAtom : roots) {
 			if (smilesBuilder.length() != 0) {
@@ -136,7 +138,7 @@ class SMILESWriter {
 			traverseSmiles(currentAtom);
 		}
 
-		if ((options & SmilesOptions.CXSMILES) != 0) {
+		if ((options&(SmilesOptions.CXSMILES+SmilesOptions.CXSMILES_ATROPISOMERS_HACK)) != 0) {
 			writeExtendedSmilesLayer(options);
 		}
 
@@ -318,6 +320,35 @@ class SMILESWriter {
 			}
 			sruContents.append("::ht");
 			extendedSmiles.add(sruContents.toString());
+		}
+
+		// see https://www.rdkit.org/docs/RDKit_Book.html#interpreting-atropisomers-without-coordinates
+		if ((options & SmilesOptions.CXSMILES_ATROPISOMERS_HACK) != 0) {
+			for (Bond bond : structure.getBondSet()) {
+				if (bond.hasAtropisomerSpecified()) {
+					int lo = Math.min(smilesOutputOrder.indexOf(bond.getFromAtom()),
+									  smilesOutputOrder.indexOf(bond.getToAtom()));
+					BondStereo bondStereo = bond.getBondStereo();
+					Atom[] carriers = bondStereo.getAtomRefs4();
+					Integer[] indexes = new Integer[]{0,1,2,3};
+					Arrays.sort(indexes,
+								(i, j) -> Integer.compare(smilesOutputOrder.indexOf(carriers[indexes[i]]),
+														                 smilesOutputOrder.indexOf(carriers[indexes[j]])));
+					Bond refBond = structure.findBond(smilesOutputOrder.get(lo).getID(),
+													  carriers[indexes[0]].getID());
+
+					boolean flipped = false;
+					for (int i=0; i<carriers.length; i++) {
+						for (int j=i+1; j<carriers.length; j++)
+							if (indexes[i] > indexes[j])
+								flipped = !flipped;
+					}
+					if (bondStereo.getBondStereoValue() == BondStereoValue.RIGHT != flipped)
+						extendedSmiles.add("wU:" + lo + "." + smilesBondOrder.indexOf(refBond));
+					else
+						extendedSmiles.add("wD:" + lo + "." + smilesBondOrder.indexOf(refBond));
+				}
+			}
 		}
 		if (extendedSmiles.size() > 0) {
 			smilesBuilder.append(" |");
@@ -521,7 +552,7 @@ class SMILESWriter {
 		Deque<Bond> bondsToVisit = new ArrayDeque<Bond>();
 		for (Bond bond : bonds) {
 			bond.setSmilesStereochemistry(null);
-			if (bond.getBondStereo() != null) {
+			if (bond.hasCisTransSpecified()) {
 				bondsToVisit.add(bond);
 			}
 		}
@@ -696,6 +727,7 @@ class SMILESWriter {
 			Atom currentAtom = currentstate.atom;
 			Bond bondtaken = currentstate.bondTaken;
 			if (bondtaken != null){
+				smilesBondOrder.add(bondtaken);
 				smilesBuilder.append(bondToSmiles(bondtaken));
 			}
 			int depth = currentstate.depth;
@@ -718,6 +750,7 @@ class SMILESWriter {
 						newlyAvailableClosureSymbols = new ArrayList<>();
 					}
 					newlyAvailableClosureSymbols.add(closure);
+					smilesBondOrder.add(bond);
 				}
 			}
 			for (Bond bond : bonds) {//ring openings

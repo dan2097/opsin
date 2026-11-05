@@ -77,11 +77,11 @@ public class NameToStructureConfigurationsTest {
 		public void testWarnRatherThanFailOnUninterpretableStereochemistry() throws StructureBuildingException {
 			NameToStructureConfig n2sConfig = NameToStructureConfig.getDefaultConfigInstance();
 			n2sConfig.setWarnRatherThanFailOnUninterpretableStereochemistry(false);
-			OpsinResult or = n2s.parseChemicalName("(R)-2,2'-Bis(diphenylphosphino)-1,1'-binaphthyl", n2sConfig);
+			OpsinResult or = n2s.parseChemicalName("(R)-hexahelicene", n2sConfig);
 			assertEquals(OPSIN_RESULT_STATUS.FAILURE, or.getStatus());
 
 			n2sConfig.setWarnRatherThanFailOnUninterpretableStereochemistry(true);
-			or = n2s.parseChemicalName("(R)-2,2'-Bis(diphenylphosphino)-1,1'-binaphthyl", n2sConfig);
+			or = n2s.parseChemicalName("(R)-hexahelicene", n2sConfig);
 			assertEquals(OPSIN_RESULT_STATUS.WARNING, or.getStatus());
 		}
 }
