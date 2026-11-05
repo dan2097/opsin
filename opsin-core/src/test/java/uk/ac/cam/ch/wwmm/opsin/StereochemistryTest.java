@@ -976,38 +976,61 @@ public class StereochemistryTest {
 
 	@Test
 	public void test_M_BiNOL() {
-		NameToStructureConfig config = NameToStructureConfig.getDefaultConfigInstance();
-		config.setWarnRatherThanFailOnUninterpretableStereochemistry(true);
-		OpsinResult result = n2s.parseChemicalName("(M)-1,1'-binaphth-2,2'-diol", config);
+		OpsinResult result = n2s.parseChemicalName("(M)-1,1'-binaphth-2,2'-diol");
 		Assertions.assertEquals("C=1(C(=CC=C2C=CC=CC12)O)C=1C(=CC=C2C=CC=CC12)O |wU:0.0|",
 								result.getSmiles(SmilesOptions.CXSMILES_ATROPISOMERS_HACK));
 	}
 
 	@Test
 	public void test_P_BiNOL() {
-		NameToStructureConfig config = NameToStructureConfig.getDefaultConfigInstance();
-		config.setWarnRatherThanFailOnUninterpretableStereochemistry(true);
-		OpsinResult result = n2s.parseChemicalName("(P)-1,1'-binaphth-2,2'-diol", config);
+		OpsinResult result = n2s.parseChemicalName("(P)-1,1'-binaphth-2,2'-diol");
 		Assertions.assertEquals("C=1(C(=CC=C2C=CC=CC12)O)C=1C(=CC=C2C=CC=CC12)O |wD:0.0|",
 								result.getSmiles(SmilesOptions.CXSMILES_ATROPISOMERS_HACK));
 	}
 
 	@Test
 	public void test_Ra_BiNOL() {
-		NameToStructureConfig config = NameToStructureConfig.getDefaultConfigInstance();
-		config.setWarnRatherThanFailOnUninterpretableStereochemistry(true);
-		OpsinResult result = n2s.parseChemicalName("(Ra)-1,1'-binaphth-2,2'-diol", config);
+		OpsinResult result = n2s.parseChemicalName("(Ra)-1,1'-binaphth-2,2'-diol");
 		Assertions.assertEquals("C=1(C(=CC=C2C=CC=CC12)O)C=1C(=CC=C2C=CC=CC12)O |wU:0.0|",
 								result.getSmiles(SmilesOptions.CXSMILES_ATROPISOMERS_HACK));
 	}
 
 	@Test
 	public void test_Sa_BiNOL() {
-		NameToStructureConfig config = NameToStructureConfig.getDefaultConfigInstance();
-		config.setWarnRatherThanFailOnUninterpretableStereochemistry(true);
-		OpsinResult result = n2s.parseChemicalName("(Sa)-1,1'-binaphth-2,2'-diol", config);
+		OpsinResult result = n2s.parseChemicalName("(Sa)-1,1'-binaphth-2,2'-diol");
 		Assertions.assertEquals("C=1(C(=CC=C2C=CC=CC12)O)C=1C(=CC=C2C=CC=CC12)O |wD:0.0|",
 								result.getSmiles(SmilesOptions.CXSMILES_ATROPISOMERS_HACK));
+	}
+
+	@Test
+	public void test_R_BiNOL() {
+		OpsinResult result = n2s.parseChemicalName("(R)-1,1'-binaphth-2,2'-diol");
+		Assertions.assertEquals("C=1(C(=CC=C2C=CC=CC12)O)C=1C(=CC=C2C=CC=CC12)O |wU:0.0|",
+								result.getSmiles(SmilesOptions.CXSMILES_ATROPISOMERS_HACK));
+	}
+
+	@Test
+	public void test_S_BiNOL() {
+		OpsinResult result = n2s.parseChemicalName("(S)-1,1'-binaphth-2,2'-diol");
+		Assertions.assertEquals("C=1(C(=CC=C2C=CC=CC12)O)C=1C(=CC=C2C=CC=CC12)O |wD:0.0|",
+								result.getSmiles(SmilesOptions.CXSMILES_ATROPISOMERS_HACK));
+	}
+
+	@Test
+	public void testAxialStereoNotFound() {
+		OpsinResult result = n2s.parseChemicalName("(M)-1,1'-binaphthalene");
+		Assertions.assertEquals(OPSIN_RESULT_STATUS.FAILURE,
+								result.getStatus());
+		Assertions.assertEquals("Could not find bond that: <stereoChemistry type=\"axial\" value=\"M\">M</stereoChemistry> appeared to be referring to",
+								result.getMessage());
+
+		NameToStructureConfig config = NameToStructureConfig.getDefaultConfigInstance();
+		config.setWarnRatherThanFailOnUninterpretableStereochemistry(true);
+		result = n2s.parseChemicalName("(M)-1,1'-binaphthalene", config);
+		Assertions.assertEquals(OPSIN_RESULT_STATUS.WARNING,
+								result.getStatus());
+		Assertions.assertEquals("C1(=CC=CC2=CC=CC=C12)C1=CC=CC2=CC=CC=C12",
+								result.getSmiles());
 	}
 
 	private String atomRefsToIdStr(Atom[] atomRefs4) {

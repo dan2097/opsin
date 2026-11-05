@@ -186,8 +186,8 @@ class StereochemistryHandler {
 			throw new StereochemistryException(stereoChemistryType + " stereochemistry is not currently interpretable by OPSIN");
 		}
 		else if (stereoChemistryType.equals(AXIAL_TYPE_VAL)){
-			assignAxialStereochem(stereoChemistryEl);
-			throw new StereochemistryException(stereoChemistryType + " stereochemistry is not currently interpretable by OPSIN");
+			if (!assignAxialStereochem(stereoChemistryEl))
+				throw new StereochemistryException("Could not find bond that: " + stereoChemistryEl.toXML() + " appeared to be referring to");
 		}
 		else if (stereoChemistryType.equals(OPTICALROTATION_TYPE_VAL)){
 			state.addWarning(OpsinWarningType.STEREOCHEMISTRY_IGNORED, "Optical rotation cannot be algorithmically used to assign stereochemistry. This term was ignored: " + stereoChemistryEl.getValue());
@@ -340,6 +340,10 @@ class StereochemistryHandler {
 				}
 			}
 		}
+
+		if (assignAxialStereochem(stereoChemistryEl))
+			return;
+
 		throw new StereochemistryException("Could not find atom that: " + stereoChemistryEl.toXML() + " appeared to be referring to");
 	}
 
@@ -503,10 +507,9 @@ class StereochemistryHandler {
 	}
 
 
-	private void assignAxialStereochem(Element stereoChemistryEl) throws CipOrderingException {
+	private boolean assignAxialStereochem(Element stereoChemistryEl) throws CipOrderingException {
 		String locant = stereoChemistryEl.getAttributeValue(LOCANT_ATR);
 		String desc   = stereoChemistryEl.getAttributeValue(VALUE_ATR);
-
 
 		Element parentSubBracketOrRoot = stereoChemistryEl.getParent();
 		List<Fragment> possibleFragments = StructureBuildingMethods.findAlternativeFragments(parentSubBracketOrRoot);
@@ -517,9 +520,11 @@ class StereochemistryHandler {
 
 		for (Fragment fragment : possibleFragments) {
 			if (attemptAssignmentOfAxialStereoFragment(fragment, desc, locant)) {
-				return;
+				return true;
 			}
 		}
+
+		return false;
 	}
 
 
