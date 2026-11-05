@@ -386,6 +386,19 @@ class StereochemistryHandler {
 				notExplicitlyDefinedAxialBondMap.remove(bond);
 				return true;
 			}
+
+			// interfragment bonds
+			List<Bond> interFragmentBonds = sortInterFragmentBonds(state.fragManager.getInterFragmentBonds(fragment), fragment);
+			for (Bond bond : interFragmentBonds) {
+				if (!notExplicitlyDefinedAxialBondMap.containsKey(bond))
+					continue;
+				Atom[] carriers = notExplicitlyDefinedAxialBondMap.get(bond)
+																  .getOrderedStereoAtoms();
+				BondStereoValue value = BondStereoValue.ofAxial(desc);
+				bond.setBondStereoElement(carriers, value);
+				notExplicitlyDefinedAxialBondMap.remove(bond);
+				return true;
+			}
 		}
 		else {
 			// TODO JWM the locant never seems to be set?
@@ -519,7 +532,7 @@ class StereochemistryHandler {
 		}
 
 		for (Fragment fragment : possibleFragments) {
-			if (attemptAssignmentOfAxialStereoFragment(fragment, desc, locant)) {
+            if (attemptAssignmentOfAxialStereoFragment(fragment, desc, locant)) {
 				return true;
 			}
 		}

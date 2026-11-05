@@ -1017,6 +1017,13 @@ public class StereochemistryTest {
 	}
 
 	@Test
+	public void test_M_InterfragmentBonds() {
+		OpsinResult result = n2s.parseChemicalName("(M)-1-(2-methyl-6-iodophenyl)-2-methyl-5-bromopyrrole");
+		Assertions.assertEquals("CC1=C(C(=CC=C1)I)N1C(=CC=C1Br)C |wU:2.1|",
+								result.getSmiles(SmilesOptions.CXSMILES_ATROPISOMERS_HACK));
+	}
+
+	@Test
 	public void testAxialStereoNotFound() {
 		OpsinResult result = n2s.parseChemicalName("(M)-1,1'-binaphthalene");
 		Assertions.assertEquals(OPSIN_RESULT_STATUS.FAILURE,
