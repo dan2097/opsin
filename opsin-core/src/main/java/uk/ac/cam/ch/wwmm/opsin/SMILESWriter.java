@@ -521,7 +521,7 @@ class SMILESWriter {
 		Deque<Bond> bondsToVisit = new ArrayDeque<Bond>();
 		for (Bond bond : bonds) {
 			bond.setSmilesStereochemistry(null);
-			if (bond.getBondStereo() != null) {
+			if (bond.hasCisTransSpecified()) {
 				bondsToVisit.add(bond);
 			}
 		}

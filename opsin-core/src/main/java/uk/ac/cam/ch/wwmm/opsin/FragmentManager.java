@@ -468,7 +468,7 @@ class FragmentManager {
 		for (Bond bond : bondSet) {
 			Bond newBond = createBond(oldToNewAtomMap.get(bond.getFromAtom()), oldToNewAtomMap.get(bond.getToAtom()), bond.getOrder());
 			newBond.setSmilesStereochemistry(bond.getSmilesStereochemistry());
-			if (bond.getBondStereo() != null){
+			if (bond.hasCisTransSpecified()){
 				Atom[] oldAtomRefs4 = bond.getBondStereo().getAtomRefs4();
 				Atom[] newAtomRefs4 = new Atom[4];
 				for (int i = 0; i < oldAtomRefs4.length; i++) {
@@ -572,7 +572,7 @@ class FragmentManager {
 					}
 				}
 			}
-			if (bond.getBondStereo() != null){
+			if (bond.hasCisTransSpecified()){
 				Atom[] atomRefs4 = bond.getBondStereo().getAtomRefs4();
 				for (int i = 0 ; i < 4; i++) {
 					if (atomRefs4[i] == atomToBeReplaced){

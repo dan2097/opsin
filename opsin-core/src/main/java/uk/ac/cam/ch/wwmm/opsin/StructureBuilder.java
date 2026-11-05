@@ -2425,7 +2425,7 @@ class StructureBuilder {
 		Set<Bond> bonds = uniFrag.getBondSet();
 		List<Bond> bondsWithPreDefinedBondStereo = new ArrayList<>();
 		for (Bond bond : bonds) {
-			if (bond.getBondStereo()!=null){
+			if (bond.hasCisTransSpecified()){
 				bondsWithPreDefinedBondStereo.add(bond);
 			}
 		}
