@@ -177,7 +177,7 @@ public class OpsinResult {
 
 	
 	/**
-	 * Experimental function that generates the extended SMILES corresponding to the molecule described by the name
+	 * Generates the extended SMILES corresponding to the molecule described by the name
 	 * If name generation failed i.e. the OPSIN_RESULT_STATUS is FAILURE then null is returned
 	 * If the molecule doesn't utilise any features made possible by extended SMILES this is equivalent to {@link #getSmiles()}
 	 * @return Extended SMILES as a String

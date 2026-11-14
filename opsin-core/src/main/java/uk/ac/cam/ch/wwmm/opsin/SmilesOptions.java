@@ -40,5 +40,6 @@ public interface SmilesOptions {
 	int CXSMILES                 = CXSMILES_ATOM_LABELS |
 			                       CXSMILES_ATOM_VALUES |
 			                       CXSMILES_POLYMERS |
-			                       CXSMILES_ENHANCED_STEREO;
+			                       CXSMILES_ENHANCED_STEREO |
+			                       CXSMILES_ATROPISOMERS_HACK;
 }

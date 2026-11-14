@@ -138,7 +138,7 @@ class SMILESWriter {
 			traverseSmiles(currentAtom);
 		}
 
-		if ((options&(SmilesOptions.CXSMILES+SmilesOptions.CXSMILES_ATROPISOMERS_HACK)) != 0) {
+		if ((options & SmilesOptions.CXSMILES) != 0) {
 			writeExtendedSmilesLayer(options);
 		}
 
