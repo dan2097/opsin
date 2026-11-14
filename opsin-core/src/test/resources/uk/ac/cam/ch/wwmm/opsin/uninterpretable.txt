@@ -64,3 +64,6 @@ ethane(chlorido)ic acid
 benzenecarbo(chlorido)thioic acid
 ethanediamidic acid
 ethanedichloridic acid
+propane-1,2,3-triyl 1,2-diacetate 2-propanoate
+propane-1,2,3-triyl 1,2-diacetate 4-propanoate
+propane-1,2,3-triyl acetate propanoate

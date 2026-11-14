@@ -4788,7 +4788,7 @@ class ComponentProcessor {
 			Element group =subOrRoot.getFirstChildElement(GROUP_EL);
 			Element lastLocant = locantEls.get(locantEls.size()-1);//the locant that may apply to an unsaturator/suffix
 			String[] locantValues = lastLocant.getValue().split(",");
-			if (locantValues.length==1 && group.getAttribute(FRONTLOCANTSEXPECTED_ATR)!=null){//some trivial retained names like 2-furyl expect locants to be in front of them. For these the indirect intepretation will always be used rather than checking whether 2-(furyl) even makes sense
+			if (locantValues.length==1 && group.getAttribute(FRONTLOCANTSEXPECTED_ATR)!=null){//some trivial retained names like 2-furyl expect locants to be in front of them. For these the indirect interpretation will always be used rather than checking whether 2-(furyl) even makes sense
 				String[] allowedLocants = group.getAttributeValue(FRONTLOCANTSEXPECTED_ATR).split(",");
 				for (String allowedLocant : allowedLocants) {
 					if (locantValues[0].equals(allowedLocant)){
@@ -4808,6 +4808,17 @@ class ComponentProcessor {
 				if (parentEl.getName().equals(WORD_EL) && parentEl.getAttributeValue(TYPE_ATR).equals(SUBSTITUENT_EL) && parentEl.getChildCount()==1 &&
 						locantValues.length==1 && !ORTHOMETAPARA_TYPE_VAL.equals(lastLocant.getAttributeValue(TYPE_ATR))){
 					allowIndirectLocants =false;
+				}
+			}
+			else if (state.currentWordRule == WordRule.ester && !ADDEDHYDROGENLOCANT_TYPE_VAL.equals(lastLocant.getAttributeValue(TYPE_ATR))
+					&& !ORTHOMETAPARA_TYPE_VAL.equals(lastLocant.getAttributeValue(TYPE_ATR))) {
+				// e.g. propane-1,2,3-triyl 1,2-diacetate 3-propanoate:
+				// the acid word's leading locants refer to the multivalent substituent.
+				Element parentEl = subOrRoot.getParent();
+				if (subOrRoot.getName().equals(ROOT_EL) && parentEl.getName().equals(WORD_EL)
+						&& parentEl.getAttributeValue(TYPE_ATR).equals(WordType.full.toString()) && parentEl.getChildCount() == 1
+						&& parentEl.getParent().getChildElements(WORD_EL).size() > 2 && locantEls.size() == 1) {
+					allowIndirectLocants = false;
 				}
 			}
 			Fragment fragmentAfterLocant = group.getFrag();
@@ -5532,7 +5543,8 @@ class ComponentProcessor {
 			Element wordRule = parentElem.getParent();
 			List<Element> words = wordRule.getChildElements(WORD_EL);
 			Element ateWord = words.get(words.size()-1);
-			if (parentElem==ateWord){
+			if (parentElem==ateWord || (state.currentWordRule == WordRule.ester
+					&& WordType.full.toString().equals(parentElem.getAttributeValue(TYPE_ATR)))){
 				return true;
 			}
 		}
