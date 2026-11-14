@@ -29,6 +29,12 @@ public interface SmilesOptions {
 	 */
 	int CXSMILES_ENHANCED_STEREO = 0x8;
 	/**
+	 * Use an RDKit extension to write out aryl-aryl atropisomers using
+	 * up/down wedges. Bit jank but the best we've got and supported by
+	 * RDKit/CDK.
+	 */
+	int CXSMILES_ATROPISOMERS_HACK = 0x10;
+	/**
 	 * Include all CXSMILES layers that are relevant. This option is equivalent to turning on all CXSMILES features.
 	 */
 	int CXSMILES                 = CXSMILES_ATOM_LABELS |
