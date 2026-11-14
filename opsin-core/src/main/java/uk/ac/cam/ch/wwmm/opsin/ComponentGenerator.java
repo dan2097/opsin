@@ -996,8 +996,9 @@ class ComponentGenerator {
 								if (symbol.equalsIgnoreCase("EandZ") ||
 									symbol.equalsIgnoreCase("EorZ") ||
 									symbol.equalsIgnoreCase("E*") ||
-									symbol.equalsIgnoreCase("Z*"))
+									symbol.equalsIgnoreCase("Z*")) {
 									symbol = "EZ";
+								}
 								stereoChemEl.addAttribute(new Attribute(VALUE_ATR, symbol));
 							} else if (matchAlphaBetaStereochem.matcher(m.group(2)).matches()) {
 								stereoChemEl.addAttribute(new Attribute(TYPE_ATR, ALPHA_OR_BETA_TYPE_VAL));

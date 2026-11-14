@@ -1111,23 +1111,30 @@ class StructureBuildingMethods {
 
 		@Override
 		public boolean equals(Object obj) {
-			if (this == obj)
+			if (this == obj) {
 				return true;
-			if (obj == null)
+			}
+			if (obj == null) {
 				return false;
-			if (getClass() != obj.getClass())
+			}
+			if (getClass() != obj.getClass()) {
 				return false;
+			}
 			HeteroAtomSmilesAndLambda other = (HeteroAtomSmilesAndLambda) obj;
 			if (lambdaConvention == null) {
-				if (other.lambdaConvention != null)
+				if (other.lambdaConvention != null) {
 					return false;
-			} else if (!lambdaConvention.equals(other.lambdaConvention))
+				}
+			} else if (!lambdaConvention.equals(other.lambdaConvention)) {
 				return false;
+			}
 			if (smiles == null) {
-				if (other.smiles != null)
+				if (other.smiles != null) {
 					return false;
-			} else if (!smiles.equals(other.smiles))
+				}
+			} else if (!smiles.equals(other.smiles)) {
 				return false;
+			}
 			return true;
 		}
 		

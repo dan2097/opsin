@@ -269,12 +269,14 @@ class SMILESWriter {
 								int len = Math.min(a.getValue().size(), b.getValue().size());
 								for (int i = 0; i < len; i++) {
 									int cmp = a.getValue().get(i).compareTo(b.getValue().get(i));
-									if (cmp != 0)
+									if (cmp != 0) {
 										return cmp;
+									}
 								}
 								int cmp = Integer.compare(a.getValue().size(), b.getValue().size());
-								if (cmp != 0)
+								if (cmp != 0) {
 									return cmp;
+								}
 								return a.getKey().compareTo(b.getKey()); // error?
 							}
 						});
@@ -296,8 +298,9 @@ class SMILESWriter {
 					}
 					List<Integer> idxs = e.getValue();
 					sb.append(idxs.get(0));
-					for (int i = 1; i < idxs.size(); i++)
+					for (int i = 1; i < idxs.size(); i++) {
 						sb.append(',').append(idxs.get(i));
+					}
 					extendedSmiles.add(sb.toString());
 				}
 			}
@@ -340,10 +343,12 @@ class SMILESWriter {
 					boolean flipped =
 							(StereochemistryHandler.swapsRequiredToSort(carriers)%2) !=
 							(StereochemistryHandler.swapsRequiredToSort(outputCarriers)%2);
-					if (bondStereo.getBondStereoValue() == BondStereoValue.RIGHT != flipped)
+					if (bondStereo.getBondStereoValue() == BondStereoValue.RIGHT != flipped) {
 						extendedSmiles.add("wU:" + lo + "." + smilesBondOrder.indexOf(refBond));
-					else
+					}
+					else {
 						extendedSmiles.add("wD:" + lo + "." + smilesBondOrder.indexOf(refBond));
+					}
 				}
 			}
 		}
@@ -820,8 +825,9 @@ class SMILESWriter {
 				atomSmiles.append(chemEl.toString());
 			}
 		}
-		if (hasStereo(atom))
+		if (hasStereo(atom)) {
 			atomSmiles.append(atomParityToSmiles(atom, depth, bondtaken));
+		}
 
 		if (hydrogenCount != 0 && needsSquareBrackets && chemEl != ChemEl.H){
 			atomSmiles.append('H');

@@ -186,8 +186,9 @@ class StereochemistryHandler {
 			throw new StereochemistryException(stereoChemistryType + " stereochemistry is not currently interpretable by OPSIN");
 		}
 		else if (stereoChemistryType.equals(AXIAL_TYPE_VAL)){
-			if (!assignAxialStereochem(stereoChemistryEl))
+			if (!assignAxialStereochem(stereoChemistryEl)) {
 				throw new StereochemistryException("Could not find bond that: " + stereoChemistryEl.toXML() + " appeared to be referring to");
+			}
 		}
 		else if (stereoChemistryType.equals(OPTICALROTATION_TYPE_VAL)){
 			state.addWarning(OpsinWarningType.STEREOCHEMISTRY_IGNORED, "Optical rotation cannot be algorithmically used to assign stereochemistry. This term was ignored: " + stereoChemistryEl.getValue());
@@ -360,8 +361,9 @@ class StereochemistryHandler {
 			}
 		}
 
-		if (assignAxialStereochem(stereoChemistryEl))
+		if (assignAxialStereochem(stereoChemistryEl)) {
 			return;
+		}
 
 		throw new StereochemistryException("Could not find atom that: " + stereoChemistryEl.toXML() + " appeared to be referring to");
 	}
@@ -396,8 +398,9 @@ class StereochemistryHandler {
 														   String locant) throws CipOrderingException {
 		if (locant == null) {//undefined locant
 			for (Bond bond : fragment.getBondSet()) {
-				if (!notExplicitlyDefinedAxialBondMap.containsKey(bond))
+				if (!notExplicitlyDefinedAxialBondMap.containsKey(bond)) {
 					continue;
+				}
 				setAxialStereo(bond, axialStereoVal);
 				return true;
 			}
@@ -405,8 +408,9 @@ class StereochemistryHandler {
 			// interfragment bonds
 			List<Bond> interFragmentBonds = sortInterFragmentBonds(state.fragManager.getInterFragmentBonds(fragment), fragment);
 			for (Bond bond : interFragmentBonds) {
-				if (!notExplicitlyDefinedAxialBondMap.containsKey(bond))
+				if (!notExplicitlyDefinedAxialBondMap.containsKey(bond)) {
 					continue;
+				}
 				setAxialStereo(bond, axialStereoVal);
 				return true;
 			}
@@ -426,10 +430,12 @@ class StereochemistryHandler {
 			if (firstAtomInBond !=null){
 				List<Bond> bonds = firstAtomInBond.getBonds();
 				for (Bond bond : bonds) {
-					if (secondAtomInBond != null && bond.getOtherAtom(firstAtomInBond) != secondAtomInBond)
+					if (secondAtomInBond != null && bond.getOtherAtom(firstAtomInBond) != secondAtomInBond) {
 						continue;
-					if (!notExplicitlyDefinedAxialBondMap.containsKey(bond))
+					}
+					if (!notExplicitlyDefinedAxialBondMap.containsKey(bond)) {
 						continue;
+					}
 					setAxialStereo(bond, axialStereoVal);
 					return true;
 				}

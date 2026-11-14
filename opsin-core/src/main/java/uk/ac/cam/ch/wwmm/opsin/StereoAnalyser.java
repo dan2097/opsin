@@ -684,35 +684,42 @@ class StereoAnalyser {
 	 * @return the number of adjacent Aryl D3 atoms
 	 */
 	private int checkArylD3(Atom a, Bond skip) {
-		if (!FragmentTools.isArylD3(a))
+		if (!FragmentTools.isArylD3(a)) {
 			return 0;
+		}
 		int count = 0;
 		List<Atom> nbors = new ArrayList<>();
 		for (Bond b : a.getBonds()) {
-			if (b == skip)
+			if (b == skip) {
 				continue;
+			}
 			Atom nbor = b.getOtherAtom(a);
-			if (!nbor.getAtomIsInACycle())
+			if (!nbor.getAtomIsInACycle()) {
 				return 0;
+			}
 			nbors.add(nbor);
-			if (FragmentTools.isArylD3(b.getOtherAtom(a)))
+			if (FragmentTools.isArylD3(b.getOtherAtom(a))) {
 				count++;
+			}
 		}
 
 		// check neighbours are symmetric!
 		assert nbors.size() == 2; // due to isArylD3
 		if (mappingToColour.get(nbors.get(0)).equals(
-				mappingToColour.get(nbors.get(1))))
+				mappingToColour.get(nbors.get(1)))) {
 			return 0;
+		}
 
 		// this bit is more expensive, if any of the bonds we consider are
 		// not in a small ring (size ≤ 6) we are not allowed,
 		// perhaps 7 membered rings should be allowed
 		for (Bond b : a.getBonds()) {
-			if (b == skip)
+			if (b == skip) {
 				continue;
-			if (FragmentTools.notIn6MemberOrSmallerRing(b))
+			}
+			if (FragmentTools.notIn6MemberOrSmallerRing(b)) {
 				return 0;
+			}
 		}
 
 		return count;
@@ -724,8 +731,9 @@ class StereoAnalyser {
 	public List<AxialBond> findAxialBonds() {
 		List<AxialBond> axialBonds = new ArrayList<>();
 		for (Bond bond : bonds) {
-			if (bond.getOrder() != 1)
+			if (bond.getOrder() != 1) {
 				continue;
+			}
 			// both must have a D3 neighbours, one (or both) must have 2
 			int count1 = checkArylD3(bond.getFromAtom(), bond);
 			int count2 = checkArylD3(bond.getToAtom(), bond);

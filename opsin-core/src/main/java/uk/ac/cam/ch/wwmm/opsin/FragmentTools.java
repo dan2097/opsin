@@ -893,8 +893,9 @@ class FragmentTools {
 	 * @return the atom is D3 conjugated
 	 */
 	static boolean isArylD3(Atom a) {
-		if (a.getBondCount() != 3)
+		if (a.getBondCount() != 3) {
 			return false;
+		}
 		int d = 0;
 		int v = 0;
 		int q = a.getCharge();
@@ -902,8 +903,9 @@ class FragmentTools {
 		for (Bond b : a.getBonds()) {
 			d++;
 			v += b.getOrder();
-			if (b.getOtherAtom(a).getElement() == ChemEl.H)
+			if (b.getOtherAtom(a).getElement() == ChemEl.H) {
 				return false;
+			}
 		}
 		switch (a.getElement()) {
 			case C:
@@ -911,8 +913,9 @@ class FragmentTools {
 				return d == 3 && v == 4 && q == 0;
 			case N:
 			case P:
-				if (q == 1)
+				if (q == 1) {
 					return d == 3 && v == 4;
+				}
 				assert q == 0;
 				return d == 3 && v == 3;
 			default:
