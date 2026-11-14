@@ -4783,108 +4783,106 @@ class ComponentProcessor {
 		 * that work on suffixes - (2-furyl), 2-propanol, (2-propylmethyl), (2-propyloxy), 2'-Butyronaphthone.
 		 */
 		List<Element> locantEls = findLocantsThatCouldBeIndirectLocants(subOrRoot);
+		if (locantEls.isEmpty()) {
+			return;
+		}
 
-		if (locantEls.size()>0){
-			Element group =subOrRoot.getFirstChildElement(GROUP_EL);
-			Element lastLocant = locantEls.get(locantEls.size()-1);//the locant that may apply to an unsaturator/suffix
-			String[] locantValues = lastLocant.getValue().split(",");
-			if (locantValues.length==1 && group.getAttribute(FRONTLOCANTSEXPECTED_ATR)!=null){//some trivial retained names like 2-furyl expect locants to be in front of them. For these the indirect interpretation will always be used rather than checking whether 2-(furyl) even makes sense
-				String[] allowedLocants = group.getAttributeValue(FRONTLOCANTSEXPECTED_ATR).split(",");
-				for (String allowedLocant : allowedLocants) {
-					if (locantValues[0].equals(allowedLocant)){
-						Element expectedSuffix = OpsinTools.getNextSibling(group);
-						if (expectedSuffix!=null && expectedSuffix.getName().equals(SUFFIX_EL) && expectedSuffix.getAttribute(LOCANT_ATR)==null){
-							expectedSuffix.addAttribute(new Attribute(LOCANT_ATR, locantValues[0]));
-							lastLocant.detach();
-							return;
-						}
-						break;
+		Element group =subOrRoot.getFirstChildElement(GROUP_EL);
+		Element lastLocant = locantEls.get(locantEls.size()-1);//the locant that may apply to an unsaturator/suffix
+		String[] locantValues = lastLocant.getValue().split(",");
+		if (locantValues.length==1 && group.getAttribute(FRONTLOCANTSEXPECTED_ATR)!=null){//some trivial retained names like 2-furyl expect locants to be in front of them. For these the indirect interpretation will always be used rather than checking whether 2-(furyl) even makes sense
+			String[] allowedLocants = group.getAttributeValue(FRONTLOCANTSEXPECTED_ATR).split(",");
+			for (String allowedLocant : allowedLocants) {
+				if (locantValues[0].equals(allowedLocant)){
+					Element expectedSuffix = OpsinTools.getNextSibling(group);
+					if (expectedSuffix!=null && expectedSuffix.getName().equals(SUFFIX_EL) && expectedSuffix.getAttribute(LOCANT_ATR)==null){
+						expectedSuffix.addAttribute(new Attribute(LOCANT_ATR, locantValues[0]));
+						lastLocant.detach();
+						return;
 					}
+					break;
 				}
 			}
-			boolean allowIndirectLocants =true;
-			if(state.currentWordRule == WordRule.multiEster && !ADDEDHYDROGENLOCANT_TYPE_VAL.equals(lastLocant.getAttributeValue(TYPE_ATR))){//special case e.g. 1-benzyl 4-butyl terephthalate (locants do not apply to yls)
-				Element parentEl = subOrRoot.getParent();
-				if (parentEl.getName().equals(WORD_EL) && parentEl.getAttributeValue(TYPE_ATR).equals(SUBSTITUENT_EL) && parentEl.getChildCount()==1 &&
-						locantValues.length==1 && !ORTHOMETAPARA_TYPE_VAL.equals(lastLocant.getAttributeValue(TYPE_ATR))){
-					allowIndirectLocants =false;
-				}
-			}
-			else if (state.currentWordRule == WordRule.ester && !ADDEDHYDROGENLOCANT_TYPE_VAL.equals(lastLocant.getAttributeValue(TYPE_ATR))
-					&& !ORTHOMETAPARA_TYPE_VAL.equals(lastLocant.getAttributeValue(TYPE_ATR))) {
-				// e.g. propane-1,2,3-triyl 1,2-diacetate 3-propanoate:
-				// the acid word's leading locants refer to the multivalent substituent.
-				Element parentEl = subOrRoot.getParent();
-				if (subOrRoot.getName().equals(ROOT_EL) && parentEl.getName().equals(WORD_EL)
-						&& parentEl.getAttributeValue(TYPE_ATR).equals(WordType.full.toString()) && parentEl.getChildCount() == 1
-						&& parentEl.getParent().getChildElements(WORD_EL).size() > 2 && locantEls.size() == 1) {
-					allowIndirectLocants = false;
-				}
-			}
-			Fragment fragmentAfterLocant = group.getFrag();
-			if (fragmentAfterLocant.getAtomCount()<=1){
-				allowIndirectLocants =false;//e.g. prevent 1-methyl as meth-1-yl is extremely unlikely to be the intended result
-			}
+		}
 
-			if (allowIndirectLocants){
-				List<Element> locantAble = findElementsMissingIndirectLocants(subOrRoot, lastLocant);
-				/* The first locant is most likely a locant indicating where this subsituent should be attached.
-				 * If the locant cannot be found on a potential root this cannot be the case though (assuming the name is valid of course)
-				 * The symmetric-parent exception must not override a retained substituent's default attachment position e.g. 1-mesitylhydrazine.
-				 */
-				if (!ADDEDHYDROGENLOCANT_TYPE_VAL.equals(lastLocant.getAttributeValue(TYPE_ATR)) && locantEls.size() ==1 && group.getAttribute(ISAMULTIRADICAL_ATR)==null &&
-						locantValues.length == 1 && checkLocantPresentOnPotentialRoot(state, subOrRoot, locantValues[0]) && OpsinTools.getPreviousSibling(lastLocant, LOCANT_EL)==null &&
-						(locantAble.isEmpty() || locantAble.get(0).getAttribute(DEFAULTLOCANTID_ATR) != null || !isLoneSubstituentOnUnsuffixedSymmetricParent(subOrRoot))){
+		if(state.currentWordRule == WordRule.multiEster && !ADDEDHYDROGENLOCANT_TYPE_VAL.equals(lastLocant.getAttributeValue(TYPE_ATR))){//special case e.g. 1-benzyl 4-butyl terephthalate (locants do not apply to yls)
+			Element parentEl = subOrRoot.getParent();
+			if (parentEl.getName().equals(WORD_EL) && parentEl.getAttributeValue(TYPE_ATR).equals(SUBSTITUENT_EL) && parentEl.getChildCount()==1 &&
+					locantValues.length==1 && !ORTHOMETAPARA_TYPE_VAL.equals(lastLocant.getAttributeValue(TYPE_ATR))){
+				return;
+			}
+		}
+		else if (state.currentWordRule == WordRule.ester && !ADDEDHYDROGENLOCANT_TYPE_VAL.equals(lastLocant.getAttributeValue(TYPE_ATR))
+				&& !ORTHOMETAPARA_TYPE_VAL.equals(lastLocant.getAttributeValue(TYPE_ATR))) {
+			// e.g. propane-1,2,3-triyl 1,2-diacetate 3-propanoate:
+			// the acid word's leading locants refer to the multivalent substituent.
+			Element parentEl = subOrRoot.getParent();
+			if (subOrRoot.getName().equals(ROOT_EL) && parentEl.getName().equals(WORD_EL)
+					&& parentEl.getAttributeValue(TYPE_ATR).equals(WordType.full.toString()) && parentEl.getChildCount() == 1
+					&& parentEl.getParent().getChildElements(WORD_EL).size() > 2 && locantEls.size() == 1) {
+				return;
+			}
+		}
+		Fragment fragmentAfterLocant = group.getFrag();
+		if (fragmentAfterLocant.getAtomCount() <= 1) {
+			return;//e.g. prevent 1-methyl as meth-1-yl is extremely unlikely to be the intended result
+		}
+
+		List<Element> locantAble = findElementsMissingIndirectLocants(subOrRoot, lastLocant);
+		/* The first locant is most likely a locant indicating where this subsituent should be attached.
+		 * If the locant cannot be found on a potential root this cannot be the case though (assuming the name is valid of course)
+		 * The symmetric-parent exception must not override a retained substituent's default attachment position e.g. 1-mesitylhydrazine.
+		 */
+		if (!ADDEDHYDROGENLOCANT_TYPE_VAL.equals(lastLocant.getAttributeValue(TYPE_ATR)) && locantEls.size() ==1 && group.getAttribute(ISAMULTIRADICAL_ATR)==null &&
+				locantValues.length == 1 && checkLocantPresentOnPotentialRoot(state, subOrRoot, locantValues[0]) && OpsinTools.getPreviousSibling(lastLocant, LOCANT_EL)==null &&
+				(locantAble.isEmpty() || locantAble.get(0).getAttribute(DEFAULTLOCANTID_ATR) != null || !isLoneSubstituentOnUnsuffixedSymmetricParent(subOrRoot))){
+			return;
+		}
+		boolean assignableToIndirectFeatures =true;
+		if (locantAble.size() < locantValues.length){
+			assignableToIndirectFeatures =false;
+		} else {
+			for (String locantValue : locantValues) {
+				if (!fragmentAfterLocant.hasLocant(locantValue)){//locant is not available on the group adjacent to the locant!
+					assignableToIndirectFeatures = false;
+				}
+			}
+		}
+		
+		if (assignableToIndirectFeatures) {
+			for (int i = 0; i < locantValues.length; i++) {
+				String locantValue = locantValues[i];
+				locantAble.get(i).addAttribute(new Attribute(LOCANT_ATR, locantValue));
+			}
+			lastLocant.detach();
+		} else {
+			//usually indicates the name will fail unless the suffix has the locant or heteroatom replacement will create the locant
+			if (locantValues.length == 1) {
+				List<Fragment> suffixes = state.xmlSuffixMap.get(group);
+				//I do not want to assign element locants as in locants on the suffix as I currently know of no examples where this actually occurs
+				if (matchElementSymbolOrAminoAcidLocant.matcher(locantValues[0]).matches()){
 					return;
 				}
-				boolean assignableToIndirectFeatures =true;
-				if (locantAble.size() < locantValues.length){
-					assignableToIndirectFeatures =false;
-				}
-				else{
-					for (String locantValue : locantValues) {
-						if (!fragmentAfterLocant.hasLocant(locantValue)){//locant is not available on the group adjacent to the locant!
-							assignableToIndirectFeatures =false;
-						}
-					}
-				}
-				
-				if (!assignableToIndirectFeatures){//usually indicates the name will fail unless the suffix has the locant or heteroatom replacement will create the locant
-					if (locantValues.length==1){
-						List<Fragment> suffixes =state.xmlSuffixMap.get(group);
-						//I do not want to assign element locants as in locants on the suffix as I currently know of no examples where this actually occurs
-						if (matchElementSymbolOrAminoAcidLocant.matcher(locantValues[0]).matches()){
-							return;
-						}
-						for (Fragment suffix : suffixes) {
-							if (suffix.hasLocant(locantValues[0])){//e.g. 2'-Butyronaphthone
-								Atom dummyRAtom =suffix.getFirstAtom();
-								List<Atom> neighbours =dummyRAtom.getAtomNeighbours();
-								Bond b =null;
-								atomLoop: for (Atom atom : neighbours) {
-									List<String> neighbourLocants = atom.getLocants();
-									for (String neighbourLocant : neighbourLocants) {
-										if (MATCH_NUMERIC_LOCANT.matcher(neighbourLocant).matches()){
-											b = dummyRAtom.getBondToAtomOrThrow(atom);
-											break atomLoop;
-										}
-									}
-								}
-								if (b!=null){
-									state.fragManager.removeBond(b);//the current bond between the dummy R and the suffix
-									state.fragManager.createBond(dummyRAtom, suffix.getAtomByLocantOrThrow(locantValues[0]), b.getOrder());
-									lastLocant.detach();
+				for (Fragment suffix : suffixes) {
+					if (suffix.hasLocant(locantValues[0])){//e.g. 2'-Butyronaphthone
+						Atom dummyRAtom =suffix.getFirstAtom();
+						List<Atom> neighbours =dummyRAtom.getAtomNeighbours();
+						Bond b =null;
+						atomLoop: for (Atom atom : neighbours) {
+							List<String> neighbourLocants = atom.getLocants();
+							for (String neighbourLocant : neighbourLocants) {
+								if (MATCH_NUMERIC_LOCANT.matcher(neighbourLocant).matches()){
+									b = dummyRAtom.getBondToAtomOrThrow(atom);
+									break atomLoop;
 								}
 							}
 						}
+						if (b!=null){
+							state.fragManager.removeBond(b);//the current bond between the dummy R and the suffix
+							state.fragManager.createBond(dummyRAtom, suffix.getAtomByLocantOrThrow(locantValues[0]), b.getOrder());
+							lastLocant.detach();
+						}
 					}
-				}
-				else{
-					for (int i = 0; i < locantValues.length; i++) {
-						String locantValue = locantValues[i];
-						locantAble.get(i).addAttribute(new Attribute(LOCANT_ATR, locantValue));
-					}
-					lastLocant.detach();
 				}
 			}
 		}
