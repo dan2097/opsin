@@ -35,6 +35,7 @@ class StereochemistryHandler {
 	private final Map<Bond, StereoBond> bondStereoBondMap;
 	private final Map<Atom, StereoCentre> notExplicitlyDefinedStereoCentreMap;
 	private final Map<Bond, StereoBond> notExplicitlyDefinedStereoBondMap;
+	private final Map<Bond, AxialBond> bondAxialMap;
 	private final Map<Bond, AxialBond> notExplicitlyDefinedAxialBondMap;
 
 	StereochemistryHandler(BuildState state,
@@ -46,6 +47,7 @@ class StereochemistryHandler {
 		notExplicitlyDefinedStereoCentreMap = new HashMap<>(atomStereoCentreMap);
 		this.bondStereoBondMap = bondStereoBondMap;
 		notExplicitlyDefinedStereoBondMap = new HashMap<>(bondStereoBondMap);
+		this.bondAxialMap = bondAxialMap;
 		notExplicitlyDefinedAxialBondMap = new HashMap<>(bondAxialMap);
 	}
 
@@ -271,6 +273,25 @@ class StereochemistryHandler {
 				else if (notExplicitlyDefinedStereoCentreMap.get(potentialStereoAtom) != null) {
 					undefinedStereo.add(potentialStereoAtom);
 				}
+			}
+		}
+
+		if (!bondAxialMap.isEmpty()) {
+			boolean axialStereoIgnored = false;
+			for (Fragment fragment : possibleFragments) {
+				for (Atom atom : fragment.getAtomList()) {
+					for (Bond bond : atom.getBonds()) {
+						if (bond.hasAtropisomerSpecified()) {
+							// Global rac-/rel- is processed after assignment. Remove the absolute
+							// configuration so warning mode cannot export it as a pure enantiomer.
+							bond.setBondStereo(null);
+							axialStereoIgnored = true;
+						}
+					}
+				}
+			}
+			if (axialStereoIgnored) {
+				throw new StereochemistryException("Racemic or relative axial stereochemistry is not currently supported");
 			}
 		}
 
@@ -512,13 +533,17 @@ class StereochemistryHandler {
 	}
 
 
-	private boolean assignAxialStereochem(Element stereoChemistryEl) throws CipOrderingException {
+	private boolean assignAxialStereochem(Element stereoChemistryEl) throws StereochemistryException {
 		String locant = stereoChemistryEl.getAttributeValue(LOCANT_ATR);
 		String desc   = stereoChemistryEl.getAttributeValue(VALUE_ATR);
 		
 		BondStereoValue axialStereoVal = BondStereoValue.ofAxial(desc);
 		if (axialStereoVal == null) {
 			return false;
+		}
+		String group = stereoChemistryEl.getAttributeValue(STEREOGROUP_ATR);
+		if (StereoGroupType.Rac.name().equals(group) || StereoGroupType.Rel.name().equals(group)) {
+			throw new StereochemistryException("Racemic or relative axial stereochemistry is not currently supported");
 		}
 
 		Element parentSubBracketOrRoot = stereoChemistryEl.getParent();

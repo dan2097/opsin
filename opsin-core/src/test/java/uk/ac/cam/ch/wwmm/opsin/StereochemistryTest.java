@@ -1029,7 +1029,7 @@ public class StereochemistryTest {
 		OpsinResult result = n2s.parseChemicalName("(M)-1,1'-binaphthalene");
 		Assertions.assertEquals(OPSIN_RESULT_STATUS.FAILURE,
 								result.getStatus());
-		Assertions.assertEquals("Could not find bond that: <stereoChemistry type=\"axial\" value=\"M\">M</stereoChemistry> appeared to be referring to",
+		Assertions.assertEquals("Could not find bond that: <stereoChemistry type=\"axial\" value=\"M\" stereoGroup=\"Abs\">M</stereoChemistry> appeared to be referring to",
 								result.getMessage());
 
 		NameToStructureConfig config = NameToStructureConfig.getDefaultConfigInstance();
@@ -1059,6 +1059,29 @@ public class StereochemistryTest {
 		assertNotEquals(expected,
 						SMILESWriter.generateSmiles(f, SmilesOptions.CXSMILES_ATROPISOMERS_HACK),
 						"Different configuration must not give same extended SMILES");
+	}
+
+	@Test
+	public void testRacemicAndRelativeAxialStereoRejected() {
+		String stem = "1,1'-binaphth-2,2'-diol";
+		String[] prefixes = {"(RS)-", "(R*)-", "rac-(R)-", "rel-(R)-",
+				"rac-(Ra)-", "rel-(Sa)-", "rac-(M)-", "rel-(P)-",
+				"(rac)-(M)-", "(rel)-(P)-"};
+		for (String prefix : prefixes) {
+			OpsinResult result = n2s.parseChemicalName(prefix + stem);
+			assertEquals(OPSIN_RESULT_STATUS.FAILURE, result.getStatus(), prefix);
+			assertEquals("Racemic or relative axial stereochemistry is not currently supported",
+					result.getMessage(), prefix);
+
+			NameToStructureConfig config = NameToStructureConfig.getDefaultConfigInstance();
+			config.setWarnRatherThanFailOnUninterpretableStereochemistry(true);
+			result = n2s.parseChemicalName(prefix + stem, config);
+			assertEquals(OPSIN_RESULT_STATUS.WARNING, result.getStatus(), prefix);
+			assertEquals(OpsinWarningType.STEREOCHEMISTRY_IGNORED,
+					result.getWarnings().get(0).getType(), prefix);
+			assertEquals(n2s.parseChemicalName(stem).getSmiles(SmilesOptions.CXSMILES_ATROPISOMERS_HACK),
+					result.getSmiles(SmilesOptions.CXSMILES_ATROPISOMERS_HACK), prefix);
+		}
 	}
 
 	private String atomRefsToIdStr(Atom[] atomRefs4) {

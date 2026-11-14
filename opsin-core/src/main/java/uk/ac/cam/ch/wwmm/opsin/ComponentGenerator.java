@@ -1019,6 +1019,8 @@ class ComponentGenerator {
 							} else if (matchAxialStereo.matcher(m.group(2)).matches()) {
 								stereoChemEl.addAttribute(new Attribute(TYPE_ATR, AXIAL_TYPE_VAL));
 								stereoChemEl.addAttribute(new Attribute(VALUE_ATR, m.group(2)));
+								StereoGroupType localStereoType = stereoType != null ? stereoType : StereoGroupType.Abs;
+								stereoChemEl.addAttribute(new Attribute(STEREOGROUP_ATR, localStereoType.name()));
 							} else {
 								throw new ComponentGenerationException("Malformed stereochemistry element: " + stereoChemistryElement.getValue());
 							}
