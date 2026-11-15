@@ -34,6 +34,7 @@ class StereochemistryHandler {
 	private final Map<Bond, StereoBond> bondStereoBondMap;
 	private final Map<Atom, StereoCentre> notExplicitlyDefinedStereoCentreMap;
 	private final Map<Bond, StereoBond> notExplicitlyDefinedStereoBondMap;
+	private final Set<Set<Atom>> ringAtomPairsUsedForCisTrans = new HashSet<>();
 	
 	StereochemistryHandler(BuildState state, Map<Atom, StereoCentre> atomStereoCentreMap, Map<Bond, StereoBond> bondStereoBondMap) {
 		this.state = state;
@@ -653,6 +654,10 @@ class StereochemistryHandler {
 		if (chosenStereoAtoms.size() == 2) {
 			Atom a1 = chosenStereoAtoms.get(0);
 			Atom a2 = chosenStereoAtoms.get(1);
+			Set<Atom> atomPair = new HashSet<>(chosenStereoAtoms);
+			if (ringAtomPairsUsedForCisTrans.contains(atomPair)) {
+				return false;
+			}
 			if (!allowAlreadyDefinedCentres && a1.getAtomParity() != null && a2.getAtomParity() != null) {
 				return false;
 			}
@@ -668,9 +673,11 @@ class StereochemistryHandler {
 				if (!cisTransOnRingAgreesWithParities(a1, a2, paths, atomList, cisOrTrans, chooseAtomByCip)) {
 					throw new StereochemistryException(cisOrTrans + " contradicts the configuration of the stereocentres it relates");
 				}
+				ringAtomPairsUsedForCisTrans.add(atomPair);
 				return true;
 			}
 			applyStereoChemistryToCisTransOnRing(a1, a2, paths, atomList, cisOrTrans, chooseAtomByCip);
+			ringAtomPairsUsedForCisTrans.add(atomPair);
 			notExplicitlyDefinedStereoCentreMap.remove(chosenStereoAtoms.get(0));
 			notExplicitlyDefinedStereoCentreMap.remove(chosenStereoAtoms.get(1));
 			if (chooseAtomByCip) {

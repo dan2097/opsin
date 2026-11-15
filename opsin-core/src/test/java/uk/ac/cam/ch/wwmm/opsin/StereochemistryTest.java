@@ -20,6 +20,7 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import org.hamcrest.CoreMatchers;
 
@@ -232,6 +233,16 @@ public class StereochemistryTest {
 		BondStereo bondStereo = stereoBonds.get(0).getBond().getBondStereo();
 		assertNotNull(bondStereo, "The cis/trans prefix must define the alkene even when it agrees with the ring configuration");
 		assertEquals(expectedStereo, bondStereo.getBondStereoValue());
+	}
+
+	@ParameterizedTest
+	@ValueSource(strings = {
+		"trans-4-hydroxy-4-methylcyclohexanecarboxylic acid trans-(4-methylcyclohexyl)amide",
+		"cis-cis-1,2-dimethylcyclohexane",
+		"cis-cis-(1R,2S)-1,2-dimethylcyclohexane"
+	})
+	public void rejectMultipleCisTransDescriptorsForSameRingPair(String name) {
+		assertEquals(OPSIN_RESULT_STATUS.FAILURE, n2s.parseChemicalName(name).getStatus());
 	}
 
 	@Test
