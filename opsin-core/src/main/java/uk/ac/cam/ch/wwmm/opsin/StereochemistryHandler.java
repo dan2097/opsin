@@ -155,8 +155,15 @@ class StereochemistryHandler {
 			assignStereoBond(stereoChemistryEl);
 		}
 		else if (stereoChemistryType.equals(CISORTRANS_TYPE_VAL)){
-			if (!assignCisTransOnRing(stereoChemistryEl)){
-				assignStereoBond(stereoChemistryEl);
+			if (!assignCisTransOnRing(stereoChemistryEl, false)){
+				try {
+					assignStereoBond(stereoChemistryEl);
+				}
+				catch (StereochemistryException e) {
+					if (!assignCisTransOnRing(stereoChemistryEl, true)) {
+						throw e;
+					}
+				}
 			}
 		}
 		else if (stereoChemistryType.equals(ALPHA_OR_BETA_TYPE_VAL)){
@@ -574,10 +581,11 @@ class StereochemistryHandler {
 	 * Searches for instances of two tetrahedral stereocentres/psuedo-stereocentres
 	 * then sets their configuration such that the substituents at these centres are cis or trans to each other
 	 * @param stereoChemistryEl
+	 * @param allowAlreadyDefinedCentres whether cis/trans may be checked against two already defined stereocentres
 	 * @return
 	 * @throws StructureBuildingException
 	 */
-	private boolean assignCisTransOnRing(Element stereoChemistryEl) throws StructureBuildingException {
+	private boolean assignCisTransOnRing(Element stereoChemistryEl, boolean allowAlreadyDefinedCentres) throws StructureBuildingException {
 		if (stereoChemistryEl.getAttribute(LOCANT_ATR) != null) {
 			return false;
 		}
@@ -588,7 +596,7 @@ class StereochemistryHandler {
 			possibleFragments.add(adjacentGroupEls.get(i).getFrag());
 		}
 		for (Fragment fragment : possibleFragments) {
-			if (attemptAssignmentOfCisTransRingStereoToFragment(fragment, stereoChemistryEl)){
+			if (attemptAssignmentOfCisTransRingStereoToFragment(fragment, stereoChemistryEl, allowAlreadyDefinedCentres)){
 				return true;
 			}
 		}
@@ -600,7 +608,7 @@ class StereochemistryHandler {
 			for (Element word : words) {
 				List<Element> possibleGroups = OpsinTools.getDescendantElementsWithTagName(word, GROUP_EL);
 				for (int i = possibleGroups.size()-1; i >=0; i--) {
-					if (attemptAssignmentOfCisTransRingStereoToFragment(possibleGroups.get(i).getFrag(), stereoChemistryEl)) {
+					if (attemptAssignmentOfCisTransRingStereoToFragment(possibleGroups.get(i).getFrag(), stereoChemistryEl, allowAlreadyDefinedCentres)) {
 						return true;
 					}
 				}
@@ -610,7 +618,7 @@ class StereochemistryHandler {
 	}
 
 
-	private boolean attemptAssignmentOfCisTransRingStereoToFragment(Fragment fragment, Element stereoChemistryEl) throws StructureBuildingException {
+	private boolean attemptAssignmentOfCisTransRingStereoToFragment(Fragment fragment, Element stereoChemistryEl, boolean allowAlreadyDefinedCentres) throws StructureBuildingException {
 		List<Atom> atomList = fragment.getAtomList();
 		List<Atom> chosenStereoAtoms = new ArrayList<>();
 		List<Atom> stereoAtomsWithTwoNonHydrogen = new ArrayList<>();
@@ -645,6 +653,9 @@ class StereochemistryHandler {
 		if (chosenStereoAtoms.size() == 2) {
 			Atom a1 = chosenStereoAtoms.get(0);
 			Atom a2 = chosenStereoAtoms.get(1);
+			if (!allowAlreadyDefinedCentres && a1.getAtomParity() != null && a2.getAtomParity() != null) {
+				return false;
+			}
 
 			Set<Bond> peripheryBonds = determinePeripheryBonds(fragment);
 			List<List<Atom>> paths = CycleDetector.getPathBetweenAtomsUsingBonds(a1, a2, peripheryBonds);
