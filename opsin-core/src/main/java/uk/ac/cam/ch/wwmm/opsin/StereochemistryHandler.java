@@ -657,9 +657,6 @@ class StereochemistryHandler {
 				if (!cisTransOnRingAgreesWithParities(a1, a2, paths, atomList, cisOrTrans, chooseAtomByCip)) {
 					throw new StereochemistryException(cisOrTrans + " contradicts the configuration of the stereocentres it relates");
 				}
-				if (chooseAtomByCip) {
-					state.addIsAmbiguous("Ring cis/trans checked against stereocenters where no hydrogen was present. Cahn-Ingold-Prelog rules used to determine which substituents are cis/trans, but other conventions may be in use");
-				}
 				return true;
 			}
 			applyStereoChemistryToCisTransOnRing(a1, a2, paths, atomList, cisOrTrans, chooseAtomByCip);
