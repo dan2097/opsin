@@ -20,6 +20,9 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import org.hamcrest.CoreMatchers;
 
@@ -215,6 +218,35 @@ public class StereochemistryTest {
 	}
 	
 	
+	@ParameterizedTest
+	@CsvSource({
+		"cis, R, CIS",
+		"trans, R, TRANS",
+		"cis, S, CIS",
+		"trans, S, TRANS"
+	})
+	public void applyCisTransToAlkeneWithFullyDefinedRingSubstituent(String cisOrTrans, String ringPosition2Configuration, BondStereoValue expectedStereo) {
+		String name = cisOrTrans + "-1-[(1R,2" + ringPosition2Configuration + ")-2-methylcyclohexyl]prop-1-ene";
+		OpsinResult result = n2s.parseChemicalName(name);
+		assertEquals(OPSIN_RESULT_STATUS.SUCCESS, result.getStatus(), result.getMessage());
+		Fragment fragment = result.getStructure();
+		List<StereoBond> stereoBonds = new StereoAnalyser(fragment).findStereoBonds();
+		assertEquals(1, stereoBonds.size());
+		BondStereo bondStereo = stereoBonds.get(0).getBond().getBondStereo();
+		assertNotNull(bondStereo, "The cis/trans prefix must define the alkene even when it agrees with the ring configuration");
+		assertEquals(expectedStereo, bondStereo.getBondStereoValue());
+	}
+
+	@ParameterizedTest
+	@ValueSource(strings = {
+		"trans-4-hydroxy-4-methylcyclohexanecarboxylic acid trans-(4-methylcyclohexyl)amide",
+		"cis-cis-1,2-dimethylcyclohexane",
+		"cis-cis-(1R,2S)-1,2-dimethylcyclohexane"
+	})
+	public void rejectMultipleCisTransDescriptorsForSameRingPair(String name) {
+		assertEquals(OPSIN_RESULT_STATUS.FAILURE, n2s.parseChemicalName(name).getStatus());
+	}
+
 	@Test
 	public void applyStereochemistryLocantedRS() throws StructureBuildingException {
 		Fragment f = n2s.parseChemicalName("(1S,2R)-2-(methylamino)-1-phenylpropan-1-ol").getStructure();
