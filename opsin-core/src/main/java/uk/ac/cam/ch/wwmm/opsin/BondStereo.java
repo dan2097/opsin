@@ -17,12 +17,35 @@ class BondStereo {
 	 */
 	enum BondStereoValue{
 		CIS("C"),
-		TRANS("T");
+		TRANS("T"),
+		RIGHT("M"),
+		LEFT("P");
 
 		private final String value;  
 		BondStereoValue(String value){
 			this.value = value;
 		}
+
+		/**
+		 * Get the bond stereo value for a given axial CIP description.
+		 *
+		 * @param desc the CIP descriptor
+		 * @return the value (null possible)
+		 */
+		public static BondStereoValue ofAxial(String desc) {
+			switch (desc) {
+				case "M":
+				case "Ra":
+				case "R":
+					return BondStereoValue.RIGHT;
+				case "P":
+				case "Sa":
+				case "S":
+					return BondStereoValue.LEFT;
+			}
+			return null;
+		}
+
 		@Override
 		public String toString() {
 			return value;

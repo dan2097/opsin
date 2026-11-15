@@ -16,6 +16,7 @@ import org.apache.logging.log4j.Logger;
 
 import uk.ac.cam.ch.wwmm.opsin.BondStereo.BondStereoValue;
 import uk.ac.cam.ch.wwmm.opsin.OpsinWarning.OpsinWarningType;
+import uk.ac.cam.ch.wwmm.opsin.StereoAnalyser.AxialBond;
 import uk.ac.cam.ch.wwmm.opsin.StereoAnalyser.StereoBond;
 import uk.ac.cam.ch.wwmm.opsin.StereoAnalyser.StereoCentre;
 import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
@@ -35,13 +36,20 @@ class StereochemistryHandler {
 	private final Map<Atom, StereoCentre> notExplicitlyDefinedStereoCentreMap;
 	private final Map<Bond, StereoBond> notExplicitlyDefinedStereoBondMap;
 	private final Set<Set<Atom>> ringAtomPairsUsedForCisTrans = new HashSet<>();
-	
-	StereochemistryHandler(BuildState state, Map<Atom, StereoCentre> atomStereoCentreMap, Map<Bond, StereoBond> bondStereoBondMap) {
+	private final Map<Bond, AxialBond> bondAxialMap;
+	private final Map<Bond, AxialBond> notExplicitlyDefinedAxialBondMap;
+
+	StereochemistryHandler(BuildState state,
+						   Map<Atom, StereoCentre> atomStereoCentreMap,
+						   Map<Bond, StereoBond> bondStereoBondMap,
+						   Map<Bond, AxialBond> bondAxialMap) {
 		this.state = state;
 		this.atomStereoCentreMap = atomStereoCentreMap;
 		notExplicitlyDefinedStereoCentreMap = new HashMap<>(atomStereoCentreMap);
 		this.bondStereoBondMap = bondStereoBondMap;
 		notExplicitlyDefinedStereoBondMap = new HashMap<>(bondStereoBondMap);
+		this.bondAxialMap = bondAxialMap;
+		notExplicitlyDefinedAxialBondMap = new HashMap<>(bondAxialMap);
 	}
 
 	/**
@@ -186,7 +194,9 @@ class StereochemistryHandler {
 			throw new StereochemistryException(stereoChemistryType + " stereochemistry is not currently interpretable by OPSIN");
 		}
 		else if (stereoChemistryType.equals(AXIAL_TYPE_VAL)){
-			throw new StereochemistryException(stereoChemistryType + " stereochemistry is not currently interpretable by OPSIN");
+			if (!assignAxialStereochem(stereoChemistryEl)) {
+				throw new StereochemistryException("Could not find bond that: " + stereoChemistryEl.toXML() + " appeared to be referring to");
+			}
 		}
 		else if (stereoChemistryType.equals(OPTICALROTATION_TYPE_VAL)){
 			state.addWarning(OpsinWarningType.STEREOCHEMISTRY_IGNORED, "Optical rotation cannot be algorithmically used to assign stereochemistry. This term was ignored: " + stereoChemistryEl.getValue());
@@ -275,6 +285,25 @@ class StereochemistryHandler {
 			}
 		}
 
+		if (!bondAxialMap.isEmpty()) {
+			boolean axialStereoIgnored = false;
+			for (Fragment fragment : possibleFragments) {
+				for (Atom atom : fragment.getAtomList()) {
+					for (Bond bond : atom.getBonds()) {
+						if (bond.hasAtropisomerSpecified()) {
+							// Global rac-/rel- is processed after assignment. Remove the absolute
+							// configuration so warning mode cannot export it as a pure enantiomer.
+							bond.setBondStereo(null);
+							axialStereoIgnored = true;
+						}
+					}
+				}
+			}
+			if (axialStereoIgnored) {
+				throw new StereochemistryException("Racemic or relative axial stereochemistry is not currently supported");
+			}
+		}
+
 		if (undefinedStereo.size() > 0) {
 
 			if (undefinedStereo.size() > 1) {
@@ -339,6 +368,11 @@ class StereochemistryHandler {
 				}
 			}
 		}
+
+		if (assignAxialStereochem(stereoChemistryEl)) {
+			return;
+		}
+
 		throw new StereochemistryException("Could not find atom that: " + stereoChemistryEl.toXML() + " appeared to be referring to");
 	}
 
@@ -365,6 +399,63 @@ class StereochemistryHandler {
 			}
 		}
 		return false;
+	}
+
+	private boolean attemptAssignmentOfAxialStereoFragment(Fragment fragment,
+														   BondStereoValue axialStereoVal,
+														   String locant) throws CipOrderingException {
+		if (locant == null) {//undefined locant
+			for (Bond bond : fragment.getBondSet()) {
+				if (!notExplicitlyDefinedAxialBondMap.containsKey(bond)) {
+					continue;
+				}
+				setAxialStereo(bond, axialStereoVal);
+				return true;
+			}
+
+			// interfragment bonds
+			List<Bond> interFragmentBonds = sortInterFragmentBonds(state.fragManager.getInterFragmentBonds(fragment), fragment);
+			for (Bond bond : interFragmentBonds) {
+				if (!notExplicitlyDefinedAxialBondMap.containsKey(bond)) {
+					continue;
+				}
+				setAxialStereo(bond, axialStereoVal);
+				return true;
+			}
+		}
+		else {
+			// TODO JWM the locant never seems to be set?
+			Atom secondAtomInBond = null;
+			Matcher compoundLocantMatcher = OpsinTools.MATCH_COMPOUND_LOCANT.matcher(locant);
+			if (compoundLocantMatcher.find()) {
+				secondAtomInBond = fragment.getAtomByLocant(compoundLocantMatcher.group(1));
+				locant = compoundLocantMatcher.replaceAll("");
+				if (secondAtomInBond == null) {
+					return false;
+				}
+			}
+			Atom firstAtomInBond = fragment.getAtomByLocant(locant);
+			if (firstAtomInBond !=null){
+				List<Bond> bonds = firstAtomInBond.getBonds();
+				for (Bond bond : bonds) {
+					if (secondAtomInBond != null && bond.getOtherAtom(firstAtomInBond) != secondAtomInBond) {
+						continue;
+					}
+					if (!notExplicitlyDefinedAxialBondMap.containsKey(bond)) {
+						continue;
+					}
+					setAxialStereo(bond, axialStereoVal);
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	private void setAxialStereo(Bond bond, BondStereoValue axialSteroVal) throws CipOrderingException {
+		Atom[] carriers = notExplicitlyDefinedAxialBondMap.get(bond).getOrderedStereoAtoms();
+		bond.setBondStereoElement(carriers, axialSteroVal);
+		notExplicitlyDefinedAxialBondMap.remove(bond);
 	}
 
 	/**
@@ -453,6 +544,36 @@ class StereochemistryHandler {
 		else{
 			throw new StereochemistryException("Could not find bond that: " + stereoChemistryEl.toXML() + " was referring to");
 		}
+	}
+
+
+	private boolean assignAxialStereochem(Element stereoChemistryEl) throws StereochemistryException {
+		String locant = stereoChemistryEl.getAttributeValue(LOCANT_ATR);
+		String desc   = stereoChemistryEl.getAttributeValue(VALUE_ATR);
+		
+		BondStereoValue axialStereoVal = BondStereoValue.ofAxial(desc);
+		if (axialStereoVal == null) {
+			return false;
+		}
+		String group = stereoChemistryEl.getAttributeValue(STEREOGROUP_ATR);
+		if (StereoGroupType.Rac.name().equals(group) || StereoGroupType.Rel.name().equals(group)) {
+			throw new StereochemistryException("Racemic or relative axial stereochemistry is not currently supported");
+		}
+
+		Element parentSubBracketOrRoot = stereoChemistryEl.getParent();
+		List<Fragment> possibleFragments = StructureBuildingMethods.findAlternativeFragments(parentSubBracketOrRoot);
+		List<Element> adjacentGroupEls = OpsinTools.getDescendantElementsWithTagName(parentSubBracketOrRoot, GROUP_EL);
+		for (int i = adjacentGroupEls.size()-1; i >=0; i--) {
+			possibleFragments.add(adjacentGroupEls.get(i).getFrag());
+		}
+
+		for (Fragment fragment : possibleFragments) {
+            if (attemptAssignmentOfAxialStereoFragment(fragment, axialStereoVal, locant)) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 

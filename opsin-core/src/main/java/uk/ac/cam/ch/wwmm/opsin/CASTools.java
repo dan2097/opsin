@@ -16,7 +16,7 @@ class CASTools {
 	private static final Pattern matchAcid = Pattern.compile("acid[\\]\\)\\}]*", Pattern.CASE_INSENSITIVE);
 	private static final Pattern matchCommaSpace = Pattern.compile(", ");
 	private static final Pattern matchCompoundWithPhrase = Pattern.compile("(compd\\. with|compound with|and) ", Pattern.CASE_INSENSITIVE);
-	private static final Pattern matchFunctionalTermAllowingSubstituentPrefix = Pattern.compile("(amide|hydrazide|(thi|selen|tellur)?oxime|hydrazone|(iso)?(semicarbazone|thiosemicarbazone|selenosemicarbazone|tellurosemicarbazone)|imide|imine|semioxamazone)[\\]\\)\\}]*", Pattern.CASE_INSENSITIVE);
+	private static final Pattern matchFunctionalTermAllowingSubstituentPrefix = Pattern.compile("((((1-)?(anilin|azetidin|piperazin|piperidin|pyrrolidin)|(4-)?morpholin)e?[ \\-]?)?amid|anilid|azetidid|hydrazid|(thi|selen|tellur)?oxim|hydrazon|(iso)?(semicarbazon|thiosemicarbazon|selenosemicarbazon|tellurosemicarbazon)|imid|imin|morpholid|piperazid|piperidid|pyrrolidid|semioxamazon)e?[\\]\\)\\}]*", Pattern.CASE_INSENSITIVE);
 	
 	/**
 	 * Inverts a CAS name.
@@ -87,15 +87,22 @@ class CASTools {
 						List<ParseWord> parseWords = WordTools.splitIntoParseWords(parseTokens, component);
 
 						List<ParseTokens> firstParseWordTokens = parseWords.get(0).getParseTokens();
-						WordType firstWordType = OpsinTools.determineWordType(firstParseWordTokens.get(0).getAnnotations());
+						WordType wordType = OpsinTools.determineWordType(firstParseWordTokens.get(0).getAnnotations());
 						for (int j = 1; j < firstParseWordTokens.size(); j++) {
-							if (!firstWordType.equals(OpsinTools.determineWordType(firstParseWordTokens.get(j).getAnnotations()))) {
-								throw new ParsingException(component + "can be interpreted in multiple ways. For the sake of precision OPSIN has decided not to process this as a CAS name");
+							WordType alternativeType = OpsinTools.determineWordType(firstParseWordTokens.get(j).getAnnotations());
+							if (wordType != alternativeType) {
+								//Prefer a functional term when the alternative is a full word.
+								if ((wordType == WordType.functionalTerm && alternativeType == WordType.full)
+										|| (wordType == WordType.full && alternativeType == WordType.functionalTerm)) {
+									wordType = WordType.functionalTerm;
+								} else {
+									throw new ParsingException(component + " can be interpreted in multiple ways. For the sake of precision OPSIN has decided not to process this as a CAS name");
+								}
 							}
 						}
 						
 						if (parseWords.size() == 1) {
-							switch (firstWordType) {
+							switch (wordType) {
 							case functionalTerm:
 								if (component.equalsIgnoreCase("ester")) {
 									if (seperateWordSubstituents.isEmpty()){
@@ -130,13 +137,20 @@ class CASTools {
 								throw new ParsingException("Unrecognised CAS index name form");
 							}
 						}
-						else if (parseWords.size() == 2 && firstWordType.equals(WordType.substituent)) {
+						else if (parseWords.size() == 2 && wordType.equals(WordType.substituent)) {
 							//could be something like O-methyloxime which is parsed as [O-methyl] [oxime]
 							List<ParseTokens> secondParseWordTokens = parseWords.get(1).getParseTokens();
 							WordType secondWordType = OpsinTools.determineWordType(secondParseWordTokens.get(0).getAnnotations());
 							for (int j = 1; j < secondParseWordTokens.size(); j++) {
-								if (!secondWordType.equals(OpsinTools.determineWordType(secondParseWordTokens.get(j).getAnnotations()))) {
-									throw new ParsingException(component + "can be interpreted in multiple ways. For the sake of precision OPSIN has decided not to process this as a CAS name");
+								WordType alternativeType = OpsinTools.determineWordType(secondParseWordTokens.get(j).getAnnotations());
+								if (secondWordType != alternativeType) {
+									//Prefer a functional term when the alternative is a full word.
+									if ((secondWordType == WordType.functionalTerm && alternativeType == WordType.full)
+											|| (secondWordType == WordType.full && alternativeType == WordType.functionalTerm)) {
+										secondWordType = WordType.functionalTerm;
+									} else {
+										throw new ParsingException(component + " can be interpreted in multiple ways. For the sake of precision OPSIN has decided not to process this as a CAS name");
+									}
 								}
 							}
 							if (secondWordType.equals(WordType.functionalTerm) && 

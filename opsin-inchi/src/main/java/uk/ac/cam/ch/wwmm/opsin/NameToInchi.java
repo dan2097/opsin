@@ -189,8 +189,8 @@ public class NameToInchi {
         }
 
 		for (Bond bond : bondList) {//add bondStereos
-			BondStereo bondStereo =bond.getBondStereo();
-			if (bondStereo != null){
+			if (bond.hasCisTransSpecified()){
+				BondStereo bondStereo =bond.getBondStereo();
 				Atom[] atomRefs4 = bondStereo.getAtomRefs4();
 				int[] atomRefs4Ids = new int[4];
 				for (int i = 0; i < atomRefs4.length; i++) {

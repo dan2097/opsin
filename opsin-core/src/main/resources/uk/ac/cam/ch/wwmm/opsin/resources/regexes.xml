@@ -108,8 +108,6 @@ does not define a CFG.
 	<regex name="%spiro%" value="Ç"/>
 	<regex name="%a%" value="È"/>
 	<regex name="%spiroLocant%" value="É"/>
-	<regex name="%phane%" value="Ĉ"/>
-	<regex name="%phaneLocants%" value="ć"/>
 	<regex name="%relativeCisTrans%" value="Ê"/>
 	<regex name="%fusionRingAcceptsFrontLocants%" value="Ë"/>
 	<regex name="%trivialRingSubstituentAnySuffix%" value="Ì"/>
@@ -171,6 +169,10 @@ does not define a CFG.
 	<regex name="%amyl%" value="Ą"/>
 	<regex name="%carbohydrateApioFuran%" value="ą"/>
 	<regex name="%alkaneStemEleven%" value="Ć"/>
+	<regex name="%phaneLocants%" value="ć"/>
+	<regex name="%phane%" value="Ĉ"/>
+	<regex name="%acidSymbols%" value="ĉ"/>
+	<regex name="%acidWord%" value="Ċ"/>
 
 <!-- composite regexes-->
 
@@ -210,9 +212,27 @@ does not define a CFG.
 	<regex name="%hydroGroup%" value="((%locant%?%multiplier%%hydro%|%perhydro%)%hyphen%?)"/><!--can be considered detachable or non detachable-->
 	<regex name="%subtractivePrefixGroup%" value="(%locant%?%multiplier%?%subtractivePrefix%%hyphen%?)"/>
 	<regex name="%suffixes%" value="(%suffixesThatCanBeModifiedByAPrefix%|%nonAcidStemSuffix%|%acidStemSuffix%)"/>
-	<regex name="%infixedSuffix%" value ="(%o%?%infixReplacement%%suffixes%|%structuralOpenBracket%%infixReplacement%%suffixes%%structuralCloseBracket%)" />
-	<regex name="%infixedSuffixForAcidStem%" value ="(%o%?%infixReplacement%(%suffixesThatCanBeModifiedByAPrefix%|%acidStemSuffix%)|%structuralOpenBracket%%infixReplacement%(%suffixesThatCanBeModifiedByAPrefix%|%acidStemSuffix%)%structuralCloseBracket%)" />
-	<regex name="%infixedPrefixedSuffix%" value ="(%suffixPrefix%%infixReplacement%%suffixesThatCanBeModifiedByAPrefix%|%optionalOpenBracket%%suffixPrefix%%infixReplacement%%suffixesThatCanBeModifiedByAPrefix%%optionalCloseBracket%)" />
+
+	<regex name="%acidStemEligibleSuffix%" value="(%suffixesThatCanBeModifiedByAPrefix%|%acidStemSuffix%)"/>
+	<regex name="%acidDesignation%" value="(%acidSymbols%|%acidWord%)"/>
+	<regex name="%bracketedInfix%" value="(%structuralOpenBracket%%infixReplacement%%structuralCloseBracket%)"/>
+
+	<regex name="%bracketedInfixedSuffix%" value="(%structuralOpenBracket%%infixReplacement%%suffixes%%structuralCloseBracket%)"/>
+	<regex name="%infixedSuffixSingleBracket%" value="((%bracketedInfixedSuffix%|%o%?%infixReplacement%%bracketedInfixedSuffix%)%acidDesignation%?)"/>
+	<regex name="%infixedSuffixNestedBrackets%" value="(%structuralOpenBracket%%bracketedInfixedSuffix%%acidDesignation%%structuralCloseBracket%)"/>
+	<regex name="%infixedSuffix%" value="(%o%?%infixReplacement%%suffixes%%acidSymbols%?|%infixedSuffixSingleBracket%|%infixedSuffixNestedBrackets%|%bracketedInfix%%infixReplacement%?%suffixes%%acidSymbols%?)"/>
+
+	<regex name="%bracketedInfixedAcidStemSuffix%" value="(%structuralOpenBracket%%infixReplacement%%acidStemEligibleSuffix%%structuralCloseBracket%)"/>
+	<regex name="%infixedAcidStemSuffixSingleBracket%" value="((%bracketedInfixedAcidStemSuffix%|%infixReplacement%%bracketedInfixedAcidStemSuffix%)%acidDesignation%?)"/>
+	<regex name="%infixedAcidStemSuffixNestedBrackets%" value="(%structuralOpenBracket%%bracketedInfixedAcidStemSuffix%%acidDesignation%%structuralCloseBracket%)"/>
+	<regex name="%infixedSuffixForAcidStem%" value="(%o%?(%infixReplacement%%acidStemEligibleSuffix%%acidSymbols%?|%infixedAcidStemSuffixSingleBracket%|%infixedAcidStemSuffixNestedBrackets%|%bracketedInfix%%infixReplacement%?%acidStemEligibleSuffix%%acidSymbols%?))"/>
+
+	<regex name="%bracketedInfixedPrefixableSuffix%" value="(%structuralOpenBracket%%infixReplacement%%suffixesThatCanBeModifiedByAPrefix%%structuralCloseBracket%)"/>
+	<regex name="%prefixedInfixedSuffix%" value="(%suffixPrefix%%infixReplacement%%suffixesThatCanBeModifiedByAPrefix%)"/>
+	<regex name="%prefixedBracketedInfixedSuffix%" value="(%suffixPrefix%%infixReplacement%?%bracketedInfixedPrefixableSuffix%%acidDesignation%?)"/>
+	<regex name="%prefixedBracketedInfixSuffix%" value="(%suffixPrefix%%bracketedInfix%%infixReplacement%?%suffixesThatCanBeModifiedByAPrefix%%acidSymbols%?)"/>
+	<regex name="%infixedPrefixedSuffix%" value="(%prefixedInfixedSuffix%%acidSymbols%?|%prefixedBracketedInfixedSuffix%|%prefixedBracketedInfixSuffix%|%optionalOpenBracket%%prefixedInfixedSuffix%%optionalCloseBracket%)"/>
+
 	<regex name="%rootSuffixForAcidStem%" value= "(%acidStemSuffix%|%o%?%suffixesThatCanBeModifiedByAPrefix%|%cycleFormingSuffix%)" />
 	<regex name="%rootSuffix%" value= "(%nonAcidStemSuffix%|%rootSuffixForAcidStem%)" />
 	<regex name="%unlocantedSuffixGroup%" value="(%multiplier%?%bracketedIupacIsotope%?(%infixedSuffix%|%rootSuffix%|(%o%?%infixReplacement%)?(%suffixPrefix%%suffixesThatCanBeModifiedByAPrefix%|%infixedPrefixedSuffix%))|%multiplier%%optionalOpenBracket%%bracketedIupacIsotope%?%rootSuffix%%optionalCloseBracket%)"/>

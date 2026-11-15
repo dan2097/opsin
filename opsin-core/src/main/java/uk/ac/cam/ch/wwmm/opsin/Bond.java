@@ -123,6 +123,19 @@ class Bond {
 		this.smilesBondDirection = bondDirection;
 	}
 
+	boolean hasCisTransSpecified() {
+		return bondStereo != null &&
+			   (bondStereo.getBondStereoValue() == BondStereoValue.CIS ||
+			    bondStereo.getBondStereoValue() == BondStereoValue.TRANS);
+	}
+
+	boolean hasAtropisomerSpecified() {
+		return bondStereo != null &&
+			   (bondStereo.getBondStereoValue() == BondStereoValue.LEFT ||
+				bondStereo.getBondStereoValue() == BondStereoValue.RIGHT);
+	}
+
+
 	BondStereo getBondStereo() {
 		return bondStereo;
 	}

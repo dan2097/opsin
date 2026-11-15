@@ -185,6 +185,14 @@ public class CASToolsTest {
 	}
 
 	@Test
+	public void commaDelimitedFunctionalGroup() throws ParsingException {
+		//I don't think this is actually a CAS name, but it's easiest to correct it in this function
+		assertEquals("propionic acid piperidide", CASTools.uninvertCASName("propionic acid, piperidide", parseRules));
+		assertEquals("propionic acid 4-methylpiperidide", CASTools.uninvertCASName("propionic acid, 4-methylpiperidide", parseRules));
+		assertEquals("propionic acid pyrrolidineamide", CASTools.uninvertCASName("propionic acid, pyrrolidineamide", parseRules));
+	}
+
+	@Test
 	public void notCas1(){		
 		assertThrows(ParsingException.class, () -> {
 		CASTools.uninvertCASName("hexanamine, hexylamine", parseRules);

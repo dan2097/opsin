@@ -11,6 +11,7 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import uk.ac.cam.ch.wwmm.opsin.StereoAnalyser.AxialBond;
 import uk.ac.cam.ch.wwmm.opsin.StereoAnalyser.StereoBond;
 import uk.ac.cam.ch.wwmm.opsin.StereoAnalyser.StereoCentre;
 import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
@@ -26,6 +27,7 @@ import static uk.ac.cam.ch.wwmm.opsin.StructureBuildingMethods.*;
 class StructureBuilder {
 	
 	private static final Pattern matchBoroHydrogenIsotope = Pattern.compile("boro(deuter|trit)ide?");
+	private static final Pattern MATCH_CHALCOGEN_PAIR_LOCANT = Pattern.compile("(O|S|Se|Te)(O|S|Se|Te)");
 	private final BuildState state;
 	private final List<Atom> polymerAttachmentPoints = new ArrayList<>();//rGroups need to be represented as normal atoms for the purpose of working out stereochemistry. They will be converted to a suitable representation later
 	
@@ -1718,6 +1720,24 @@ class StructureBuilder {
 	 * @throws StructureBuildingException
 	 */
 	private Atom determineFunctionalAtomToUse(String locant, BuildResults mainGroupBR) throws StructureBuildingException {
+		Matcher chalcogenPairMatcher = MATCH_CHALCOGEN_PAIR_LOCANT.matcher(locant);
+		if (chalcogenPairMatcher.matches()) {
+			//e.g. OS-methyl: the last symbol is the functional atom, the first symbol the atom it is bonded to
+			for (int i = 0; i < mainGroupBR.getFunctionalAtomCount(); i++) {
+				Atom possibleAtom = mainGroupBR.getFunctionalAtom(i);
+				if (possibleAtom.getElement().toString().equals(chalcogenPairMatcher.group(2)) &&
+						possibleAtom.getBondCount() == 1 &&
+						possibleAtom.getBonds().get(0).getOtherAtom(possibleAtom).getElement().toString().equals(chalcogenPairMatcher.group(1))) {
+					mainGroupBR.removeFunctionalAtom(i);
+					Set<Atom> degenerateAtoms = possibleAtom.getProperty(Atom.AMBIGUOUS_ELEMENT_ASSIGNMENT);
+					if (degenerateAtoms != null){
+						degenerateAtoms.remove(possibleAtom);
+					}
+					return possibleAtom;
+				}
+			}
+			throw new StructureBuildingException("Cannot find functional atom with locant: " +locant + " to form an ester with");
+		}
 		for (int i = 0; i < mainGroupBR.getFunctionalAtomCount(); i++) {
 			//look for exact locant match
 			Atom possibleAtom = mainGroupBR.getFunctionalAtom(i);
@@ -2406,7 +2426,7 @@ class StructureBuilder {
 		Set<Bond> bonds = uniFrag.getBondSet();
 		List<Bond> bondsWithPreDefinedBondStereo = new ArrayList<>();
 		for (Bond bond : bonds) {
-			if (bond.getBondStereo()!=null){
+			if (bond.hasCisTransSpecified()){
 				bondsWithPreDefinedBondStereo.add(bond);
 			}
 		}
@@ -2425,7 +2445,19 @@ class StructureBuilder {
 					bondStereoBondMap.put(b, stereoBond);
 				}
 			}
-			StereochemistryHandler stereoChemistryHandler = new StereochemistryHandler(state, atomStereoCentreMap, bondStereoBondMap);
+
+			Map<Bond, AxialBond> axialStereoMap = new HashMap<>();
+			List<AxialBond> axialBonds = stereoAnalyser.findAxialBonds();
+			for (AxialBond axialBond : axialBonds) {
+				Bond b = axialBond.getBond();
+				if (FragmentTools.notIn6MemberOrSmallerRing(b)) {
+					axialStereoMap.put(b, axialBond);
+				}
+			}
+			StereochemistryHandler stereoChemistryHandler = new StereochemistryHandler(state,
+																					   atomStereoCentreMap,
+																					   bondStereoBondMap,
+																					   axialStereoMap);
 			stereoChemistryHandler.applyStereochemicalElements(stereoChemistryEls);
 			stereoChemistryHandler.removeRedundantStereoCentres(atomsWithPreDefinedAtomParity, bondsWithPreDefinedBondStereo);
 		}

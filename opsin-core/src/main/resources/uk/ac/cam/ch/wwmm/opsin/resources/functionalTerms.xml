@@ -51,13 +51,13 @@
 
 	<tokenList tagname="functionalGroup" type="acidReplacingFunctionalGroup" subType="none" symbol="±">
 		<token value="[NH2-]">amide|amid</token>
-		<token value="Nc1ccccc1" labels="/1/2,ortho/3,meta/4,para/5/6">anilide|anilid</token>
-		<token value="N1CCC1" labels="1/2/3/4">azetidide|azetidid</token>
+		<token value="Nc1ccccc1" labels="/1/2,ortho/3,meta/4,para/5/6">anilide|anilid|aniline amide|aniline-amide|anilineamide|anilinamide|aniline amid|aniline-amid|anilineamid|anilinamid</token>
+		<token value="N1CCC1" labels="1/2/3/4">azetidide|azetidid|azetidine amide|azetidine-amide|azetidineamide|azetidinamide|azetidine amid|azetidine-amid|azetidineamid|azetidinamid|1-azetidine amide|1-azetidine-amide|1-azetidineamide|1-azetidinamide|1-azetidine amid|1-azetidine-amid|1-azetidineamid|1-azetidinamid</token>
 		<token value="NN" labels="1/2">hydrazide|hydrazid</token>
-		<token value="N1CCOCC1">morpholide|morpholid</token>
-		<token value="N1CCNCC1" labels="1/2/3/4/5/6">piperazide|piperazid</token>
-		<token value="N1CCCCC1" labels="1/2/3/4/5/6">piperidide|piperidid</token>
-		<token value="N1CCCC1" labels="1/2/3/4/5">pyrrolidide|pyrrolidid</token>
+		<token value="N1CCOCC1">morpholide|morpholid|morpholine amide|morpholine-amide|morpholineamide|morpholinamide|morpholine amid|morpholine-amid|morpholineamid|morpholinamid|4-morpholine amide|4-morpholine-amide|4-morpholineamide|4-morpholinamide|4-morpholine amid|4-morpholine-amid|4-morpholineamid|4-morpholinamid</token>
+		<token value="N1CCNCC1" labels="1/2/3/4/5/6">piperazide|piperazid|piperazine amide|piperazine-amide|piperazineamide|piperazinamide|piperazine amid|piperazine-amid|piperazineamid|piperazinamid|1-piperazine amide|1-piperazine-amide|1-piperazineamide|1-piperazinamide|1-piperazine amid|1-piperazine-amid|1-piperazineamid|1-piperazinamid</token>
+		<token value="N1CCCCC1" labels="1/2/3/4/5/6">piperidide|piperidid|piperidine amide|piperidine-amide|piperidineamide|piperidinamide|piperidine amid|piperidine-amid|piperidineamid|piperidinamid|1-piperidine amide|1-piperidine-amide|1-piperidineamide|1-piperidinamide|1-piperidine amid|1-piperidine-amid|1-piperidineamid|1-piperidinamid</token>
+		<token value="N1CCCC1" labels="1/2/3/4/5">pyrrolidide|pyrrolidid|pyrrolidine amide|pyrrolidine-amide|pyrrolidineamide|pyrrolidinamide|pyrrolidine amid|pyrrolidine-amid|pyrrolidineamid|pyrrolidinamid|1-pyrrolidine amide|1-pyrrolidine-amide|1-pyrrolidineamide|1-pyrrolidinamide|1-pyrrolidine amid|1-pyrrolidine-amid|1-pyrrolidineamid|1-pyrrolidinamid</token>
 	</tokenList>
 
 	<tokenList tagname="functionalClass" type="functionalClass" subType="acetalLike" symbol="¿">

@@ -848,7 +848,7 @@ class SMILESFragmentBuilder {
 									throw new StructureBuildingException(followingBond.getSmilesStereochemistry() + " is not a slash!");
 								}
 								BondStereoValue cisTrans = upFirst == upSecond ? BondStereoValue.CIS : BondStereoValue.TRANS;
-								if (centralBond.getBondStereo() != null) {
+								if (centralBond.hasCisTransSpecified()) {
 									//double bond has redundant specification e.g. C/C=C\\1/NC1 hence need to check it is consistent
 									Atom[] atomRefs4 = centralBond.getBondStereo().getAtomRefs4();
 									if (atomRefs4[0].equals(atom1) || atomRefs4[3].equals(atom4)) {

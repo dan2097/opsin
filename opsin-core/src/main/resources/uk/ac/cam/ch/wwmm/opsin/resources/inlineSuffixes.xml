@@ -4,6 +4,9 @@
 	<tokenList tagname="suffix" type="inline" symbol="i">
 		<token value="oyl" additionalValue="aldehyde">aldehydoyl</token>
 		<token value="amido">amido|amidyl</token>
+		<token value="aminiumyl">aminiumyl</token>
+		<token value="aminiumylidene">aminiumylidene|aminiumyliden</token>
+		<token value="aminiumylidyne">aminiumylidyne|aminiumylidyn</token>
 		<token value="aminyl">aminyl</token>
 		<token value="oyl" additionalValue="amide">amoyl</token>
 		<token value="oyl" additionalValue="anilide">aniloyl</token>

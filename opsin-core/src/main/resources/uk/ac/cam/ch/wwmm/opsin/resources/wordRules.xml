@@ -34,6 +34,17 @@ Parsing will fail if the end result is not one or more full terms or a polymer.
 		<word type="functionalTerm" functionalGroupType="monoValentStandaloneGroup"/>
 	</wordRule>
 
+	<wordRule name="ester" type="full"><!-- e.g. propane-1,2,3-triyl 1-acetate 2-propanoate 3-butanoate -->
+		<word type="substituent" endsWithRegex="(triyl|tetrayl|pentayl|hexayl|heptayl|octayl|nonayl|decayl)[\]\)\}]*" />
+		<word type="full" endsWith="ateGroup"/>
+		<word type="full" endsWith="ateGroup"/>
+		<word type="full" endsWith="ateGroup"/>
+	</wordRule>
+	<wordRule name="ester" type="full"><!-- e.g. propane-1,2,3-triyl 1,2-diacetate 3-propanoate -->
+		<word type="substituent" endsWithRegex="(diyl|triyl|tetrayl|pentayl|hexayl|heptayl|octayl|nonayl|decayl)[\]\)\}]*" />
+		<word type="full" endsWith="ateGroup"/>
+		<word type="full" endsWith="ateGroup"/>
+	</wordRule>
 	<wordRule name="ester" type="full">
 		<word type="substituent" />
 		<word type="full" endsWith="ateGroup"/>

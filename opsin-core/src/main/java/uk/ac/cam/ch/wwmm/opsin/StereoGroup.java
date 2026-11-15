@@ -18,10 +18,12 @@ class StereoGroup implements Comparable<StereoGroup> {
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o)
+		if (this == o) {
 			return true;
-		if (o == null || getClass() != o.getClass())
+		}
+		if (o == null || getClass() != o.getClass()) {
 			return false;
+		}
 		StereoGroup that = (StereoGroup) o;
 		return number == that.number && type == that.type;
 	}

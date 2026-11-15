@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.mockito.Mockito.mock;
 
 import java.util.ArrayList;
@@ -14,6 +15,7 @@ import java.util.Map;
 
 import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
@@ -1003,6 +1005,115 @@ public class StereochemistryTest {
 		assertEquals(OPSIN_RESULT_STATUS.WARNING, result.getStatus());
 		assertEquals(1, result.getWarnings().size());
 		assertEquals(OpsinWarningType.APPEARS_AMBIGUOUS, result.getWarnings().get(0).getType());
+	}
+
+	@Test
+	public void test_M_BiNOL() {
+		OpsinResult result = n2s.parseChemicalName("(M)-1,1'-binaphth-2,2'-diol");
+		Assertions.assertEquals("C=1(C(=CC=C2C=CC=CC12)O)C=1C(=CC=C2C=CC=CC12)O |wU:0.0|",
+								result.getSmiles(SmilesOptions.CXSMILES_ATROPISOMERS_HACK));
+	}
+
+	@Test
+	public void test_P_BiNOL() {
+		OpsinResult result = n2s.parseChemicalName("(P)-1,1'-binaphth-2,2'-diol");
+		Assertions.assertEquals("C=1(C(=CC=C2C=CC=CC12)O)C=1C(=CC=C2C=CC=CC12)O |wD:0.0|",
+								result.getSmiles(SmilesOptions.CXSMILES_ATROPISOMERS_HACK));
+	}
+
+	@Test
+	public void test_Ra_BiNOL() {
+		OpsinResult result = n2s.parseChemicalName("(Ra)-1,1'-binaphth-2,2'-diol");
+		Assertions.assertEquals("C=1(C(=CC=C2C=CC=CC12)O)C=1C(=CC=C2C=CC=CC12)O |wU:0.0|",
+								result.getSmiles(SmilesOptions.CXSMILES_ATROPISOMERS_HACK));
+	}
+
+	@Test
+	public void test_Sa_BiNOL() {
+		OpsinResult result = n2s.parseChemicalName("(Sa)-1,1'-binaphth-2,2'-diol");
+		Assertions.assertEquals("C=1(C(=CC=C2C=CC=CC12)O)C=1C(=CC=C2C=CC=CC12)O |wD:0.0|",
+								result.getSmiles(SmilesOptions.CXSMILES_ATROPISOMERS_HACK));
+	}
+
+	@Test
+	public void test_R_BiNOL() {
+		OpsinResult result = n2s.parseChemicalName("(R)-1,1'-binaphth-2,2'-diol");
+		Assertions.assertEquals("C=1(C(=CC=C2C=CC=CC12)O)C=1C(=CC=C2C=CC=CC12)O |wU:0.0|",
+								result.getSmiles(SmilesOptions.CXSMILES_ATROPISOMERS_HACK));
+	}
+
+	@Test
+	public void test_S_BiNOL() {
+		OpsinResult result = n2s.parseChemicalName("(S)-1,1'-binaphth-2,2'-diol");
+		Assertions.assertEquals("C=1(C(=CC=C2C=CC=CC12)O)C=1C(=CC=C2C=CC=CC12)O |wD:0.0|",
+								result.getSmiles(SmilesOptions.CXSMILES_ATROPISOMERS_HACK));
+	}
+
+	@Test
+	public void test_M_InterfragmentBonds() {
+		OpsinResult result = n2s.parseChemicalName("(M)-1-(2-methyl-6-iodophenyl)-2-methyl-5-bromopyrrole");
+		Assertions.assertEquals("CC1=C(C(=CC=C1)I)N1C(=CC=C1Br)C |wU:2.1|",
+								result.getSmiles(SmilesOptions.CXSMILES_ATROPISOMERS_HACK));
+	}
+
+	@Test
+	public void testAxialStereoNotFound() {
+		OpsinResult result = n2s.parseChemicalName("(M)-1,1'-binaphthalene");
+		Assertions.assertEquals(OPSIN_RESULT_STATUS.FAILURE,
+								result.getStatus());
+		Assertions.assertEquals("Could not find bond that: <stereoChemistry type=\"axial\" value=\"M\" stereoGroup=\"Abs\">M</stereoChemistry> appeared to be referring to",
+								result.getMessage());
+
+		NameToStructureConfig config = NameToStructureConfig.getDefaultConfigInstance();
+		config.setWarnRatherThanFailOnUninterpretableStereochemistry(true);
+		result = n2s.parseChemicalName("(M)-1,1'-binaphthalene", config);
+		Assertions.assertEquals(OPSIN_RESULT_STATUS.WARNING,
+								result.getStatus());
+		Assertions.assertEquals("C1(=CC=CC2=CC=CC=C12)C1=CC=CC2=CC=CC=C12",
+								result.getSmiles());
+	}
+
+	@Test
+	public void testAxialStereoDistinguishesOppositeConfigurations() throws StructureBuildingException {
+		Fragment f = fm.buildSMILES("C1=CC=C2C(=C1)C=CC(=C2C3=C(C=CC4=CC=CC=C43)O)O");
+		fm.makeHydrogensExplicit();
+		Bond b = f.getAtomByID(10).getBondToAtom(f.getAtomByID(11));
+		b.setBondStereo(new BondStereo(
+				new Atom[]{f.getAtomByID(12), f.getAtomByID(20),
+						   f.getAtomByID(4), f.getAtomByID(9)},
+				BondStereoValue.RIGHT));
+		String expected = SMILESWriter.generateSmiles(f, SmilesOptions.CXSMILES_ATROPISOMERS_HACK);
+		b.setBondStereo(new BondStereo(
+				new Atom[]{f.getAtomByID(12), f.getAtomByID(20),
+						   f.getAtomByID(9), f.getAtomByID(4)},
+				BondStereoValue.RIGHT));
+
+		assertNotEquals(expected,
+						SMILESWriter.generateSmiles(f, SmilesOptions.CXSMILES_ATROPISOMERS_HACK),
+						"Different configuration must not give same extended SMILES");
+	}
+
+	@Test
+	public void testRacemicAndRelativeAxialStereoRejected() {
+		String stem = "1,1'-binaphth-2,2'-diol";
+		String[] prefixes = {"(RS)-", "(R*)-", "rac-(R)-", "rel-(R)-",
+				"rac-(Ra)-", "rel-(Sa)-", "rac-(M)-", "rel-(P)-",
+				"(rac)-(M)-", "(rel)-(P)-"};
+		for (String prefix : prefixes) {
+			OpsinResult result = n2s.parseChemicalName(prefix + stem);
+			assertEquals(OPSIN_RESULT_STATUS.FAILURE, result.getStatus(), prefix);
+			assertEquals("Racemic or relative axial stereochemistry is not currently supported",
+					result.getMessage(), prefix);
+
+			NameToStructureConfig config = NameToStructureConfig.getDefaultConfigInstance();
+			config.setWarnRatherThanFailOnUninterpretableStereochemistry(true);
+			result = n2s.parseChemicalName(prefix + stem, config);
+			assertEquals(OPSIN_RESULT_STATUS.WARNING, result.getStatus(), prefix);
+			assertEquals(OpsinWarningType.STEREOCHEMISTRY_IGNORED,
+					result.getWarnings().get(0).getType(), prefix);
+			assertEquals(n2s.parseChemicalName(stem).getSmiles(SmilesOptions.CXSMILES_ATROPISOMERS_HACK),
+					result.getSmiles(SmilesOptions.CXSMILES_ATROPISOMERS_HACK), prefix);
+		}
 	}
 
 	private String atomRefsToIdStr(Atom[] atomRefs4) {
