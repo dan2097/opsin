@@ -89,7 +89,7 @@ Natural products are treated as cyclic biochemicals. Many natural products suppo
 		<token value="CC=1C(C(C=CC1)(C)C)C(/C=C/C)=O" labels="none">alpha-damascenon</token>
 		<token value="CC1=C(C(CC=C1)(C)C)C(/C=C/C)=O" labels="none">beta-damascenon|damascenon</token>
 		<token value="CC=CC(=O)C1C(C)=CCCC1(C)C" labels="none">alpha-damascon</token>
-		<token value="C/C=C/C(=O)C1=C(C)CCCC1(C)C" labels="none">beta-damascon</token>
+		<token value="CC=CC(=O)C1=C(C)CCCC1(C)C" labels="none">beta-damascon</token>
 		<token value="C=C1CCCC(C)(C)C1C(=O)C=CC" labels="none">gamma-damascon</token>
 		<token value="CC=CC(=O)C1C(C)C=CCC1(C)C" labels="none">delta-damascon</token>
 		<token value="CC=CC(=O)C1C(C)CC=CC1(C)C" labels="none">epsilon-damascon</token>
