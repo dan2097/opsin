@@ -32,6 +32,58 @@ class SuffixApplier {
 	boolean isGroupTypeWithSpecificSuffixRules(String groupType){
 		return suffixRules.isGroupTypeWithSpecificSuffixRules(groupType);
 	}
+
+	/**
+	 * Predicts the remaining substitution capacity of a single-atom parent without applying its suffixes.
+	 * Returns null if the suffix effects cannot safely be predicted here.
+	 */
+	Integer calculateMononuclearParentSubstitutionCapacityAfterSuffixes(Element group, List<Element> suffixes) throws ComponentGenerationException {
+		Fragment frag = group.getFrag();
+		if (frag.getAtomCount() != 1) {
+			return null;
+		}
+		Atom parentAtom = frag.getFirstAtom();
+		String suffixType = isGroupTypeWithSpecificSuffixRules(frag.getType()) ? frag.getType() : STANDARDGROUP_TYPE_VAL;
+		int reservedValency = 0;
+		for (Element suffix : suffixes) {
+			if (CYCLEFORMER_SUBTYPE_VAL.equals(suffix.getAttributeValue(SUBTYPE_ATR))) {
+				return null;
+			}
+			if (suffix.getAttribute(SUFFIXPREFIX_ATR) != null) {
+				//The suffix prefix joins the parent through one single bond; other suffix effects act on that prefix.
+				reservedValency++;
+				continue;
+			}
+			List<SuffixRule> rules = suffixRules.getSuffixRuleTags(suffixType, suffix.getAttributeValue(VALUE_ATR), frag.getSubType());
+			for (SuffixRule rule : rules) {
+				switch (rule.getType()) {
+				case addgroup:
+					Fragment suffixFrag = suffix.getFrag();
+					if (suffixFrag == null) {
+						return null;
+					}
+					reservedValency += suffixFrag.getFirstAtom().getIncomingValency();
+					break;
+				case setOutAtom:
+					String outValency = rule.getAttributeValue(SUFFIXRULES_OUTVALENCY_ATR);
+					reservedValency += outValency != null ? Integer.parseInt(outValency) : 1;
+					break;
+				case addSuffixPrefixIfNonePresentAndCyclic:
+				case addFunctionalAtomsToHydroxyGroups:
+				case chargeHydroxyGroups:
+				case removeTerminalOxygen:
+				case convertHydroxyGroupsToOutAtoms:
+				case convertHydroxyGroupsToPositiveCharge:
+					//These effects have already been applied during preliminary suffix processing.
+					break;
+				default:
+					//In particular, charge changes can alter the parent's valency rather than just consume it.
+					return null;
+				}
+			}
+		}
+		return Math.max(0, StructureBuildingMethods.calculateSubstitutableHydrogenAtoms(parentAtom) - reservedValency);
+	}
 	
 
 	/**Process the effects of suffixes upon a fragment. 
