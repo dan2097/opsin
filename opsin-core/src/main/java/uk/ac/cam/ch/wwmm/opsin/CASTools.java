@@ -167,6 +167,14 @@ class CASTools {
 			//stereochemistry term comes after substituent term. In older CAS names (9CI) this stereochemistry term can apply to the substituent term. Hence append in reverse order
 			casName.append(substituents.get(i));
 		}
+		//CAS Index Guide, section 108 indicates that a hyphen at the end of a list of substituents does not require that the uninverted name should have one
+		//e.g. Acetic acid, 2-chloro- becomes 2-Chloroacetic acid
+		//Retain the hyphen unless the parent starts with at least three letters, e.g. retain it before 1-butane or DL-alanine
+		if (casName.length() > 0 && casName.charAt(casName.length() - 1) == '-'
+				&& parent.length() >= 3 && Character.isLetter(parent.charAt(0))
+				&& Character.isLetter(parent.charAt(1)) && Character.isLetter(parent.charAt(2))) {
+			casName.setLength(casName.length() - 1);
+		}
 		casName.append(parent);
 		for (String functionalTerm : functionalTerms) {
 			casName.append(" ");

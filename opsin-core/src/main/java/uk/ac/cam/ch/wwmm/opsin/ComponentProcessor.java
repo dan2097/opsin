@@ -4707,6 +4707,11 @@ class ComponentProcessor {
 		if (!afterName.equals(ROOT_EL) && !afterName.equals(SUBSTITUENT_EL)) {
 			return false;
 		}
+		//An explicit separator keeps the preceding prefixes together, e.g. trichloromethyl-silane.
+		Element beforeParent = OpsinTools.getPrevious(elementAftersubstituent.getChild(0));
+		if (beforeParent != null && beforeParent.getName().equals(HYPHEN_EL)) {
+			return false;
+		}
 		Element firstChild = elementBeforeSubstituent.getChild(0);
 		if (firstChild == null || !firstChild.getName().equals(MULTIPLIER_EL)) {
 			return false;//unmultiplied, or locanted (the locant comes first)
