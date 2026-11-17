@@ -4739,15 +4739,6 @@ class ComponentProcessor {
 		if (!(el == ChemEl.Si || el == ChemEl.Ge || el == ChemEl.Sn || el == ChemEl.Pb || el == ChemEl.B)) {
 			return false;
 		}
-		//halomethyl groups (trifluoromethyl, trichloromethyl, difluoromethyl) are conventional compound substituents
-		//e.g. trimethyl(trifluoromethyl)silane; the CAS form Silane, trichloromethyl- is resolved by CASTools instead
-		Element groupBefore = elementBeforeSubstituent.getName().equals(SUBSTITUENT_EL) ? elementBeforeSubstituent.getFirstChildElement(GROUP_EL) : null;
-		if (groupBefore != null && groupBefore.getFrag() != null && groupBefore.getFrag().getAtomCount() == 1) {
-			ChemEl before = groupBefore.getFrag().getFirstAtom().getElement();
-			if ((before == ChemEl.F || before == ChemEl.Cl || before == ChemEl.Br || before == ChemEl.I) && substituentGroup.getFrag().getAtomCount() == 1) {
-				return false;
-			}
-		}
 		//the prefixes must fit on the parent: trimethyltrifluoromethylsilane would need seven bonds to silicon
 		int prefixes = 0;
 		for (Element sibling = OpsinTools.getPreviousSibling(elementAftersubstituent); sibling != null; sibling = OpsinTools.getPreviousSibling(sibling)) {
