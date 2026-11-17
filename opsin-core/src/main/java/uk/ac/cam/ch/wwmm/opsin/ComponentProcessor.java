@@ -4462,7 +4462,10 @@ class ComponentProcessor {
 		if (frag.getAtomCount() == 1 && frag.getFirstAtom().getElement() == ChemEl.Si) {
 			//silyl is typically triple substituted, so more than just the preceding substituent potentially should be inside the implicit bracket
 			//e.g. ethoxydimethylsilylpropyl should be (ethoxydimethylsilyl)propyl
-			elementBeforeSubstituent = determineSubstituentForMultiSubstituentImplicitBracketting(elementBeforeSubstituent, 3);
+			Integer capacity = suffixApplier.calculateMononuclearParentSubstitutionCapacityAfterSuffixes(substituentGroup, substituent.getChildElements(SUFFIX_EL));
+			if (capacity != null && capacity > 0) {
+				elementBeforeSubstituent = determineSubstituentForMultiSubstituentImplicitBracketting(elementBeforeSubstituent, capacity);
+			}
 		} else if (expectedSubstituents > 1) {//e.g. phosphoryl typically has two substituents
 			elementBeforeSubstituent = determineSubstituentForMultiSubstituentImplicitBracketting(elementBeforeSubstituent, expectedSubstituents);
 		}
@@ -4699,7 +4702,7 @@ class ComponentProcessor {
 	 * @param elementAftersubstituent
 	 * @return true if implicit bracketing should not be applied
 	 */
-	private boolean multipliedPrefixBelongsToMononuclearParent(Element elementBeforeSubstituent, Element substituentGroup, Element elementAftersubstituent) {
+	private boolean multipliedPrefixBelongsToMononuclearParent(Element elementBeforeSubstituent, Element substituentGroup, Element elementAftersubstituent) throws ComponentGenerationException {
 		if (elementAftersubstituent == null) {
 			return false;
 		}
@@ -4753,7 +4756,8 @@ class ComponentProcessor {
 			Element first = sibling.getChild(0);
 			prefixes += (first != null && first.getName().equals(MULTIPLIER_EL)) ? Integer.parseInt(first.getAttributeValue(VALUE_ATR)) : 1;
 		}
-		return prefixes <= StructureBuildingMethods.calculateSubstitutableHydrogenAtoms(fragAfter.getFirstAtom());
+		Integer capacity = suffixApplier.calculateMononuclearParentSubstitutionCapacityAfterSuffixes(groupAfter, elementAftersubstituent.getChildElements(SUFFIX_EL));
+		return capacity != null && prefixes <= capacity;
 	}
 
 	private boolean implicitBracketWouldPreventAdditiveBonding(Element elementBeforeSubstituent, Element elementAftersubstituent) {

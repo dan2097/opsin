@@ -3,6 +3,8 @@ package uk.ac.cam.ch.wwmm.opsin;
 import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -11,6 +13,27 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 
 public class ComponentProcessorTest {
+
+	@ParameterizedTest
+	@CsvSource({
+		"dimethylphenylsilanol, dimethyl(phenyl)silanol",
+		"dimethoxyphenylsilanol, dimethoxy(phenyl)silanol",
+		"diethoxymethylsilanediol, (diethoxymethyl)silanediol",
+		"triethoxymethylsilanol, (triethoxymethyl)silanol",
+		"methoxydimethylsilylidenemethane, methoxy(dimethylsilylidene)methane",
+		"ethoxydimethylsilylpropane, (ethoxydimethylsilyl)propane",
+		"dimethoxymethylsilanamine, dimethoxy(methyl)silanamine",
+		"diethoxymethylsilanethiol, diethoxy(methyl)silanethiol",
+		"dimethoxymethylsilanecarbaldehyde, dimethoxy(methyl)silanecarbaldehyde"
+	})
+	public void implicitBracketsRespectPendingSuffixValence(String name, String explicitlyBracketedName) {
+		NameToStructure n2s = NameToStructure.getInstance();
+		OpsinResult expected = n2s.parseChemicalName(explicitlyBracketedName);
+		OpsinResult actual = n2s.parseChemicalName(name);
+		assertNotNull(expected.getStructure(), expected.getMessage());
+		assertNotNull(actual.getStructure(), actual.getMessage());
+		assertEquals(expected.getSmiles(), actual.getSmiles());
+	}
 
 	@Test()
 	public void testSubtractiveWithNoGroupToAttachTo() {
