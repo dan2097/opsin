@@ -430,6 +430,7 @@
 		<token value="-[Y]">yttrio</token>
 		<token value="-[Zn]" usableAsAJoiner="yes">zincio</token>
 		<token value="-[Zr]">zirconio</token>
+		<token value="-C1CC2CC1C(C)C2(C)C">isocamphyl</token><!--5,5,6-trimethylbicyclo[2.2.1]hept-2-yl, as in 3-isocamphylcyclohexanol (Sandela, CAS 3407-42-9)-->
 	</tokenList>
 
 	<tokenList tagname="group" type="substituent" subType="phospho" symbol="x">
