@@ -1,5 +1,6 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
+import uk.ac.cam.ch.wwmm.opsin.OpsinResult.OPSIN_RESULT_STATUS;
 import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
 
 import org.junit.jupiter.api.Test;
@@ -270,4 +271,40 @@ public class ComponentProcessorTest {
 		assertEquals("?/?", prefix.getAttributeValue(VALUE_ATR));
 	}
 	
+
+	@ParameterizedTest
+	@CsvSource(delimiter = ';', value = {
+		"ethyl 3-methyl-3-phenylglycidate; ethyl 3-methyl-3-phenyloxirane-2-carboxylate",
+		"ethyl 3-phenylglycidate; ethyl 3-phenyloxirane-2-carboxylate",
+		"ethyl 2-methyl-3-phenylglycidate; ethyl 2-methyl-3-phenyloxirane-2-carboxylate",
+		"glycidic acid; oxirane-2-carboxylic acid"
+	})
+	public void glycidicAcidNumberedAsPropanoicAcid(String glycidName, String oxiraneName) {
+		NameToStructure n2s = NameToStructure.getInstance();
+		OpsinResult result = n2s.parseChemicalName(glycidName);
+		assertEquals(OPSIN_RESULT_STATUS.SUCCESS, result.getStatus(), result.getMessage());
+		assertEquals(canonicalAtomCounts(n2s.parseChemicalName(oxiraneName)), canonicalAtomCounts(result));
+	}
+
+	private static String canonicalAtomCounts(OpsinResult result) {
+		//element and heavy-atom degree of every atom, plus ring-oxygen neighbours: enough to tell 2- from 3-substitution
+		java.util.List<String> desc = new java.util.ArrayList<>();
+		for (Atom a : result.getStructure().getAtomList()) {
+			if (a.getElement() == ChemEl.H) {
+				continue;
+			}
+			StringBuilder sb = new StringBuilder(a.getElement().toString());
+			java.util.List<String> nbs = new java.util.ArrayList<>();
+			for (Atom n : a.getAtomNeighbours()) {
+				if (n.getElement() != ChemEl.H) {
+					nbs.add(n.getElement().toString() + n.getAtomNeighbours().size());
+				}
+			}
+			java.util.Collections.sort(nbs);
+			sb.append(nbs);
+			desc.add(sb.toString());
+		}
+		java.util.Collections.sort(desc);
+		return desc.toString();
+	}
 }
