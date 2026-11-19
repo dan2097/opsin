@@ -370,6 +370,110 @@
 		<token value="F[Ga-](F)(F)F">tetrafluorogallate|tetrafluorogallat</token><!--gallate has multiple meanings-->
 		<token value="I[Ga-](I)(I)I">tetraiodogallate|tetraiodogallat</token><!--gallate has multiple meanings-->
 		<token value="Cc1c(N=C=O)cc(N=C=O)cc1">toluene-diisocyanate|toluene diisocyanate|toluene-diisocyanat|toluene diisocyanat</token><!--trivial name-->
+		<!--woody and amber fragrance trade names: structure of the CAS registry number of the trade product (PubChem record for that CAS); a name was kept only when PubChem resolves the name and the CAS to the same compound. Ambrox is the exception: PubChem files the name under a nor-compound, but the Ambrox trade product is CAS 6790-58-5-->
+		<token value="CC1(C)CCC[C@]2(C)[C@H]3CCO[C@]3(C)CC[C@@H]12">ambrox|ambroxan|ambrofix|ambroxide</token><!--CAS 6790-58-5-->
+		<token value="CC1(C)CCCC2(C)C1CCC1(C)OCCC12">cetalox|ambrox dl</token><!--CAS 3738-00-9-->
+		<token value="CCC(O)COC1CCCCC1C(C)(C)C">amber core</token><!--CAS 139504-68-0-->
+		<token value="CC1CCC2C(C)(C)C3CC12CC1OC(C)(C)OC13C">ambrocenide</token><!--CAS 211299-54-6, tetrahedral stereo dropped: PubChem record for this CAS defines only some centres-->
+		<token value="CC1CCC2C(C)(C)C3CC12CC1OC13C">andrane|cedrene epoxide|alpha-cedrene epoxide</token><!--CAS 13567-39-0-->
+		<token value="COCOC1CCCCCCCCCCC1">boisambrene</token><!--CAS 42604-12-6-->
+		<token value="CCOCOC1CCCCCCCCCCC1">boisambrene forte</token><!--CAS 58567-11-6-->
+		<token value="CC1=CCC(CCC(C)CO)C1(C)C">brahmanol</token><!--CAS 72089-08-8-->
+		<token value="CC1C(C)(C)C2=C(C(=O)CCC2)C1(C)C">cashmeran</token><!--CAS 33704-61-9-->
+		<token value="CO[C@]1(C)CC[C@@]23C[C@@H]1C(C)(C)[C@@H]2CC[C@H]3C">cedramber</token><!--CAS 67874-81-1-->
+		<token value="C=C1C(O)CC23CC1C(C)(C)C2CCC3C">cedrenol</token><!--CAS 28231-03-0-->
+		<token value="C/C1=C\CCC2(C)OC2CC/C(C)=C/CC1">cedroxyde</token><!--CAS 13786-79-3-->
+		<token value="CC/C(=C\C[C@H]1CC=C(C)C1(C)C)CO">dartanol|levosandol</token><!--CAS 164203-46-7-->
+		<token value="CC(C)CCCC(C)(C)O">dimetol</token><!--CAS 13254-34-7-->
+		<token value="CCOC(=O)OC1CCCCC1C(C)(C)C">floramat</token><!--CAS 67801-64-3-->
+		<token value="CCCCC1C=C(C)CC(C)O1">gyrane</token><!--CAS 24237-00-1-->
+		<token value="CC1C2CCC(C3(O)CCCCC3)(C2)C1(C)C">indisan</token><!--CAS 80748-58-9-->
+		<token value="CC(=O)C1(C)CC2=C(CCCC2(C)C)CC1C">iso e super</token><!--CAS 54464-57-2-->
+		<token value="CC1(C)C2CCC3(C2)C1C(=O)CCC3(C)C">isolongifolanone</token><!--CAS 29461-14-1, tetrahedral stereo dropped: PubChem record for this CAS defines only some centres-->
+		<token value="CC1(C)CCC2OC23C(C)(C)C2CCC13C2">isolongifolene epoxide</token><!--CAS 67999-56-8-->
+		<token value="C=C(OCC)C1C(C)(C)CC(=O)CC1(C)C">kephalis</token><!--CAS 36306-87-3-->
+		<token value="COC1(C)CCCCCCCCCCC1">madrox</token><!--CAS 37514-30-0-->
+		<token value="C[C@H]1CC(C)(C)C2=C(C[C@@]3(C)O[C@H]3C2)C1(C)C">moxalone</token><!--CAS 94400-98-3-->
+		<token value="CC1C(C)(C)C2=C(C3OCOCC3CC2)C1(C)C">nebulone</token><!--CAS 365411-50-3-->
+		<token value="CCCC(O)CCC1C(C)CCCC1(C)C">norlimbanol|timberol</token><!--CAS 70788-30-6-->
+		<token value="CC1COC(C)(c2ccc3c(c2)C(C)(C)CCC3(C)C)O1">okoumal</token><!--CAS 131812-67-4-->
+		<token value="CCC(C)(C)C1CCC(=O)CC1">orivone</token><!--CAS 16587-71-6-->
+		<token value="CC(=O)CCc1ccc(O)cc1">oxyphenylon</token><!--CAS 5471-51-2-->
+		<token value="COC1CCCCCCCCCCC1">palisandin</token><!--CAS 2986-54-1-->
+		<token value="CC1=CCC2C3CC(C2C1)C1(C3)OC1C">rhubofix</token><!--CAS 41816-03-9-->
+		<token value="CC1=CCC(CCC(C)C(C)O)C1(C)C">sandalore</token><!--CAS 65113-99-7-->
+		<token value="CC1C2CC(CC2C2CCCC(O)C2)C1(C)C">sandela</token><!--CAS 3407-42-9-->
+		<token value="COC1C=C2C(C)(C)C3CCC2(C3)C(C)(C)C1">symroxane</token><!--CAS 676125-00-1-->
+		<token value="CC1CC2CCC3C(C2O1)C(C)(C)C(C)C3(C)C">trisamber</token><!--CAS 338735-71-0-->
+		<token value="CC(=O)CC(C)(C)c1ccccc1">vetikon</token><!--CAS 7403-42-1-->
+		<token value="CC1(C)[C@H]2CC[C@]3(C2)[C@H]1C1(CCC3(C)C)OCCO1">ysamber k</token><!--CAS 154171-77-4-->
+		<token value="CC(=O)C1=C(C)[C@@H]2C[C@@]3(C1)[C@H](C)CC[C@H]3C2(C)C">methyl cedryl ketone|acetyl cedrene|acetylcedrene|vertofix|vertofix coeur</token><!--CAS 32388-55-9-->
+		<token value="CC1=CCC(CCO)C1(C)C">campholenic alcohol|alpha-campholenic alcohol|campholenol|alpha-campholenol</token><!--CAS 1901-38-8-->
+		<token value="CC1=CCC(CC=O)C1(C)C">campholenic aldehyde|alpha-campholenic aldehyde|campholenaldehyde|alpha-campholenaldehyde</token><!--CAS 91819-58-8-->
+		<token value="CC1=CC[C@H](CC#N)C1(C)C">alpha-campholenonitrile</token><!--CAS 26585-74-0-->
+		<token value="CC(C)=CCCC(C)CC#N">citronellyl nitrile|citronellonitrile</token><!--CAS 52671-32-6-->
+		<token value="CC(=O)CCC1C(C)=CCCC1(C)C">dihydro-alpha-ionone</token><!--CAS 31499-72-6-->
+		<token value="CC(=O)CCC1=C(C)CCCC1(C)C">dihydro-beta-ionone</token><!--CAS 17283-81-7-->
+		<token value="C=C1CCCC(C)(C)C1CCC(C)=O">dihydro-gamma-ionone</token><!--CAS 13720-12-2-->
+		<token value="CCC(=O)/C=C/C1=C(C)CCCC1(C)C">beta-methyl ionone|beta-methylionone</token><!--CAS 63429-28-7-->
+		<token value="CC(=O)/C(C)=C/C1C(C)=CCCC1(C)C">alpha-isomethyl ionone|alpha-isomethylionone|isomethyl-alpha-ionone</token><!--CAS 127-51-5-->
+		<token value="CCC1(c2ccccc2)NC(=O)NC1=O">nirvanol</token><!--CAS 631-07-2-->
+		<token value="CC/C(=C\CC1CC=C(C)C1(C)C)CO">bacdanol|sandranol</token><!--CAS 106185-75-5-->
+		<!--woody and amber natural products: the natural stereoisomer, i.e. the stereochemistry of the CAS registry record, unless that record defines only some stereocentres-->
+		<token value="CC1(C)CCC[C@]2(C)[C@H]3CCC(=O)O[C@]3(C)CC[C@@H]12">ambreinolide</token><!--CAS 468-84-8-->
+		<token value="C=C1CCCC(C)(C)[C@@H]1CC/C(C)=C/CC[C@@H]1[C@@]2(C)CCCC(C)(C)[C@@H]2CC[C@@]1(C)O">ambrein</token><!--CAS 473-03-0-->
+		<token value="C=C(C)[C@@H]1CCC2=CC(=O)C[C@@H](C)[C@]2(C)C1">nootkatone</token><!--CAS 4674-50-4-->
+		<token value="CC(C)[C@@H]1CC[C@H]2CC(=O)C[C@@H](C)[C@]2(C)C1">tetrahydronootkatone</token><!--CAS 20489-54-7-->
+		<token value="CC1(C)[C@H]2CC[C@]3(C)[C@@H](C=CC[C@@]13O)C2">norpatchoulenol</token><!--CAS 41429-52-1-->
+		<token value="C[C@H]1CC[C@@]2(O)C(C)(C)[C@@H]3CC[C@@]2(C)[C@H]1C3">patchoulol|patchouli alcohol</token><!--CAS 5986-55-0-->
+		<token value="C/C(=C/CCC1(C)C2CC3C(C2)C31C)CO">alpha-santalol</token><!--CAS 115-71-9, tetrahedral stereo dropped: PubChem record for this CAS defines only some centres-->
+		<token value="C=C1[C@@H]2CC[C@@H](C2)[C@@]1(C)CC/C=C(/C)CO">beta-santalol</token><!--CAS 77-42-9-->
+		<token value="CC(C)=CCCC1(C)C2CC3C(C2)C31C">alpha-santalene</token><!--CAS 512-61-8-->
+		<token value="C=C1[C@@H]2CC[C@@H](C2)[C@@]1(C)CCC=C(C)C">beta-santalene</token><!--CAS 511-59-1-->
+		<token value="C=C1[C@@H]2CC[C@@H](C2)[C@]1(C)CCC=C(C)C">epi-beta-santalene</token><!--CAS 156617-33-3-->
+		<token value="CC1=CCC[C@@H](C)[C@]12CC[C@@H](C(C)(C)O)C2">agarospirol</token><!--CAS 1460-73-7-->
+		<token value="C[C@H]1CC[C@@H](C(C)(C)O)CC2=C1CC[C@@H]2C">guaiol</token><!--CAS 489-86-1-->
+		<token value="CC(=O)OC(C)(C)[C@@H]1CC[C@H](C)C2=C(C1)[C@@H](C)CC2">guaiyl acetate</token><!--CAS 134-28-1-->
+		<token value="C[C@H]1CC[C@@H]2C[C@@]3(OC2(C)C)[C@@H]1CC[C@@H]3C">guaioxide</token><!--CAS 20149-50-2-->
+		<token value="C=C(C)[C@@H]1CC[C@H](C)C2=C(C1)[C@@H](C)CC2">alpha-guaiene</token><!--CAS 3691-12-1-->
+		<token value="CC1=C2CCC(C)C2CC(C(C)(C)O)CC1">bulnesol</token><!--CAS 22451-73-6-->
+		<token value="C=C(C)[C@@H]1CCC(C)=C2CC[C@H](C)[C@@H]2C1">alpha-bulnesene</token><!--CAS 3691-11-0-->
+		<token value="C=C[C@](C)(O)CC[C@@H]1[C@@]2(C)CCCC(C)(C)[C@@H]2CC[C@@]1(C)O">sclareol</token><!--CAS 515-03-7-->
+		<token value="CC1(C)CCC[C@]2(C)[C@H]3CC(=O)O[C@]3(C)CC[C@@H]12">sclareolide</token><!--CAS 564-20-5-->
+		<token value="C=C[C@](C)(O)CC[C@H]1C(=C)CC[C@H]2C(C)(C)CCC[C@]12C">manool</token><!--CAS 596-85-0-->
+		<token value="C=CC1(C)CCC2C(C)(CCC3C(C)(C)CCCC32C)O1">manool oxide</token><!--CAS 19123-29-6-->
+		<token value="C=C(CCC=C(C)CO)[C@@H]1CC=C(C)CC1">lanceol</token><!--CAS 859202-95-2, E/Z dropped: the PubChem record is titled (Z) but its structure is E-->
+		<token value="C[C@@H]1C(=O)C[C@]2(C)CCCC(C)(C)[C@@]23C[C@@H]13">3-thujopsanone</token><!--CAS 25966-79-4-->
+		<token value="CC1=CC[C@]2(C)CCCC(C)(C)[C@@]23C[C@@H]13">thujopsene</token><!--CAS 470-40-6-->
+		<token value="CC1(C)CCC[C@@]2(C)CC[C@](C)(O)CC=C12">widdrol</token><!--CAS 6892-80-4-->
+		<token value="CC1(C)C[C@H]2[C@H]1CC[C@]1(C)CCC[C@@]2(O)C1">caryolan-1-ol|beta-caryolanol</token><!--CAS 56747-96-7; beta-caryolanol is CAS 472-97-9, the same constitution. "caryophyllene alcohol" is left out: PubChem files its acetate under a different skeleton-->
+		<token value="C=C1CC/C=C(\C)CC[C@@H]2[C@@H]1CC2(C)C">beta-caryophyllene|caryophyllene</token><!--CAS 87-44-5-->
+		<token value="C=C1CC[C@H]2O[C@]2(C)CC[C@@H]2[C@@H]1CC2(C)C">beta-caryophyllene oxide|caryophyllene oxide</token><!--CAS 1139-30-6-->
+		<token value="C/C1=C\CC(C)(C)C[C@H]2C[C@]2(C)C(=O)CC1">bicyclohumulenone</token><!--CAS 71493-03-3-->
+		<token value="CC(C)=CCCC1(C)C2CCC1(C)C(O)C2">campherenol</token><!--CAS 18530-03-5, tetrahedral stereo dropped: PubChem record for this CAS defines only some centres-->
+		<token value="CC1(C)C=C[C@@]23CCC[C@@](C)(CC[C@@H]12)C3">clovene</token><!--CAS 469-92-1-->
+		<token value="CC1=CCC[C@@]2(C)[C@@H]3CC[C@]12CC3(C)C">alpha-neoclovene</token><!--CAS 4545-68-0-->
+		<token value="CC1=CC[C@H]2C(C)(C)CCC[C@]2(C)[C@H]1CO">drimenol</token><!--CAS 468-68-8-->
+		<token value="C=C1[C@H]2CC[C@@H](C=O)[C@@]23CC[C@H](C3)C1(C)C">epizizanal</token><!--CAS 82463-21-6-->
+		<token value="C=C1[C@H]2CC[C@H](C(=O)O)[C@@]23CC[C@H](C3)C1(C)C">zizanoic acid</token><!--CAS 16203-25-1-->
+		<token value="C=C1[C@H]2CC[C@H](CO)[C@@]23CC[C@H](C3)C1(C)C">khusimol</token><!--CAS 16223-63-5-->
+		<token value="C=C1[C@H]2CCC(=O)[C@@]23CC[C@@H](C3)C1(C)C">khusimone</token><!--CAS 30557-76-7-->
+		<token value="CC1CCC=C2CCC(C(C)(C)O)CC21C">jinkoh-eremol</token><!--CAS 94201-17-9-->
+		<token value="C=C1[C@H]2CC[C@@H]3[C@H]2C(C)(C)CCC[C@]13C">longifolene</token><!--CAS 475-20-7-->
+		<token value="CC1(C)C2=CCCC(C)(C)[C@]23CC[C@H]1C3">isolongifolene</token><!--CAS 1135-66-6-->
+		<token value="C=C1[C@@H]2CC[C@@]3(C)[C@@H](C2)[C@@H](C)CC[C@@]13C">seychellene</token><!--CAS 20085-93-2-->
+		<token value="C=C(C)[C@@H]1CC[C@H](C)C2=C(C1)[C@@H](C)CC2=O">rotundone</token><!--CAS 18374-76-0-->
+		<token value="CC1=CCC[C@@]2(C)CC[C@@H]3C[C@]12OC3(C)C">alpha-agarofuran</token><!--CAS 5956-12-7-->
+		<token value="CC1(C)OC23C=CCCC2(C)CCC1C3">beta-agarofuran</token><!--CAS 6040-08-0, tetrahedral stereo dropped: PubChem record for this CAS defines only some centres-->
+		<token value="CC1=CC[C@@]23C[C@@H]1C(C)(C)[C@@H]2CC[C@H]3C">alpha-cedrene</token><!--CAS 469-61-4-->
+		<token value="C=C1CC[C@@]23C[C@@H]1C(C)(C)[C@@H]2CC[C@H]3C">beta-cedrene</token><!--CAS 546-28-1-->
+		<token value="CC(=O)OCC1=CC[C@@]23C[C@@H]1C(C)(C)[C@@H]2CC[C@H]3C">cedrenyl acetate</token><!--CAS 1405-92-1-->
+		<token value="CC1=CCC2CC3C(C)CCC13C2(C)C">alpha-patchoulene</token><!--CAS 560-32-7-->
+		<token value="C=C1CCC2CC3C(C)CCC13C2(C)C">gamma-patchoulene</token><!--CAS 508-55-4-->
+		<token value="CC(C)=C1CCC2=CC(=O)C[C@@H](C)[C@]2(C)C1">alpha-vetivone</token><!--CAS 15764-04-2-->
+		<token value="CC1=CC(=O)C[C@@H](C)[C@]12CCC(=C(C)C)C2">beta-vetivone</token><!--CAS 18444-79-6-->
+		<token value="CC(C)=CCCC(C)c1ccc(C)cc1">alpha-curcumene|ar-curcumene</token><!--CAS 644-30-4-->
+		<token value="C=C[C@]1(C)CC[C@@H](C(C)C)C(=O)[C@H]1C(=C)C">shyobunone</token><!--CAS 21698-44-2-->
 	</tokenList>
 
 	<tokenList tagname="group" type="simpleGroup" subType="biochemical" symbol="G">
