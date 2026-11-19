@@ -12,6 +12,7 @@ silver monoxide	InChI=1S/2Ag.O/q2*+1;-2
 silver(I) oxide	InChI=1S/2Ag.O/q2*+1;-2
 silver(1+) oxide	InChI=1S/2Ag.O/q2*+1;-2
 argentous oxide	InChI=1S/2Ag.O/q2*+1;-2
+gold(III) oxide	InChI=1S/2Au.3O/q2*+3;3*-2
 #mostly covalent
 boron trifluoride	InChI=1S/BF3/c2-1(3)4
 silicon dioxide	InChI=1S/O2Si/c1-3-2
