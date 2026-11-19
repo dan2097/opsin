@@ -1,3 +1,24 @@
+Version 2.10.0 (2026-11-19)
+Support for phane nomenclature e.g. 1,4(1,4)-dibenzenacyclohexaphane [@iwyoo]
+Support for axial stereochemistry descriptors M/P and Ra/Sa, with atropisomerism output via CXSMILES [@johnmay]
+Command-line option -t/--threads for concurrent SMILES and InChI generation [@guillaume-osmo]
+Support for chalcogen locants on non-carboxylic acids e.g. phosphorodithioic S,S-acid [@iwyoo]
+Support for peroxo acids and their chalcogen analogues, including thioperoxols and thioperoxoic esters [@iwyoo]
+Support for esters of up to three distinct acids e.g. propane-1,2,3-triyl 1-acetate 2-propanoate 3-butanoate
+Support for substituted halogen anuide anions e.g. diphenyliodanuide [@guillaume-osmo]
+Added retained names for fragrance and flavour compounds e.g. damascones and gamma-ionone [@guillaume-osmo]
+Corrected Greek-letter locants in lactones, lactams and sultones e.g. gamma-decanolactone [@guillaume-osmo]
+Improved interpretation of inverted CAS names and unlocanted prefixes on silanes e.g. triethoxyoctylsilane [@guillaume-osmo]
+Names with redundant ring cis/trans descriptors are now accepted when they agree with the R/S descriptors [@guillaume-osmo]
+Faster name parsing [@guillaume-osmo]
+Fixed parsing of stereochemistry locants with primes in the IUPAC-recommended position e.g. (3'aS) [@guillaume-osmo]
+Corrected D/L stereochemistry assignment for amino acids with oxygenated side chains and for amino alcohols
+Fixed several fused ring numbering bugs involving selection of the longest row of fused rings and the layout of systems containing seven-membered rings
+Fixed premature termination when finding the smallest set of smallest rings [@mjw99]
+Improved handling of mixture separators e.g. compound with and em dashes
+Corrected interpretation of gold(III) oxide
+Minor dependency updates (Log4j, automaton, Woodstox, Commons IO)
+
 Version 2.9.0 (2026-03-15)
 Support for IUPAC recommended primed number-letter locants e.g. 2''a
 Command-line output now includes warnings e.g. ambiguity
