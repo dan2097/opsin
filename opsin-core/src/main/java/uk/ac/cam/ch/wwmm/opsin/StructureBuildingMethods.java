@@ -1187,6 +1187,12 @@ class StructureBuildingMethods {
 						(replacementsRequired == 1 || replacementsRequired == atomsThatCouldBeReplaced.size() - 1))) {
 					//by convention cycloalkanes can have one unsaturation implicitly at the 1 locant
 					state.addIsAmbiguous("Heteroatom replacement on " + frag.getTokenEl().getValue());
+					/*
+					 * The position is a guess, so avoid guessing an atom that is multiply bonded.
+					 * Replacement by a heteroatom such as silicon conventionally targets a saturated centre
+					 * (e.g. sila-linalool is the silanol, not the Si=C compound)
+					 */
+					preferSaturatedAtoms(atomsThatCouldBeReplaced);
 				}
 			}
 			
@@ -1200,6 +1206,30 @@ class StructureBuildingMethods {
 		}
 	}
 	
+	/**
+	 * Stably reorders the atoms so that those with only single bonds and no spare valency come first
+	 * @param atoms
+	 */
+	private static void preferSaturatedAtoms(List<Atom> atoms) {
+		List<Atom> saturated = new ArrayList<>();
+		List<Atom> unsaturated = new ArrayList<>();
+		for (Atom atom : atoms) {
+			boolean isSaturated = !atom.hasSpareValency();
+			if (isSaturated) {
+				for (Bond b : atom.getBonds()) {
+					if (b.getOrder() != 1) {
+						isSaturated = false;
+						break;
+					}
+				}
+			}
+			(isSaturated ? saturated : unsaturated).add(atom);
+		}
+		atoms.clear();
+		atoms.addAll(saturated);
+		atoms.addAll(unsaturated);
+	}
+
 	private static void applyIsotopeSpecifications(BuildState state, Fragment frag, List<Element> isotopeSpecifications, boolean applyLocanted) throws StructureBuildingException {
 		for(int i = isotopeSpecifications.size() - 1; i >= 0; i--) {
 			Element isotopeSpecification = isotopeSpecifications.get(i);
