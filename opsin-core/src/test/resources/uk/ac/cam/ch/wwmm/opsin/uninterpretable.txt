@@ -72,3 +72,5 @@ ethanedichloridic acid
 propane-1,2,3-triyl 1,2-diacetate 2-propanoate
 propane-1,2,3-triyl 1,2-diacetate 4-propanoate
 propane-1,2,3-triyl acetate propanoate
+2,4-dihydroxyacetophenone
+4-tert-butyl-2,6-dimethylacetophenone
