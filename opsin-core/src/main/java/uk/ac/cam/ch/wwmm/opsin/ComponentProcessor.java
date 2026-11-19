@@ -3917,6 +3917,11 @@ class ComponentProcessor {
 
 	private void processFusedRingBridges(Element groupEl, List<Element> bridges) throws StructureBuildingException {
 		Fragment ringFrag = groupEl.getFrag();
+		String groupValue = groupEl.getValue();
+		if (groupValue.equals("pyrrolizin") || groupValue.equals("pyrrolizidin") || groupValue.equals("pyrroliz")) {
+			// IUPAC assigns locant 8 to the first bridge atom of bridged pyrrolizines, so remove the 8 alias from fusion atom 7a
+			ringFrag.getAtomByLocantOrThrow("7a").removeLocant("8");
+		}
 		Map<Fragment, Atom[]> bridgeToRingAtoms = new LinkedHashMap<>();
 		for (Element bridge : bridges) {
 			Element possibleMultiplier = OpsinTools.getPreviousSibling(bridge);
