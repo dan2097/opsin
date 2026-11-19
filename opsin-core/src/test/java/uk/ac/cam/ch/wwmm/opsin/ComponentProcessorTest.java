@@ -1,5 +1,6 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
+import uk.ac.cam.ch.wwmm.opsin.OpsinResult.OPSIN_RESULT_STATUS;
 import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
 
 import org.junit.jupiter.api.Test;
@@ -270,4 +271,24 @@ public class ComponentProcessorTest {
 		assertEquals("?/?", prefix.getAttributeValue(VALUE_ATR));
 	}
 	
+
+	@ParameterizedTest
+	@CsvSource(delimiter = ';', value = {
+		"1,4-butanolide; butan-4-olide",
+		"1,4-undecanolide; undecan-4-olide",
+		"1,15-pentadecanolide; pentadecan-15-olide",
+		"12-oxa-1,16-hexadecanolide; 12-oxahexadecan-16-olide",
+		"3-methyl-1,4-octanolide; 3-methyloctan-4-olide"
+	})
+	public void olideLocantPairCitesAcidCarbon(String casStyle, String iupac) {
+		NameToStructure n2s = NameToStructure.getInstance();
+		OpsinResult result = n2s.parseChemicalName(casStyle);
+		assertEquals(OPSIN_RESULT_STATUS.SUCCESS, result.getStatus(), result.getMessage());
+		assertEquals(n2s.parseChemicalName(iupac).getSmiles(), result.getSmiles());
+	}
+
+	@Test
+	public void olideLocantPairNotStartingAtOneStillRejected() {
+		assertEquals(OPSIN_RESULT_STATUS.FAILURE, NameToStructure.getInstance().parseChemicalName("2,4-butanolide").getStatus());
+	}
 }
