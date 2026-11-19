@@ -184,6 +184,42 @@ public class CASToolsTest {
 	}
 
 	@Test
+	public void retainHyphenBeforeScylloPrefix() throws ParsingException {
+		String name = CASTools.uninvertCASName("scyllo-Inositol, 1-C-methyl-", parseRules);
+		assertEquals("1-C-methyl-scyllo-Inositol", name);
+	}
+
+	@Test
+	public void retainHyphenBeforeNeoPrefix() throws ParsingException {
+		String name = CASTools.uninvertCASName("neo-Inositol, 2-amino-2-deoxy-", parseRules);
+		assertEquals("2-amino-2-deoxy-neo-Inositol", name);
+	}
+
+	@Test
+	public void retainHyphenBeforeGreekPrefix() throws ParsingException {
+		String name = CASTools.uninvertCASName("beta-D-Mannopyranoside, methyl 2-bromo-2-deoxy-", parseRules);
+		assertEquals("methyl 2-bromo-2-deoxy-beta-D-Mannopyranoside", name);
+	}
+
+	@Test
+	public void retainHyphenBeforeCommaDelimitedGreekPrefixes() throws ParsingException {
+		String name = CASTools.uninvertCASName("epsilon,epsilon-Carotene-2,3'-dione, 2'-methoxy-", parseRules);
+		assertEquals("2'-methoxy-epsilon,epsilon-Carotene-2,3'-dione", name);
+	}
+
+	@Test
+	public void retainHyphenBeforeLocantedLambdaDescriptor() throws ParsingException {
+		String name = CASTools.uninvertCASName("1lambda5-1,2-Benziodoxole, 1,1,1-trifluoro-1,3-dihydro-3,3-dimethyl-", parseRules);
+		assertEquals("1,1,1-trifluoro-1,3-dihydro-3,3-dimethyl-1lambda5-1,2-Benziodoxole", name);
+	}
+
+	@Test
+	public void removeHyphenBeforeAlphabeticParent() throws ParsingException {
+		String name = CASTools.uninvertCASName("Acetic acid, 2-chloro-", parseRules);
+		assertEquals("2-chloroAcetic acid", name);
+	}
+
+	@Test
 	public void commaDelimitedAcidSalt() throws ParsingException{
 		//I don't think this is actually a CAS name, but it's easiest to correct it in this function 
 		String name = CASTools.uninvertCASName("benzamide, trifluoroacetic acid salt", parseRules);

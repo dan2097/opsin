@@ -17,6 +17,26 @@ class CASTools {
 	private static final Pattern matchCommaSpace = Pattern.compile(", ");
 	private static final Pattern matchCompoundWithPhrase = Pattern.compile("(compd\\. with|compound with|and) ", Pattern.CASE_INSENSITIVE);
 	private static final Pattern matchFunctionalTermAllowingSubstituentPrefix = Pattern.compile("((((1-)?(anilin|azetidin|piperazin|piperidin|pyrrolidin)|(4-)?morpholin)e?[ \\-]?)?amid|anilid|azetidid|hydrazid|(thi|selen|tellur)?oxim|hydrazon|(iso)?(semicarbazon|thiosemicarbazon|selenosemicarbazon|tellurosemicarbazon)|imid|imin|morpholid|piperazid|piperidid|pyrrolidid|semioxamazon)e?[\\]\\)\\}]*", Pattern.CASE_INSENSITIVE);
+	private static final Pattern matchParentStartsWithThreeLetters = Pattern.compile("[A-Za-z]{3}");
+	private static final Pattern matchParentRequiringJoiningHyphen = Pattern.compile(
+			"(?:"
+			+ "(?:"
+			//Carbohydrate configurational prefixes
+			+ "glycero|erythro|threo|ribo|arabino|xylo|lyxo|"
+			+ "allo|altro|gluco|manno|gulo|ido|galacto|talo|"
+			//Cyclitol and other stereochemical descriptors
+			+ "chiro|epi|muco|myo|neo|scyllo|meso|"
+			+ "cis|trans|endo|exo|syn|anti|"
+			+ "rel|rac\\.?|racem\\.?|racemic|all-(?:cis|trans)|"
+			//Other separately written descriptors and modifiers
+			+ "apio|ortho|meta|para|sym|asym|uns|unsym|vic|"
+			+ "sec\\.?|secondary|tert\\.?|tertiary|normal|aci|active|half"
+			+ ")-|"
+			//Greek names may precede punctuation or numerals, e.g. epsilon,epsilon- or lambda5-
+			+ "(?:alpha|beta|gamma|delta|epsilon|zeta|eta|theta|"
+			+ "iota|kappa|lambda|mu|nu|xi|omicron|pi|rho|sigma|"
+			+ "tau|upsilon|phi|chi|psi|omega)(?=[^A-Za-z])"
+			+ ")", Pattern.CASE_INSENSITIVE);
 	
 	/**
 	 * Inverts a CAS name.
@@ -181,12 +201,12 @@ class CASTools {
 			//stereochemistry term comes after substituent term. In older CAS names (9CI) this stereochemistry term can apply to the substituent term. Hence append in reverse order
 			casName.append(substituents.get(i));
 		}
-		//CAS Index Guide, section 108 indicates that a hyphen at the end of a list of substituents does not require that the uninverted name should have one
+		//CAS Index Guide, section 108: the terminal hyphen in an inverted substituent list signifies no space
 		//e.g. Acetic acid, 2-chloro- becomes 2-Chloroacetic acid
-		//Retain the hyphen unless the parent starts with at least three letters, e.g. retain it before 1-butane or DL-alanine
+		//Retain the hyphen unless the parent starts with three ASCII letters and no descriptor requiring separation
 		if (casName.length() > 0 && casName.charAt(casName.length() - 1) == '-'
-				&& parent.length() >= 3 && Character.isLetter(parent.charAt(0))
-				&& Character.isLetter(parent.charAt(1)) && Character.isLetter(parent.charAt(2))) {
+				&& matchParentStartsWithThreeLetters.matcher(parent).lookingAt()
+				&& !matchParentRequiringJoiningHyphen.matcher(parent).lookingAt()) {
 			casName.setLength(casName.length() - 1);
 		}
 		casName.append(parent);
