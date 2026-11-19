@@ -109,7 +109,7 @@ class FusedRingNumberer {
 
 	/**
 	 * Result of identifying the longest straight chain(s) in the ring connectivity tables.
-	 * The chain length is the number of rings.
+	 * The chain length is the number of rings, rather than the number of fusion connections.
 	 */
 	private static class LongestChainDirections {
 		private final Map<RingConnectivityTable, List<HorizontalChain>> horizonalRowChains;
@@ -370,16 +370,24 @@ class FusedRingNumberer {
 		if (tRings.size()<1) {
 			throw new RuntimeException("OPSIN bug: Unable to find a terminal ring in fused ring system");
 		}
-		Ring tRing = tRings.get(0);
-		Bond b1 = getStartingNonFusedBond(tRing);
-		if(b1 == null) {
-			throw new RuntimeException("OPSIN Bug: Non-fused bond from terminal ring not found");
-		}
-
 		List<RingConnectivityTable> cts = new ArrayList<>();
-		RingConnectivityTable startingCT = new RingConnectivityTable();
-		cts.add(startingCT);
-		buildRingConnectionTables(tRing, null, 0, b1, b1.getFromAtom(), startingCT, cts);
+		/*
+		 * For most fused ring systems the choice of terminal ring only changes the
+		 * traversal order. For systems containing multiply fused odd-membered rings,
+		 * however, the allowed ring shapes can depend on the bond through which the
+		 * ring is entered. Building connectivity tables from every terminal ring avoids
+		 * making the result depend on the arbitrary order returned by ring perception.
+		 */
+		for (Ring tRing : tRings) {
+			Bond b1 = getStartingNonFusedBond(tRing);
+			if(b1 == null) {
+				throw new RuntimeException("OPSIN Bug: Non-fused bond from terminal ring not found");
+			}
+
+			RingConnectivityTable startingCT = new RingConnectivityTable();
+			cts.add(startingCT);
+			buildRingConnectionTables(tRing, null, 0, b1, b1.getFromAtom(), startingCT, cts);
+		}
 		//The preference against fusion to elongated edges is built into the construction of the ring table
 		
 		/* FR 5.1.1/FR 5.1.2 Preferred shapes preferred to distorted shapes */
@@ -457,8 +465,17 @@ class FusedRingNumberer {
 				// find direction
 				Bond currentBond = findFusionBond(currentRing, neighbourRing);
 
-				int dir = 0;
-				if (neighbourRing == previousRing) {
+				int dir;
+
+				if (previousRing == null && currentRing.getNumberOfFusedBonds() == 1) {
+					/*
+					 * The absolute orientation of the first terminal ring is arbitrary.
+					 * Its sole fusion can therefore define direction 0 directly rather
+					 * than deriving a direction from the artificial non-fused starting bond.
+					 */
+					dir = 0;
+				}
+				else if (neighbourRing == previousRing) {
 					dir = getOppositeDirection(previousDir);
 				}
 				else {
