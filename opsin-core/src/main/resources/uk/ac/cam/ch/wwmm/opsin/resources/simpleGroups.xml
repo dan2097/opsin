@@ -474,6 +474,9 @@
 		<token value="CC1=CC(=O)C[C@@H](C)[C@]12CCC(=C(C)C)C2">beta-vetivone</token><!--CAS 18444-79-6-->
 		<token value="CC(C)=CCCC(C)c1ccc(C)cc1">alpha-curcumene|ar-curcumene</token><!--CAS 644-30-4-->
 		<token value="C=C[C@]1(C)CC[C@@H](C(C)C)C(=O)[C@H]1C(=C)C">shyobunone</token><!--CAS 21698-44-2-->
+		<token value="C[C@H]1CCC2=C1C[C@H]1CC[C@]2(C)C1(C)C">beta-patchoulene</token><!--CAS 514-51-2-->
+		<token value="CC1(O)CCC2C(=CCCC2(C)C)C1">alpha-ambrinol</token><!--CAS 41199-19-3, constitution only: no CAS record defines its stereochemistry-->
+		<token value="CC1=CC[C@H]2C[C@@H]1[C@]2(C)CC/C=C(/C)CO">alpha-trans-bergamotol|trans-alpha-bergamotol</token><!--CAS 88034-74-6; the (Z) natural product, configuration from the Wikidata/LOTUS record for this CAS as the PubChem record defines only one centre-->
 	</tokenList>
 
 	<tokenList tagname="group" type="simpleGroup" subType="biochemical" symbol="G">
