@@ -1,5 +1,6 @@
 package uk.ac.cam.ch.wwmm.opsin;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static uk.ac.cam.ch.wwmm.opsin.XmlDeclarations.*;
@@ -72,5 +73,26 @@ public class SuffixApplierTest {
 		Element suffix = suffix(value);
 		suffix.setFrag(state.fragManager.buildSMILES(smiles));
 		return suffix;
+	}
+
+	@Test
+	public void unlocantedSuffixesAvoidAtomsOfLocantedReplacement() {
+		//HAT-CN, CAS 105598-27-4: the six nitriles go on the six carbons, not on the aza positions
+		NameToStructure n2s = NameToStructure.getInstance();
+		OpsinResult unlocanted = n2s.parseChemicalName("1,4,5,8,9,12-hexaazatriphenylenehexacarbonitrile");
+		assertEquals(OpsinResult.OPSIN_RESULT_STATUS.SUCCESS, unlocanted.getStatus(), unlocanted.getMessage());
+		assertEquals(n2s.parseChemicalName("1,4,5,8,9,12-hexaazatriphenylene-2,3,6,7,10,11-hexacarbonitrile").getSmiles(), unlocanted.getSmiles());
+	}
+
+	@Test
+	public void unlocantedSuffixNeverOnReplacedNitrogen() {
+		OpsinResult result = NameToStructure.getInstance().parseChemicalName("1,4-diazanaphthalenetetracarbonitrile");
+		for (Atom a : result.getStructure().getAtomList()) {
+			if (a.getElement() == ChemEl.N && a.getAtomIsInACycle()) {
+				for (Atom neighbour : a.getAtomNeighbours()) {
+					assertTrue(neighbour.getAtomIsInACycle(), "ring nitrogen carries a substituent");
+				}
+			}
+		}
 	}
 }
