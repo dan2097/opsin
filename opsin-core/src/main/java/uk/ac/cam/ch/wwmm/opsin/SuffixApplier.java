@@ -294,6 +294,11 @@ class SuffixApplier {
 				}
 
 				if (suffixFrag != null) {//merge suffix frag and parent fragment
+					if (suffixValue.equals("ophenone")) {
+						if (!wordCitesUnprimedLocant(group, "2")) {
+							addUnprimedRingLocantsToPhenone(frag, suffixFrag);
+						}
+					}
 					fragsToMerge.add(suffixFrag);
 					suffix.setFrag(null);
 				}
@@ -710,5 +715,57 @@ class SuffixApplier {
 
 	List<SuffixRule> getSuffixRuleTags(String suffixTypeToUse, String suffixValue, String subgroupType) throws ComponentGenerationException {
 		return suffixRules.getSuffixRuleTags(suffixTypeToUse, suffixValue, subgroupType);
+	}
+
+	/**
+	 * The ring of a phenone is numbered with primes (4'-methylacetophenone) but is very commonly cited
+	 * without them (4-methylacetophenone). Where the acyl part has no atom with the unprimed locant,
+	 * the ring atom is also given the unprimed locant, so 4-methylacetophenone works while
+	 * 2-bromoacetophenone and 3-chloropropiophenone keep referring to the chain.
+	 * This is only done when the name cites no unprimed locant 2, as 2 could equally be the acyl carbon
+	 * (2-bromoacetophenone) or the ring (2,4-dihydroxyacetophenone)
+	 * @param frag the acyl part
+	 * @param phenoneFrag the phenone suffix fragment
+	 */
+	private static void addUnprimedRingLocantsToPhenone(Fragment frag, Fragment phenoneFrag) {
+		for (Atom a : phenoneFrag.getAtomList()) {
+			for (String locant : new ArrayList<>(a.getLocants())) {
+				if (locant.length() == 2 && locant.charAt(1) == '\'' && locant.charAt(0) >= '2' && locant.charAt(0) <= '6') {
+					String unprimed = locant.substring(0, 1);
+					if (frag.getAtomByLocant(unprimed) == null && phenoneFrag.getAtomByLocant(unprimed) == null) {
+						a.addLocant(unprimed);
+					}
+				}
+			}
+		}
+	}
+
+	private static boolean wordCitesUnprimedLocant(Element group, String locantToFind) {
+		Element word = group;
+		while (word != null && !word.getName().equals(WORD_EL)) {
+			word = word.getParent();
+		}
+		if (word == null) {
+			return true;
+		}
+		List<Element> elementsWithLocants = new ArrayList<>(OpsinTools.getDescendantElementsWithTagName(word, LOCANT_EL));
+		for (Element locantEl : elementsWithLocants) {
+			for (String locant : locantEl.getValue().split(",")) {
+				if (locant.equals(locantToFind)) {
+					return true;
+				}
+			}
+		}
+		for (Element el : OpsinTools.getDescendantElementsWithTagNames(word, new String[]{SUBSTITUENT_EL, BRACKET_EL, ROOT_EL, GROUP_EL, SUFFIX_EL})) {
+			String locantAtr = el.getAttributeValue(LOCANT_ATR);
+			if (locantAtr != null) {
+				for (String locant : locantAtr.split(",")) {
+					if (locant.equals(locantToFind)) {
+						return true;
+					}
+				}
+			}
+		}
+		return false;
 	}
 }

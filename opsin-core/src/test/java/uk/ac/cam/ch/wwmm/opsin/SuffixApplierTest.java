@@ -73,4 +73,33 @@ public class SuffixApplierTest {
 		suffix.setFrag(state.fragManager.buildSMILES(smiles));
 		return suffix;
 	}
+
+	@ParameterizedTest
+	@CsvSource(delimiter = ';', value = {
+		"4-methylacetophenone; 4'-methylacetophenone",
+		"3,4-dimethoxyacetophenone; 3',4'-dimethoxyacetophenone",
+		"4-methylpropiophenone; 4'-methylpropiophenone"
+	})
+	public void unprimedPhenoneRingLocants(String unprimed, String primed) {
+		NameToStructure n2s = NameToStructure.getInstance();
+		OpsinResult result = n2s.parseChemicalName(unprimed);
+		assertEquals(OpsinResult.OPSIN_RESULT_STATUS.SUCCESS, result.getStatus(), result.getMessage());
+		assertEquals(n2s.parseChemicalName(primed).getSmiles(), result.getSmiles());
+	}
+
+	@ParameterizedTest
+	@CsvSource(delimiter = ';', value = {
+		"2-bromoacetophenone; BrCC(=O)C1=CC=CC=C1",
+		"3-chloropropiophenone; ClCCC(=O)C1=CC=CC=C1",
+		"4-chlorobutyrophenone; ClCCCC(=O)C1=CC=CC=C1"
+	})
+	public void unprimedLocantPresentOnAcylChainStillMeansTheChain(String name, String smiles) {
+		assertEquals(smiles, NameToStructure.getInstance().parseChemicalName(name).getSmiles());
+	}
+
+	@Test
+	public void unprimedTwoMakesRingLocantsAmbiguous() {
+		//2 may be the acyl carbon or the ring, so the ring numbering is not guessed
+		assertEquals(OpsinResult.OPSIN_RESULT_STATUS.FAILURE, NameToStructure.getInstance().parseChemicalName("2,4-dihydroxyacetophenone").getStatus());
+	}
 }
