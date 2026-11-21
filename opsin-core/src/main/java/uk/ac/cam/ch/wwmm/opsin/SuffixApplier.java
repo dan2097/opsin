@@ -169,7 +169,7 @@ class SuffixApplier {
 								if (fragAtomToUse == null) {
 									if (possibleAtomsToAttachSuffixTo == null) {
 										int substitutionsRequired = suffixesWithThisVal.size();
-										possibleAtomsToAttachSuffixTo = FragmentTools.findnAtomsForSubstitution(frag, atomList.get(0), substitutionsRequired, bondOrderRequired, true);
+										possibleAtomsToAttachSuffixTo = findAtomsAvoidingPendingHeteroatomReplacement(group, frag, atomList, substitutionsRequired, bondOrderRequired);
 										if (possibleAtomsToAttachSuffixTo == null) {
 											throw new StructureBuildingException("No suitable atom found to attach " + suffixValue + " suffix");
 										}
@@ -710,5 +710,39 @@ class SuffixApplier {
 
 	List<SuffixRule> getSuffixRuleTags(String suffixTypeToUse, String suffixValue, String subgroupType) throws ComponentGenerationException {
 		return suffixRules.getSuffixRuleTags(suffixTypeToUse, suffixValue, subgroupType);
+	}
+
+	/**
+	 * Locanted skeletal replacement prefixes (e.g. the 1,4-diaza of 1,4-diazanaphthalene) are applied after suffixes,
+	 * so at this point the atoms they will replace are still carbons with hydrogen.
+	 * Unlocanted suffixes must not be put on those atoms: the substituent would end up on the heteroatom
+	 * e.g. 1,4-diazanaphthalenetetracarbonitrile had cyano groups on both nitrogens
+	 * Falls back to considering all atoms if there are too few otherwise.
+	 */
+	private static List<Atom> findAtomsAvoidingPendingHeteroatomReplacement(Element group, Fragment frag, List<Atom> atomList, int substitutionsRequired, int bondOrderRequired) {
+		Set<Atom> toBeReplaced = new HashSet<>();
+		Element subOrRoot = group.getParent();
+		if (subOrRoot != null) {
+			for (Element heteroatom : subOrRoot.getChildElements(HETEROATOM_EL)) {
+				String locant = heteroatom.getAttributeValue(LOCANT_ATR);
+				if (locant != null) {
+					Atom a = frag.getAtomByLocant(locant);
+					if (a != null) {
+						toBeReplaced.add(a);
+					}
+				}
+			}
+		}
+		if (!toBeReplaced.isEmpty()) {
+			List<Atom> remaining = new ArrayList<>(atomList);
+			remaining.removeAll(toBeReplaced);
+			if (!remaining.isEmpty()) {
+				List<Atom> atoms = FragmentTools.findnAtomsForSubstitution(remaining, remaining.get(0), substitutionsRequired, bondOrderRequired, true);
+				if (atoms != null) {
+					return atoms;
+				}
+			}
+		}
+		return FragmentTools.findnAtomsForSubstitution(frag, atomList.get(0), substitutionsRequired, bondOrderRequired, true);
 	}
 }
