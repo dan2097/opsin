@@ -1174,6 +1174,9 @@ class ComponentProcessor {
 							throw new ComponentGenerationException("Mismatch between locant and multiplier counts (" + Integer.toString(locantValues.length) + " and " + multiplierEl.getAttributeValue(VALUE_ATR) + "):" + locant.getValue());
 						}
 					}
+				} else if (isLocantPairOfOlide(locant, locantValues, group)) {
+					//e.g. 1,4-butanolide: the acid carbon is always 1, so only the locant of the ring oxygen matters
+					locant.setValue(locantValues[1]);
 				} else {
 					/* Multiple locants without a multiplier */
 					if(!checkSpecialLocantUses(locant, locantValues, finalSubOrRootInWord)) {
@@ -1184,6 +1187,30 @@ class ComponentProcessor {
 		}
 	}
 
+
+	/**
+	 * Is the locant the CAS-style pair of an -olide lactone suffix on a chain e.g. 1,4-butanolide, 1,15-pentadecanolide
+	 * The first locant is the carbon of the acid, which is necessarily 1, the second is the atom bearing the ring oxygen
+	 * @param locant
+	 * @param locantValues
+	 * @param group
+	 * @return
+	 */
+	private boolean isLocantPairOfOlide(Element locant, String[] locantValues, Element group) {
+		if (locantValues.length != 2 || !locantValues[0].equals("1") || group == null ||
+				!CHAIN_TYPE_VAL.equals(group.getAttributeValue(TYPE_ATR)) || !group.equals(OpsinTools.getNextSibling(locant))) {
+			return false;
+		}
+		Element afterGroup = OpsinTools.getNextSibling(group);
+		while (afterGroup != null && afterGroup.getName().equals(UNSATURATOR_EL)) {
+			afterGroup = OpsinTools.getNextSibling(afterGroup);
+		}
+		if (afterGroup == null || !afterGroup.getName().equals(SUFFIX_EL) || !"olide".equals(afterGroup.getAttributeValue(VALUE_ATR))) {
+			return false;
+		}
+		Element nextSuffix = OpsinTools.getNextSibling(afterGroup);
+		return nextSuffix == null || !nextSuffix.getName().equals(SUFFIX_EL);
+	}
 
 	/**Looks for Hantzch-Widman systems, and sees if the number of locants
 	 * agrees with the number of heteroatoms.
